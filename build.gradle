@@ -64,7 +64,9 @@ dependencyManagement {
 		dependency "org.gitlab4j:gitlab4j-api:${gitlab4jVersion}"
 		dependency "org.openrewrite:rewrite-java-11:${openrewriteVersion}"
 		dependency "org.openrewrite:rewrite-xml:${openrewriteVersion}"
-		dependency "org.openrewrite:rewrite-maven:${openrewriteVersion}"
+		dependency("org.openrewrite:rewrite-maven:${openrewriteVersion}") {
+			exclude 'org.slf4j:jcl-over-slf4j'
+		}
 		dependency "org.apache.ant:ant:${antVersion}"
 		dependency "org.apache.maven:maven-model:${mavenModelVersion}"
 		dependency "org.apache.tika:tika-core:${tikaVersion}"
