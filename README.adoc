@@ -1,6 +1,4 @@
-= spring-up
-
-A Spring CLI focused on developer productivity
+= A CLI focused on developer productivity
 
 == Build
 
@@ -82,14 +80,12 @@ template-repositories:
 === Generic Commands
 
 ```
-$ build/native/nativeCompile/spring-up help
+$ build/native/nativeCompile/spring help
 AVAILABLE COMMANDS
 
 Boot Commands
-        boot new: Create a new Spring Boot project from a template
-
-Boot Template Commands
-        template list: List templates available to create a new Spring Boot project
+        boot add: Merge an existing project into the current Spring Boot project
+        boot new: Create a new Spring Boot project from an existing project
 
 Built-In Commands
         completion bash: Generate bash completion script
@@ -107,6 +103,16 @@ Initializr Commands
         initializr dependencies: List supported dependencies
         initializr info: Show the Initializr server being used
         initializr new: Create a new project from start.spring.io
+
+Project Catalog Commands
+        catalog add: Add a project to a project catalog
+        catalog list: List catalogs
+        catalog remove: Remove a project from a catalog
+
+Project Commands
+        project add: Add a project to use with 'boot new' and 'boot add' commands
+        project list: List projects available for use with 'boot new' and 'boot add' commands
+        project remove: Remove project
 
 ```
 
