@@ -1,0 +1,19 @@
+spring:
+  up:
+    templateCatalogs:
+      - name: catalog1
+        description: The first catalog
+        url: https://github.com/rd-1-2022/template-catalog
+      - name: catalog2
+        description: The second catalog
+        url: https://github.com/rd-1-2022/template-catalog-2
+    templateRepositories:
+      - name: jpa
+        description: Learn how to work with JPA data persistence using Spring Data JPA.
+        url: https://github.com/rd-1-2022/rpt-spring-data-jpa
+        tags:
+          - jpa
+          - h2
+    defaults:
+      packageName: com.xkcd
+      templateRepositoryName: jpa

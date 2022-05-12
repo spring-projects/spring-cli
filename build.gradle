@@ -1,0 +1,85 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.4'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'org.springframework.experimental.aot' version '0.11.3'
+	id 'com.gorylenko.gradle-git-properties' version '2.3.2'
+}
+
+group = 'org.springframework.experimental'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+	maven { url 'https://repo.spring.io/snapshot' }
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/release' }
+	mavenCentral()
+}
+
+ext {
+	set('springShellVersion', '2.1.0-SNAPSHOT')
+	set('initializrVersion', '0.11.1')
+	set('jarchivelibVersion', '1.2.0')
+	set('kohsukeVersion', '1.301')
+	set('gitlab4jVersion', '4.19.0')
+	set('openrewriteVersion', '7.20.0-SNAPSHOT')
+	set('antVersion', '1.10.9')
+	set('mavenModelVersion', '3.5.4')
+	set('tikaVersion', '1.18')
+	set('jimfsVersion', '1.2')
+}
+
+configurations.all {
+	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation "org.springframework.shell:spring-shell-starter-jna"
+	implementation 'io.spring.initializr:initializr-generator'
+	implementation 'io.projectreactor.addons:reactor-extra'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+	implementation 'org.rauschig:jarchivelib'
+	implementation 'org.kohsuke:github-api'
+	implementation 'org.gitlab4j:gitlab4j-api'
+	implementation 'org.openrewrite:rewrite-java-11'
+	implementation 'org.openrewrite:rewrite-maven'
+	implementation 'org.openrewrite:rewrite-xml'
+	implementation 'org.apache.ant:ant'
+	implementation 'org.apache.maven:maven-model'
+	implementation 'org.apache.tika:tika-core'
+	compileOnly 'org.springframework.experimental:spring-aot'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'com.google.jimfs:jimfs'
+}
+
+dependencyManagement {
+	dependencies {
+		dependency "org.springframework.experimental:spring-aot:0.11.3"
+		dependency "org.springframework.shell:spring-shell-starter-jna:${springShellVersion}"
+		dependency "org.rauschig:jarchivelib:${jarchivelibVersion}"
+		dependency "org.kohsuke:github-api:${kohsukeVersion}"
+		dependency "org.gitlab4j:gitlab4j-api:${gitlab4jVersion}"
+		dependency "org.openrewrite:rewrite-java-11:${openrewriteVersion}"
+		dependency "org.openrewrite:rewrite-xml:${openrewriteVersion}"
+		dependency "org.openrewrite:rewrite-maven:${openrewriteVersion}"
+		dependency "org.apache.ant:ant:${antVersion}"
+		dependency "org.apache.maven:maven-model:${mavenModelVersion}"
+		dependency "org.apache.tika:tika-core:${tikaVersion}"
+		dependency "com.google.jimfs:jimfs:${jimfsVersion}"
+	}
+	imports {
+		mavenBom "org.springframework.shell:spring-shell-dependencies:${springShellVersion}"
+		mavenBom "io.spring.initializr:initializr-bom:${initializrVersion}"
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
+
+springBoot {
+	buildInfo()
+}

@@ -1,0 +1,39 @@
+name: Dev Native
+
+on:
+  workflow_dispatch:
+
+jobs:
+  native:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - nickname: win
+            os: windows-2019
+            graal: 22.0.0.2
+          - nickname: win-dev
+            os: windows-2019
+            graal: dev
+    name: CI Native ${{ matrix.nickname }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 11
+          cache: gradle
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          version: ${{ matrix.graal }}
+          java-version: 11
+          components: native-image
+          set-java-home: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - run: ./gradlew build nativeCompile --no-daemon
+      - uses: actions/upload-artifact@v2
+        with:
+          name: spring-up-${{ matrix.nickname }}
+          path: build/native/nativeCompile/
+          retention-days: 1

@@ -1,0 +1,119 @@
+= spring-up
+
+A Spring CLI focused on developer productivity
+
+== Build
+
+NOTE: Use either JDK11 or JDK17
+
+Normal build without _native_:
+```
+./gradlew clean build
+```
+
+Which you can then run with:
+```
+java -jar build/libs/spring-up-0.0.1-SNAPSHOT.jar
+```
+
+For native build:
+```
+./gradlew clean build nativeCompile
+```
+
+NOTE: You need to have `GRAALVM_HOME` pointing to your _graal_ installation
+
+Which you can then run with:
+```
+build/native/nativeCompile/spring-up
+```
+
+TIP: There is a CI workflow which builds native binaries for linux, macos and windows.
+     Published artifacts in CI workflow will get removed daily so take it from
+     a latest run which is scheduled nightly.
+
+== Docs
+
+=== Overview
+The command `boot new`, for example invoked by calling 'spring-up boot new' will create a new Spring Boot project named `demo` in a directory named `demo`.
+
+You can configure Spring Up to create Spring Boot projects that are based on existing projects hosted on GitHub and GitLab.  These projects are called `Runnable Project Templates`.
+
+`Runnable Project Templates` are nothing more than Spring Boot projects that compile successfully and showcase code for a specific use-case.
+`Runnable Project Templates` do not involve the use of a template engine to generate code.
+
+It is expected that a user or a company will curate a collection of projects to share with other users that represent coding best practices for a particular use-case.
+A collection of `Runnable Project Templates` is known as a Template Catalog.
+
+A configuration file lets you specify
+
+ * Github Client ID and default Scopes.
+ * List of Runnable Project Templates
+ * List of Template Catalogs
+ * Default values for the new project' package name and Runnable Project Template.
+
+One of several locations for the configuration file is
+
+ *  `<user.home>`/.config/springup/springup.yml
+
+=== Sample Configuration file
+
+Below is a sample configuration file that should be located in <user.home>`/.config/springup/springup.yml`
+
+Use lowercase kebab-case names.
+
+```
+template-catalogs:
+  - name: catalog1
+    description: The first catalog
+    url: https://github.com/rd-1-2022/template-catalog
+  - name: catalog2
+    description: The second catalog
+    url: https://github.com/rd-1-2022/template-catalog-2
+template-repositories:
+  - name: jpa
+    description: Learn how to work with JPA data persistence using Spring Data JPA.
+    url: https://github.com/rd-1-2022/rpt-spring-data-jpa
+    tags:
+      - jpa
+      - h2
+```
+
+=== Generic Commands
+
+```
+$ build/native/nativeCompile/spring-up help
+AVAILABLE COMMANDS
+
+Boot Commands
+        boot new: Create a new Spring Boot project from a template
+
+Boot Template Commands
+        template list: List templates available to create a new Spring Boot project
+
+Built-In Commands
+        completion bash: Generate bash completion script
+        help: Display help about available commands.
+        history: Display or save the history of previously run commands
+        script: Read and execute commands from a file.
+        version: Show version info
+
+Github Commands
+        github auth login: Authenticate with a GitHub
+        github auth logout: Log out of a GitHub
+        github auth status: View authentication status
+
+Initializr Commands
+        initializr dependencies: List supported dependencies
+        initializr info: Show the Initializr server being used
+        initializr new: Create a new project from start.spring.io
+
+```
+
+=== Shell Completion
+
+Shell completion for `bash` can be generate with `completion bash` command:
+
+```
+$ source <(spring-up completion bash)
+```
