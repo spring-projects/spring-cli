@@ -1,5 +1,7 @@
 = A CLI focused on developer productivity
 
+* This repository is a work in progress, it should stabilize over the next month
+
 == Build
 
 NOTE: Use either JDK11 or JDK17
