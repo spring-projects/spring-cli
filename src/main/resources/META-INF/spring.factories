@@ -1,2 +1,2 @@
 org.springframework.nativex.type.NativeConfiguration=\
-org.springframework.up.config.UpCliNativeConfiguration
+org.springframework.cli.config.SpringCliNativeConfiguration
