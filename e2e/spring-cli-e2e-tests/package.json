@@ -1,24 +1,26 @@
 {
-  "name": "springup",
-  "version": "1.0.0",
-  "description": "Testing concepts of `springup`.",
+  "name": "spring-cli-e2e-tests",
+  "version": "0.0.1",
+  "description": "e2e tests for spring-cli",
   "main": "index.js",
   "scripts": {
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
-    "test": "jest"
+    "test": "jest",
+    "build-spring-shell-e2e": "npm --prefix node_modules/spring-shell-e2e run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rd-1-2022/spring-up.git"
+    "url": "git+https://github.com/spring-projects-experimental/spring-cli.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rd-1-2022/spring-up/issues"
+    "url": "https://github.com/spring-projects-experimental/spring-cli/issues"
   },
-  "homepage": "https://github.com/rd-1-2022/spring-up",
+  "homepage": "https://github.com/spring-projects-experimental/spring-cli",
   "devDependencies": {
+    "@actions/io": "^1.1.2",
     "@alex_neo/jest-expect-message": "^1.0.5",
     "@types/jest": "^27.4.1",
     "@types/jest-expect-message": "^1.0.3",
@@ -33,11 +35,6 @@
     "wait-for-expect": "^3.0.2"
   },
   "dependencies": {
-    "@actions/io": "^1.1.1",
-    "lodash": "^4.17.21",
-    "node-pty": "^0.10.1",
-    "prod": "^1.0.1",
-    "xterm-headless": "^4.18.0",
-    "yaml": "^1.10.2"
+    "spring-shell-e2e": "https://gitpkg.now.sh/spring-projects/spring-shell/e2e/spring-shell-e2e?8477a5ac4cd40b76d9c273c6153cc758cacf488f"
   }
 }
