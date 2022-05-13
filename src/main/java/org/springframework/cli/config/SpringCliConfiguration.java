@@ -22,7 +22,7 @@ import io.netty.resolver.DefaultAddressResolverGroup;
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactorNettyHttpClientMapper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cli.initializr.InitializrClient;
-import org.springframework.cli.support.UpCliUserConfig;
+import org.springframework.cli.support.SpringCliUserConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorResourceFactory;
@@ -61,7 +61,7 @@ public class SpringCliConfiguration {
 	}
 
 	@Bean
-	public UpCliUserConfig upCliUserConfig() {
-		return new UpCliUserConfig();
+	public SpringCliUserConfig upCliUserConfig() {
+		return new SpringCliUserConfig();
 	}
 }

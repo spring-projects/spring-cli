@@ -27,11 +27,9 @@ import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.cli.support.UpCliUserConfig;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UpCliUserConfigTests {
+public class SpringCliUserConfigTests {
 
 	private FileSystem fileSystem;
 	private Function<String, Path> pathProvider;
@@ -44,13 +42,13 @@ public class UpCliUserConfigTests {
 
 	@Test
 	public void testHosts() {
-		UpCliUserConfig config = new UpCliUserConfig(pathProvider);
+		SpringCliUserConfig config = new SpringCliUserConfig(pathProvider);
 
 		assertThat(config.getHosts()).isNull();
 
-		UpCliUserConfig.Hosts hosts = new UpCliUserConfig.Hosts();
-		Map<String, UpCliUserConfig.Host> hostsMap = new HashMap<>();
-		hostsMap.put("github.com", new UpCliUserConfig.Host("faketoken", "user"));
+		SpringCliUserConfig.Hosts hosts = new SpringCliUserConfig.Hosts();
+		Map<String, SpringCliUserConfig.Host> hostsMap = new HashMap<>();
+		hostsMap.put("github.com", new SpringCliUserConfig.Host("faketoken", "user"));
 		hosts.setHosts(hostsMap);
 		config.setHosts(hosts);
 		assertThat(config.getHosts()).isNotNull();
@@ -60,14 +58,14 @@ public class UpCliUserConfigTests {
 
 	@Test
 	public void testTemplateCatalogs() {
-		UpCliUserConfig config = new UpCliUserConfig(pathProvider);
+		SpringCliUserConfig config = new SpringCliUserConfig(pathProvider);
 
 		assertThat(config.getTemplateCatalogsConfig()).isNotNull();
 
-		UpCliUserConfig.TemplateCatalogs catalogs = new UpCliUserConfig.TemplateCatalogs();
-		List<UpCliUserConfig.TemplateCatalog> catalogList = new ArrayList<>();
-		UpCliUserConfig.TemplateCatalog catalog1 = new UpCliUserConfig.TemplateCatalog("fakename1", "fakedesc1", "fakeurl1");
-		UpCliUserConfig.TemplateCatalog catalog2 = new UpCliUserConfig.TemplateCatalog("fakename2", "fakedesc2", "fakeurl2");
+		SpringCliUserConfig.TemplateCatalogs catalogs = new SpringCliUserConfig.TemplateCatalogs();
+		List<SpringCliUserConfig.TemplateCatalog> catalogList = new ArrayList<>();
+		SpringCliUserConfig.TemplateCatalog catalog1 = new SpringCliUserConfig.TemplateCatalog("fakename1", "fakedesc1", "fakeurl1");
+		SpringCliUserConfig.TemplateCatalog catalog2 = new SpringCliUserConfig.TemplateCatalog("fakename2", "fakedesc2", "fakeurl2");
 		catalogList.add(catalog1);
 		catalogList.add(catalog2);
 		catalogs.setTemplateCatalogs(catalogList);
@@ -77,14 +75,14 @@ public class UpCliUserConfigTests {
 
 	@Test
 	public void testTemplateRepositories() {
-		UpCliUserConfig config = new UpCliUserConfig(pathProvider);
+		SpringCliUserConfig config = new SpringCliUserConfig(pathProvider);
 
 		assertThat(config.getTemplateRepositoriesConfig()).isNotNull();
 
-		UpCliUserConfig.TemplateRepositories repositories = new UpCliUserConfig.TemplateRepositories();
-		List<UpCliUserConfig.TemplateRepository> repositoryList = new ArrayList<>();
-		UpCliUserConfig.TemplateRepository repository1 = new UpCliUserConfig.TemplateRepository("fakename1", "fakedesc1", "fakeurl1", new ArrayList<>());
-		UpCliUserConfig.TemplateRepository repository2 = new UpCliUserConfig.TemplateRepository("fakename2", "fakedesc2", "fakeurl2", new ArrayList<>());
+		SpringCliUserConfig.TemplateRepositories repositories = new SpringCliUserConfig.TemplateRepositories();
+		List<SpringCliUserConfig.TemplateRepository> repositoryList = new ArrayList<>();
+		SpringCliUserConfig.TemplateRepository repository1 = new SpringCliUserConfig.TemplateRepository("fakename1", "fakedesc1", "fakeurl1", new ArrayList<>());
+		SpringCliUserConfig.TemplateRepository repository2 = new SpringCliUserConfig.TemplateRepository("fakename2", "fakedesc2", "fakeurl2", new ArrayList<>());
 		repositoryList.add(repository1);
 		repositoryList.add(repository2);
 		repositories.setTemplateRepositories(repositoryList);

@@ -40,8 +40,8 @@ import org.springframework.cli.SpringCliException;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.merger.ProjectMerger;
 import org.springframework.cli.support.AbstractUpCliCommands;
-import org.springframework.cli.support.UpCliUserConfig;
-import org.springframework.cli.support.UpCliUserConfig.TemplateRepository;
+import org.springframework.cli.support.SpringCliUserConfig;
+import org.springframework.cli.support.SpringCliUserConfig.TemplateRepository;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.cli.util.PackageNameUtils;
 import org.springframework.cli.util.PomReader;
@@ -62,12 +62,12 @@ public class BootCommands extends AbstractUpCliCommands {
 
 	private static final String DEFAULT_REPO_URL = "https://github.com/rd-1-2022/rpt-rest-service";
 
-	private UpCliUserConfig upCliUserConfig;
+	private SpringCliUserConfig upCliUserConfig;
 
 	private final SourceRepositoryService sourceRepositoryService;
 
 	@Autowired
-	public BootCommands(UpCliUserConfig upCliUserConfig,
+	public BootCommands(SpringCliUserConfig upCliUserConfig,
 			SourceRepositoryService sourceRepositoryService) {
 		this.upCliUserConfig = upCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;

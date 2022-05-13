@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cli.support.UpCliUserConfig;
-import org.springframework.cli.support.UpCliUserConfig.TemplateRepositories;
-import org.springframework.cli.support.UpCliUserConfig.TemplateRepository;
+import org.springframework.cli.support.SpringCliUserConfig;
+import org.springframework.cli.support.SpringCliUserConfig.TemplateRepositories;
+import org.springframework.cli.support.SpringCliUserConfig.TemplateRepository;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -38,10 +38,10 @@ import org.springframework.util.StringUtils;
 @ShellComponent
 public class ProjectCommands {
 
-	private final UpCliUserConfig upCliUserConfig;
+	private final SpringCliUserConfig upCliUserConfig;
 
 	@Autowired
-	public ProjectCommands(UpCliUserConfig upCliUserConfig) {
+	public ProjectCommands(SpringCliUserConfig upCliUserConfig) {
 		this.upCliUserConfig = upCliUserConfig;
 	}
 

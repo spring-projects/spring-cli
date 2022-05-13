@@ -17,9 +17,7 @@ package org.springframework.cli.support;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,7 +31,7 @@ import org.springframework.util.ObjectUtils;
  *
  * @author Janne Valkealahti
  */
-public class UpCliUserConfig {
+public class SpringCliUserConfig {
 
 	/**
 	 * Optional env variable for {@code SpringUp} configuration dir.
@@ -58,7 +56,7 @@ public class UpCliUserConfig {
 	/**
 	 * Base directory name we store our config files.
 	 */
-	private final static String SPRINGUP_CONFIG_NAME = "springup";
+	private final static String SPRINGUP_CONFIG_NAME = "springcli";
 
 	/**
 	 * Keeps auth tokens per hostname.
@@ -75,11 +73,11 @@ public class UpCliUserConfig {
 	 */
 	private final UserConfig<TemplateRepositories> templateRepositoriesConfigFile;
 
-	public UpCliUserConfig() {
+	public SpringCliUserConfig() {
 		this(null);
 	}
 
-	public UpCliUserConfig(Function<String, Path> pathProvider) {
+	public SpringCliUserConfig(Function<String, Path> pathProvider) {
 		this.hostsConfigFile = new UserConfig<>(HOSTS, Hosts.class, SPRINGUP_CONFIG_DIR, SPRINGUP_CONFIG_NAME);
 		this.templateCatalogsConfigFile = new UserConfig<>(TEMPLATE_CATALOGS, TemplateCatalogs.class,
 				SPRINGUP_CONFIG_DIR, SPRINGUP_CONFIG_NAME);

@@ -22,9 +22,9 @@ import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.support.AbstractUpCliCommands;
-import org.springframework.cli.support.UpCliUserConfig;
-import org.springframework.cli.support.UpCliUserConfig.TemplateCatalog;
-import org.springframework.cli.support.UpCliUserConfig.TemplateCatalogs;
+import org.springframework.cli.support.SpringCliUserConfig;
+import org.springframework.cli.support.SpringCliUserConfig.TemplateCatalog;
+import org.springframework.cli.support.SpringCliUserConfig.TemplateCatalogs;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -38,10 +38,10 @@ import org.springframework.util.ObjectUtils;
 @ShellComponent
 public class ProjectCatalogCommands extends AbstractUpCliCommands {
 
-	private final UpCliUserConfig upCliUserConfig;
+	private final SpringCliUserConfig upCliUserConfig;
 
 	@Autowired
-	public ProjectCatalogCommands(UpCliUserConfig upCliUserConfig) {
+	public ProjectCatalogCommands(SpringCliUserConfig upCliUserConfig) {
 		this.upCliUserConfig = upCliUserConfig;
 	}
 

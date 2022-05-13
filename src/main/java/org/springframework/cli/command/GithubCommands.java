@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.support.AbstractUpCliCommands;
-import org.springframework.cli.support.UpCliUserConfig;
-import org.springframework.cli.support.UpCliUserConfig.Host;
-import org.springframework.cli.support.UpCliUserConfig.Hosts;
+import org.springframework.cli.support.SpringCliUserConfig;
+import org.springframework.cli.support.SpringCliUserConfig.Host;
+import org.springframework.cli.support.SpringCliUserConfig.Hosts;
 import org.springframework.cli.support.github.GithubDeviceFlow;
 import org.springframework.shell.component.flow.ComponentFlow;
 import org.springframework.shell.component.flow.ResultMode;
@@ -58,7 +58,7 @@ public class GithubCommands extends AbstractUpCliCommands {
 	private ComponentFlow.Builder componentFlowBuilder;
 
 	@Autowired
-	private UpCliUserConfig userConfig;
+	private SpringCliUserConfig userConfig;
 
 	/**
 	 * Login command for github. Makes user to choose either starting a device flow
