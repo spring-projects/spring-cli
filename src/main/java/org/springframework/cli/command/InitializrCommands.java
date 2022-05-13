@@ -125,10 +125,32 @@ public class InitializrCommands extends AbstractShellComponent {
 		Map<String, String> projectSelectItems = metadata.getType().getValues().stream()
 				.filter(v -> ObjectUtils.nullSafeEquals(v.getTags().get("format"), "project"))
 				.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
+
+		String defaultProject = metadata.getType().getDefault();
+		String defaultProjectSelect = projectSelectItems.entrySet().stream()
+			.filter(e -> ObjectUtils.nullSafeEquals(e.getValue(), defaultProject))
+			.map(e -> e.getKey())
+			.findFirst()
+			.orElse(null);
 		Map<String, String> languageSelectItems = metadata.getLanguage().getValues().stream()
 				.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
+
+		String defaultLanguage = metadata.getLanguage().getDefault();
+		String defaultLanguageSelect = languageSelectItems.entrySet().stream()
+			.filter(e -> ObjectUtils.nullSafeEquals(e.getValue(), defaultLanguage))
+			.map(e -> e.getKey())
+			.findFirst()
+			.orElse(null);
+
 		Map<String, String> bootSelectItems = metadata.getBootVersion().getValues().stream()
 				.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
+		String defaultBootVersion = metadata.getBootVersion().getDefaultversion();
+		String defaultBootVersionSelect = bootSelectItems.entrySet().stream()
+			.filter(e -> ObjectUtils.nullSafeEquals(e.getValue(), defaultBootVersion))
+			.map(e -> e.getKey())
+			.findFirst()
+			.orElse(null);
+
 		String defaultVersion = metadata.getVersion().getDefault();
 		String defaultGroupId = metadata.getGroupId().getDefault();
 		String defaultArtifact = metadata.getArtifactId().getDefault();
@@ -136,10 +158,24 @@ public class InitializrCommands extends AbstractShellComponent {
 		String defaultDescription = metadata.getDescription().getDefault();
 		String defaultPackageName = metadata.getPackageName().getDefault();
 		dependencies = dependencies == null ? Collections.emptyList() : dependencies;
+
 		Map<String, String> packagingSelectItems = metadata.getPackaging().getValues().stream()
 				.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
+		String defaultPackaging = metadata.getPackaging().getDefault();
+		String defaultPackagingSelect = packagingSelectItems.entrySet().stream()
+			.filter(e -> ObjectUtils.nullSafeEquals(e.getValue(), defaultPackaging))
+			.map(e -> e.getKey())
+			.findFirst()
+			.orElse(null);
+
 		Map<String, String> javaVersionSelectItems = metadata.getJavaVersion().getValues().stream()
 				.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
+		String defaultJavaVersion = metadata.getJavaVersion().getDefault();
+		String defaultJavaVersionSelect = javaVersionSelectItems.entrySet().stream()
+			.filter(e -> ObjectUtils.nullSafeEquals(e.getValue(), defaultJavaVersion))
+			.map(e -> e.getKey())
+			.findFirst()
+			.orElse(null);
 
 		ComponentFlow wizard = componentFlowBuilder.clone().reset()
 				.withPathInput(PATH_ID)
@@ -152,6 +188,7 @@ public class InitializrCommands extends AbstractShellComponent {
 					.resultValue(project)
 					.resultMode(ResultMode.ACCEPT)
 					.selectItems(projectSelectItems)
+					.defaultSelect(defaultProjectSelect)
 					.sort(NAME_COMPARATOR)
 					.and()
 				.withSingleItemSelector(LANGUAGE_ID)
@@ -159,6 +196,7 @@ public class InitializrCommands extends AbstractShellComponent {
 					.resultValue(language)
 					.resultMode(ResultMode.ACCEPT)
 					.selectItems(languageSelectItems)
+					.defaultSelect(defaultLanguageSelect)
 					.sort(NAME_COMPARATOR)
 					.and()
 				.withSingleItemSelector(BOOT_VERSION_ID)
@@ -166,6 +204,7 @@ public class InitializrCommands extends AbstractShellComponent {
 					.resultValue(bootVersion)
 					.resultMode(ResultMode.ACCEPT)
 					.selectItems(bootSelectItems)
+					.defaultSelect(defaultBootVersionSelect)
 					.sort(NAME_COMPARATOR.reversed())
 					.and()
 				.withStringInput(VERSION_ID)
@@ -227,6 +266,7 @@ public class InitializrCommands extends AbstractShellComponent {
 					.resultValue(packaging)
 					.resultMode(ResultMode.ACCEPT)
 					.selectItems(packagingSelectItems)
+					.defaultSelect(defaultPackagingSelect)
 					.sort(NAME_COMPARATOR)
 					.and()
 				.withSingleItemSelector(JAVA_VERSION_ID)
@@ -234,6 +274,7 @@ public class InitializrCommands extends AbstractShellComponent {
 					.resultValue(javaVersion)
 					.resultMode(ResultMode.ACCEPT)
 					.selectItems(javaVersionSelectItems)
+					.defaultSelect(defaultJavaVersionSelect)
 					.sort(JAVA_VERSION_COMPARATOR)
 					.and()
 				.build();
