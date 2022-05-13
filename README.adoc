@@ -32,6 +32,16 @@ TIP: There is a CI workflow which builds native binaries for linux, macos and wi
      Published artifacts in CI workflow will get removed daily so take it from
      a latest run which is scheduled nightly.
 
+
+=== Building Documentation
+
+```
+cd docs
+../gradlew antora
+```
+
+Output is in `./build/site`
+
 == Docs
 
 === Overview

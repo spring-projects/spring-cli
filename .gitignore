@@ -48,3 +48,7 @@ e2e/.vscode/*
 !e2e/.vscode/tasks.json
 !e2e/.vscode/launch.json
 !e2e/.vscode/extensions.json
+
+# antora output
+docs/build/
+docs/node_modules/

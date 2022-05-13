@@ -1,0 +1,19 @@
+site:
+  title: Spring CLI
+  url: https://docs.spring.io/spring-cli/reference/
+asciidoc:
+  attributes:
+    page-pagination: true
+content:
+  sources:
+    - url: ../../spring-cli
+#      branches: [main]
+      start_path: docs
+urls:
+  latest_version_segment_strategy: redirect:to
+  latest_version_segment: ''
+  redirect_facility: httpd
+ui:
+  bundle:
+    url: https://github.com/spring-io/antora-ui-spring/releases/download/latest/ui-bundle.zip
+    snapshot: true

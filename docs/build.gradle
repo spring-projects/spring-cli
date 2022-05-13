@@ -1,0 +1,10 @@
+plugins {
+	id "io.github.rwinch.antora" version "0.0.2"
+}
+
+antora {
+	playbookFile = file("local-antora-playbook.yml")
+	antoraVersion = "3.0.0"
+	arguments = ["--fetch", "--stacktrace"]
+}
+
