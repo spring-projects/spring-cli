@@ -5,10 +5,10 @@ spring:
   shell:
     command:
       completion:
-        root-command: spring-up
+        root-command: spring-cli
       version:
         show-git-short-commit-id: true
-  up:
+  cli:
     github:
       client-id: 10a18d1837ecdac59ba2
       default-scopes: repo,read:org

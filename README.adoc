@@ -13,7 +13,7 @@ Normal build without _native_:
 
 Which you can then run with:
 ```
-java -jar build/libs/spring-up-0.0.1-SNAPSHOT.jar
+java -jar build/libs/spring-cli-0.0.1-SNAPSHOT.jar
 ```
 
 For native build:
@@ -25,7 +25,7 @@ NOTE: You need to have `GRAALVM_HOME` pointing to your _graal_ installation
 
 Which you can then run with:
 ```
-build/native/nativeCompile/spring-up
+build/native/nativeCompile/spring-cli
 ```
 
 TIP: There is a CI workflow which builds native binaries for linux, macos and windows.
@@ -35,7 +35,7 @@ TIP: There is a CI workflow which builds native binaries for linux, macos and wi
 == Docs
 
 === Overview
-The command `boot new`, for example invoked by calling 'spring-up boot new' will create a new Spring Boot project named `demo` in a directory named `demo`.
+The command `boot new`, for example invoked by calling 'spring-cli boot new' will create a new Spring Boot project named `demo` in a directory named `demo`.
 
 You can configure Spring Up to create Spring Boot projects that are based on existing projects hosted on GitHub and GitLab.  These projects are called `Runnable Project Templates`.
 
@@ -54,7 +54,7 @@ A configuration file lets you specify
 
 One of several locations for the configuration file is
 
- *  `<user.home>`/.config/springup/springup.yml
+ *  `<user.home>`/.config/springcli/springcli.yml
 
 === Sample Configuration file
 
@@ -82,7 +82,7 @@ template-repositories:
 === Generic Commands
 
 ```
-$ build/native/nativeCompile/spring help
+$ build/native/nativeCompile/spring-cli help
 AVAILABLE COMMANDS
 
 Boot Commands
@@ -123,5 +123,5 @@ Project Commands
 Shell completion for `bash` can be generate with `completion bash` command:
 
 ```
-$ source <(spring-up completion bash)
+$ source <(spring-cli completion bash)
 ```
