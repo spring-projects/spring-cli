@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.gitlab4j.api.Constants.ArchiveFormat;
@@ -44,7 +45,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
-import org.springframework.cli.config.TemplateRepositoryProperties;
+import org.springframework.cli.support.SpringCliUserConfig;
+import org.springframework.cli.support.SpringCliUserConfig.Host;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.ResourceUtils;
@@ -59,10 +61,10 @@ public class UrlRepositoryService implements SourceRepositoryService {
 
 	private final Logger logger = LoggerFactory.getLogger(UrlRepositoryService.class);
 
-	private final TemplateRepositoryProperties templateRepositoryProperties;
+	private final SpringCliUserConfig userConfig;
 
-	public UrlRepositoryService(TemplateRepositoryProperties templateRepositoryProperties) {
-		this.templateRepositoryProperties = templateRepositoryProperties;
+	public UrlRepositoryService(SpringCliUserConfig userConfig) {
+		this.userConfig = userConfig;
 	}
 
 	@Override
@@ -115,7 +117,7 @@ public class UrlRepositoryService implements SourceRepositoryService {
 
 		try {
 			URI gitUri = new URI(url.getRepoUrl().toString());
-			String token = this.templateRepositoryProperties.getTokens().get(gitUri.getHost());
+			String token = getToken(gitUri.getHost());
 			GitHub github;
 			if (token == null) {
 				github = GitHub.connectAnonymously();
@@ -175,7 +177,7 @@ public class UrlRepositoryService implements SourceRepositoryService {
 	private Path retrieveGitLabRepositoryContents(GitRepoUrlRef url, Path targetPath) {
 		try {
 			URI gitUri = new URI(url.getRepoUrl().toString());
-			String token = this.templateRepositoryProperties.getTokens().get(gitUri.getHost());
+			String token = getToken(gitUri.getHost());
 			if (token == null) {
 				throw new SpringCliException("Access token not provided for " + gitUri);
 			}
@@ -231,4 +233,14 @@ public class UrlRepositoryService implements SourceRepositoryService {
 		}
 	}
 
+	private String getToken(String host) {
+		Map<String, Host> hosts = userConfig.getHosts();
+		if (hosts != null) {
+			Host h = hosts.get(host);
+			if (h != null) {
+				return h.getOauthToken();
+			}
+		}
+		return null;
+	}
 }

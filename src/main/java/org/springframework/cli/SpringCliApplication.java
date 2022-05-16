@@ -17,9 +17,6 @@ package org.springframework.cli;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cli.config.TemplateRepositoryProperties;
-import org.springframework.cli.config.SpringCliProperties;
 
 /**
  * Main boot app.
@@ -27,7 +24,6 @@ import org.springframework.cli.config.SpringCliProperties;
  * @author Janne Valkealahti
  */
 @SpringBootApplication
-@EnableConfigurationProperties({ SpringCliProperties.class, TemplateRepositoryProperties.class })
 public class SpringCliApplication {
 
 	public static void main(String[] args) {
