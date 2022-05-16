@@ -39,17 +39,17 @@ public class SpringCliUserConfig {
 	public final static String SPRINGUP_CONFIG_DIR = "SPRINGUP_CONFIG_DIR";
 
 	/**
-	 * {@code hosts.yml} stores authentication spesific info for hosts.
+	 * {@code hosts.yml} stores authentication specific info for hosts.
 	 */
 	public final static String HOSTS = "hosts.yml";
 
 	/**
-	 * {@code catalogs.yml} stores template catalog spesific info.
+	 * {@code catalogs.yml} stores template catalog specific info.
 	 */
 	public final static String TEMPLATE_CATALOGS = "catalogs.yml";
 
 	/**
-	 * {@code repositories.yml} stores template repository spesific info.
+	 * {@code repositories.yml} stores template repository specific info.
 	 */
 	public final static String TEMPLATE_REPOSITORIES = "repositories.yml";
 
