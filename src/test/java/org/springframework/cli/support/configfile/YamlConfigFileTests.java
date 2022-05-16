@@ -22,8 +22,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import org.springframework.cli.support.configfile.YamlConfigFile;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class YamlConfigFileTests {

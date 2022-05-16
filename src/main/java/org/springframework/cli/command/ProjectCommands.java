@@ -33,7 +33,6 @@ import org.springframework.shell.table.Table;
 import org.springframework.shell.table.TableBuilder;
 import org.springframework.shell.table.TableModel;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 @ShellComponent
 public class ProjectCommands {

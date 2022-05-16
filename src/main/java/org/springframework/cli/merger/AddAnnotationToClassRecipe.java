@@ -28,7 +28,6 @@ import org.openrewrite.java.JavaParser;
 import org.openrewrite.java.JavaTemplate;
 import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.J.ClassDeclaration;
-import org.openrewrite.java.tree.J.CompilationUnit;
 
 public class AddAnnotationToClassRecipe extends Recipe {
 

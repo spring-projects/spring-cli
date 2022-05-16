@@ -34,9 +34,8 @@ import org.junit.jupiter.api.io.TempDir;
 import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.Result;
 import org.openrewrite.SourceFile;
-import org.openrewrite.maven.MavenParser;
 import org.openrewrite.maven.AddManagedDependency;
-import org.openrewrite.xml.XmlParser;
+import org.openrewrite.maven.MavenParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

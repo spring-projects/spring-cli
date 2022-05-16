@@ -23,9 +23,6 @@ import java.util.Optional;
 
 import javax.lang.model.SourceVersion;
 
-import org.apache.tools.ant.taskdefs.Pack;
-import org.jline.utils.AttributedStringBuilder;
-import org.jline.utils.AttributedStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

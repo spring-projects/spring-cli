@@ -21,9 +21,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
@@ -31,8 +28,6 @@ import org.springframework.util.Assert;
  * @author Thomas Risberg
  */
 public final class GitRepoUrlRef {
-
-	private static final Logger logger = LoggerFactory.getLogger(GitRepoUrlRef.class);
 
 	private final URL repoUrl;
 
