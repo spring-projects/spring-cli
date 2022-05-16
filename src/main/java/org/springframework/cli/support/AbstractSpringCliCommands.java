@@ -33,7 +33,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Janne Valkealahti
  */
-public abstract class AbstractUpCliCommands extends AbstractShellComponent {
+public abstract class AbstractSpringCliCommands extends AbstractShellComponent {
 
     private ObjectProvider<SpringCliProperties> cliPropertiesProvider;
 

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cli.support.AbstractUpCliCommands;
+import org.springframework.cli.support.AbstractSpringCliCommands;
 import org.springframework.cli.support.SpringCliUserConfig;
 import org.springframework.cli.support.SpringCliUserConfig.TemplateCatalog;
 import org.springframework.cli.support.SpringCliUserConfig.TemplateCatalogs;
@@ -36,7 +36,7 @@ import org.springframework.shell.table.TableModel;
 import org.springframework.util.ObjectUtils;
 
 @ShellComponent
-public class ProjectCatalogCommands extends AbstractUpCliCommands {
+public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 	private final SpringCliUserConfig upCliUserConfig;
 

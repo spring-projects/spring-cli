@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cli.support.AbstractUpCliCommands;
+import org.springframework.cli.support.AbstractSpringCliCommands;
 import org.springframework.cli.support.SpringCliUserConfig;
 import org.springframework.cli.support.SpringCliUserConfig.Host;
 import org.springframework.cli.support.SpringCliUserConfig.Hosts;
@@ -48,7 +48,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  * @author Janne Valkealahti
  */
 @ShellComponent
-public class GithubCommands extends AbstractUpCliCommands {
+public class GithubCommands extends AbstractSpringCliCommands {
 
 	private final static Logger log = LoggerFactory.getLogger(GithubCommands.class);
 

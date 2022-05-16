@@ -39,7 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.merger.ProjectMerger;
-import org.springframework.cli.support.AbstractUpCliCommands;
+import org.springframework.cli.support.AbstractSpringCliCommands;
 import org.springframework.cli.support.SpringCliUserConfig;
 import org.springframework.cli.support.SpringCliUserConfig.TemplateRepository;
 import org.springframework.cli.util.IoUtils;
@@ -56,7 +56,7 @@ import org.springframework.util.StringUtils;
 import static org.springframework.cli.util.RefactorUtils.refactorPackage;
 
 @ShellComponent
-public class BootCommands extends AbstractUpCliCommands {
+public class BootCommands extends AbstractSpringCliCommands {
 
 	private static final Logger logger = LoggerFactory.getLogger(BootCommands.class);
 
