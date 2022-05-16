@@ -53,6 +53,7 @@ dependencies {
 	compileOnly 'org.springframework.experimental:spring-aot'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'com.google.jimfs:jimfs'
+	testImplementation 'com.squareup.okhttp3:mockwebserver'
 }
 
 dependencyManagement {

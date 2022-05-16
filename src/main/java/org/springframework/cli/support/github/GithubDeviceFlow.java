@@ -17,25 +17,37 @@ package org.springframework.cli.support.github;
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.Optional;
 
 import reactor.core.publisher.Mono;
-import reactor.retry.Backoff;
 import reactor.util.retry.Retry;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
- * Utility methods for github auth flows.
+ * Imlements methods for github auth flows.
  *
  * @author Janne Valkealahti
  */
-public abstract class GithubDeviceFlow {
+public class GithubDeviceFlow {
 
 	private final static ParameterizedTypeReference<Map<String, String>> RESPONSE_TYPE_REFERENCE =
 			new ParameterizedTypeReference<Map<String, String>>() {};
+	private String baseUrl;
+
+	/**
+	 * Constructs a new github device flow.
+	 *
+	 * @param baseUrl the base url
+	 */
+	public GithubDeviceFlow(String baseUrl) {
+		Assert.hasText(baseUrl, "baseUrl must be set");
+		this.baseUrl = baseUrl;
+	}
 
 	/**
 	 * Starts a device flow. Makes a simple request to github api to request new
@@ -46,9 +58,9 @@ public abstract class GithubDeviceFlow {
 	 * @param scope the scopes
 	 * @return Map of response values
 	 */
-	public static Map<String, String> requestDeviceFlow(WebClient.Builder webClientBuilder, String clientId, String scope) {
+	public Map<String, String> requestDeviceFlow(WebClient.Builder webClientBuilder, String clientId, String scope) {
 		WebClient client = webClientBuilder
-			.baseUrl("https://github.com")
+			.baseUrl(baseUrl)
 			.build();
 		Mono<Map<String, String>> response = client.post()
 			.uri(uriBuilder -> uriBuilder
@@ -71,10 +83,10 @@ public abstract class GithubDeviceFlow {
 	 * @param interval the interval
 	 * @return a token
 	 */
-	public static String waitTokenFromDeviceFlow(WebClient.Builder webClientBuilder, String clientId, String deviceCode,
+	public Optional<String> waitTokenFromDeviceFlow(WebClient.Builder webClientBuilder, String clientId, String deviceCode,
 			int timeout, int interval) {
 		WebClient client = webClientBuilder
-			.baseUrl("https://github.com")
+			.baseUrl(baseUrl)
 			.build();
 		Mono<String> accessToken = client.post()
 			.uri(uriBuilder -> uriBuilder
@@ -96,18 +108,10 @@ public abstract class GithubDeviceFlow {
 					return Mono.error(new NoAccessTokenException());
 				}
 			})
-			.retryWhen(Retry.withThrowable(reactor.retry.Retry.onlyIf(x -> {
-					if (x.exception() instanceof NoAccessTokenException) {
-						return true;
-					}
-					else {
-						return false;
-					}
-				})
-				.timeout(Duration.ofSeconds(timeout))
-				.backoff(Backoff.fixed(Duration.ofSeconds(interval)))
-			));
-			return accessToken.block();
+			.retryWhen(Retry.fixedDelay(timeout / interval, Duration.ofSeconds(interval))
+				.filter(t -> t instanceof NoAccessTokenException))
+			.onErrorResume(e -> Mono.empty());
+			return accessToken.blockOptional();
 	}
 
 	/**

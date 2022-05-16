@@ -18,6 +18,7 @@ package org.springframework.cli.command;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.jline.utils.AttributedString;
 import org.kohsuke.github.GitHub;
@@ -71,7 +72,8 @@ public class GithubCommands extends AbstractUpCliCommands {
 		String scopes = getCliProperties().getGithub().getDefaultScopes();
 
 		if (ObjectUtils.nullSafeEquals(authType, "web")) {
-			Map<String, String> response = GithubDeviceFlow.requestDeviceFlow(webClientBuilder, clientId, scopes);
+			GithubDeviceFlow githubDeviceFlow = new GithubDeviceFlow("https://github.com");
+			Map<String, String> response = githubDeviceFlow.requestDeviceFlow(webClientBuilder, clientId, scopes);
 
 			AttributedString styledStr = styledString("!", ThemeSettings.TAG_LEVEL_WARN);
 			styledStr = join(styledStr,
@@ -79,12 +81,17 @@ public class GithubCommands extends AbstractUpCliCommands {
 			styledStr = join(styledStr, styledString(response.get("user_code"), ThemeSettings.TAG_HIGHLIGHT));
 			shellPrint(styledStr);
 
-			String token = GithubDeviceFlow.waitTokenFromDeviceFlow(webClientBuilder, clientId,
+			Optional<String> token = githubDeviceFlow.waitTokenFromDeviceFlow(webClientBuilder, clientId,
 					response.get("device_code"),
 					Integer.parseInt(response.get("expires_in")),
 					Integer.parseInt(response.get("interval")));
-			userConfig.updateHost("github.com", new Host(token, null));
-			shellPrint("logged in to github");
+			if (token.isPresent()) {
+				userConfig.updateHost("github.com", new Host(token.get(), null));
+				shellPrint("logged in to github");
+			}
+			else {
+				shellPrint("failed logging in to github");
+			}
 		}
 		else if (ObjectUtils.nullSafeEquals(authType, "paste")) {
 			shellPrint("Tip: you can generate a Personal Access Token here https://github.com/settings/tokens");
