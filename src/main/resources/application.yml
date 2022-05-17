@@ -3,6 +3,10 @@ spring:
     web-application-type: none
     banner-mode: off
   shell:
+    config:
+      location: "{userconfig}/springcli"
+    history:
+      name: spring-cli-history.log
     command:
       completion:
         root-command: spring-cli
