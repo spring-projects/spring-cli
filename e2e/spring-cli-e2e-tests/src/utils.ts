@@ -4,7 +4,7 @@ import * as path from 'path';
 export const tempDir = path.join(__dirname, 'spring-cli', 'temp');
 export const isWindows = os.platform() === 'win32';
 export const cliPathRelative = isWindows
-  ? '..\\..\\build\\native\\\nativeCompile\spring-cli.exe'
+  ? '..\\..\\build\\native\\nativeCompile\\spring-cli.exe'
   : '../../build/native/nativeCompile/spring-cli';
 export const jarPathRelative = isWindows
   ? '..\\..\\build\\libs\\spring-cli-0.0.1-SNAPSHOT.jar'
