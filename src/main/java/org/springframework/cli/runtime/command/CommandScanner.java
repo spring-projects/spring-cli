@@ -65,18 +65,20 @@ public class CommandScanner {
 		if (commandsDirectory.isPresent()) {
 			// Look for command/subcommand structures
 			File[] files = commandsDirectory.get().listFiles();
-			for (File commandDirectory : files) {
-				if (commandDirectory.isDirectory() && !commandDirectory.isHidden()) {
-					Command command = getCommandObject(commandDirectory);
-					File[] subFiles = commandDirectory.listFiles();
-					List<Command> subCommandList = new ArrayList<>();
-					for (File subCommandDirectory : subFiles) {
-						if (subCommandDirectory.isDirectory()) {
-							Command subCommand = getCommandObject(subCommandDirectory);
-							subCommandList.add(subCommand);
+			if (files != null) {
+				for (File commandDirectory : files) {
+					if (commandDirectory.isDirectory() && !commandDirectory.isHidden()) {
+						Command command = getCommandObject(commandDirectory);
+						File[] subFiles = commandDirectory.listFiles();
+						List<Command> subCommandList = new ArrayList<>();
+						for (File subCommandDirectory : subFiles) {
+							if (subCommandDirectory.isDirectory()) {
+								Command subCommand = getCommandObject(subCommandDirectory);
+								subCommandList.add(subCommand);
+							}
 						}
+						results.put(command, subCommandList);
 					}
-					results.put(command, subCommandList);
 				}
 			}
 		}

@@ -77,7 +77,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 	public void bootNew(
 			@ShellOption(help = "Name or URL of existing project", defaultValue = ShellOption.NULL) String existingProjectNameOrUrl,
 			@ShellOption(help = "Name of the new project", defaultValue = ShellOption.NULL) String newProjectName,
-			@ShellOption(help = "Package name for the new project", defaultValue = ShellOption.NULL) String packageName) {
+			@ShellOption(help = "Package name for the new project", defaultValue = "com.example") String packageName) {
 		String projectNameToUse = getProjectNameOrDefault(newProjectName); // Will return string, never null
 		String urlToUse = getTemplateRepositoryUrl(existingProjectNameOrUrl);  // Will return string or throw exception
 		String packageNameToUse = getPackageName(packageName); // Will return string, never null
@@ -145,6 +145,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 	}
 
 	private String getPackageName(String packageName) {
+		// TODO - this logic will channge once we have the set config COMMAND/PROPERTY=VALUE system in place
 		String defaultPackageName = packageName;
 		if (defaultPackageName == null) {
 			defaultPackageName = getCliProperties().getDefaults().getPackageName();

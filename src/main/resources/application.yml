@@ -45,5 +45,5 @@ logging:
 #    root: debug
 #    org:
 #      springframework:
-#        up: debug
+#        cli: debug
 #        shell: debug
