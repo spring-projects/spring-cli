@@ -60,7 +60,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	private static final Logger logger = LoggerFactory.getLogger(BootCommands.class);
 
-	private static final String DEFAULT_REPO_URL = "https://github.com/rd-1-2022/rpt-rest-service";
+	private static final String FALLBACK_DEFAULT_REPO_URL = "https://github.com/rd-1-2022/rpt-rest-service";
 
 	private SpringCliUserConfig upCliUserConfig;
 
@@ -138,10 +138,10 @@ public class BootCommands extends AbstractSpringCliCommands {
 		// no default template name found
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.YELLOW));
-		sb.append("Using base project from " + DEFAULT_REPO_URL);
+		sb.append("Using base project from " + FALLBACK_DEFAULT_REPO_URL);
 		sb.append(System.lineSeparator());
 		shellPrint(sb.toAttributedString());
-		return DEFAULT_REPO_URL;
+		return FALLBACK_DEFAULT_REPO_URL;
 	}
 
 	private String getPackageName(String packageName) {
@@ -151,7 +151,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 			defaultPackageName = getCliProperties().getDefaults().getPackageName();
 		}
 		if (defaultPackageName == null) {
-			throw new SpringCliException("Unable to find package name to use");
+			throw new SpringCliException("Please specify package name to use, no default value found.");
 		}
 		// get the final package name to use taking into account default value and validity of that value from the JLS
 		String packageNameToUse = PackageNameUtils.getTargetPackageName(packageName, defaultPackageName);

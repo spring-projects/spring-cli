@@ -39,6 +39,10 @@ public class SpringCliUserConfig {
 	public final static String SPRING_CLI_CONFIG_DIR = "SPRING_CLI_CONFIG_DIR";
 
 	/**
+	 * {@code defaults.yml} stores command default values set by the user
+	 */
+	public final static String DEFAULTS = "defaults.yml";
+	/**
 	 * {@code hosts.yml} stores authentication specific info for hosts.
 	 */
 	public final static String HOSTS = "hosts.yml";
@@ -56,7 +60,7 @@ public class SpringCliUserConfig {
 	/**
 	 * Base directory name we store our config files.
 	 */
-	private final static String SPRING_CLI_CONFIG_NAME = "springcli";
+	private final static String SPRING_CLI_CONFIG_DIR_NAME = "springcli";
 
 	/**
 	 * Keeps auth tokens per hostname.
@@ -78,11 +82,11 @@ public class SpringCliUserConfig {
 	}
 
 	public SpringCliUserConfig(Function<String, Path> pathProvider) {
-		this.hostsConfigFile = new UserConfig<>(HOSTS, Hosts.class, SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_NAME);
+		this.hostsConfigFile = new UserConfig<>(HOSTS, Hosts.class, SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
 		this.templateCatalogsConfigFile = new UserConfig<>(TEMPLATE_CATALOGS, TemplateCatalogs.class,
-				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_NAME);
+				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
 		this.templateRepositoriesConfigFile = new UserConfig<>(TEMPLATE_REPOSITORIES, TemplateRepositories.class,
-				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_NAME);
+				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
 		if (pathProvider != null) {
 			this.hostsConfigFile.setPathProvider(pathProvider);
 			this.templateCatalogsConfigFile.setPathProvider(pathProvider);
