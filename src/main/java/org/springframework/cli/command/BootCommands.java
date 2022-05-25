@@ -62,14 +62,14 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	private static final String FALLBACK_DEFAULT_REPO_URL = "https://github.com/rd-1-2022/rpt-rest-service";
 
-	private SpringCliUserConfig upCliUserConfig;
+	private SpringCliUserConfig springCliUserConfig;
 
 	private final SourceRepositoryService sourceRepositoryService;
 
 	@Autowired
-	public BootCommands(SpringCliUserConfig upCliUserConfig,
+	public BootCommands(SpringCliUserConfig springCliUserConfig,
 			SourceRepositoryService sourceRepositoryService) {
-		this.upCliUserConfig = upCliUserConfig;
+		this.springCliUserConfig = springCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
 	}
 
@@ -167,7 +167,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	@Nullable
 	private String findTemplateUrl(String templateName) {
-		Collection<TemplateRepository> templateRepositories = upCliUserConfig.getTemplateRepositoriesConfig().getTemplateRepositories();
+		Collection<TemplateRepository> templateRepositories = springCliUserConfig.getTemplateRepositories().getTemplateRepositories();
 		if (templateRepositories != null) {
 			for (TemplateRepository templateRepository : templateRepositories) {
 				if (templateName.trim().equalsIgnoreCase(templateRepository.getName().trim())) {

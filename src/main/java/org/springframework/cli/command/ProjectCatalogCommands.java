@@ -51,17 +51,17 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		@ShellOption(help = "Catalog url") String url,
 		@ShellOption(help = "Catalog description", defaultValue = ShellOption.NULL) String description
 	) {
-		List<TemplateCatalog> templateCatalogs = upCliUserConfig.getTemplateCatalogsConfig().getTemplateCatalogs();
+		List<TemplateCatalog> templateCatalogs = upCliUserConfig.getTemplateCatalogs().getTemplateCatalogs();
 		templateCatalogs.add(TemplateCatalog.of(name, description, url));
 		TemplateCatalogs templateCatalogsConfig = new TemplateCatalogs();
 		templateCatalogsConfig.setTemplateCatalogs(templateCatalogs);
-		upCliUserConfig.setTemplateCatalogsConfig(templateCatalogsConfig);
+		upCliUserConfig.setTemplateCatalogs(templateCatalogsConfig);
 	}
 
 	@ShellMethod(key = "catalog list", value = "List catalogs")
 	public Table catalogList() {
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description" });
-		Collection<TemplateCatalog> templateRepositories = upCliUserConfig.getTemplateCatalogsConfig().getTemplateCatalogs();
+		Collection<TemplateCatalog> templateRepositories = upCliUserConfig.getTemplateCatalogs().getTemplateCatalogs();
 		Stream<String[]> rows = null;
 		if (templateRepositories != null) {
 			rows = templateRepositories.stream()
@@ -80,12 +80,12 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 	public void catalogRemove(
 		@ShellOption(help = "Catalog name") String name
 	) {
-		List<TemplateCatalog> templateCatalogs = upCliUserConfig.getTemplateCatalogsConfig().getTemplateCatalogs();
+		List<TemplateCatalog> templateCatalogs = upCliUserConfig.getTemplateCatalogs().getTemplateCatalogs();
 		templateCatalogs = templateCatalogs.stream()
 			.filter(tc -> !ObjectUtils.nullSafeEquals(tc.getName(), name))
 			.collect(Collectors.toList());
 		TemplateCatalogs templateCatalogsConfig = new TemplateCatalogs();
 		templateCatalogsConfig.setTemplateCatalogs(templateCatalogs);
-		upCliUserConfig.setTemplateCatalogsConfig(templateCatalogsConfig);
+		upCliUserConfig.setTemplateCatalogs(templateCatalogsConfig);
 	}
 }

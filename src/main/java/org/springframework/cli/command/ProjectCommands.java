@@ -51,17 +51,17 @@ public class ProjectCommands {
 		@ShellOption(help = "Project description", defaultValue = ShellOption.NULL) String description,
 		@ShellOption(help = "Project tags", defaultValue = ShellOption.NULL) List<String> tags
 	) {
-		List<TemplateRepository> templateRepositories = upCliUserConfig.getTemplateRepositoriesConfig().getTemplateRepositories();
+		List<TemplateRepository> templateRepositories = upCliUserConfig.getTemplateRepositories().getTemplateRepositories();
 		templateRepositories.add(TemplateRepository.of(name, description, url, tags));
 		TemplateRepositories templateRepositoriesConfig = new TemplateRepositories();
 		templateRepositoriesConfig.setTemplateRepositories(templateRepositories);
-		upCliUserConfig.setTemplateRepositoriesConfig(templateRepositoriesConfig);
+		upCliUserConfig.setTemplateRepositories(templateRepositoriesConfig);
 	}
 
 	@ShellMethod(key = "project list", value = "List projects available for use with 'boot new' and 'boot add' commands")
 	public Table templateList() {
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description", "URL" });
-		Collection<TemplateRepository> templateRepositories = upCliUserConfig.getTemplateRepositoriesConfig().getTemplateRepositories();
+		Collection<TemplateRepository> templateRepositories = upCliUserConfig.getTemplateRepositories().getTemplateRepositories();
 		Stream<String[]> rows = null;
 		if (templateRepositories != null) {
 			rows = templateRepositories.stream()
@@ -80,12 +80,12 @@ public class ProjectCommands {
 	public void templateRemove(
 		@ShellOption(help = "Template name") String name
 	) {
-		List<TemplateRepository> templateRepositories = upCliUserConfig.getTemplateRepositoriesConfig().getTemplateRepositories();
+		List<TemplateRepository> templateRepositories = upCliUserConfig.getTemplateRepositories().getTemplateRepositories();
 		templateRepositories = templateRepositories.stream()
 			.filter(tc -> !ObjectUtils.nullSafeEquals(tc.getName(), name))
 			.collect(Collectors.toList());
 		TemplateRepositories templateRepositoriesConfig = new TemplateRepositories();
 		templateRepositoriesConfig.setTemplateRepositories(templateRepositories);
-		upCliUserConfig.setTemplateRepositoriesConfig(templateRepositoriesConfig);
+		upCliUserConfig.setTemplateRepositories(templateRepositoriesConfig);
 	}
 }
