@@ -68,7 +68,7 @@ One of several locations for the configuration file is
 
 === Sample Configuration file
 
-Below is a sample configuration file that should be located in <user.home>`/.config/springup/springup.yml`
+Below is a sample configuration file that should be located in <user.home>`/.config/springcli/springcli.yml`
 
 Use lowercase kebab-case names.
 
