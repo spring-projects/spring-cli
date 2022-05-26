@@ -41,6 +41,7 @@ import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.merger.ProjectMerger;
 import org.springframework.cli.support.AbstractSpringCliCommands;
 import org.springframework.cli.support.SpringCliUserConfig;
+import org.springframework.cli.support.SpringCliUserConfig.CommandDefaults;
 import org.springframework.cli.support.SpringCliUserConfig.TemplateRepository;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.cli.util.PackageNameUtils;
@@ -62,6 +63,9 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	private static final String FALLBACK_DEFAULT_REPO_URL = "https://github.com/rd-1-2022/rpt-rest-service";
 
+	private static final String FALLBACK_DEFAULT_PROJECT_NAME = "demo";
+
+	private static final String FALLBACK_DEFAULT_PACKAGE_NAME = "com.example";
 	private SpringCliUserConfig springCliUserConfig;
 
 	private final SourceRepositoryService sourceRepositoryService;
@@ -75,102 +79,89 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	@ShellMethod(key = "boot new", value = "Create a new Spring Boot project from an existing project")
 	public void bootNew(
-			@ShellOption(help = "Name or URL of existing project", defaultValue = ShellOption.NULL) String existingProjectNameOrUrl,
-			@ShellOption(help = "Name of the new project", defaultValue = ShellOption.NULL) String newProjectName,
-			@ShellOption(help = "Package name for the new project", defaultValue = "com.example") String packageName) {
-		String projectNameToUse = getProjectNameOrDefault(newProjectName); // Will return string, never null
-		String urlToUse = getTemplateRepositoryUrl(existingProjectNameOrUrl);  // Will return string or throw exception
-		String packageNameToUse = getPackageName(packageName); // Will return string, never null
+			@ShellOption(help = "Create project from existing project name or URL", defaultValue = ShellOption.NULL, arity = 1) String from,
+			@ShellOption(help = "Name of the new project", defaultValue = ShellOption.NULL, arity = 1) String name,
+			@ShellOption(help = "Package name for the new project", defaultValue = FALLBACK_DEFAULT_PACKAGE_NAME, arity = 1) String packageName) {
+
+		String urlToUse = !StringUtils.hasText(from) ? FALLBACK_DEFAULT_REPO_URL : getTemplateRepositoryUrl(from);  // Will return string or throw exception
+		String projectNameToUse = getProjectName("boot", "new", name); // Will return string, never null
+		String packageNameToUse = getPackageName("boot", "new", packageName); // Will return string, never null
+
+		AttributedStringBuilder sb = new AttributedStringBuilder();
+		sb.style(sb.style().foreground(AttributedStyle.YELLOW));
+		sb.append("Using project name " + projectNameToUse);
+		sb.append(System.lineSeparator());
+		sb.append("Using package name " + packageNameToUse);
+		sb.append(System.lineSeparator());
+		sb.append("Cloning project from " + urlToUse);
+		sb.append(System.lineSeparator());
+		shellPrint(sb.toAttributedString());
 		generateFromUrl(projectNameToUse, urlToUse, packageNameToUse);
 	}
 
 	@ShellMethod(key = "boot add", value = "Merge an existing project into the current Spring Boot project")
-	public void bootAdd(@ShellOption(help = "Name or URL of existing project", defaultValue = ShellOption.NULL) String existingProjectNameOrUrl ) throws IOException {
-		String urlToUse = getTemplateRepositoryUrl(existingProjectNameOrUrl);  // Will return string or throw exception
-		String projectName = getProjectNameForAdd(existingProjectNameOrUrl);	  // Will return string
+	public void bootAdd(@ShellOption(help = "Add to project from an existing project name or URL") String from ) throws IOException {
+		String urlToUse = getTemplateRepositoryUrl(from);  // Will return string or throw exception
+		String projectName = getProjectNameForAdd(from);  // Will return string
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(urlToUse);
 		ProjectMerger projectMerger = new ProjectMerger(repositoryContentsPath, IoUtils.getWorkingDirectory().toPath(), projectName);
 		projectMerger.merge();
-		System.out.println("\n--- Done! ---");
-	}
-
-	private String getProjectNameOrDefault(String projectName) {
-		if (StringUtils.hasText(projectName)) {
-			return projectName;
-		}
 		AttributedStringBuilder sb = new AttributedStringBuilder();
-		sb.style(sb.style().foreground(AttributedStyle.YELLOW));
-		sb.append("Using project name " + getCliProperties().getDefaults().getProjectName());
+		sb.style(sb.style().foreground(AttributedStyle.GREEN));
 		sb.append(System.lineSeparator());
+		sb.append("--- Done! ---");
 		shellPrint(sb.toAttributedString());
-		return getCliProperties().getDefaults().getProjectName();
+	}
+
+	private String getProjectName(String commandName, String subCommandName, String optionProjectNameValue) {
+		if (StringUtils.hasText(optionProjectNameValue)) {
+			return optionProjectNameValue;
+		}
+		CommandDefaults commandDefaults = this.springCliUserConfig.getCommandDefaults();
+		Optional<String> newProjectName = commandDefaults.findDefaultOptionValue(commandName, subCommandName, "name");
+		return newProjectName.orElse(FALLBACK_DEFAULT_PROJECT_NAME);
 	}
 
 
-	private String getProjectNameForAdd(String existingProjectNameOrUrl) throws MalformedURLException {
-		if (StringUtils.hasText(existingProjectNameOrUrl)) {
-			// Check it if is a URL
-			if (existingProjectNameOrUrl.startsWith("https")) {
-				URL url = new URL(existingProjectNameOrUrl);
-				return new File(url.getPath()).getName();
-			}
+	private String getProjectNameForAdd(String from) throws MalformedURLException {
+		// Check it if is a URL, then use just the last part of the name as the 'project name'
+		if (from.startsWith("https:")) {
+			URL url = new URL(from);
+			return new File(url.getPath()).getName();
 		}
-		// Check that name maps to a Url
-		findTemplateUrl(existingProjectNameOrUrl);
-		// return name
-		return existingProjectNameOrUrl;
+
+		// We don't have a URL, but a name, let's check that it can be resolved to a URL
+		findUrlFromProjectName(from);
+		// The name is valid, return name
+		return from;
 	}
 	@Nullable
-	private String getTemplateRepositoryUrl(String templateName) {
-		// If provided template name on the command line
-		if (StringUtils.hasText(templateName)) {
-			// Check it if is a URL
-			if (templateName.startsWith("https")) {
-				return templateName;
-			}
-			// Find URL from name
-			else {
-				// look up url based on name
-				return findTemplateUrl(templateName);
-			}
+	private String getTemplateRepositoryUrl(String from) {
+		// Check it if is a URL
+		if (from.startsWith("https:")) {
+			return from;
+		} else {
+			// look up url based on name
+			return findUrlFromProjectName(from);
 		}
-
-		// no default template name found
-		AttributedStringBuilder sb = new AttributedStringBuilder();
-		sb.style(sb.style().foreground(AttributedStyle.YELLOW));
-		sb.append("Using base project from " + FALLBACK_DEFAULT_REPO_URL);
-		sb.append(System.lineSeparator());
-		shellPrint(sb.toAttributedString());
-		return FALLBACK_DEFAULT_REPO_URL;
 	}
 
-	private String getPackageName(String packageName) {
-		// TODO - this logic will channge once we have the set config COMMAND/PROPERTY=VALUE system in place
-		String defaultPackageName = packageName;
-		if (defaultPackageName == null) {
-			defaultPackageName = getCliProperties().getDefaults().getPackageName();
+	private String getPackageName(String commandName, String subCommandName, String packageName) {
+		// If user provided, make sure it is sanitized
+		if (!packageName.equals(FALLBACK_DEFAULT_PACKAGE_NAME) && StringUtils.hasText(packageName)) {
+			return PackageNameUtils.getTargetPackageName(packageName, packageName);
 		}
-		if (defaultPackageName == null) {
-			throw new SpringCliException("Please specify package name to use, no default value found.");
-		}
-		// get the final package name to use taking into account default value and validity of that value from the JLS
-		String packageNameToUse = PackageNameUtils.getTargetPackageName(packageName, defaultPackageName);
-
-		AttributedStringBuilder sb = new AttributedStringBuilder();
-		sb.style(sb.style().foreground(AttributedStyle.YELLOW));
-		sb.append("Using package name " + packageNameToUse);
-		sb.append(System.lineSeparator());
-		shellPrint(sb.toAttributedString());
-
-		return packageNameToUse;
+		CommandDefaults commandDefaults = this.springCliUserConfig.getCommandDefaults();
+		Optional<String> newPackageName = commandDefaults.findDefaultOptionValue(commandName, subCommandName, "package-name");
+		return newPackageName.orElse(FALLBACK_DEFAULT_PACKAGE_NAME);
 	}
 
 	@Nullable
-	private String findTemplateUrl(String templateName) {
+	private String findUrlFromProjectName(String projectName) {
 		Collection<TemplateRepository> templateRepositories = springCliUserConfig.getTemplateRepositories().getTemplateRepositories();
 		if (templateRepositories != null) {
 			for (TemplateRepository templateRepository : templateRepositories) {
-				if (templateName.trim().equalsIgnoreCase(templateRepository.getName().trim())) {
+				if (projectName.trim().equalsIgnoreCase(templateRepository.getName().trim())) {
 					// match - get url
 					String url = templateRepository.getUrl();
 					if (StringUtils.hasText(url)) {
@@ -180,7 +171,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 				}
 			}
 		}
-		throw new SpringCliException("Could not resolve template name " + templateName + " to URL.  Check configuration file settings.");
+		throw new SpringCliException("Could not resolve project name " + projectName + " to URL.  Command `project list` shows available project names.");
 	}
 
 	private void generateFromUrl(String projectName, String url, String packageName) {
@@ -276,6 +267,9 @@ public class BootCommands extends AbstractSpringCliCommands {
 		File workingDirectory = IoUtils.getWorkingDirectory();
 		String projectNameToUse = projectName.replaceAll(" ", "_");
 		File projectDirectory = new File(workingDirectory, projectNameToUse);
+		if (projectDirectory.exists()) {
+			throw new SpringCliException("Directory named " + projectName + " already exists.  Choose another name.");
+		}
 		IoUtils.createDirectory(projectDirectory);
 		logger.debug("Created directory " + projectDirectory);
 		return projectDirectory;

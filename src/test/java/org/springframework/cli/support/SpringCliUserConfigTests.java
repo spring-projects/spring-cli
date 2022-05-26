@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import com.google.common.jimfs.Jimfs;
@@ -28,8 +29,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.cli.support.SpringCliUserConfig.CommandDefault;
-import org.springframework.cli.support.SpringCliUserConfig.CommandDefaults;
-import org.springframework.cli.support.SpringCliUserConfig.Option;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -96,20 +95,24 @@ public class SpringCliUserConfigTests {
 
 	@Test
 	public void testCommandDefaults() {
-		SpringCliUserConfig config = new SpringCliUserConfig(pathProvider);
+		SpringCliUserConfig springCliUserConfig = new SpringCliUserConfig(pathProvider);
 
-		assertThat(config.getCommandDefaults()).isNotNull();
+		assertThat(springCliUserConfig.getCommandDefaults()).isNotNull();
 
 		SpringCliUserConfig.CommandDefaults commandDefaults = new SpringCliUserConfig.CommandDefaults();
 		List<SpringCliUserConfig.CommandDefault> commandDefaultList = new ArrayList<>();
-		SpringCliUserConfig.CommandDefault commandDefault1 = new SpringCliUserConfig.CommandDefault("boot new");
+		SpringCliUserConfig.CommandDefault commandDefault1 = new SpringCliUserConfig.CommandDefault("boot" ,"new");
 		List<SpringCliUserConfig.Option> optionList = new ArrayList<>();
 		optionList.add(new SpringCliUserConfig.Option("package-name", "com.xkcd"));
 		commandDefault1.setOptions(optionList);
 		commandDefaultList.add(commandDefault1);
 		commandDefaults.setCommandDefaults(commandDefaultList);
-		config.setCommandDefaults(commandDefaults);
-		assertThat(config.getCommandDefaults().getCommandDefaults()).hasSize(1);
+		springCliUserConfig.setCommandDefaults(commandDefaults);
+		assertThat(springCliUserConfig.getCommandDefaults().getCommandDefaults()).hasSize(1);
+
+		//List<CommandDefault> commandDefaults1 = /commandDefaults.getCommandDefaults();
+		Optional<String> defaultValue = commandDefaults.findDefaultOptionValue("boot", "new", "package-name");
+		assertThat(defaultValue.get()).isEqualTo("com.xkcd");
 	}
 
 }

@@ -19,6 +19,7 @@ package org.springframework.cli.command;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,11 @@ import org.springframework.cli.support.SpringCliUserConfig.CommandDefault;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.table.ArrayTableModel;
+import org.springframework.shell.table.BorderStyle;
+import org.springframework.shell.table.Table;
+import org.springframework.shell.table.TableBuilder;
+import org.springframework.shell.table.TableModel;
 
 @ShellComponent
 public class ConfigCommands extends AbstractSpringCliCommands {
@@ -43,23 +49,42 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 		this.springCliUserConfig = springCliUserConfig;
 	}
 
+	// TODO - consider renaming to 'default set'
 	@ShellMethod(key = "config set", value = "For a given command name, set a default value for an option")
 	public void configSet(
-			@ShellOption(help = "Name of command, specify as command-subcommand") String commandName,
-			@ShellOption(help = "Name of option") String optionName,
-			@ShellOption(help = "Default value of option") String optionValue) {
+			@ShellOption(help = "Name of command", arity = 1) String commandName,
+			@ShellOption(help = "Name of subcommand", arity = 1) String subCommandName,
+			@ShellOption(help = "Name of option", arity = 1) String optionName,
+			@ShellOption(help = "Default value of option", arity = 1) String optionValue) {
 		// get current defaults
-		System.out.println("commandName = " + commandName);
-		System.out.println("optionName = " + optionName);
-		System.out.println("default value = " + optionValue);
 		SpringCliUserConfig.CommandDefaults commandDefaults = new SpringCliUserConfig.CommandDefaults();
 		List<CommandDefault> commandDefaultList = new ArrayList<>();
-		String commandNameToUse = commandName.replace("-", " ");
-		SpringCliUserConfig.CommandDefault commandDefault = new SpringCliUserConfig.CommandDefault(commandNameToUse);
+		SpringCliUserConfig.CommandDefault commandDefault = new SpringCliUserConfig.CommandDefault(commandName, subCommandName);
 		List<SpringCliUserConfig.Option> optionList = new ArrayList<>();
 		optionList.add(new SpringCliUserConfig.Option(optionName, optionValue));
 		commandDefault.setOptions(optionList);
 		commandDefaultList.add(commandDefault);
 		commandDefaults.setCommandDefaults(commandDefaultList);
+		this.springCliUserConfig.setCommandDefaults(commandDefaults);
+	}
+
+	@ShellMethod(key = "config list", value = "List default value configurations")
+	public Table configList() {
+
+		Stream<String[]> header = Stream.<String[]>of(new String[] { "Command", "Sub Command", "Option Name/Values"});
+
+		List<CommandDefault> commandDefaults = this.springCliUserConfig.getCommandDefaults().getCommandDefaults();
+		Stream<String[]> rows = null;
+		if (commandDefaults != null) {
+			rows = commandDefaults.stream()
+					.map(tr -> new String[] { tr.getCommandName(), tr.getSubCommandName(), tr.getOptions().toString() });
+		}
+		else {
+			rows = Stream.empty();
+		}
+		String[][] data = Stream.concat(header, rows).toArray(String[][]::new);
+		TableModel model = new ArrayTableModel(data);
+		TableBuilder tableBuilder = new TableBuilder(model);
+		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
 	}
 }

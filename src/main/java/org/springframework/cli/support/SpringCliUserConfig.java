@@ -166,6 +166,7 @@ public class SpringCliUserConfig {
 	 *
 	 * @return template repositories
 	 */
+	// TODO rename to ProjectRepositories
 	public TemplateRepositories getTemplateRepositories() {
 		TemplateRepositories repositories = templateRepositoriesUserConfig.getConfig();
 		return repositories != null ? repositories : new TemplateRepositories();
@@ -375,27 +376,52 @@ public class SpringCliUserConfig {
 		public void setCommandDefaults(List<CommandDefault> commandDefaults) {
 			this.commandDefaults = commandDefaults;
 		}
+
+		public Optional<String> findDefaultOptionValue(String commandName, String subCommandName, String optionName) {
+			for (CommandDefault commandDefault : commandDefaults) {
+				if (commandDefault.getCommandName().equals(commandName) &&
+					commandDefault.getSubCommandName().equals(subCommandName)) {
+					for (Option option : commandDefault.getOptions()) {
+						if (option.getName().equals(optionName)) {
+							return Optional.of(option.getValue());
+						}
+					}
+				}
+			}
+			return Optional.empty();
+		}
 	}
 
 	public static class CommandDefault {
 
-		private String name;
+		private String commandName;
+
+		private String subCommandName;
 
 		private List<Option> options = new ArrayList<>();
 
 		public CommandDefault() {
 
 		}
-		public CommandDefault(String name) {
-			this.name = name;
+		public CommandDefault(String commandName, String subCommandName) {
+			this.commandName = commandName;
+			this.subCommandName = subCommandName;
 		}
 
-		public String getName() {
-			return name;
+		public String getCommandName() {
+			return commandName;
 		}
 
-		public void setName(String name) {
-			this.name = name;
+		public void setCommandName(String commandName) {
+			this.commandName = commandName;
+		}
+
+		public String getSubCommandName() {
+			return subCommandName;
+		}
+
+		public void setSubCommandName(String subCommandName) {
+			this.subCommandName = subCommandName;
 		}
 
 		public List<Option> getOptions() {
@@ -436,6 +462,13 @@ public class SpringCliUserConfig {
 
 		public void setValue(String value) {
 			this.value = value;
+		}
+
+		@Override
+		public String toString() {
+			return
+					"'" + name + '\'' +
+					" = '" + value + '\'';
 		}
 	}
 }
