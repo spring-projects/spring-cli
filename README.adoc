@@ -45,26 +45,15 @@ Output is in `./build/site`
 == Docs
 
 === Overview
-The command `boot new`, for example invoked by calling 'spring-cli boot new' will create a new Spring Boot project named `demo` in a directory named `demo`.
+The command `boot new`, for example invoked by calling 'spring boot new' will create a new Spring Boot project named `demo` in a directory named `demo`.
 
-You can configure Spring Up to create Spring Boot projects that are based on existing projects hosted on GitHub and GitLab.  These projects are called `Runnable Project Templates`.
+You can configure the Spring CLI to create Spring Boot projects that are based on existing projects hosted on GitHub and GitLab.
 
-`Runnable Project Templates` are nothing more than Spring Boot projects that compile successfully and showcase code for a specific use-case.
-`Runnable Project Templates` do not involve the use of a template engine to generate code.
+It is expected that a user or a company will curate a collection of projects that can bootstrap developement for common use cases.
 
-It is expected that a user or a company will curate a collection of projects to share with other users that represent coding best practices for a particular use-case.
-A collection of `Runnable Project Templates` is known as a Template Catalog.
+A collection of projects that share a theme of functionality is represented as a Project Catalog.
 
-A configuration file lets you specify
 
- * Github Client ID and default Scopes.
- * List of Runnable Project Templates
- * List of Template Catalogs
- * Default values for the new project' package name and Runnable Project Template.
-
-One of several locations for the configuration file is
-
- *  `<user.home>`/.config/springcli/springcli.yml
 
 === Sample Configuration file
 
