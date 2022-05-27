@@ -85,20 +85,30 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 			CommandDefault commandDefault = it.next();
 			if (commandDefault.getCommandName().equals(commandName) &&
 					commandDefault.getSubCommandName().equals(subCommandName)) {
-				for (Option option : commandDefault.getOptions()) {
+				Iterator<Option> commandDefaultIterator = commandDefault.getOptions().iterator();
+				while (commandDefaultIterator.hasNext()) {
+					Option option = commandDefaultIterator.next();
 					if (option.getName().equals(optionName)) {
-						it.remove();
+						commandDefaultIterator.remove();
 						removed = true;
-						break;
 					}
+				}
+				if (commandDefault.getOptions().size() == 0) {
+					it.remove();
 				}
 			}
 		}
 		if (removed = true) {
+			pruneEmptyOptions(commandDefaults);
 			this.springCliUserConfig.setCommandDefaults(commandDefaults);
 		}
 		return false;
 	}
+
+	private void pruneEmptyOptions(CommandDefaults commandDefaults) {
+
+	}
+
 	@ShellMethod(key = "config list", value = "List configuration values")
 	public Table configList() {
 

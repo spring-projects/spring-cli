@@ -48,34 +48,21 @@ public class ConfigCommandTests {
 		//System.out.println(table.render(80));
 		assertThat(table.getModel().getColumnCount()).isEqualTo(3);
 		assertThat(table.getModel().getRowCount()).isEqualTo(1);
-		assertThat(table.getModel().getValue(0,0)).
-				as("Header Row, First Column value should be: Command")
-				.isEqualTo("Command");
-		assertThat(table.getModel().getValue(0,1)).
-				as("Header Row, Second Column value should be: Sub Command")
-				.isEqualTo("Sub Command");
-		assertThat(table.getModel().getValue(0,2)).
-				as("Header Row, Third Column value should be Option Name/Values")
-				.isEqualTo("Option Name/Values");
+		verifyTableValue(table, 0, 0, "Command");
+		verifyTableValue(table, 0, 1, "Sub Command");
+		verifyTableValue(table, 0, 2, "Option Name/Values");
 
 		configCommands.configSet("boot", "new", "package-name", "com.xkcd");
 		table = configCommands.configList();
 		//System.out.println(table.render(80));
+		verifyTableValue(table, 1, 0, "boot");
+		verifyTableValue(table, 1, 1, "new");
+		verifyTableValue(table, 1, 2, "['package-name' = 'com.xkcd']");
 		assertThat(table.getModel().getRowCount()).isEqualTo(2);
-		assertThat(table.getModel().getValue(1,0)).
-				as("First Row, First Column value should be: boot")
-				.isEqualTo("boot");
-		assertThat(table.getModel().getValue(1,1)).
-				as("First Row, Second Column value should be: new")
-				.isEqualTo("new");
-		assertThat(table.getModel().getValue(1,2)).
-				as("First Row, Third Column value should be Option Name/Values")
-				.isEqualTo("['package-name' = 'com.xkcd']");
 
 		configCommands.configUnSet("boot", "new", "package-name");
 		table = configCommands.configList();
 		System.out.println(table.render(80));
-
 		assertThat(table.getModel().getColumnCount()).isEqualTo(3);
 		assertThat(table.getModel().getRowCount()).isEqualTo(1);
 	}
