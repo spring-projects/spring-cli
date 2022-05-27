@@ -18,7 +18,9 @@
 package org.springframework.cli.command;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -28,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.support.AbstractSpringCliCommands;
 import org.springframework.cli.support.SpringCliUserConfig;
 import org.springframework.cli.support.SpringCliUserConfig.CommandDefault;
+import org.springframework.cli.support.SpringCliUserConfig.CommandDefaults;
+import org.springframework.cli.support.SpringCliUserConfig.Option;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -68,7 +72,34 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 		this.springCliUserConfig.setCommandDefaults(commandDefaults);
 	}
 
-	@ShellMethod(key = "config list", value = "List default value configurations")
+	@ShellMethod(key = "config unset", value = "For a given command name, set a default value for an option")
+	public boolean configUnSet(
+			@ShellOption(help = "Name of command", arity = 1) String commandName,
+			@ShellOption(help = "Name of subcommand", arity = 1) String subCommandName,
+			@ShellOption(help = "Name of option", arity = 1) String optionName) {
+		CommandDefaults commandDefaults = this.springCliUserConfig.getCommandDefaults();
+		List<CommandDefault> commandDefaultList = commandDefaults.getCommandDefaults();
+		Iterator<CommandDefault> it = commandDefaultList.iterator();
+		boolean removed = false;
+		while (it.hasNext()) {
+			CommandDefault commandDefault = it.next();
+			if (commandDefault.getCommandName().equals(commandName) &&
+					commandDefault.getSubCommandName().equals(subCommandName)) {
+				for (Option option : commandDefault.getOptions()) {
+					if (option.getName().equals(optionName)) {
+						it.remove();
+						removed = true;
+						break;
+					}
+				}
+			}
+		}
+		if (removed = true) {
+			this.springCliUserConfig.setCommandDefaults(commandDefaults);
+		}
+		return false;
+	}
+	@ShellMethod(key = "config list", value = "List configuration values")
 	public Table configList() {
 
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Command", "Sub Command", "Option Name/Values"});
