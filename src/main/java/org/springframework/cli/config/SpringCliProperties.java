@@ -29,8 +29,6 @@ public class SpringCliProperties {
 
 	private Github github = new Github();
 
-	private Defaults defaults = new Defaults();
-
 	public Initializr getInitializr() {
 		return initializr;
 	}
@@ -45,14 +43,6 @@ public class SpringCliProperties {
 
 	public void setGithub(Github github) {
 		this.github = github;
-	}
-
-	public Defaults getDefaults() {
-		return defaults;
-	}
-
-	public void setDefaults(Defaults defaults) {
-		this.defaults = defaults;
 	}
 
 	/**
@@ -120,7 +110,6 @@ public class SpringCliProperties {
 		return "UpCliProperties{" +
 				"initializr=" + initializr +
 				", github=" + github +
-				", defaults=" + defaults +
 				'}';
 	}
 }

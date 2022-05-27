@@ -35,8 +35,6 @@ public class SpringCliPropertiesTests {
 					assertThat(properties.getInitializr().getBaseUrl()).isEqualTo("https://start.spring.io");
 					assertThat(properties.getGithub().getClientId()).isNull();
 					assertThat(properties.getGithub().getDefaultScopes()).isEqualTo("repo,read:org");
-					assertThat(properties.getDefaults().getPackageName()).isNull();
-					assertThat(properties.getDefaults().getTemplateRepositoryName()).isNull();
 				});
 	}
 
@@ -46,18 +44,12 @@ public class SpringCliPropertiesTests {
 				.withPropertyValues("spring.cli.initializr.base-url=fakeurl")
 				.withPropertyValues("spring.cli.github.client-id=fakeid")
 				.withPropertyValues("spring.cli.github.default-scopes=fakescopes")
-				.withPropertyValues("spring.cli.defaults.project-name=fakeproject")
-				.withPropertyValues("spring.cli.defaults.package-name=fakepackage")
-				.withPropertyValues("spring.cli.defaults.template-repository-name=fakerepo")
 				.withUserConfiguration(Config1.class)
 				.run((context) -> {
 					SpringCliProperties properties = context.getBean(SpringCliProperties.class);
 					assertThat(properties.getInitializr().getBaseUrl()).isEqualTo("fakeurl");
 					assertThat(properties.getGithub().getClientId()).isEqualTo("fakeid");
 					assertThat(properties.getGithub().getDefaultScopes()).isEqualTo("fakescopes");
-					assertThat(properties.getDefaults().getProjectName()).isEqualTo("fakeproject");
-					assertThat(properties.getDefaults().getPackageName()).isEqualTo("fakepackage");
-					assertThat(properties.getDefaults().getTemplateRepositoryName()).isEqualTo("fakerepo");
 				});
 	}
 

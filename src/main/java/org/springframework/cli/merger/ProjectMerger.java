@@ -72,6 +72,11 @@ import org.springframework.core.io.FileSystemResource;
 
 import static org.springframework.cli.util.RefactorUtils.refactorPackage;
 
+/**
+ * Performs the refactoring steps to merge two Spring projects
+ *
+ * @author Mark Pollack
+ */
 public class ProjectMerger {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectMergerWithMavenDepRecipe.class);
@@ -82,6 +87,12 @@ public class ProjectMerger {
 
 	private String projectName;
 
+	/**
+	 * Create a new instance
+	 * @param toMergeProjectPath The Path where the new project to merge is located
+	 * @param currentProjectPath The Path where the current project is located
+	 * @param projectName used to change the name of README files
+	 */
 	public ProjectMerger(Path toMergeProjectPath, Path currentProjectPath, String projectName) {
 		this.toMergeProjectPath = toMergeProjectPath;
 		this.currentProjectPath = currentProjectPath;

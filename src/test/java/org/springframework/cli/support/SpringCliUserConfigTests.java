@@ -21,11 +21,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import org.springframework.cli.support.SpringCliUserConfig.CommandDefault;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -60,7 +63,7 @@ public class SpringCliUserConfigTests {
 	public void testTemplateCatalogs() {
 		SpringCliUserConfig config = new SpringCliUserConfig(pathProvider);
 
-		assertThat(config.getTemplateCatalogsConfig()).isNotNull();
+		assertThat(config.getTemplateCatalogs()).isNotNull();
 
 		SpringCliUserConfig.TemplateCatalogs catalogs = new SpringCliUserConfig.TemplateCatalogs();
 		List<SpringCliUserConfig.TemplateCatalog> catalogList = new ArrayList<>();
@@ -69,15 +72,15 @@ public class SpringCliUserConfigTests {
 		catalogList.add(catalog1);
 		catalogList.add(catalog2);
 		catalogs.setTemplateCatalogs(catalogList);
-		config.setTemplateCatalogsConfig(catalogs);
-		assertThat(config.getTemplateCatalogsConfig().getTemplateCatalogs()).hasSize(2);
+		config.setTemplateCatalogs(catalogs);
+		assertThat(config.getTemplateCatalogs().getTemplateCatalogs()).hasSize(2);
 	}
 
 	@Test
 	public void testTemplateRepositories() {
 		SpringCliUserConfig config = new SpringCliUserConfig(pathProvider);
 
-		assertThat(config.getTemplateRepositoriesConfig()).isNotNull();
+		assertThat(config.getTemplateRepositories()).isNotNull();
 
 		SpringCliUserConfig.TemplateRepositories repositories = new SpringCliUserConfig.TemplateRepositories();
 		List<SpringCliUserConfig.TemplateRepository> repositoryList = new ArrayList<>();
@@ -86,7 +89,30 @@ public class SpringCliUserConfigTests {
 		repositoryList.add(repository1);
 		repositoryList.add(repository2);
 		repositories.setTemplateRepositories(repositoryList);
-		config.setTemplateRepositoriesConfig(repositories);
-		assertThat(config.getTemplateRepositoriesConfig().getTemplateRepositories()).hasSize(2);
+		config.setTemplateRepositories(repositories);
+		assertThat(config.getTemplateRepositories().getTemplateRepositories()).hasSize(2);
 	}
+
+	@Test
+	public void testCommandDefaults() {
+		SpringCliUserConfig springCliUserConfig = new SpringCliUserConfig(pathProvider);
+
+		assertThat(springCliUserConfig.getCommandDefaults()).isNotNull();
+
+		SpringCliUserConfig.CommandDefaults commandDefaults = new SpringCliUserConfig.CommandDefaults();
+		List<SpringCliUserConfig.CommandDefault> commandDefaultList = new ArrayList<>();
+		SpringCliUserConfig.CommandDefault commandDefault1 = new SpringCliUserConfig.CommandDefault("boot" ,"new");
+		List<SpringCliUserConfig.Option> optionList = new ArrayList<>();
+		optionList.add(new SpringCliUserConfig.Option("package-name", "com.xkcd"));
+		commandDefault1.setOptions(optionList);
+		commandDefaultList.add(commandDefault1);
+		commandDefaults.setCommandDefaults(commandDefaultList);
+		springCliUserConfig.setCommandDefaults(commandDefaults);
+		assertThat(springCliUserConfig.getCommandDefaults().getCommandDefaults()).hasSize(1);
+
+		//List<CommandDefault> commandDefaults1 = /commandDefaults.getCommandDefaults();
+		Optional<String> defaultValue = commandDefaults.findDefaultOptionValue("boot", "new", "package-name");
+		assertThat(defaultValue.get()).isEqualTo("com.xkcd");
+	}
+
 }
