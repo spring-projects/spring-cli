@@ -1,8 +1,8 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.7'
+	id 'org.springframework.boot' version '2.7.0'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'org.springframework.experimental.aot' version '0.11.5'
+	id 'org.springframework.experimental.aot' version '0.12.0'
 	id 'com.gorylenko.gradle-git-properties' version '2.3.2'
 }
 
@@ -64,7 +64,7 @@ dependencies {
 
 dependencyManagement {
 	dependencies {
-		dependency "org.springframework.experimental:spring-aot:0.11.5"
+		dependency "org.springframework.experimental:spring-aot:0.12.0"
 		dependency "org.springframework.shell:spring-shell-starter-jna:${springShellVersion}"
 		dependency "org.rauschig:jarchivelib:${jarchivelibVersion}"
 		dependency "org.kohsuke:github-api:${kohsukeVersion}"
