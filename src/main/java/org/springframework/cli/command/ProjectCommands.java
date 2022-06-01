@@ -22,8 +22,8 @@ import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.support.SpringCliUserConfig;
-import org.springframework.cli.support.SpringCliUserConfig.TemplateRepositories;
-import org.springframework.cli.support.SpringCliUserConfig.TemplateRepository;
+import org.springframework.cli.support.SpringCliUserConfig.ProjectRepositories;
+import org.springframework.cli.support.SpringCliUserConfig.ProjectRepository;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -45,26 +45,26 @@ public class ProjectCommands {
 	}
 
 	@ShellMethod(key = "project add", value = "Add a project to use with 'boot new' and 'boot add' commands")
-	public void templateAdd(
+	public void projectAdd(
 		@ShellOption(help = "Project name") String name,
 		@ShellOption(help = "Project url") String url,
 		@ShellOption(help = "Project description", defaultValue = ShellOption.NULL) String description,
 		@ShellOption(help = "Project tags", defaultValue = ShellOption.NULL) List<String> tags
 	) {
-		List<TemplateRepository> templateRepositories = upCliUserConfig.getTemplateRepositories().getTemplateRepositories();
-		templateRepositories.add(TemplateRepository.of(name, description, url, tags));
-		TemplateRepositories templateRepositoriesConfig = new TemplateRepositories();
-		templateRepositoriesConfig.setTemplateRepositories(templateRepositories);
-		upCliUserConfig.setTemplateRepositories(templateRepositoriesConfig);
+		List<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
+		projectRepositories.add(ProjectRepository.of(name, description, url, tags));
+		ProjectRepositories projectRepositoriesConfig = new ProjectRepositories();
+		projectRepositoriesConfig.setProjectRepositories(projectRepositories);
+		upCliUserConfig.setProjectRepositories(projectRepositoriesConfig);
 	}
 
 	@ShellMethod(key = "project list", value = "List projects available for use with 'boot new' and 'boot add' commands")
-	public Table templateList() {
+	public Table projectList() {
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description", "URL" });
-		Collection<TemplateRepository> templateRepositories = upCliUserConfig.getTemplateRepositories().getTemplateRepositories();
+		Collection<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
 		Stream<String[]> rows = null;
-		if (templateRepositories != null) {
-			rows = templateRepositories.stream()
+		if (projectRepositories != null) {
+			rows = projectRepositories.stream()
 				.map(tr -> new String[] { tr.getName(), tr.getDescription(), tr.getUrl() });
 		}
 		else {
@@ -77,15 +77,15 @@ public class ProjectCommands {
 	}
 
 	@ShellMethod(key = "project remove", value = "Remove project")
-	public void templateRemove(
-		@ShellOption(help = "Template name") String name
+	public void projectRemove(
+		@ShellOption(help = "Project name") String name
 	) {
-		List<TemplateRepository> templateRepositories = upCliUserConfig.getTemplateRepositories().getTemplateRepositories();
-		templateRepositories = templateRepositories.stream()
+		List<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
+		projectRepositories = projectRepositories.stream()
 			.filter(tc -> !ObjectUtils.nullSafeEquals(tc.getName(), name))
 			.collect(Collectors.toList());
-		TemplateRepositories templateRepositoriesConfig = new TemplateRepositories();
-		templateRepositoriesConfig.setTemplateRepositories(templateRepositories);
-		upCliUserConfig.setTemplateRepositories(templateRepositoriesConfig);
+		ProjectRepositories projectRepositoriesConfig = new ProjectRepositories();
+		projectRepositoriesConfig.setProjectRepositories(projectRepositories);
+		upCliUserConfig.setProjectRepositories(projectRepositoriesConfig);
 	}
 }

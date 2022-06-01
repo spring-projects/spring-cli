@@ -44,14 +44,14 @@ public class SpringCliUserConfig {
 	public final static String HOSTS_FILE_NAME = "hosts.yml";
 
 	/**
-	 * {@code catalogs.yml} stores template catalog specific info.
+	 * {@code catalogs.yml} stores project catalog specific info.
 	 */
-	public final static String TEMPLATE_CATALOGS_FILE_NAME = "catalogs.yml";
+	public final static String PROJECT_CATALOGS_FILE_NAME = "project-catalogs.yml";
 
 	/**
-	 * {@code repositories.yml} stores template repository specific info.
+	 * {@code repositories.yml} stores project repository specific info.
 	 */
-	public final static String TEMPLATE_REPOSITORIES_FILE_NAME = "repositories.yml";
+	public final static String PROJECT_REPOSITORIES_FILE_NAME = "project-repositories.yml";
 
 	/**
 	 * {@code command-defaults.yml} store default option values for commands.
@@ -68,14 +68,14 @@ public class SpringCliUserConfig {
 	private final UserConfig<Hosts> hostsUserConfig;
 
 	/**
-	 * Keeps template catalogs as list.
+	 * Keeps project catalogs as list.
 	 */
-	private final UserConfig<TemplateCatalogs> templateCatalogsUserConfig;
+	private final UserConfig<ProjectCatalogs> projectCatalogsUserConfig;
 
 	/**
-	 * Keeps template repositories as list.
+	 * Keeps project repositories as list.
 	 */
-	private final UserConfig<TemplateRepositories> templateRepositoriesUserConfig;
+	private final UserConfig<ProjectRepositories> projectRepositoriesUserConfig;
 
 	private final UserConfig<CommandDefaults> commandDefaultsUserConfig;
 
@@ -86,16 +86,16 @@ public class SpringCliUserConfig {
 	public SpringCliUserConfig(Function<String, Path> pathProvider) {
 		this.hostsUserConfig = new UserConfig<>(HOSTS_FILE_NAME, Hosts.class,
 				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
-		this.templateCatalogsUserConfig = new UserConfig<>(TEMPLATE_CATALOGS_FILE_NAME, TemplateCatalogs.class,
+		this.projectCatalogsUserConfig = new UserConfig<>(PROJECT_CATALOGS_FILE_NAME, ProjectCatalogs.class,
 				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
-		this.templateRepositoriesUserConfig = new UserConfig<>(TEMPLATE_REPOSITORIES_FILE_NAME, TemplateRepositories.class,
+		this.projectRepositoriesUserConfig = new UserConfig<>(PROJECT_REPOSITORIES_FILE_NAME, ProjectRepositories.class,
 				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
 		this.commandDefaultsUserConfig = new UserConfig<>(COMMAND_DEFAULTS_FILE_NAME, CommandDefaults.class,
 				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
 		if (pathProvider != null) {
 			this.hostsUserConfig.setPathProvider(pathProvider);
-			this.templateCatalogsUserConfig.setPathProvider(pathProvider);
-			this.templateRepositoriesUserConfig.setPathProvider(pathProvider);
+			this.projectCatalogsUserConfig.setPathProvider(pathProvider);
+			this.projectRepositoriesUserConfig.setPathProvider(pathProvider);
 			this.commandDefaultsUserConfig.setPathProvider(pathProvider);
 		}
 	}
@@ -143,42 +143,41 @@ public class SpringCliUserConfig {
 	}
 
 	/**
-	 * Get template catalogs.
+	 * Get project catalogs.
 	 *
-	 * @return template catalogs
+	 * @return project catalogs
 	 */
-	public TemplateCatalogs getTemplateCatalogs() {
-		TemplateCatalogs catalogs = templateCatalogsUserConfig.getConfig();
-		return catalogs != null ? catalogs : new TemplateCatalogs();
+	public ProjectCatalogs getProjectCatalogs() {
+		ProjectCatalogs catalogs = projectCatalogsUserConfig.getConfig();
+		return catalogs != null ? catalogs : new ProjectCatalogs();
 	}
 
 	/**
-	 * Sets template catalogs
+	 * Sets project catalogs
 	 *
-	 * @param templateCatalogs the template catalogs
+	 * @param projectCatalogs the project catalogs
 	 */
-	public void setTemplateCatalogs(TemplateCatalogs templateCatalogs) {
-		templateCatalogsUserConfig.setConfig(templateCatalogs);
+	public void setProjectCatalogs(ProjectCatalogs projectCatalogs) {
+		projectCatalogsUserConfig.setConfig(projectCatalogs);
 	}
 
 	/**
-	 * Get template repositories.
+	 * Get project repositories.
 	 *
-	 * @return template repositories
+	 * @return project repositories
 	 */
-	// TODO rename to ProjectRepositories
-	public TemplateRepositories getTemplateRepositories() {
-		TemplateRepositories repositories = templateRepositoriesUserConfig.getConfig();
-		return repositories != null ? repositories : new TemplateRepositories();
+	public ProjectRepositories getProjectRepositories() {
+		ProjectRepositories repositories = projectRepositoriesUserConfig.getConfig();
+		return repositories != null ? repositories : new ProjectRepositories();
 	}
 
 	/**
-	 * Sets template repositories.
+	 * Sets project repositories.
 	 *
-	 * @param templateRepositories
+	 * @param projectRepositories
 	 */
-	public void setTemplateRepositories(TemplateRepositories templateRepositories) {
-		templateRepositoriesUserConfig.setConfig(templateRepositories);
+	public void setProjectRepositories(ProjectRepositories projectRepositories) {
+		projectRepositoriesUserConfig.setConfig(projectRepositories);
 	}
 
 	/**
@@ -247,16 +246,16 @@ public class SpringCliUserConfig {
 		}
 	}
 
-	public abstract static class BaseTemplateCommon {
+	public abstract static class BaseProjectCommon {
 
 		private String name;
 		private String description;
 		private String url;
 
-		BaseTemplateCommon() {
+		BaseProjectCommon() {
 		}
 
-		BaseTemplateCommon(String name, String description, String url) {
+		BaseProjectCommon(String name, String description, String url) {
 			this.name = name;
 			this.description = description;
 			this.url = url;
@@ -287,71 +286,68 @@ public class SpringCliUserConfig {
 		}
 	}
 
-	public static class TemplateCatalogs {
+	public static class ProjectCatalogs {
 
-		private List<TemplateCatalog> templateCatalogs = new ArrayList<>();
+		private List<ProjectCatalog> projectCatalogs = new ArrayList<>();
 
-		public List<TemplateCatalog> getTemplateCatalogs() {
-			return templateCatalogs;
+		public List<ProjectCatalog> getProjectCatalogs() {
+			return projectCatalogs;
 		}
 
-		public void setTemplateCatalogs(List<TemplateCatalog> templateCatalogs) {
-			this.templateCatalogs = templateCatalogs;
+		public void setProjectCatalogs(List<ProjectCatalog> projectCatalogs) {
+			this.projectCatalogs = projectCatalogs;
 		}
 	}
 
-	public static class TemplateRepositories {
+	public static class ProjectRepositories {
 
-		private List<TemplateRepository> templateRepositories = new ArrayList<>();
+		private List<ProjectRepository> projectRepositories = new ArrayList<>();
 
-		public List<TemplateRepository> getTemplateRepositories() {
-			return templateRepositories;
+		public List<ProjectRepository> getProjectRepositories() {
+			return projectRepositories;
 		}
 
-		public void setTemplateRepositories(List<TemplateRepository> templateRepositories) {
-			this.templateRepositories.clear();
-			this.templateRepositories.addAll(templateRepositories);
+		public void setProjectRepositories(List<ProjectRepository> projectRepositories) {
+			this.projectRepositories.clear();
+			this.projectRepositories.addAll(projectRepositories);
 		}
 
-		public Optional<TemplateRepository> findByName(String name) {
-			return this.templateRepositories.stream()
+		public Optional<ProjectRepository> findByName(String name) {
+			return this.projectRepositories.stream()
 				.filter(t -> ObjectUtils.nullSafeEquals(t.getName(), name))
 				.findFirst();
 		}
 
-		public void setTemplateRepository(TemplateRepository templateRepository) {
-			templateRepositories.add(templateRepository);
-		}
 	}
 
-	public static class TemplateCatalog extends BaseTemplateCommon {
+	public static class ProjectCatalog extends BaseProjectCommon {
 
-		public TemplateCatalog() {
+		public ProjectCatalog() {
 		}
 
-		public TemplateCatalog(String name, String description, String url) {
+		public ProjectCatalog(String name, String description, String url) {
 			super(name, description, url);
 		}
 
-		public static TemplateCatalog of(String name, String description, String url) {
-			return new TemplateCatalog(name, description, url);
+		public static ProjectCatalog of(String name, String description, String url) {
+			return new ProjectCatalog(name, description, url);
 		}
 	}
 
-	public static class TemplateRepository extends BaseTemplateCommon {
+	public static class ProjectRepository extends BaseProjectCommon {
 
 		private List<String> tags = new ArrayList<>();
 
-		public TemplateRepository() {
+		public ProjectRepository() {
 		}
 
-		public TemplateRepository(String name, String description, String url, List<String> tags) {
+		public ProjectRepository(String name, String description, String url, List<String> tags) {
 			super(name, description, url);
 			this.tags = tags;
 		}
 
-		public static TemplateRepository of (String name, String description, String url, List<String> tags) {
-			return new TemplateRepository(name, description, url, tags);
+		public static ProjectRepository of (String name, String description, String url, List<String> tags) {
+			return new ProjectRepository(name, description, url, tags);
 		}
 
 		public List<String> getTags() {

@@ -23,8 +23,8 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.support.AbstractSpringCliCommands;
 import org.springframework.cli.support.SpringCliUserConfig;
-import org.springframework.cli.support.SpringCliUserConfig.TemplateCatalog;
-import org.springframework.cli.support.SpringCliUserConfig.TemplateCatalogs;
+import org.springframework.cli.support.SpringCliUserConfig.ProjectCatalog;
+import org.springframework.cli.support.SpringCliUserConfig.ProjectCatalogs;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -51,20 +51,20 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		@ShellOption(help = "Catalog url") String url,
 		@ShellOption(help = "Catalog description", defaultValue = ShellOption.NULL) String description
 	) {
-		List<TemplateCatalog> templateCatalogs = upCliUserConfig.getTemplateCatalogs().getTemplateCatalogs();
-		templateCatalogs.add(TemplateCatalog.of(name, description, url));
-		TemplateCatalogs templateCatalogsConfig = new TemplateCatalogs();
-		templateCatalogsConfig.setTemplateCatalogs(templateCatalogs);
-		upCliUserConfig.setTemplateCatalogs(templateCatalogsConfig);
+		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		projectCatalogs.add(ProjectCatalog.of(name, description, url));
+		ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
+		projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
+		upCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
 	}
 
 	@ShellMethod(key = "catalog list", value = "List catalogs")
 	public Table catalogList() {
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description" });
-		Collection<TemplateCatalog> templateRepositories = upCliUserConfig.getTemplateCatalogs().getTemplateCatalogs();
+		Collection<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 		Stream<String[]> rows = null;
-		if (templateRepositories != null) {
-			rows = templateRepositories.stream()
+		if (projectCatalogs != null) {
+			rows = projectCatalogs.stream()
 				.map(tr -> new String[] { tr.getName(), tr.getDescription()});
 		}
 		else {
@@ -80,12 +80,12 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 	public void catalogRemove(
 		@ShellOption(help = "Catalog name") String name
 	) {
-		List<TemplateCatalog> templateCatalogs = upCliUserConfig.getTemplateCatalogs().getTemplateCatalogs();
-		templateCatalogs = templateCatalogs.stream()
+		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		projectCatalogs = projectCatalogs.stream()
 			.filter(tc -> !ObjectUtils.nullSafeEquals(tc.getName(), name))
 			.collect(Collectors.toList());
-		TemplateCatalogs templateCatalogsConfig = new TemplateCatalogs();
-		templateCatalogsConfig.setTemplateCatalogs(templateCatalogs);
-		upCliUserConfig.setTemplateCatalogs(templateCatalogsConfig);
+		ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
+		projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
+		upCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
 	}
 }
