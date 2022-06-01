@@ -1,3 +1,6 @@
-name: Spring CLI
+name: spring-cli
 version: '1.0.0'
 prerelease: '-SNAPSHOT'
+start_page: ROOT:index.adoc
+nav:
+- modules/ROOT/nav.adoc
