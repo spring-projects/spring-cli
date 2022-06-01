@@ -28,7 +28,10 @@ import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.cli.support.SpringCliUserConfig.CommandDefault;
+import org.springframework.cli.support.SpringCliUserConfig.ProjectCatalog;
+import org.springframework.cli.support.SpringCliUserConfig.ProjectCatalogs;
+import org.springframework.cli.support.SpringCliUserConfig.ProjectRepositories;
+import org.springframework.cli.support.SpringCliUserConfig.ProjectRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,34 +66,34 @@ public class SpringCliUserConfigTests {
 	public void testTemplateCatalogs() {
 		SpringCliUserConfig config = new SpringCliUserConfig(pathProvider);
 
-		assertThat(config.getTemplateCatalogs()).isNotNull();
+		assertThat(config.getProjectCatalogs()).isNotNull();
 
-		SpringCliUserConfig.TemplateCatalogs catalogs = new SpringCliUserConfig.TemplateCatalogs();
-		List<SpringCliUserConfig.TemplateCatalog> catalogList = new ArrayList<>();
-		SpringCliUserConfig.TemplateCatalog catalog1 = new SpringCliUserConfig.TemplateCatalog("fakename1", "fakedesc1", "fakeurl1");
-		SpringCliUserConfig.TemplateCatalog catalog2 = new SpringCliUserConfig.TemplateCatalog("fakename2", "fakedesc2", "fakeurl2");
+		ProjectCatalogs catalogs = new ProjectCatalogs();
+		List<ProjectCatalog> catalogList = new ArrayList<>();
+		ProjectCatalog catalog1 = new ProjectCatalog("fakename1", "fakedesc1", "fakeurl1");
+		ProjectCatalog catalog2 = new ProjectCatalog("fakename2", "fakedesc2", "fakeurl2");
 		catalogList.add(catalog1);
 		catalogList.add(catalog2);
-		catalogs.setTemplateCatalogs(catalogList);
-		config.setTemplateCatalogs(catalogs);
-		assertThat(config.getTemplateCatalogs().getTemplateCatalogs()).hasSize(2);
+		catalogs.setProjectCatalogs(catalogList);
+		config.setProjectCatalogs(catalogs);
+		assertThat(config.getProjectCatalogs().getProjectCatalogs()).hasSize(2);
 	}
 
 	@Test
 	public void testTemplateRepositories() {
 		SpringCliUserConfig config = new SpringCliUserConfig(pathProvider);
 
-		assertThat(config.getTemplateRepositories()).isNotNull();
+		assertThat(config.getProjectRepositories()).isNotNull();
 
-		SpringCliUserConfig.TemplateRepositories repositories = new SpringCliUserConfig.TemplateRepositories();
-		List<SpringCliUserConfig.TemplateRepository> repositoryList = new ArrayList<>();
-		SpringCliUserConfig.TemplateRepository repository1 = new SpringCliUserConfig.TemplateRepository("fakename1", "fakedesc1", "fakeurl1", new ArrayList<>());
-		SpringCliUserConfig.TemplateRepository repository2 = new SpringCliUserConfig.TemplateRepository("fakename2", "fakedesc2", "fakeurl2", new ArrayList<>());
+		ProjectRepositories repositories = new ProjectRepositories();
+		List<ProjectRepository> repositoryList = new ArrayList<>();
+		ProjectRepository repository1 = new ProjectRepository("fakename1", "fakedesc1", "fakeurl1", new ArrayList<>());
+		ProjectRepository repository2 = new ProjectRepository("fakename2", "fakedesc2", "fakeurl2", new ArrayList<>());
 		repositoryList.add(repository1);
 		repositoryList.add(repository2);
-		repositories.setTemplateRepositories(repositoryList);
-		config.setTemplateRepositories(repositories);
-		assertThat(config.getTemplateRepositories().getTemplateRepositories()).hasSize(2);
+		repositories.setProjectRepositories(repositoryList);
+		config.setProjectRepositories(repositories);
+		assertThat(config.getProjectRepositories().getProjectRepositories()).hasSize(2);
 	}
 
 	@Test

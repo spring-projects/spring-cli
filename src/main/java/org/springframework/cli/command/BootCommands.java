@@ -42,7 +42,7 @@ import org.springframework.cli.merger.ProjectMerger;
 import org.springframework.cli.support.AbstractSpringCliCommands;
 import org.springframework.cli.support.SpringCliUserConfig;
 import org.springframework.cli.support.SpringCliUserConfig.CommandDefaults;
-import org.springframework.cli.support.SpringCliUserConfig.TemplateRepository;
+import org.springframework.cli.support.SpringCliUserConfig.ProjectRepository;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.cli.util.PackageNameUtils;
 import org.springframework.cli.util.PomReader;
@@ -83,7 +83,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 			@ShellOption(help = "Name of the new project", defaultValue = ShellOption.NULL, arity = 1) String name,
 			@ShellOption(help = "Package name for the new project", defaultValue = FALLBACK_DEFAULT_PACKAGE_NAME, arity = 1) String packageName) {
 
-		String urlToUse = !StringUtils.hasText(from) ? FALLBACK_DEFAULT_REPO_URL : getTemplateRepositoryUrl(from);  // Will return string or throw exception
+		String urlToUse = !StringUtils.hasText(from) ? FALLBACK_DEFAULT_REPO_URL : getProjectRepositoryUrl(from);  // Will return string or throw exception
 		String projectNameToUse = getProjectName("boot", "new", name); // Will return string, never null
 		String packageNameToUse = getPackageName("boot", "new", packageName); // Will return string, never null
 
@@ -101,7 +101,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	@ShellMethod(key = "boot add", value = "Merge an existing project into the current Spring Boot project")
 	public void bootAdd(@ShellOption(help = "Add to project from an existing project name or URL") String from ) throws IOException {
-		String urlToUse = getTemplateRepositoryUrl(from);  // Will return string or throw exception
+		String urlToUse = getProjectRepositoryUrl(from);  // Will return string or throw exception
 		String projectName = getProjectNameForAdd(from);  // Will return string
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(urlToUse);
 		ProjectMerger projectMerger = new ProjectMerger(repositoryContentsPath, IoUtils.getWorkingDirectory().toPath(), projectName);
@@ -136,7 +136,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 		return from;
 	}
 	@Nullable
-	private String getTemplateRepositoryUrl(String from) {
+	private String getProjectRepositoryUrl(String from) {
 		// Check it if is a URL
 		if (from.startsWith("https:")) {
 			return from;
@@ -158,12 +158,12 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	@Nullable
 	private String findUrlFromProjectName(String projectName) {
-		Collection<TemplateRepository> templateRepositories = springCliUserConfig.getTemplateRepositories().getTemplateRepositories();
-		if (templateRepositories != null) {
-			for (TemplateRepository templateRepository : templateRepositories) {
-				if (projectName.trim().equalsIgnoreCase(templateRepository.getName().trim())) {
+		Collection<ProjectRepository> projectRepositories = springCliUserConfig.getProjectRepositories().getProjectRepositories();
+		if (projectRepositories != null) {
+			for (ProjectRepository projectRepository : projectRepositories) {
+				if (projectName.trim().equalsIgnoreCase(projectRepository.getName().trim())) {
 					// match - get url
-					String url = templateRepository.getUrl();
+					String url = projectRepository.getUrl();
 					if (StringUtils.hasText(url)) {
 						return url;
 					}
@@ -284,7 +284,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 		if (rootPackage.isEmpty()) {
 			AttributedStringBuilder sb = new AttributedStringBuilder();
 			sb.style(sb.style().foreground(AttributedStyle.YELLOW));
-			sb.append("Could find root package containing class with @SpringBootApplication.  No Java Package refactoring from the template will occur.");
+			sb.append("Could find root package containing class with @SpringBootApplication.  No Java Package refactoring on the project will occur.");
 			shellPrint(sb.toAttributedString());
 			return Optional.empty();
 		}
