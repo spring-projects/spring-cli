@@ -322,15 +322,26 @@ public class SpringCliUserConfig {
 
 	public static class ProjectCatalog extends BaseProjectCommon {
 
+		private List<String> tags = new ArrayList<>();
+
 		public ProjectCatalog() {
 		}
 
-		public ProjectCatalog(String name, String description, String url) {
+		public ProjectCatalog(String name, String description, String url, List<String> tags) {
 			super(name, description, url);
+			this.tags = tags;
 		}
 
-		public static ProjectCatalog of(String name, String description, String url) {
-			return new ProjectCatalog(name, description, url);
+		public static ProjectCatalog of(String name, String description, String url, List<String> tags) {
+			return new ProjectCatalog(name, description, url, tags);
+		}
+
+		public List<String> getTags() {
+			return tags;
+		}
+
+		public void setTags(List<String> tags) {
+			this.tags = tags;
 		}
 	}
 

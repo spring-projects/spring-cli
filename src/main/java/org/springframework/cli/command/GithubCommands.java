@@ -23,6 +23,7 @@ import java.util.Optional;
 import org.jline.utils.AttributedString;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
+import org.kohsuke.github.RateLimitHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -148,7 +149,9 @@ public class GithubCommands extends AbstractSpringCliCommands {
 		else {
 			String loginName = null;
 			try {
-				GitHub gh = new GitHubBuilder().withOAuthToken(host.getOauthToken()).build();
+				GitHub gh = new GitHubBuilder()
+						.withOAuthToken(host.getOauthToken())
+						.withRateLimitHandler(RateLimitHandler.FAIL).build();
 				loginName = gh.getMyself().getLogin();
 				log.debug("Got loginName {}", loginName);
 			} catch (IOException e) {

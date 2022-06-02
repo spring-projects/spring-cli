@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -35,6 +36,7 @@ public class YamlConfigFile implements ConfigFile {
 		mapper = new ObjectMapper(new YAMLFactory());
 		mapper.setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		mapper.setSerializationInclusion(Include.NON_NULL);
 	}
 
 	@Override

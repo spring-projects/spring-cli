@@ -31,9 +31,10 @@ import org.springframework.shell.table.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.cli.support.SpringCliUserConfig.SPRING_CLI_CONFIG_DIR;
+import static org.springframework.cli.testutil.TableAssertions.verifyTableValue;
 
 @ExtendWith(SystemStubsExtension.class)
-public class ConfigCommandTests {
+public class ConfigCommandsTests {
 	@SystemStub
 	private EnvironmentVariables environmentVariables;
 
@@ -67,9 +68,4 @@ public class ConfigCommandTests {
 		assertThat(table.getModel().getRowCount()).isEqualTo(1);
 	}
 
-	private void verifyTableValue(Table table, int row, int col, Object expected) {
-		assertThat(table.getModel().getValue(row, col))
-				.as(String.format("Row %d, Column %d should be: %s", row, col, expected))
-				.isEqualTo(expected);
-	}
 }

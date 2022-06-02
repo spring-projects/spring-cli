@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,7 +43,10 @@ import org.springframework.cli.merger.ProjectMerger;
 import org.springframework.cli.support.AbstractSpringCliCommands;
 import org.springframework.cli.support.SpringCliUserConfig;
 import org.springframework.cli.support.SpringCliUserConfig.CommandDefaults;
+import org.springframework.cli.support.SpringCliUserConfig.ProjectCatalog;
+import org.springframework.cli.support.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.support.SpringCliUserConfig.ProjectRepository;
+import org.springframework.cli.support.configfile.YamlConfigFile;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.cli.util.PackageNameUtils;
 import org.springframework.cli.util.PomReader;
@@ -85,6 +89,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 		String urlToUse = !StringUtils.hasText(from) ? FALLBACK_DEFAULT_REPO_URL : getProjectRepositoryUrl(from);  // Will return string or throw exception
 		String projectNameToUse = getProjectName("boot", "new", name); // Will return string, never null
+
 		String packageNameToUse = getPackageName("boot", "new", packageName); // Will return string, never null
 
 		AttributedStringBuilder sb = new AttributedStringBuilder();
@@ -96,11 +101,20 @@ public class BootCommands extends AbstractSpringCliCommands {
 		sb.append("Cloning project from " + urlToUse);
 		sb.append(System.lineSeparator());
 		shellPrint(sb.toAttributedString());
+
+		// Fail fast if there is already a directory with the project name
+		File workingDirectory = IoUtils.getWorkingDirectory();
+		File projectDirectory = new File(workingDirectory, projectNameToUse);
+		if (projectDirectory.exists()) {
+			throw new SpringCliException("Directory named " + projectNameToUse + " already exists.  Choose another name.");
+		}
+
+
 		generateFromUrl(projectNameToUse, urlToUse, packageNameToUse);
 	}
 
 	@ShellMethod(key = "boot add", value = "Merge an existing project into the current Spring Boot project")
-	public void bootAdd(@ShellOption(help = "Add to project from an existing project name or URL") String from ) throws IOException {
+	public void bootAdd(@ShellOption(help = "Add to project from an existing project name or URL", arity = 1) String from ) throws IOException {
 		String urlToUse = getProjectRepositoryUrl(from);  // Will return string or throw exception
 		String projectName = getProjectNameForAdd(from);  // Will return string
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(urlToUse);
@@ -119,7 +133,11 @@ public class BootCommands extends AbstractSpringCliCommands {
 		}
 		CommandDefaults commandDefaults = this.springCliUserConfig.getCommandDefaults();
 		Optional<String> newProjectName = commandDefaults.findDefaultOptionValue(commandName, subCommandName, "name");
-		return newProjectName.orElse(FALLBACK_DEFAULT_PROJECT_NAME);
+		if (newProjectName.isPresent()) {
+			return newProjectName.get().replaceAll(" ", "_");
+		} else {
+			return (FALLBACK_DEFAULT_PROJECT_NAME);
+		}
 	}
 
 
@@ -160,18 +178,39 @@ public class BootCommands extends AbstractSpringCliCommands {
 	private String findUrlFromProjectName(String projectName) {
 		Collection<ProjectRepository> projectRepositories = springCliUserConfig.getProjectRepositories().getProjectRepositories();
 		if (projectRepositories != null) {
-			for (ProjectRepository projectRepository : projectRepositories) {
-				if (projectName.trim().equalsIgnoreCase(projectRepository.getName().trim())) {
-					// match - get url
-					String url = projectRepository.getUrl();
-					if (StringUtils.hasText(url)) {
-						return url;
-					}
-					break;
-				}
+			String url = findUrlFromProjectRepositories(projectName, projectRepositories);
+			if (url != null) return url;
+		}
+
+		List<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		if (projectCatalogs != null) {
+			for (ProjectCatalog projectCatalog : projectCatalogs) {
+				String url = projectCatalog.getUrl();
+				Path path = sourceRepositoryService.retrieveRepositoryContents(url);
+				YamlConfigFile yamlConfigFile = new YamlConfigFile();
+				projectRepositories = yamlConfigFile.read(Paths.get(path.toString(), "project-repositories.yml"),
+						ProjectRepositories.class).getProjectRepositories();
+				url = findUrlFromProjectRepositories(projectName, projectRepositories);
+				if (url != null) return url;
 			}
 		}
+
 		throw new SpringCliException("Could not resolve project name " + projectName + " to URL.  Command `project list` shows available project names.");
+	}
+
+	@Nullable
+	private String findUrlFromProjectRepositories(String projectName, Collection<ProjectRepository> projectRepositories) {
+		for (ProjectRepository projectRepository : projectRepositories) {
+			if (projectName.trim().equalsIgnoreCase(projectRepository.getName().trim())) {
+				// match - get url
+				String url = projectRepository.getUrl();
+				if (StringUtils.hasText(url)) {
+					return url;
+				}
+				break;
+			}
+		}
+		return null;
 	}
 
 	private void generateFromUrl(String projectName, String url, String packageName) {

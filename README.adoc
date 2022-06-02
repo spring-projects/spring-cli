@@ -49,34 +49,9 @@ The command `boot new`, for example invoked by calling 'spring boot new' will cr
 
 You can configure the Spring CLI to create Spring Boot projects that are based on existing projects hosted on GitHub and GitLab.
 
-It is expected that a user or a company will curate a collection of projects that can bootstrap developement for common use cases.
+It is expected that a user or a company will curate a collection of projects that can bootstrap development for common use cases.
 
 A collection of projects that share a theme of functionality is represented as a Project Catalog.
-
-
-
-=== Sample Configuration file
-
-Below is a sample configuration file that should be located in <user.home>`/.config/springcli/springcli.yml`
-
-Use lowercase kebab-case names.
-
-```
-template-catalogs:
-  - name: catalog1
-    description: The first catalog
-    url: https://github.com/rd-1-2022/template-catalog
-  - name: catalog2
-    description: The second catalog
-    url: https://github.com/rd-1-2022/template-catalog-2
-template-repositories:
-  - name: jpa
-    description: Learn how to work with JPA data persistence using Spring Data JPA.
-    url: https://github.com/rd-1-2022/rpt-spring-data-jpa
-    tags:
-      - jpa
-      - h2
-```
 
 === Generic Commands
 
