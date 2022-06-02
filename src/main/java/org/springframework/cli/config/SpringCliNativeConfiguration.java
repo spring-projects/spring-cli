@@ -54,6 +54,9 @@ import org.springframework.cli.initializr.model.JavaVersion.JavaVersionValues;
 import org.springframework.cli.initializr.model.Language.LanguageValues;
 import org.springframework.cli.initializr.model.Packaging.PackagingValues;
 import org.springframework.cli.initializr.model.ProjectType.ProjectTypeValue;
+import org.springframework.cli.support.SpringCliUserConfig.CommandDefault;
+import org.springframework.cli.support.SpringCliUserConfig.CommandDefaults;
+import org.springframework.cli.support.SpringCliUserConfig.Option;
 import org.springframework.nativex.hint.FieldHint;
 import org.springframework.nativex.hint.JdkProxyHint;
 import org.springframework.nativex.hint.MethodHint;
@@ -254,6 +257,15 @@ import org.springframework.nativex.type.NativeConfiguration;
 			types = {
 				GHMyself.class, GHObject.class, GHPerson.class, GHUser.class, GHCommit.class, GHLicense.class,
 				GHRepository.class, GHVerification.class, GitUser.class
+			},
+			access = {
+				TypeAccess.PUBLIC_CONSTRUCTORS, TypeAccess.DECLARED_CLASSES, TypeAccess.DECLARED_CONSTRUCTORS,
+				TypeAccess.DECLARED_FIELDS, TypeAccess.DECLARED_METHODS
+			}
+		),
+		@TypeHint(
+			types = {
+				CommandDefaults.class, CommandDefault.class, Option.class
 			},
 			access = {
 				TypeAccess.PUBLIC_CONSTRUCTORS, TypeAccess.DECLARED_CLASSES, TypeAccess.DECLARED_CONSTRUCTORS,
