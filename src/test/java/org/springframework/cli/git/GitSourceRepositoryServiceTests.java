@@ -29,7 +29,7 @@ import org.springframework.cli.support.SpringCliUserConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UrlRepositoryServiceTests {
+public class GitSourceRepositoryServiceTests {
 
 
 	/**
@@ -38,7 +38,7 @@ public class UrlRepositoryServiceTests {
 	 */
 	@Test
 	void testRetrieval(@TempDir Path tempDir) throws IOException {
-		UrlRepositoryService urlRepositoryService = new UrlRepositoryService(new SpringCliUserConfig());
+		GitSourceRepositoryService urlRepositoryService = new GitSourceRepositoryService(new SpringCliUserConfig());
 		Path contentPath = urlRepositoryService.retrieveRepositoryContents("https://github.com/rd-1-2022/rpt-rest-service");
 		assertThat(PathUtils.isEmpty(contentPath)).isFalse();
 		String[] pathToFile = new String[] { "src", "main", "java", "com", "example", "restservice",

@@ -17,6 +17,7 @@ package org.springframework.cli.command;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -47,12 +48,13 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 	@ShellMethod(key = "catalog add", value = "Add a project to a project catalog")
 	public void catalogAdd(
-		@ShellOption(help = "Catalog name") String name,
-		@ShellOption(help = "Catalog url") String url,
-		@ShellOption(help = "Catalog description", defaultValue = ShellOption.NULL) String description
+		@ShellOption(help = "Catalog name", arity = 1) String name,
+		@ShellOption(help = "Catalog url", arity = 1) String url,
+		@ShellOption(help = "Catalog description", defaultValue = ShellOption.NULL, arity = 1) String description,
+		@ShellOption(help = "Project tags", defaultValue = ShellOption.NULL, arity = 1) List<String> tags
 	) {
 		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
-		projectCatalogs.add(ProjectCatalog.of(name, description, url));
+		projectCatalogs.add(ProjectCatalog.of(name, description, url, tags));
 		ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
 		projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
 		upCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
@@ -60,12 +62,17 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 	@ShellMethod(key = "catalog list", value = "List catalogs")
 	public Table catalogList() {
-		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description" });
+		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "URL", "Description" , "Tags" });
 		Collection<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 		Stream<String[]> rows = null;
 		if (projectCatalogs != null) {
 			rows = projectCatalogs.stream()
-				.map(tr -> new String[] { tr.getName(), tr.getDescription()});
+				.map(tr -> new String[] {
+						tr.getName(),
+						tr.getUrl(),
+						Objects.requireNonNullElse(tr.getDescription(), ""),
+						(Objects.requireNonNullElse(tr.getTags(), "")).toString()
+				});
 		}
 		else {
 			rows = Stream.empty();
@@ -78,7 +85,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 	@ShellMethod(key = "catalog remove", value = "Remove a project from a catalog")
 	public void catalogRemove(
-		@ShellOption(help = "Catalog name") String name
+		@ShellOption(help = "Catalog name", arity = 1) String name
 	) {
 		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 		projectCatalogs = projectCatalogs.stream()

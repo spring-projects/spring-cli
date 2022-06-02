@@ -15,15 +15,21 @@
  */
 package org.springframework.cli.command;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.support.SpringCliUserConfig;
+import org.springframework.cli.support.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.support.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.support.SpringCliUserConfig.ProjectRepository;
+import org.springframework.cli.support.configfile.YamlConfigFile;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -39,17 +45,20 @@ public class ProjectCommands {
 
 	private final SpringCliUserConfig upCliUserConfig;
 
+	private final SourceRepositoryService sourceRepositoryService;
+
 	@Autowired
-	public ProjectCommands(SpringCliUserConfig upCliUserConfig) {
+	public ProjectCommands(SpringCliUserConfig upCliUserConfig, SourceRepositoryService sourceRepositoryService) {
 		this.upCliUserConfig = upCliUserConfig;
+		this.sourceRepositoryService = sourceRepositoryService;
 	}
 
 	@ShellMethod(key = "project add", value = "Add a project to use with 'boot new' and 'boot add' commands")
 	public void projectAdd(
-		@ShellOption(help = "Project name") String name,
-		@ShellOption(help = "Project url") String url,
-		@ShellOption(help = "Project description", defaultValue = ShellOption.NULL) String description,
-		@ShellOption(help = "Project tags", defaultValue = ShellOption.NULL) List<String> tags
+		@ShellOption(help = "Project name", arity = 1) String name,
+		@ShellOption(help = "Project url", arity = 1) String url,
+		@ShellOption(help = "Project description", defaultValue = ShellOption.NULL, arity = 1) String description,
+		@ShellOption(help = "Project tags", defaultValue = ShellOption.NULL, arity = 1) List<String> tags
 	) {
 		List<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
 		projectRepositories.add(ProjectRepository.of(name, description, url, tags));
@@ -60,17 +69,47 @@ public class ProjectCommands {
 
 	@ShellMethod(key = "project list", value = "List projects available for use with 'boot new' and 'boot add' commands")
 	public Table projectList() {
-		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description", "URL" });
+		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "URL", "Description", "Catalog", "Tags" });
 		Collection<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
-		Stream<String[]> rows = null;
+		//List<String[]> allRows;
+		Stream<String[]> rows;
 		if (projectRepositories != null) {
 			rows = projectRepositories.stream()
-				.map(tr -> new String[] { tr.getName(), tr.getDescription(), tr.getUrl() });
+				.map(tr -> new String[] { tr.getName(), tr.getUrl(),
+						Objects.requireNonNullElse(tr.getDescription(), ""),
+						"",
+						(Objects.requireNonNullElse(tr.getTags(), "")).toString() }
+			);
 		}
 		else {
 			rows = Stream.empty();
 		}
-		String[][] data = Stream.concat(header, rows).toArray(String[][]::new);
+		List<String[]> allRows = rows.collect(Collectors.toList());
+
+		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		for (ProjectCatalog projectCatalog : projectCatalogs) {
+			String url = projectCatalog.getUrl();
+			Path path = sourceRepositoryService.retrieveRepositoryContents(url);
+			YamlConfigFile yamlConfigFile = new YamlConfigFile();
+			projectRepositories = yamlConfigFile.read(Paths.get(path.toString(),"project-repositories.yml"),
+					ProjectRepositories.class).getProjectRepositories();
+			Stream<String[]> fromCatalogRows = null;
+			if (projectRepositories != null) {
+				fromCatalogRows = projectRepositories.stream()
+						.map(tr -> new String[] { tr.getName(),
+								tr.getUrl(),
+								Objects.requireNonNullElse(tr.getDescription(), ""),
+								projectCatalog.getName(),
+								(Objects.requireNonNullElse(tr.getTags(), "")).toString() }
+						);
+			} else {
+				fromCatalogRows = Stream.empty();
+			}
+			List<String[]> projectCatalogRows = fromCatalogRows.collect(Collectors.toList());
+			allRows.addAll(projectCatalogRows);
+		}
+
+		String[][] data = Stream.concat(header, allRows.stream()).toArray(String[][]::new);
 		TableModel model = new ArrayTableModel(data);
 		TableBuilder tableBuilder = new TableBuilder(model);
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
@@ -78,7 +117,7 @@ public class ProjectCommands {
 
 	@ShellMethod(key = "project remove", value = "Remove project")
 	public void projectRemove(
-		@ShellOption(help = "Project name") String name
+		@ShellOption(help = "Project name", arity = 1) String name
 	) {
 		List<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
 		projectRepositories = projectRepositories.stream()

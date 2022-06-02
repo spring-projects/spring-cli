@@ -54,16 +54,18 @@ import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * Retrieve source files from GitHub or GitLab
+ *
  * @author Thomas Risberg
  */
 @Component
-public class UrlRepositoryService implements SourceRepositoryService {
+public class GitSourceRepositoryService implements SourceRepositoryService {
 
-	private final Logger logger = LoggerFactory.getLogger(UrlRepositoryService.class);
+	private final Logger logger = LoggerFactory.getLogger(GitSourceRepositoryService.class);
 
 	private final SpringCliUserConfig userConfig;
 
-	public UrlRepositoryService(SpringCliUserConfig userConfig) {
+	public GitSourceRepositoryService(SpringCliUserConfig userConfig) {
 		this.userConfig = userConfig;
 	}
 

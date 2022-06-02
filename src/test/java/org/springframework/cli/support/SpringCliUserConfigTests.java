@@ -70,8 +70,11 @@ public class SpringCliUserConfigTests {
 
 		ProjectCatalogs catalogs = new ProjectCatalogs();
 		List<ProjectCatalog> catalogList = new ArrayList<>();
-		ProjectCatalog catalog1 = new ProjectCatalog("fakename1", "fakedesc1", "fakeurl1");
-		ProjectCatalog catalog2 = new ProjectCatalog("fakename2", "fakedesc2", "fakeurl2");
+		List<String> tags = new ArrayList<>();
+		tags.add("spring");
+		tags.add("guide");
+		ProjectCatalog catalog1 = new ProjectCatalog("fakename1", "fakedesc1", "fakeurl1", tags);
+		ProjectCatalog catalog2 = new ProjectCatalog("fakename2", "fakedesc2", "fakeurl2", tags);
 		catalogList.add(catalog1);
 		catalogList.add(catalog2);
 		catalogs.setProjectCatalogs(catalogList);
