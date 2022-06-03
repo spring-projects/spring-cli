@@ -15,6 +15,8 @@
  */
 package org.springframework.cli.command;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -22,6 +24,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.git.SourceRepositoryService;
@@ -38,10 +43,13 @@ import org.springframework.shell.table.BorderStyle;
 import org.springframework.shell.table.Table;
 import org.springframework.shell.table.TableBuilder;
 import org.springframework.shell.table.TableModel;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.util.ObjectUtils;
 
 @ShellComponent
 public class ProjectCommands {
+
+	private static final Logger logger = LoggerFactory.getLogger(ProjectCommands.class);
 
 	private final SpringCliUserConfig upCliUserConfig;
 
@@ -107,6 +115,14 @@ public class ProjectCommands {
 			}
 			List<String[]> projectCatalogRows = fromCatalogRows.collect(Collectors.toList());
 			allRows.addAll(projectCatalogRows);
+
+			// clean up temp files
+			try {
+				FileSystemUtils.deleteRecursively(path);
+			} catch (IOException ex) {
+				logger.warn("Could not delete path " + path, ex);
+			}
+
 		}
 
 		String[][] data = Stream.concat(header, allRows.stream()).toArray(String[][]::new);

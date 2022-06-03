@@ -56,6 +56,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 
 import static org.springframework.cli.util.RefactorUtils.refactorPackage;
@@ -100,26 +101,38 @@ public class BootCommands extends AbstractSpringCliCommands {
 		sb.append(System.lineSeparator());
 		sb.append("Cloning project from " + urlToUse);
 		sb.append(System.lineSeparator());
+
 		shellPrint(sb.toAttributedString());
 
 		// Fail fast if there is already a directory with the project name
-		File workingDirectory = IoUtils.getWorkingDirectory();
-		File projectDirectory = new File(workingDirectory, projectNameToUse);
-		if (projectDirectory.exists()) {
-			throw new SpringCliException("Directory named " + projectNameToUse + " already exists.  Choose another name.");
-		}
+		getProjectDirectoryFromProjectName(projectNameToUse);
 
 
 		generateFromUrl(projectNameToUse, urlToUse, packageNameToUse);
 	}
 
+	private Path getProjectDirectoryFromProjectName(String projectNameToUse) {
+		Path workingPath = IoUtils.getWorkingDirectory();
+		Path projectDirectoryPath = Paths.get(workingPath.toString(), projectNameToUse);
+		if (Files.exists(projectDirectoryPath) && Files.isDirectory(projectDirectoryPath)) {
+			throw new SpringCliException("Directory named " + projectNameToUse + " already exists.  Choose another name.");
+		}
+		return projectDirectoryPath;
+	}
+
 	@ShellMethod(key = "boot add", value = "Merge an existing project into the current Spring Boot project")
-	public void bootAdd(@ShellOption(help = "Add to project from an existing project name or URL", arity = 1) String from ) throws IOException {
+	public void bootAdd(@ShellOption(help = "Add to project from an existing project name or URL", arity = 1) String from ) {
 		String urlToUse = getProjectRepositoryUrl(from);  // Will return string or throw exception
 		String projectName = getProjectNameForAdd(from);  // Will return string
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(urlToUse);
-		ProjectMerger projectMerger = new ProjectMerger(repositoryContentsPath, IoUtils.getWorkingDirectory().toPath(), projectName);
+		ProjectMerger projectMerger = new ProjectMerger(repositoryContentsPath, IoUtils.getWorkingDirectory(), projectName);
 		projectMerger.merge();
+		try {
+			FileSystemUtils.deleteRecursively(repositoryContentsPath);
+		} catch (IOException ex) {
+			logger.warn("Could not delete path " + repositoryContentsPath, ex);
+		}
+
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.GREEN));
 		sb.append(System.lineSeparator());
@@ -141,11 +154,15 @@ public class BootCommands extends AbstractSpringCliCommands {
 	}
 
 
-	private String getProjectNameForAdd(String from) throws MalformedURLException {
+	private String getProjectNameForAdd(String from) {
 		// Check it if is a URL, then use just the last part of the name as the 'project name'
-		if (from.startsWith("https:")) {
-			URL url = new URL(from);
-			return new File(url.getPath()).getName();
+		try {
+			if (from.startsWith("https:")) {
+				URL url = new URL(from);
+				return new File(url.getPath()).getName();
+			}
+		} catch (MalformedURLException ex) {
+			throw new SpringCliException("Malformed URL " + from, ex);
 		}
 
 		// We don't have a URL, but a name, let's check that it can be resolved to a URL
@@ -166,7 +183,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	private String getPackageName(String commandName, String subCommandName, String packageName) {
 		// If user provided, make sure it is sanitized
-		if (!packageName.equals(FALLBACK_DEFAULT_PACKAGE_NAME) && StringUtils.hasText(packageName)) {
+		if (packageName != null && !packageName.equals(FALLBACK_DEFAULT_PACKAGE_NAME) && StringUtils.hasText(packageName)) {
 			return PackageNameUtils.getTargetPackageName(packageName, packageName);
 		}
 		CommandDefaults commandDefaults = this.springCliUserConfig.getCommandDefaults();
@@ -190,6 +207,11 @@ public class BootCommands extends AbstractSpringCliCommands {
 				YamlConfigFile yamlConfigFile = new YamlConfigFile();
 				projectRepositories = yamlConfigFile.read(Paths.get(path.toString(), "project-repositories.yml"),
 						ProjectRepositories.class).getProjectRepositories();
+				try {
+					FileSystemUtils.deleteRecursively(path);
+				} catch (IOException ex) {
+					logger.warn("Could not delete path " + path, ex);
+				}
 				url = findUrlFromProjectRepositories(projectName, projectRepositories);
 				if (url != null) return url;
 			}
@@ -232,7 +254,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 		// Copy files
 		File fromDir = repositoryContentsPath.toFile();
-		File toDir = createProjectDirectory(projectName);
+		File toDir = createProjectDirectory(projectName).toFile();
 
 		DirectoryScanner ds = new DirectoryScanner();
 		ds.setBasedir(fromDir);
@@ -265,6 +287,11 @@ public class BootCommands extends AbstractSpringCliCommands {
 				throw new SpringCliException(
 						"Could not copy files from " + fromDir.getAbsolutePath() + " to " + toDir.getAbsolutePath());
 			}
+		}
+		try {
+			FileSystemUtils.deleteRecursively(repositoryContentsPath);
+		} catch (IOException ex) {
+			logger.warn("Could not delete path " + repositoryContentsPath, ex);
 		}
 
 		AttributedStringBuilder sb = new AttributedStringBuilder();
@@ -302,13 +329,8 @@ public class BootCommands extends AbstractSpringCliCommands {
 		return Optional.empty();
 	}
 
-	private File createProjectDirectory(String projectName) {
-		File workingDirectory = IoUtils.getWorkingDirectory();
-		String projectNameToUse = projectName.replaceAll(" ", "_");
-		File projectDirectory = new File(workingDirectory, projectNameToUse);
-		if (projectDirectory.exists()) {
-			throw new SpringCliException("Directory named " + projectName + " already exists.  Choose another name.");
-		}
+	private Path createProjectDirectory(String projectName) {
+		Path projectDirectory = getProjectDirectoryFromProjectName(projectName);
 		IoUtils.createDirectory(projectDirectory);
 		logger.debug("Created directory " + projectDirectory);
 		return projectDirectory;

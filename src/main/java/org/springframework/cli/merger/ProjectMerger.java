@@ -99,8 +99,7 @@ public class ProjectMerger {
 		this.projectName = projectName;
 	}
 
-	// TODO don't rethrow checked exception
-	public void merge() throws IOException {
+	public void merge() {
 		PomReader pomReader = new PomReader();
 		Path toMergeProjectPomPath = this.toMergeProjectPath.resolve("pom.xml");
 		if (toMergeProjectPomPath == null) {
@@ -117,17 +116,21 @@ public class ProjectMerger {
 		paths.add(currentProjectPomPath);
 		MavenParser mavenParser = MavenParser.builder().build();
 
-		// Maven merges
-		mergeMavenProperties(currentProjectPomPath, toMergeModel);
-		mergeMavenDependencyManagement(currentProjectPomPath, toMergeModel, paths, mavenParser);
-		mergeMavenDependencies(currentProjectPomPath, currentModel, toMergeModel, paths, mavenParser);
+		try {
+			// Maven merges
+			mergeMavenProperties(currentProjectPomPath, toMergeModel);
+			mergeMavenDependencyManagement(currentProjectPomPath, toMergeModel, paths, mavenParser);
+			mergeMavenDependencies(currentProjectPomPath, currentModel, toMergeModel, paths, mavenParser);
 
-		// Code Refactoring
-		refactorToMergeCodebase();
-		copyToMergeCodebase();
-		// Copy and merge filesi
+			// Code Refactoring
+			refactorToMergeCodebase();
+			copyToMergeCodebase();
+			// Copy and merge files
 
-		mergeSpringBootApplicationClassAnnotations();
+			mergeSpringBootApplicationClassAnnotations();
+		} catch (IOException ex) {
+			throw new SpringCliException("Error merging projects.", ex);
+		}
 	}
 
 	private void mergeSpringBootApplicationClassAnnotations() throws IOException {

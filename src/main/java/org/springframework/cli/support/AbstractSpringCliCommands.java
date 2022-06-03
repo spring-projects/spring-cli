@@ -28,6 +28,8 @@ import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.util.StringUtils;
 
+import static org.springframework.cli.util.IoUtils.TEST_WORKING_DIRECTORY;
+
 /**
  * Base class for all cli commands.
  *
@@ -57,10 +59,12 @@ public abstract class AbstractSpringCliCommands extends AbstractShellComponent {
 	}
 
 	protected void shellPrint(AttributedString... text) {
-		for (AttributedString t : text) {
-			getTerminal().writer().println(t.toAnsi(getTerminal()));
+		if (!StringUtils.hasText(System.getenv(TEST_WORKING_DIRECTORY))) {
+			for (AttributedString t : text) {
+				getTerminal().writer().println(t.toAnsi(getTerminal()));
+			}
+			shellFlush();
 		}
-		shellFlush();
 	}
 
 	protected void shellFlush() {
