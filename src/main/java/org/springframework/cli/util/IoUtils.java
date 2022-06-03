@@ -39,7 +39,7 @@ import org.springframework.util.StringUtils;
  */
 public abstract class IoUtils {
 
-	private final static String TEST_WORKING_DIRECTORY = "TEST_WORKING_DIRECTORY";
+	public final static String TEST_WORKING_DIRECTORY = "TEST_WORKING_DIRECTORY";
 
 	private static final Logger logger = LoggerFactory.getLogger(IoUtils.class);
 
@@ -53,9 +53,9 @@ public abstract class IoUtils {
 	}
 
 	public static Path getWorkingDirectory() {
-
-		if (StringUtils.hasText(System.getenv(TEST_WORKING_DIRECTORY))) {
-			Path path = Paths.get(TEST_WORKING_DIRECTORY);
+		String testWorkingDir = System.getenv(TEST_WORKING_DIRECTORY);
+		if (StringUtils.hasText(testWorkingDir)) {
+			Path path = Paths.get(testWorkingDir);
 			if (Files.isDirectory(path)) {
 				return path;
 			} else {
