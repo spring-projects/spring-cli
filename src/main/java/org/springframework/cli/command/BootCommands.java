@@ -100,6 +100,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 		sb.append(System.lineSeparator());
 		sb.append("Cloning project from " + urlToUse);
 		sb.append(System.lineSeparator());
+
 		shellPrint(sb.toAttributedString());
 
 		// Fail fast if there is already a directory with the project name
@@ -171,7 +172,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	private String getPackageName(String commandName, String subCommandName, String packageName) {
 		// If user provided, make sure it is sanitized
-		if (!packageName.equals(FALLBACK_DEFAULT_PACKAGE_NAME) && StringUtils.hasText(packageName)) {
+		if (packageName != null && !packageName.equals(FALLBACK_DEFAULT_PACKAGE_NAME) && StringUtils.hasText(packageName)) {
 			return PackageNameUtils.getTargetPackageName(packageName, packageName);
 		}
 		CommandDefaults commandDefaults = this.springCliUserConfig.getCommandDefaults();
