@@ -123,8 +123,8 @@ jobs:
         path: ${{runner.temp}}/artifacts/spring-cli-macos
     - uses: actions/download-artifact@v3
       with:
-        name: spring-cli-win
-        path: ${{runner.temp}}/artifacts/spring-cli-win
+        name: spring-cli-windows
+        path: ${{runner.temp}}/artifacts/spring-cli-windows
     - uses: actions/download-artifact@v3
       with:
         name: spring-cli-jar
@@ -170,6 +170,6 @@ jobs:
         mkdir ${{runner.temp}}/artifacts/out
         cp ${{runner.temp}}/artifacts/spring-cli-linux/spring-cli ${{runner.temp}}/artifacts/out/spring-cli-linux
         cp ${{runner.temp}}/artifacts/spring-cli-macos/spring-cli ${{runner.temp}}/artifacts/out/spring-cli-macos
-        cp ${{runner.temp}}/artifacts/spring-cli-win/spring-cli.exe ${{runner.temp}}/artifacts/out/spring-cli-win.exe
+        cp ${{runner.temp}}/artifacts/spring-cli-windows/spring-cli.exe ${{runner.temp}}/artifacts/out/spring-cli-win.exe
         cp ${{runner.temp}}/artifacts/spring-cli-jar/*.jar ${{runner.temp}}/artifacts/out/
         gh release upload "v$PROJECT_VERSION" ${{runner.temp}}/artifacts/out/*
