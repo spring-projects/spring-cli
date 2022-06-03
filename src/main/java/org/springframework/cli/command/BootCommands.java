@@ -103,14 +103,19 @@ public class BootCommands extends AbstractSpringCliCommands {
 		shellPrint(sb.toAttributedString());
 
 		// Fail fast if there is already a directory with the project name
-		File workingDirectory = IoUtils.getWorkingDirectory();
-		File projectDirectory = new File(workingDirectory, projectNameToUse);
-		if (projectDirectory.exists()) {
-			throw new SpringCliException("Directory named " + projectNameToUse + " already exists.  Choose another name.");
-		}
+		getProjectDirectoryFromProjectName(projectNameToUse);
 
 
 		generateFromUrl(projectNameToUse, urlToUse, packageNameToUse);
+	}
+
+	private Path getProjectDirectoryFromProjectName(String projectNameToUse) {
+		Path workingPath = IoUtils.getWorkingDirectory();
+		Path projectDirectoryPath = Paths.get(workingPath.toString(), projectNameToUse);
+		if (Files.exists(projectDirectoryPath) && Files.isDirectory(projectDirectoryPath)) {
+			throw new SpringCliException("Directory named " + projectNameToUse + " already exists.  Choose another name.");
+		}
+		return projectDirectoryPath;
 	}
 
 	@ShellMethod(key = "boot add", value = "Merge an existing project into the current Spring Boot project")
@@ -118,7 +123,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 		String urlToUse = getProjectRepositoryUrl(from);  // Will return string or throw exception
 		String projectName = getProjectNameForAdd(from);  // Will return string
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(urlToUse);
-		ProjectMerger projectMerger = new ProjectMerger(repositoryContentsPath, IoUtils.getWorkingDirectory().toPath(), projectName);
+		ProjectMerger projectMerger = new ProjectMerger(repositoryContentsPath, IoUtils.getWorkingDirectory(), projectName);
 		projectMerger.merge();
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.GREEN));
@@ -232,7 +237,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 		// Copy files
 		File fromDir = repositoryContentsPath.toFile();
-		File toDir = createProjectDirectory(projectName);
+		File toDir = createProjectDirectory(projectName).toFile();
 
 		DirectoryScanner ds = new DirectoryScanner();
 		ds.setBasedir(fromDir);
@@ -302,13 +307,8 @@ public class BootCommands extends AbstractSpringCliCommands {
 		return Optional.empty();
 	}
 
-	private File createProjectDirectory(String projectName) {
-		File workingDirectory = IoUtils.getWorkingDirectory();
-		String projectNameToUse = projectName.replaceAll(" ", "_");
-		File projectDirectory = new File(workingDirectory, projectNameToUse);
-		if (projectDirectory.exists()) {
-			throw new SpringCliException("Directory named " + projectName + " already exists.  Choose another name.");
-		}
+	private Path createProjectDirectory(String projectName) {
+		Path projectDirectory = getProjectDirectoryFromProjectName(projectName);
 		IoUtils.createDirectory(projectDirectory);
 		logger.debug("Created directory " + projectDirectory);
 		return projectDirectory;

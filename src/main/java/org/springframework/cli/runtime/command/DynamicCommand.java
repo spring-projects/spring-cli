@@ -46,6 +46,7 @@ import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.templating.HandlebarsTemplateEngine;
 import org.springframework.cli.runtime.engine.templating.MustacheTemplateEngine;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
+import org.springframework.cli.util.IoUtils;
 import org.springframework.shell.command.CommandContext;
 import org.springframework.shell.command.CommandParser.CommandParserResult;
 import org.springframework.util.StringUtils;
@@ -107,7 +108,7 @@ public class DynamicCommand {
 	}
 
 	private void runCommand(CommandContext commandContext, Map<String, Object> model) throws IOException {
-		Path cwd = Path.of("");
+		Path cwd = IoUtils.getWorkingDirectory();
 		Path dynamicSubCommandPath = Paths.get(cwd.toString(), ".spring", "commands")
 				.resolve(this.commandName).resolve(this.subCommandName).toAbsolutePath();
 

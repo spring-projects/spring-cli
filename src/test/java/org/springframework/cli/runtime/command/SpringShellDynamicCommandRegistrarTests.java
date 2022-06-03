@@ -26,6 +26,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.cli.runtime.engine.GeneratorResolver;
+import org.springframework.cli.util.IoUtils;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 
@@ -72,7 +73,7 @@ public class SpringShellDynamicCommandRegistrarTests {
 		CommandScanResults commandScanResults = new CommandScanResults(commands);
 
 		SpringShellDynamicCommandRegistrar springCliDynamicCommandRegistrar = new SpringShellDynamicCommandRegistrar();
-		Path cwd = Path.of("").toAbsolutePath();
+		Path cwd = IoUtils.getWorkingDirectory().toAbsolutePath();
 		CommandCatalog commandCatalog = CommandCatalog.of();
 		springCliDynamicCommandRegistrar.registerSpringCliCommands(commandCatalog,
 				commandScanResults,

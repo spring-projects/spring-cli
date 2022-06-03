@@ -27,6 +27,7 @@ import org.springframework.cli.runtime.command.CommandScanResults;
 import org.springframework.cli.runtime.command.CommandScanner;
 import org.springframework.cli.runtime.command.SpringShellDynamicCommandRegistrar;
 import org.springframework.cli.runtime.engine.GeneratorResolver;
+import org.springframework.cli.util.IoUtils;
 import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.command.CommandCatalog;
 
@@ -43,7 +44,7 @@ public class DynamicMethodTargetRegistrar implements MethodTargetRegistrar {
 	@Override
 	public void register(CommandCatalog commandCatalog) {
 		SpringShellDynamicCommandRegistrar springCliDynamicCommandRegistrar = new SpringShellDynamicCommandRegistrar();
-		Path cwd = Path.of("").toAbsolutePath();
+		Path cwd = IoUtils.getWorkingDirectory().toAbsolutePath();
 		Path pathToUse = Paths.get(cwd.toString(), ".spring", "commands");
 		logger.debug("Looking for dynamic commands in directory " + pathToUse);
 		CommandScanner scanner = new CommandScanner(pathToUse);
