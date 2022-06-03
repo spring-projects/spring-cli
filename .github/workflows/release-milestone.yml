@@ -21,6 +21,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Configure Milestone Version
       run: |
+        ./gradlew milestoneVersion -PspringCliMilestone=${{ github.event.inputs.milestone }}
         echo PROJECT_VERSION=$(./gradlew properties -q | grep "version:" | awk '{print $2}') >> $GITHUB_ENV
     - name: Tag Release
       uses: jvalkeal/build-zoo-handler@v0.0.4
