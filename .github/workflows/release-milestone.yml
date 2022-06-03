@@ -16,6 +16,8 @@ jobs:
   # as native builds only need to publish binaries.
   tag:
     runs-on: ubuntu-latest
+    outputs:
+      project-version: ${{ steps.output.outputs.project-version }}
     name: Tag Release Branch
     steps:
     - uses: actions/checkout@v2
@@ -104,13 +106,13 @@ jobs:
       run: |
         gh issue list \
           --milestone $PROJECT_VERSION \
-          --label automation/rlnotes-header  \
+          --label automation/rlnotes-header \
           --state all --json title,body \
           --jq '{headers:map(.),headerslength:(length)}' \
           > $RELEASE_NOTES_HEADERS
         gh issue list \
           --milestone $PROJECT_VERSION \
-          --label automation/rlnotes-footer  \
+          --label automation/rlnotes-footer \
           --state all --json title,body \
           --jq '{footers:map(.),footerslength:(length)}' \
           > $RELEASE_NOTES_FOOTERS
