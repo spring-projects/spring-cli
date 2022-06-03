@@ -154,4 +154,5 @@ jobs:
           --prerelease \
           --title "$PROJECT_VERSION" \
           --notes-file $RELEASE_NOTES_FILE
-        gh release upload v$PROJECT_VERSION ${{runner.temp}}/artifacts/*/*
+        sleep 5
+        gh release upload "v$PROJECT_VERSION" ${{runner.temp}}/artifacts/*/*
