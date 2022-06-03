@@ -54,6 +54,9 @@ import org.springframework.cli.initializr.model.JavaVersion.JavaVersionValues;
 import org.springframework.cli.initializr.model.Language.LanguageValues;
 import org.springframework.cli.initializr.model.Packaging.PackagingValues;
 import org.springframework.cli.initializr.model.ProjectType.ProjectTypeValue;
+import org.springframework.cli.runtime.command.Command;
+import org.springframework.cli.runtime.command.CommandFileContents;
+import org.springframework.cli.runtime.command.CommandOption;
 import org.springframework.cli.support.SpringCliUserConfig.CommandDefault;
 import org.springframework.cli.support.SpringCliUserConfig.CommandDefaults;
 import org.springframework.cli.support.SpringCliUserConfig.Option;
@@ -265,7 +268,8 @@ import org.springframework.nativex.type.NativeConfiguration;
 		),
 		@TypeHint(
 			types = {
-				CommandDefaults.class, CommandDefault.class, Option.class
+				CommandDefaults.class, CommandDefault.class, Option.class, CommandFileContents.class, Command.class,
+				CommandOption.class, CommandOption.Builder.class
 			},
 			access = {
 				TypeAccess.PUBLIC_CONSTRUCTORS, TypeAccess.DECLARED_CLASSES, TypeAccess.DECLARED_CONSTRUCTORS,
