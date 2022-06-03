@@ -21,6 +21,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,40 +32,49 @@ import org.springframework.cli.SpringCliException;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Mark Pollack
  */
 public abstract class IoUtils {
 
+	private final static String TEST_WORKING_DIRECTORY = "TEST_WORKING_DIRECTORY";
+
 	private static final Logger logger = LoggerFactory.getLogger(IoUtils.class);
 
-	public static void createDirectory(File directory) {
-		if (!directory.exists()) {
-			boolean createdDir = directory.mkdirs();
-			try {
-				if (createdDir) {
-					logger.debug("Created directory " + directory.getCanonicalPath());
-				}
-			}
-			catch (IOException e) {
-				throw new SpringCliException(e.getMessage(), e);
+	public static void createDirectory(Path directory) {
+		if (!Files.exists(directory)) {
+			boolean createdDir = directory.toFile().mkdirs();
+			if (createdDir) {
+				logger.debug("Created directory " + directory.toAbsolutePath());
 			}
 		}
 	}
 
-	public static File getWorkingDirectory() {
-		try {
-			String homeDir = new File(".").getCanonicalPath();
-			File f = new File(homeDir);
-			Assert.isTrue(f.isDirectory(), "Path " + f.getAbsolutePath() + " must be a directory.");
-			logger.debug("Working directory = " + f.getAbsolutePath());
-			return f;
-		}
-		catch (IOException e) {
-			throw new SpringCliException("Could not determine working directory", e);
+	public static Path getWorkingDirectory() {
 
+		if (StringUtils.hasText(System.getenv(TEST_WORKING_DIRECTORY))) {
+			Path path = Paths.get(TEST_WORKING_DIRECTORY);
+			if (Files.isDirectory(path)) {
+				return path;
+			} else {
+				throw new SpringCliException("Environment variable TEST_WORKING_DIRECTORY = " + path.toAbsolutePath().toString() + " is not a directory");
+			}
 		}
+		return Path.of("");
+
+//		try {
+//			String homeDir = new File(".").getCanonicalPath();
+//			File f = new File(homeDir);
+//			Assert.isTrue(f.isDirectory(), "Path " + f.getAbsolutePath() + " must be a directory.");
+//			logger.debug("Working directory = " + f.getAbsolutePath());
+//			return f;
+//		}
+//		catch (IOException e) {
+//			throw new SpringCliException("Could not determine working directory", e);
+//
+//		}
 	}
 
 	public static void writeToDir(File dir, String fileName, Resource resource) {
