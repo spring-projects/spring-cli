@@ -38,10 +38,32 @@ jobs:
       run: |
         echo "::set-output name=project-version::$PROJECT_VERSION"
 
+  # build fatjar as it's only needed once from a linux
+  jar:
+    runs-on: ubuntu-latest
+    needs: [tag]
+    name: Build Fatjar
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{needs.tag.outputs.project-version}}
+    - uses: actions/setup-java@v2
+      with:
+        distribution: adopt
+        java-version: 11
+        cache: gradle
+    - run: |
+        ./gradlew clean build
+    - uses: actions/upload-artifact@v3
+      with:
+        name: spring-cli-jar
+        path: build/libs/
+        retention-days: 1
+
   # go through matrix build and publish native artifacts
   build:
     runs-on: ${{ matrix.os }}
-    needs: [tag]
+    needs: [tag, jar]
     strategy:
       fail-fast: false
       matrix:
@@ -84,7 +106,7 @@ jobs:
   # and attach fatjar and os binaries
   ghrelease:
     runs-on: ubuntu-latest
-    needs: [tag, build]
+    needs: [tag, jar, build]
     name: Github Release
     steps:
     - uses: actions/checkout@v2
