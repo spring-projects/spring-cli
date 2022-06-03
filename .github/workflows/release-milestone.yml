@@ -115,7 +115,20 @@ jobs:
         curl -sSL https://github.com/cbroglie/mustache/releases/download/v1.2.2/mustache_1.2.2_linux_amd64.tar.gz | sudo tar -C /usr/local/bin/ --no-same-owner -xzv mustache
     - uses: actions/download-artifact@v3
       with:
-        path: ${{runner.temp}}/artifacts
+        name: spring-cli-linux
+        path: ${{runner.temp}}/artifacts/spring-cli-linux
+    - uses: actions/download-artifact@v3
+      with:
+        name: spring-cli-macos
+        path: ${{runner.temp}}/artifacts/spring-cli-macos
+    - uses: actions/download-artifact@v3
+      with:
+        name: spring-cli-win
+        path: ${{runner.temp}}/artifacts/spring-cli-win
+    - uses: actions/download-artifact@v3
+      with:
+        name: spring-cli-jar
+        path: ${{runner.temp}}/artifacts/spring-cli-har
     - name: GitHub Release
       env:
         PROJECT_VERSION: ${{needs.tag.outputs.project-version}}
@@ -154,5 +167,9 @@ jobs:
           --prerelease \
           --title "$PROJECT_VERSION" \
           --notes-file $RELEASE_NOTES_FILE
-        sleep 5
-        gh release upload "v$PROJECT_VERSION" ${{runner.temp}}/artifacts/*/*
+        mkdir ${{runner.temp}}/artifacts/out
+        cp ${{runner.temp}}/artifacts/spring-cli-linux/spring-cli ${{runner.temp}}/artifacts/out/spring-cli-linux
+        cp ${{runner.temp}}/artifacts/spring-cli-macos/spring-cli ${{runner.temp}}/artifacts/out/spring-cli-macos
+        cp ${{runner.temp}}/artifacts/spring-cli-win/spring-cli.exe ${{runner.temp}}/artifacts/out/spring-cli-win.exe
+        cp ${{runner.temp}}/artifacts/spring-cli-jar/*.jar ${{runner.temp}}/artifacts/out/
+        gh release upload "v$PROJECT_VERSION" ${{runner.temp}}/artifacts/out/*
