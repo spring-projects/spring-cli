@@ -128,7 +128,7 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: spring-cli-jar
-        path: ${{runner.temp}}/artifacts/spring-cli-har
+        path: ${{runner.temp}}/artifacts/spring-cli-jar
     - name: GitHub Release
       env:
         PROJECT_VERSION: ${{needs.tag.outputs.project-version}}
