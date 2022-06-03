@@ -95,7 +95,7 @@ jobs:
         set-java-home: false
         github-token: ${{ secrets.GITHUB_TOKEN }}
     - run: |
-        ./gradlew clean build nativeBuild
+        ./gradlew clean build nativeBuild --no-daemon
     - uses: actions/upload-artifact@v3
       with:
         name: spring-cli-${{ matrix.nickname }}
@@ -149,7 +149,7 @@ jobs:
           $RELEASE_NOTES_FOOTERS \
           > $RELEASE_NOTES_DATA
         mustache $RELEASE_NOTES_DATA .github/rlnotes.mustache > $RELEASE_NOTES_FILE
-        gh release create v$PROJECT_VERSION \
+        gh release create "v$PROJECT_VERSION" \
           --draft \
           --prerelease \
           --title "$PROJECT_VERSION" \
