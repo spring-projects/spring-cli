@@ -45,3 +45,8 @@ jobs:
           npm install
           npm run build-spring-shell-e2e
           npm test
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/composite@v1
+        if: always()
+        with:
+          files: e2e/spring-cli-e2e-tests/junit.xml
