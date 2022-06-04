@@ -135,7 +135,6 @@ public class ProjectMerger {
 
 	private void mergeSpringBootApplicationClassAnnotations() throws IOException {
 		System.out.println("\n--- Merging Spring Boot Application class ---");
-		RootPackageFinder rootPackageFinder = new RootPackageFinder();
 		logger.debug("Looking for @SpringBootApplication in directory " + this.toMergeProjectPath.toFile());
 		Optional<File> springBootApplicationFile = RootPackageFinder.findSpringBootApplicationFile(this.toMergeProjectPath.toFile());
 
@@ -334,9 +333,8 @@ public class ProjectMerger {
 
 	private void refactorToMergeCodebase() {
 		System.out.println("\n--- Reactor code base that is to be merged ---");
-		RootPackageFinder rootPackageFinder = new RootPackageFinder();
 		logger.debug("Looking for @SpringBootApplication in directory " + this.currentProjectPath.toFile());
-		Optional<String> currentRootPackageName =  rootPackageFinder.findRootPackage(this.currentProjectPath.toFile());
+		Optional<String> currentRootPackageName = RootPackageFinder.findRootPackage(this.currentProjectPath.toFile());
 		if (currentRootPackageName.isEmpty()) {
 			System.out.println("Could find root package containing class with @SpringBootApplication in " + this.currentProjectPath.toFile());
 			System.out.println("Stopping");
@@ -344,7 +342,7 @@ public class ProjectMerger {
 		}
 
 		logger.debug("Looking for @SpringBootApplication in directory " + this.toMergeProjectPath.toFile());
-		Optional<String> toMergeRootPackageName =  rootPackageFinder.findRootPackage(this.toMergeProjectPath.toFile());
+		Optional<String> toMergeRootPackageName = RootPackageFinder.findRootPackage(this.toMergeProjectPath.toFile());
 		if (toMergeRootPackageName.isEmpty()) {
 			System.out.println("Could find root package containing class with @SpringBootApplication in " + this.toMergeProjectPath.toFile());
 			System.out.println("Stopping");

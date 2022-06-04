@@ -339,9 +339,8 @@ public class BootCommands extends AbstractSpringCliCommands {
 	private Optional<String> getRootPackageName(Path workingPath) {
 		// Derive fromPackage using location of existing @SpringBootApplication class.
 		// TODO warning if find multiple @SpringBootApplication classes.
-		RootPackageFinder rootPackageFinder = new RootPackageFinder();
 		logger.debug("Looking for @SpringBootApplication in directory " + workingPath.toFile());
-		Optional<String> rootPackage = rootPackageFinder.findRootPackage(workingPath.toFile());
+		Optional<String> rootPackage = RootPackageFinder.findRootPackage(workingPath.toFile());
 		if (rootPackage.isEmpty()) {
 			AttributedStringBuilder sb = new AttributedStringBuilder();
 			sb.style(sb.style().foreground(AttributedStyle.YELLOW));

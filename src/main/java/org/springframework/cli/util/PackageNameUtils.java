@@ -17,30 +17,15 @@
 
 package org.springframework.cli.util;
 
-import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Optional;
 
 import javax.lang.model.SourceVersion;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
 public class PackageNameUtils {
-
-	private static final Logger logger = LoggerFactory.getLogger(PackageNameUtils.class);
-
-	private Optional<String> getRootPackageName(Path workingPath) {
-		// Derive fromPackage using location of existing @SpringBootApplication class.
-		// TODO warning if find multiple @SpringBootApplication classes.
-		RootPackageFinder rootPackageFinder = new RootPackageFinder();
-		logger.debug("Looking for @SpringBootApplication in directory " + workingPath.toFile());
-		return rootPackageFinder.findRootPackage(workingPath.toFile());
-	}
 
 	/**
 	 * Get the package name to use for the new project
