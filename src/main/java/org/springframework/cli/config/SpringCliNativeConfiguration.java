@@ -58,6 +58,14 @@ import org.springframework.cli.runtime.command.Command;
 import org.springframework.cli.runtime.command.CommandFileContents;
 import org.springframework.cli.runtime.command.CommandOption;
 import org.springframework.cli.runtime.command.DynamicCommand;
+import org.springframework.cli.runtime.engine.frontmatter.Actions;
+import org.springframework.cli.runtime.engine.frontmatter.Conditional;
+import org.springframework.cli.runtime.engine.frontmatter.Exec;
+import org.springframework.cli.runtime.engine.frontmatter.FrontMatter;
+import org.springframework.cli.runtime.engine.frontmatter.Inject;
+import org.springframework.cli.runtime.engine.frontmatter.InjectMavenDependency;
+import org.springframework.cli.runtime.engine.frontmatter.InjectMavenPlugin;
+import org.springframework.cli.runtime.engine.frontmatter.InjectProperties;
 import org.springframework.cli.support.SpringCliUserConfig.CommandDefault;
 import org.springframework.cli.support.SpringCliUserConfig.CommandDefaults;
 import org.springframework.cli.support.SpringCliUserConfig.Option;
@@ -81,6 +89,8 @@ import org.springframework.nativex.type.NativeConfiguration;
  */
 @NativeHint(
 	options = {
+		// debug info flag
+		// "-g",
 		// https://github.com/rd-1-2022/spring-up/issues/14
 		"-H:+AllowJRTFileSystem",
 		// Attempt to make win not to fail fast
@@ -271,6 +281,16 @@ import org.springframework.nativex.type.NativeConfiguration;
 			types = {
 				CommandDefaults.class, CommandDefault.class, Option.class, CommandFileContents.class, Command.class,
 				CommandOption.class, CommandOption.Builder.class, DynamicCommand.class
+			},
+			access = {
+				TypeAccess.PUBLIC_CONSTRUCTORS, TypeAccess.DECLARED_CLASSES, TypeAccess.DECLARED_CONSTRUCTORS,
+				TypeAccess.DECLARED_FIELDS, TypeAccess.DECLARED_METHODS
+			}
+		),
+		@TypeHint(
+			types = {
+				Actions.class, Conditional.class, Exec.class, FrontMatter.class, Inject.class, InjectMavenDependency.class,
+				InjectMavenPlugin.class, InjectProperties.class
 			},
 			access = {
 				TypeAccess.PUBLIC_CONSTRUCTORS, TypeAccess.DECLARED_CLASSES, TypeAccess.DECLARED_CONSTRUCTORS,
