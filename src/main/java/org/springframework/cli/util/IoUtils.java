@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
 import org.springframework.core.io.Resource;
-import org.springframework.util.Assert;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 

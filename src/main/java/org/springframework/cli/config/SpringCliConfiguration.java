@@ -27,7 +27,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorResourceFactory;
 import org.springframework.shell.MethodTargetRegistrar;
-import org.springframework.shell.command.CommandCatalog;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**

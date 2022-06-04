@@ -20,11 +20,7 @@ package org.springframework.cli.command;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.support.AbstractSpringCliCommands;
@@ -43,8 +39,6 @@ import org.springframework.shell.table.TableModel;
 
 @ShellComponent
 public class ConfigCommands extends AbstractSpringCliCommands {
-
-	private static final Logger logger = LoggerFactory.getLogger(ConfigCommands.class);
 
 	private SpringCliUserConfig springCliUserConfig;
 
