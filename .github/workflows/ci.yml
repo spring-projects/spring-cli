@@ -24,6 +24,10 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: gradle
       - run: ./gradlew build --no-daemon
+      - uses: actions/upload-artifact@v3
+        with:
+          path: build/libs/*.jar
+          retention-days: 1
   native:
     needs: [build]
     runs-on: ${{ matrix.os }}
@@ -53,7 +57,7 @@ jobs:
           set-java-home: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - run: ./gradlew build nativeCompile --no-daemon
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: spring-up-${{ matrix.nickname }}
           path: build/native/nativeCompile/
