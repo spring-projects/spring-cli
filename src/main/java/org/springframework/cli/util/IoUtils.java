@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cli.SpringCliException;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Mark Pollack
@@ -41,6 +42,7 @@ public abstract class IoUtils {
 
 	public static void createDirectory(Path directory) {
 		if (!Files.exists(directory)) {
+			//TODO remove File usage
 			boolean createdDir = directory.toFile().mkdirs();
 			if (createdDir) {
 				logger.debug("Created directory " + directory.toAbsolutePath());
@@ -52,6 +54,13 @@ public abstract class IoUtils {
 		return Path.of("").toAbsolutePath();
 	}
 
+	public static Path getProjectPath(String path) {
+		Path resolved = null;
+		if (StringUtils.hasText(path)) {
+			resolved = Path.of(path);
+		}
+		return resolved;
+	}
 	public static void writeToDir(File dir, String fileName, Resource resource) {
 		try {
 			String data = StreamUtils.copyToString(resource.getInputStream(), Charset.defaultCharset());

@@ -25,10 +25,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import org.springframework.cli.runtime.engine.GeneratorResolver;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.shell.command.CommandCatalog;
-import org.springframework.shell.command.CommandRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -76,10 +74,7 @@ public class SpringShellDynamicCommandRegistrarTests {
 		Path cwd = IoUtils.getWorkingDirectory().toAbsolutePath();
 		CommandCatalog commandCatalog = CommandCatalog.of();
 		springCliDynamicCommandRegistrar.registerSpringCliCommands(commandCatalog,
-				commandScanResults,
-				new GeneratorResolver(cwd, null));
-
-		Map<String, CommandRegistration> commandRegistrationMap = commandCatalog.getRegistrations();
+				commandScanResults, modelPopulators);
 
 		assertThat(commandCatalog.getRegistrations()).hasSize(2);
 		assertThat(commandCatalog.getRegistrations().get("k8s-simple new")).satisfies(registration -> {

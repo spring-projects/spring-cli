@@ -103,7 +103,7 @@ public class ProjectHandler {
 		sb.append(System.lineSeparator());
 		this.terminalMessage.shellPrint(sb.toAttributedString());
 
-		generateFromUrl(getProjectPath(path), projectNameToUse, urlToUse, packageNameToUse);
+		generateFromUrl(IoUtils.getProjectPath(path), projectNameToUse, urlToUse, packageNameToUse);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class ProjectHandler {
 		// Will return string
 		String projectName = getProjectNameForAdd(from);
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(urlToUse);
-		Path projectDir = getProjectPath(path);
+		Path projectDir = IoUtils.getProjectPath(path);
 		Path workingPath = projectDir != null ? projectDir : IoUtils.getWorkingDirectory();
 
 		ProjectMerger projectMerger = new ProjectMerger(repositoryContentsPath, workingPath, projectName);
@@ -151,14 +151,6 @@ public class ProjectHandler {
 		findUrlFromProjectName(from);
 		// The name is valid, return name
 		return from;
-	}
-
-	private Path getProjectPath(String path) {
-		Path resolved = null;
-		if (StringUtils.hasText(path)) {
-			resolved = Path.of(path);
-		}
-		return resolved;
 	}
 
 	private void replaceString(String projectName, Optional<ProjectInfo> projectInfo, File destFile,

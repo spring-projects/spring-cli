@@ -16,6 +16,7 @@
 
 package org.springframework.cli.runtime.command;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,7 +25,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.cli.runtime.engine.GeneratorResolver;
+import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.Builder;
@@ -47,8 +48,7 @@ public class SpringShellDynamicCommandRegistrar {
 	private final Logger logger = LoggerFactory.getLogger(SpringShellDynamicCommandRegistrar.class);
 
 	public void registerSpringCliCommands(CommandCatalog commandCatalog,
-			CommandScanResults results,
-			GeneratorResolver generatorResolver) {
+			CommandScanResults results, Collection<ModelPopulator> modelPopulators) {
 
 
 
@@ -64,7 +64,7 @@ public class SpringShellDynamicCommandRegistrar {
 
 
 				DynamicCommand dynamicCommand
-						= new DynamicCommand(commandName, subCommandName, null);
+						= new DynamicCommand(commandName, subCommandName, modelPopulators);
 
 				Builder builder = CommandRegistration.builder()
 						.command(commandName + " " + subCommandName)

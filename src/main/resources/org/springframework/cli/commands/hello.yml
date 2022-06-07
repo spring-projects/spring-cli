@@ -1,0 +1,5 @@
+---
+actions:
+  generate: hello.txt
+---
+Hello World at {{now}}

@@ -19,6 +19,7 @@ package org.springframework.cli.config;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cli.runtime.command.CommandScanResults;
 import org.springframework.cli.runtime.command.CommandScanner;
 import org.springframework.cli.runtime.command.SpringShellDynamicCommandRegistrar;
-import org.springframework.cli.runtime.engine.GeneratorResolver;
+import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.command.CommandCatalog;
@@ -36,9 +37,10 @@ public class DynamicMethodTargetRegistrar implements MethodTargetRegistrar {
 
 	private static final Logger logger = LoggerFactory.getLogger(DynamicMethodTargetRegistrar.class);
 
+	private Collection<ModelPopulator> modelPopulators;
 
-	public DynamicMethodTargetRegistrar() {
-
+	public DynamicMethodTargetRegistrar(Collection<ModelPopulator> modelPopulators) {
+		this.modelPopulators = modelPopulators;
 	}
 
 	@Override
@@ -51,8 +53,7 @@ public class DynamicMethodTargetRegistrar implements MethodTargetRegistrar {
 		CommandScanResults commandScanResults = scanner.scan();
 		logger.debug("Found commands " + commandScanResults);
 		springCliDynamicCommandRegistrar.registerSpringCliCommands(commandCatalog,
-				commandScanResults,
-				new GeneratorResolver(cwd, null));
+				commandScanResults, modelPopulators);
 
 	}
 }

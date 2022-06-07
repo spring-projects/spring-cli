@@ -36,7 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
-import org.springframework.cli.runtime.engine.GeneratorResolver;
 import org.springframework.cli.runtime.engine.frontmatter.Actions;
 import org.springframework.cli.runtime.engine.frontmatter.CommandActionFileContents;
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatter;
@@ -66,9 +65,6 @@ public class DynamicCommand {
 
 	private static final Logger logger = LoggerFactory.getLogger(DynamicCommand.class);
 
-
-	private GeneratorResolver generatorResolver;
-
 	private String commandName;
 
 	private String subCommandName;
@@ -83,27 +79,23 @@ public class DynamicCommand {
 
 	public void execute(CommandContext commandContext) throws IOException {
 
-
 		System.out.println("Hello world from dynamic command " + commandName + " " + subCommandName);
 
 		Map<String, Object> model = new HashMap<>();
 
 		addMatchedOptions(model, commandContext);
 
-		addUnmatchedOptions(model, commandContext);
-
 		runCommand(commandContext, model);
 	}
 
-	private void addUnmatchedOptions(Map<String, Object> model, CommandContext commandContext) {
-		// TODO investigate if spring-shell can support this... do we want it.
-	}
 
 	private void addMatchedOptions(Map<String, Object> model, CommandContext commandContext) {
 		List<CommandParserResult> commandParserResults = commandContext.getParserResults().results();
 		for (CommandParserResult commandParserResult : commandParserResults) {
 			// TODO will value() be populated with defaultValue() if not passed in?
-			model.put(commandParserResult.option().getLongNames()[0], commandParserResult.value());
+			String kebabOption = toKebab(commandParserResult.option().getLongNames()[0]);
+			// TODO will value() be populated with defaultValue() if not passed in?
+			model.put(kebabOption, commandParserResult.value());
 		}
 	}
 
@@ -118,10 +110,9 @@ public class DynamicCommand {
 				modelPopulator.contributeToModel(cwd, model);
 			}
 		}
+		System.out.println(model);
 
 		// TODO normalize model keys to camelCase?
-
-		Optional<CommandFileContents> commandFileContents = getCommandFileContents(dynamicSubCommandPath);
 
 		final Map<Path, CommandActionFileContents> commandActionFiles = findCommandActionFiles(dynamicSubCommandPath);
 		if (commandActionFiles.size() == 0) {
@@ -227,4 +218,18 @@ public class DynamicCommand {
 		}, TreeMap::new);
 	}
 
+
+	public static String toKebab(CharSequence original) {
+		StringBuilder result = new StringBuilder(original.length());
+		boolean wasLowercase = false;
+		for (int i = 0; i < original.length(); i++) {
+			char ch = original.charAt(i);
+			if (Character.isUpperCase(ch) && wasLowercase) {
+				result.append('-');
+			}
+			wasLowercase = Character.isLowerCase(ch);
+			result.append(Character.toLowerCase(ch));
+		}
+		return result.toString();
+	}
 }

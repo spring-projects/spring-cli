@@ -31,7 +31,7 @@ public class FrontMatterReaderTests {
 	void readTests() {
 		String templateYaml = TestResourceUtils.resourceContents(getClass(), "template1.yaml");
 		CommandActionFileContents commandActionFileContents = FrontMatterReader.read(templateYaml).get();
-		assertThat(commandActionFileContents.getMetadata().getActions().getGenerate()).isEqualTo("hello.yml");
+		assertThat(commandActionFileContents.getMetadata().getActions().getGenerate()).isEqualTo("org/springframework/cli/commands/hello.yml");
 	}
 
 	@Test
