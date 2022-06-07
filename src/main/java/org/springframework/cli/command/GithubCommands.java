@@ -136,7 +136,7 @@ public class GithubCommands extends AbstractSpringCliCommands {
 	 */
 	@ShellMethod(key = "github auth status", value = "View authentication status")
 	public AttributedString status(
-			@ShellOption(help = "Display the auth token") boolean showToken
+			@ShellOption(help = "Display the auth token", defaultValue = "false") boolean showToken
 		) {
 		Host host = null;
 		Map<String, Host> hosts = userConfig.getHosts();
