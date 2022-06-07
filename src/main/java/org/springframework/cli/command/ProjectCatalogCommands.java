@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cli.SpringCliException;
 import org.springframework.cli.support.AbstractSpringCliCommands;
 import org.springframework.cli.support.SpringCliUserConfig;
 import org.springframework.cli.support.SpringCliUserConfig.ProjectCatalog;
@@ -35,6 +36,7 @@ import org.springframework.shell.table.Table;
 import org.springframework.shell.table.TableBuilder;
 import org.springframework.shell.table.TableModel;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 @ShellComponent
 public class ProjectCatalogCommands extends AbstractSpringCliCommands {
@@ -54,6 +56,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		@ShellOption(help = "Project tags", defaultValue = ShellOption.NULL, arity = 1) List<String> tags
 	) {
 		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		checkIfCatalogNameExists(name, projectCatalogs);
 		projectCatalogs.add(ProjectCatalog.of(name, description, url, tags));
 		ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
 		projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
@@ -95,4 +98,14 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
 		upCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
 	}
+
+	private void checkIfCatalogNameExists(String catalogName, List<ProjectCatalog> projectCatalogs) {
+		for (ProjectCatalog projectCatalog : projectCatalogs) {
+			if (StringUtils.hasText(catalogName) && projectCatalog.getName().equalsIgnoreCase(catalogName)) {
+				throw new SpringCliException(
+						"Catalog named " + catalogName + " already exists.  Choose another name.");
+			}
+		}
+	}
+
 }

@@ -28,12 +28,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.cli.SpringCliException;
 import org.springframework.cli.support.SpringCliUserConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.table.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.cli.testutil.TableAssertions.verifyTableValue;
 
 public class ProjectCatalogCommandsTests {
@@ -69,6 +71,12 @@ public class ProjectCatalogCommandsTests {
 			verifyTableValue(table, 1, 2, "Spring Getting Started Projects");
 			verifyTableValue(table, 1, 3, "[spring, guide]");
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
+
+			assertThatThrownBy(() -> {
+				projectCatalogCommands.catalogAdd("getting-started", "https://github.com/rd-1-2022/spring-gs-catalog/", "Spring Getting Started Projects", tags);
+			}).isInstanceOf(SpringCliException.class)
+					.hasMessageContaining("Catalog named getting-started already exists.  Choose another name.");
+
 		});
 	}
 
