@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Spring CLI :: Spring CLI</title>
-    <link rel="next" href="installation.html">
+    <title>Comments on the Approach :: Spring CLI</title>
+    <link rel="prev" href="key-concepts.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 
@@ -96,7 +96,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Overview</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -111,7 +111,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="key-concepts.html">Key Concepts</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="comments-on-the-approach.html">Commnets on the approach</a>
   </li>
 </ul>
@@ -141,48 +141,43 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="index.html" class="home-link is-current"></a>
+  <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">spring-cli</a></li>
-    <li><a href="index.html">Overview</a></li>
+    <li><a href="comments-on-the-approach.html">Commnets on the approach</a></li>
   </ul>
 </nav>
 <div class="search">
   <input id="search-input" type="text" placeholder="Search docs">
 </div>
-  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/comments-on-the-approach.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 id="page-title" class="page">Spring CLI</h1>
+<h1 id="page-title" class="page">Comments on the Approach</h1>
 <div class="paragraph">
-<p>The goal of the Spring CLI is to increase your productivity when creating new projects and adding functionality to existing projects. It does this by providing the following high-level features.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The command <code>boot new</code> clones an external project and performs a package refactoring to your chosen package name. You can also specify the new project’s group id, artifact id, and version</p>
-</li>
-<li>
-<p>The command <code>boot add</code> will add an external project to your current project. It will perform an intelligent merge of project dependencies, plug-ins, annotations, application configuration files, and refactoring of the external project code into your current project’s package structure.</p>
-</li>
-<li>
-<p>User-provided <code>commands</code> are defined declaratively and live side by side with your code to help you perform everyday tasks on your current project. For example, creating a new controller with tests, adding new dependencies, code, and configuration files for specific functionality such as test container support, or creating configuration files for your platform or CI system. User-provided commands often leverage a template engine of your choice to perform code generation that can create new files or update existing files.</p>
-</li>
-</ol>
+<p>The Spring CLI approach is different from creating a new project from Initializr, aka <a href="https://start.spring.io" class="bare">https://start.spring.io</a>, since it contains fully working code and configuration in addition to your project&#8217;s dependencies.</p>
 </div>
 <div class="paragraph">
-<p>By basing the <code>boot new</code> and <code>boot add</code> commands on "Plain Old Java Projects" hosted on GitHub or GitLab, it is easy for companies to define a standard set of projects that use a company&#8217;s preferred libraries and coding styles. These projects can also serve as the starting point for education about a particular library or approach to programming, for example, learning more about Spring Data JPA, GraphQL, or using testing libraries such as RESTDocs, Assert4j, and Test Containers.</p>
+<p>While you do not get to pick your initial dependencies when executing <code>boot new</code>, you can add dependencies afterward as your needs change while developing the application.
+After initial project creation, use the command <code>boot add</code> or a user-provided command to add code or dependencies.</p>
 </div>
 <div class="paragraph">
-<p>User-provided commands are best suited for performing smaller, repetitive coding tasks during the development process. These command definitions can live side by side with the code so that anyone on the development team can contribute a new command or improve an existing command.   By having commands living side by side with the code, contributing to the project is a simple procedure as there is no other artifact or project to create, update and publish.</p>
+<p>A goal of the Spring CLI is for a collection of curated projects and user-provided commands to emerge in a company.
+The Spring CLI project offers many examples of projects and user-provided commands to help you get started.</p>
+</div>
+<div class="paragraph">
+<p>This approach is also different from projects such as JHipster where you have to create a specific JHipster based project that uses a template engine for code generation of the initial code base.
+The new project template is a separate artifact specific to JHipster.
+This approach is more challanging to create and maintain, in my experience, as compared to using "Plan Old Java Projects" as a starting point.
+You can use a JHipster created project as the basis for some additional customization and then share that project with others for use with the <code>boot new</code> and <code>boot add</code> commands.</p>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="installation.html">Installation</a></span>
+  <span class="prev"><a href="key-concepts.html">Key Concepts</a></span>
 </nav>
 </article>
   </div>

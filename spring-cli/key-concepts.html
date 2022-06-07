@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Spring CLI :: Spring CLI</title>
-    <link rel="next" href="installation.html">
+    <title>Key Concepts :: Spring CLI</title>
+    <link rel="prev" href="creating-new-projects.html">
+    <link rel="next" href="comments-on-the-approach.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 
@@ -96,7 +97,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Overview</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -108,7 +109,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="creating-new-projects.html">Creating New Projects</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="key-concepts.html">Key Concepts</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -141,48 +142,107 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="index.html" class="home-link is-current"></a>
+  <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">spring-cli</a></li>
-    <li><a href="index.html">Overview</a></li>
+    <li><a href="key-concepts.html">Key Concepts</a></li>
   </ul>
 </nav>
 <div class="search">
   <input id="search-input" type="text" placeholder="Search docs">
 </div>
-  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/key-concepts.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 id="page-title" class="page">Spring CLI</h1>
+<h1 id="page-title" class="page">Key Concepts</h1>
+<div class="sect1">
+<h2 id="_project"><a class="anchor" href="#_project"></a>Project</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>The goal of the Spring CLI is to increase your productivity when creating new projects and adding functionality to existing projects. It does this by providing the following high-level features.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The command <code>boot new</code> clones an external project and performs a package refactoring to your chosen package name. You can also specify the new project’s group id, artifact id, and version</p>
-</li>
-<li>
-<p>The command <code>boot add</code> will add an external project to your current project. It will perform an intelligent merge of project dependencies, plug-ins, annotations, application configuration files, and refactoring of the external project code into your current project’s package structure.</p>
-</li>
-<li>
-<p>User-provided <code>commands</code> are defined declaratively and live side by side with your code to help you perform everyday tasks on your current project. For example, creating a new controller with tests, adding new dependencies, code, and configuration files for specific functionality such as test container support, or creating configuration files for your platform or CI system. User-provided commands often leverage a template engine of your choice to perform code generation that can create new files or update existing files.</p>
-</li>
-</ol>
+<p><strong>Project</strong>: A "Plain Old Java Project" hosted in GitHub or GitLab.
+Projects are registered with the CLI so that a simple name can refer to them.</p>
 </div>
 <div class="paragraph">
-<p>By basing the <code>boot new</code> and <code>boot add</code> commands on "Plain Old Java Projects" hosted on GitHub or GitLab, it is easy for companies to define a standard set of projects that use a company&#8217;s preferred libraries and coding styles. These projects can also serve as the starting point for education about a particular library or approach to programming, for example, learning more about Spring Data JPA, GraphQL, or using testing libraries such as RESTDocs, Assert4j, and Test Containers.</p>
+<p>For example, if you register the GitHub URL of a project that uses Spring Data JPA under the name ‘jpa’, you can create a new project from that one by invoking the command <code>boot new jpa</code>.
+Similarly, you can add JPA functionality to an existing project by invoking the command <code>boot add jpa</code>.</p>
 </div>
 <div class="paragraph">
-<p>User-provided commands are best suited for performing smaller, repetitive coding tasks during the development process. These command definitions can live side by side with the code so that anyone on the development team can contribute a new command or improve an existing command.   By having commands living side by side with the code, contributing to the project is a simple procedure as there is no other artifact or project to create, update and publish.</p>
+<p>The commands related to projects are <code>project list</code>, <code>project add</code> and <code>project remove</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_project_catalog"><a class="anchor" href="#_project_catalog"></a>Project Catalog</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Project Catalog</strong>: The Project Catalog is a collection of projects that share a common theme.</p>
+</div>
+<div class="paragraph">
+<p>After registering a catalog with the CLI, the projects are readily available for the user when using the <code>boot new</code> and <code>boot add</code> commands.
+The catalog is a YAML file with the name <code>project-repositories.yaml</code>.
+It contains a list of project repository URLs, and an associated name.
+The catalog is hosted on GitHub or GitLab</p>
+</div>
+<div class="paragraph">
+<p>The commands related to projects catalogs are <code>catalog list</code>, <code>catalog add</code> and <code>catalog remove</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuraiton"><a class="anchor" href="#_configuraiton"></a>Configuraiton</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Configuration</strong>: The CLI provides a configuration system to provide default values to commonly used command options.</p>
+</div>
+<div class="paragraph">
+<p>If you most often create a project with a package name reflecting the name of your company, e.g. <code>com.xkcd</code>, then the command <code>config set boot new `packageName`</code> com.xkcd` will set the default value for the <code>packageName</code> options for the <code>boot new</code> command.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_commands"><a class="anchor" href="#_commands"></a>Commands</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Commands</strong>: These are declaratively defined commands that let you add or modify code and configuration files.</p>
+</div>
+<div class="paragraph">
+<p>You can also run arbitrary executables to help solve any arbitrary task commonly occurring in your development workflow.
+User-defined commands are integrated into the CLI and appear the same as the built-in commands.</p>
+</div>
+<div class="paragraph">
+<p>The user-defined command has three parts, the <code>command name</code>, the <code>sub-command name</code>, and the `options.
+The command name and sub-command name are defined using a directory structure convention.</p>
+</div>
+<div class="paragraph">
+<p>As an example, to create a new user-defined command, with a command name of <code>controller</code> and a sub-command name of <code>new</code>, make the following directory structure</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">.spring/commands/controller/new</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this directory, you can have one file named <code>command.yaml</code> that defines the command&#8217;s description, options, and default values.
+Also in this directory or subdirectories are action files that define the actions to take on the project.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_action_files"><a class="anchor" href="#_action_files"></a>Action Files</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Action Files</strong></p>
+</div>
+</div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="installation.html">Installation</a></span>
+  <span class="prev"><a href="creating-new-projects.html">Creating New Projects</a></span>
+  <span class="next"><a href="comments-on-the-approach.html">Commnets on the approach</a></span>
 </nav>
 </article>
   </div>
