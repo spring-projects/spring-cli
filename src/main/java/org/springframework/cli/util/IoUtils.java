@@ -23,7 +23,6 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,14 +30,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cli.SpringCliException;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Mark Pollack
+ * @author Janne Valkealahti
  */
 public abstract class IoUtils {
-
-	public final static String TEST_WORKING_DIRECTORY = "TEST_WORKING_DIRECTORY";
 
 	private static final Logger logger = LoggerFactory.getLogger(IoUtils.class);
 
@@ -52,28 +49,7 @@ public abstract class IoUtils {
 	}
 
 	public static Path getWorkingDirectory() {
-		String testWorkingDir = System.getenv(TEST_WORKING_DIRECTORY);
-		if (StringUtils.hasText(testWorkingDir)) {
-			Path path = Paths.get(testWorkingDir);
-			if (Files.isDirectory(path)) {
-				return path;
-			} else {
-				throw new SpringCliException("Environment variable TEST_WORKING_DIRECTORY = " + path.toAbsolutePath().toString() + " is not a directory");
-			}
-		}
-		return Path.of("");
-
-//		try {
-//			String homeDir = new File(".").getCanonicalPath();
-//			File f = new File(homeDir);
-//			Assert.isTrue(f.isDirectory(), "Path " + f.getAbsolutePath() + " must be a directory.");
-//			logger.debug("Working directory = " + f.getAbsolutePath());
-//			return f;
-//		}
-//		catch (IOException e) {
-//			throw new SpringCliException("Could not determine working directory", e);
-//
-//		}
+		return Path.of("").toAbsolutePath();
 	}
 
 	public static void writeToDir(File dir, String fileName, Resource resource) {
@@ -86,7 +62,6 @@ public abstract class IoUtils {
 			throw new SpringCliException(
 					"Could not write " + resource.getDescription() + " to directory " + dir.toString(), e);
 		}
-
 	}
 
 	public static void writeText(File target, String body) {
@@ -97,5 +72,4 @@ public abstract class IoUtils {
 			throw new SpringCliException("Cannot write file " + target, e);
 		}
 	}
-
 }

@@ -13,68 +13,66 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package org.springframework.cli.command;
 
 
+import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
+import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.io.TempDir;
-import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
-import uk.org.webcompere.systemstubs.jupiter.SystemStub;
-import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cli.git.GitSourceRepositoryService;
+import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.support.SpringCliUserConfig;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.table.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.cli.support.SpringCliUserConfig.SPRING_CLI_CONFIG_DIR;
 import static org.springframework.cli.testutil.TableAssertions.verifyTableValue;
 
-@ExtendWith(SystemStubsExtension.class)
 public class ProjectCommandsTests {
 
-	@SystemStub
-	private EnvironmentVariables environmentVariables;
+	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
+		.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
-	void testProjectCommands(final @TempDir Path tempDir) {
-		environmentVariables.set(SPRING_CLI_CONFIG_DIR, tempDir.toAbsolutePath().toString());
-		SpringCliUserConfig springCliUserConfig = new SpringCliUserConfig();
-		ProjectCommands projectCommands = new ProjectCommands(springCliUserConfig, new GitSourceRepositoryService(springCliUserConfig));
+	void testProjectCommands() {
+		this.contextRunner.run((context) -> {
+			assertThat(context).hasSingleBean(ProjectCommands.class);
+			ProjectCommands projectCommands = context.getBean(ProjectCommands.class);
 
-		// Get empty table, assert header values
-		Table table = projectCommands.projectList();
-		//System.out.println(table.render(100));
-		assertEmptyProjectListTable(table);
+			// Get empty table, assert header values
+			Table table = projectCommands.projectList();
+			//System.out.println(table.render(100));
+			assertEmptyProjectListTable(table);
 
-		// Add a project and assert values
-		List<String> tags = new ArrayList<>();
-		tags.add("data");
-		tags.add("jpa");
-		projectCommands.projectAdd("jpa", "https://github.com/rd-1-2022/rpt-spring-data-jpa", "Learn JPA", tags);
-		table = projectCommands.projectList();
-		System.out.println(table.render(100));
-		verifyTableValue(table, 1, 0, "jpa");
-		verifyTableValue(table, 1, 1, "https://github.com/rd-1-2022/rpt-spring-data-jpa");
-		verifyTableValue(table, 1, 2, "Learn JPA");
-		verifyTableValue(table, 1, 3, "");
-		verifyTableValue(table, 1, 4, "[data, jpa]");
-		assertThat(table.getModel().getRowCount()).isEqualTo(2);
+			// Add a project and assert values
+			List<String> tags = new ArrayList<>();
+			tags.add("data");
+			tags.add("jpa");
+			projectCommands.projectAdd("jpa", "https://github.com/rd-1-2022/rpt-spring-data-jpa", "Learn JPA", tags);
+			table = projectCommands.projectList();
+			System.out.println(table.render(100));
+			verifyTableValue(table, 1, 0, "jpa");
+			verifyTableValue(table, 1, 1, "https://github.com/rd-1-2022/rpt-spring-data-jpa");
+			verifyTableValue(table, 1, 2, "Learn JPA");
+			verifyTableValue(table, 1, 3, "");
+			verifyTableValue(table, 1, 4, "[data, jpa]");
+			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 
-		// Remove project
-		projectCommands.projectRemove("jpa");
-		table = projectCommands.projectList();
-		//System.out.println(table.render(100));
-		assertThat(table.getModel().getColumnCount()).isEqualTo(5);
-		assertThat(table.getModel().getRowCount()).isEqualTo(1);
-
+			// Remove project
+			projectCommands.projectRemove("jpa");
+			table = projectCommands.projectList();
+			//System.out.println(table.render(100));
+			assertThat(table.getModel().getColumnCount()).isEqualTo(5);
+			assertThat(table.getModel().getRowCount()).isEqualTo(1);
+		});
 	}
 
 	public static void assertEmptyProjectListTable(Table table) {
@@ -87,4 +85,26 @@ public class ProjectCommandsTests {
 		verifyTableValue(table, 0, 4, "Tags");
 	}
 
+	@Configuration
+	static class MockBaseConfig {
+
+		@Bean
+		SpringCliUserConfig springCliUserConfig() {
+			FileSystem fileSystem = Jimfs.newFileSystem();
+			Function<String, Path> pathProvider = (path) -> fileSystem.getPath(path);
+			return new SpringCliUserConfig(pathProvider);
+		}
+
+		@Bean
+		GitSourceRepositoryService gitSourceRepositoryService(SpringCliUserConfig springCliUserConfig) {
+			return new GitSourceRepositoryService(springCliUserConfig);
+		}
+
+		@Bean
+		ProjectCommands projectCommands(SpringCliUserConfig springCliUserConfig,
+				SourceRepositoryService sourceRepositoryService) {
+			ProjectCommands projectCommands = new ProjectCommands(springCliUserConfig, sourceRepositoryService);
+			return projectCommands;
+		}
+	}
 }
