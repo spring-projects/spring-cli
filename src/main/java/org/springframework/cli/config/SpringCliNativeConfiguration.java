@@ -68,6 +68,8 @@ import org.springframework.cli.runtime.engine.frontmatter.InjectMavenPlugin;
 import org.springframework.cli.runtime.engine.frontmatter.InjectProperties;
 import org.springframework.cli.support.SpringCliUserConfig.CommandDefault;
 import org.springframework.cli.support.SpringCliUserConfig.CommandDefaults;
+import org.springframework.cli.support.SpringCliUserConfig.Host;
+import org.springframework.cli.support.SpringCliUserConfig.Hosts;
 import org.springframework.cli.support.SpringCliUserConfig.Option;
 import org.springframework.nativex.hint.FieldHint;
 import org.springframework.nativex.hint.JdkProxyHint;
@@ -247,20 +249,6 @@ import org.springframework.nativex.type.NativeConfiguration;
 			}
 		),
 		@TypeHint(
-			typeNames = "org.springframework.up.support.UpCliUserConfig$Hosts",
-			access = {
-				TypeAccess.PUBLIC_CONSTRUCTORS, TypeAccess.DECLARED_CLASSES, TypeAccess.DECLARED_CONSTRUCTORS,
-				TypeAccess.DECLARED_FIELDS, TypeAccess.DECLARED_METHODS
-			}
-		),
-		@TypeHint(
-			typeNames = "org.springframework.up.support.UpCliUserConfig$Host",
-			access = {
-				TypeAccess.PUBLIC_CONSTRUCTORS, TypeAccess.DECLARED_CLASSES, TypeAccess.DECLARED_CONSTRUCTORS,
-				TypeAccess.DECLARED_FIELDS, TypeAccess.DECLARED_METHODS
-			}
-		),
-		@TypeHint(
 			typeNames = "org.kohsuke.github.GitHubInteractiveObject",
 			access = {
 				TypeAccess.PUBLIC_CONSTRUCTORS, TypeAccess.DECLARED_CLASSES, TypeAccess.DECLARED_CONSTRUCTORS,
@@ -280,7 +268,7 @@ import org.springframework.nativex.type.NativeConfiguration;
 		@TypeHint(
 			types = {
 				CommandDefaults.class, CommandDefault.class, Option.class, CommandFileContents.class, Command.class,
-				CommandOption.class, CommandOption.Builder.class, DynamicCommand.class
+				CommandOption.class, CommandOption.Builder.class, DynamicCommand.class, Hosts.class, Host.class
 			},
 			access = {
 				TypeAccess.PUBLIC_CONSTRUCTORS, TypeAccess.DECLARED_CLASSES, TypeAccess.DECLARED_CONSTRUCTORS,
