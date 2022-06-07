@@ -1,0 +1,53 @@
+= Key Concepts
+
+
+== Project
+
+*Project*: A "Plain Old Java Project" hosted in GitHub or GitLab. 
+Projects are registered with the CLI so that a simple name can refer to them. 
+
+For example, if you register the GitHub URL of a project that uses Spring Data JPA under the name ‘jpa’, you can create a new project from that one by invoking the command `boot new jpa`. 
+Similarly, you can add JPA functionality to an existing project by invoking the command `boot add jpa`.
+
+The commands related to projects are `project list`, `project add` and `project remove`
+
+== Project Catalog
+
+*Project Catalog*: The Project Catalog is a collection of projects that share a common theme.
+
+After registering a catalog with the CLI, the projects are readily available for the user when using the `boot new` and `boot add` commands.
+The catalog is a YAML file with the name `project-repositories.yaml`.
+It contains a list of project repository URLs, and an associated name.
+The catalog is hosted on GitHub or GitLab
+
+The commands related to projects catalogs are `catalog list`, `catalog add` and `catalog remove`
+
+== Configuraiton
+
+*Configuration*: The CLI provides a configuration system to provide default values to commonly used command options.
+
+If you most often create a project with a package name reflecting the name of your company, e.g. `com.xkcd`, then the command `config set boot new `packageName`` com.xkcd` will set the default value for the `packageName` options for the `boot new` command.
+
+
+== Commands
+
+*Commands*: These are declaratively defined commands that let you add or modify code and configuration files.
+
+You can also run arbitrary executables to help solve any arbitrary task commonly occurring in your development workflow.
+User-defined commands are integrated into the CLI and appear the same as the built-in commands.
+
+The user-defined command has three parts, the `command name`, the `sub-command name`, and the `options.
+The command name and sub-command name are defined using a directory structure convention. 
+
+As an example, to create a new user-defined command, with a command name of `controller` and a sub-command name of `new`, make the following directory structure
+
+```
+.spring/commands/controller/new
+```
+
+In this directory, you can have one file named `command.yaml` that defines the command's description, options, and default values.
+Also in this directory or subdirectories are action files that define the actions to take on the project. 
+
+== Action Files
+
+*Action Files*

@@ -1,0 +1,14 @@
+= Comments on the Approach
+
+The Spring CLI approach is different from creating a new project from Initializr, aka https://start.spring.io, since it contains fully working code and configuration in addition to your project's dependencies. 
+
+While you do not get to pick your initial dependencies when executing `boot new`, you can add dependencies afterward as your needs change while developing the application.
+After initial project creation, use the command `boot add` or a user-provided command to add code or dependencies. 
+
+A goal of the Spring CLI is for a collection of curated projects and user-provided commands to emerge in a company. 
+The Spring CLI project offers many examples of projects and user-provided commands to help you get started.
+
+This approach is also different from projects such as JHipster where you have to create a specific JHipster based project that uses a template engine for code generation of the initial code base.
+The new project template is a separate artifact specific to JHipster.
+This approach is more challanging to create and maintain, in my experience, as compared to using "Plan Old Java Projects" as a starting point.
+You can use a JHipster created project as the basis for some additional customization and then share that project with others for use with the `boot new` and `boot add` commands.

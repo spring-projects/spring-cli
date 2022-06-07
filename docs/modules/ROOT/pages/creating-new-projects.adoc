@@ -1,0 +1,67 @@
+= Creating New Projects
+
+To create other projects, you can register a project with the Spring CLI or import a project catalog.
+
+== Importing a Project Catalog
+To import a project catalog with applications that are similar to the Spring Getting Started guides found on https://spring.io/guides, run the following command to import the catalog
+
+[source, bash]
+----
+spring catalog add gs https://github.com/rd-1-2022/spring-gs-catalog
+----
+
+or if you prefer you can specify the command option names
+
+catalog add --name gs --url https://github.com/rd-1-2022/spring-gs-catalog
+
+Now you can see what projects you can create using the command
+
+[source, bash]
+----
+spring project list
+----
+
+To create other projects, you can register a project with the Spring CLI or import a project catalog.
+
+To import a project catalog with applications that are similar to the Spring Getting Started guides found on spring.io/guides, run the following command to import the catalog
+
+catalog add gs https://github.com/rd-1-2022/spring-gs-catalog
+
+or if you prefer you can specify the command option names
+
+catalog add --name gs --url https://github.com/rd-1-2022/spring-gs-catalog
+
+Now you can see what projects you can create using the command
+
+[source, bash]
+----
+spring project list
+----
+
+That returns the following table
+
+[source, bash]
+----
+┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
+│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
+│          │                                                        │JPA.                                                            │       │              │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
+│          │                                                        │                                                                │       │eureka]       │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│scheduling│https://github.com/rd-1-2022/rpt-spring-scheduling-tasks│Scheduling Tasks                                                │gs     │[scheduling]  │
+└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘
+----
+
+To create a new Spring Data JPA project, also setting the package name
+
+spring boot new jpa –name myjpaproject –packageName com.xkcd
+
+
+To create a new Spring Data JPA project, also setting the package name
+
+spring boot new jpa –name myjpaproject –packageName com.xkcd

@@ -1,0 +1,31 @@
+= Installation
+
+The Spring CLI is available as a native binary for Windows, Mac and Linux as well as a Spring Boot uber-jar.  
+
+As the project is evolving quickly in the early days, you can download the Spring Boot uber-jar, Linux and Mac native binaries from the output of GitHub's Continuous Integration Action. 
+
+
+* https://github.com/spring-projects-experimental/spring-cli/actions/workflows/ci.yml[Download CI artifacts here].  The uber-jar is in the `artifacts.zip` file
+
+
+When available,  https://github.com/spring-projects-experimental/spring-cli/actions/workflows/release-milestone.yml[Download Milestone Releases here]
+
+
+Follow the instructions on the project's README file https://github.com/spring-projects-experimental/spring-cli#readme[to build the project from source] file.
+
+== Setting up your PATH or alias
+
+If you have downloaded the Spring Boot uber-jar, create the following alias with the directory appropriate for you download path.
+
+[source, bash]
+----
+alias spring='java -jar /home/mark/downloads/spring-cli-0.0.1-SNAPSHOT.jar'
+----
+
+If you have downloaded the native binary, please add the directory to your `$PATH`.
+
+== Getting Help
+
+The command `spring help` will show help for all the commands.  
+
+To get help on a specific command, just type `spring help` and the command plus sub-command name, e.g. `spring help boot new`
