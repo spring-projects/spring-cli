@@ -2,8 +2,8 @@
 
 To create other projects, you can register a project with the Spring CLI or import a project catalog.
 
-== Importing a Project Catalog
-To import a project catalog with applications that are similar to the Spring Getting Started guides found on https://spring.io/guides, run the following command to import the catalog
+== Adding a Project Catalog
+To add a project catalog that contains applications which are similar to the Spring Getting Started guides found on https://spring.io/guides, run the following command to add the catalog
 
 [source, bash]
 ----
@@ -53,15 +53,111 @@ That returns the following table
 │eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
 │          │                                                        │                                                                │       │eureka]       │
 ├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│scheduling│https://github.com/rd-1-2022/rpt-spring-scheduling-tasks│Scheduling Tasks                                                │gs     │[scheduling]  │
 └──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘
 ----
 
 To create a new Spring Data JPA project, also setting the package name
 
+[source, bash]
+----
 spring boot new jpa –name myjpaproject –packageName com.xkcd
-
+----
 
 To create a new Spring Data JPA project, also setting the package name
 
+[source, bash]
+----
 spring boot new jpa –name myjpaproject –packageName com.xkcd
+----
+
+== Adding a project
+
+Instead of using a catalog, you can add an individual project using the command `project add`.  For example
+
+[source, bash]
+----
+spring project add scheduling https://github.com/rd-1-2022/rpt-spring-scheduling-tasks
+----
+
+Now if you run `spring project list` you will see this project in addition to those from the catalog
+
+[source, bash]
+----
+┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
+│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│scheduling│https://github.com/rd-1-2022/rpt-spring-scheduling-tasks│                                                                │       │[]            │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
+│          │                                                        │JPA.                                                            │       │              │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
+│          │                                                        │                                                                │       │eureka]       │
+└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘
+----
+
+You can now create a new project that showcases how to use scheduling features via the command
+
+
+[source, bash]
+----
+spring boot new scheduling
+----
+
+== Creating a project using a URL
+
+Instead of adding a project to the Spring CLI so as to reference it with a short name, you can use the URL of the project's source repository directly.
+
+For example, to create the Spring JPA project, use the command
+
+[source, bash]
+----
+spring boot new https://github.com/rd-1-2022/rpt-spring-data-jpa 
+----
+
+== Other Options
+The `boot new` command takes the following options, which can be seen by executing the command
+
+[source, bash]
+----
+spring help boot new
+----
+
+Which displays
+
+[source, bash]
+----
+NAME
+       boot new - Create a new Spring Boot project from an existing project
+
+SYNOPSIS
+       boot new --from String --name String --packageName String --path String
+
+OPTIONS
+       --from String
+       Create project from existing project name or URL
+       [Optional]
+
+       --name String
+       Name of the new project
+       [Optional]
+
+       --packageName String
+       Package name for the new project
+       [Optional, default = com.example]
+
+       --path String
+       Path
+       [Optional]
+----
+
+The options not yet shown in this documentation are
+
+* `--name` - that specifies the name of the project, the default value is `demo`.  
+* `--packageName` - the package name to refactor to
+* `--path`  The path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.
+
+
+
