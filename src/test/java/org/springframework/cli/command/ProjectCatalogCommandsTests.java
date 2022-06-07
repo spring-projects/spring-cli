@@ -17,58 +17,75 @@
 
 package org.springframework.cli.command;
 
+import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
+import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
-import uk.org.webcompere.systemstubs.jupiter.SystemStub;
-import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cli.support.SpringCliUserConfig;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.table.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.cli.support.SpringCliUserConfig.SPRING_CLI_CONFIG_DIR;
 import static org.springframework.cli.testutil.TableAssertions.verifyTableValue;
 
-@ExtendWith(SystemStubsExtension.class)
 public class ProjectCatalogCommandsTests {
 
-	@SystemStub
-	private EnvironmentVariables environmentVariables;
+	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
+		.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
 	void testProjectCatalogCommands(final @TempDir Path tempDir) {
-		environmentVariables.set(SPRING_CLI_CONFIG_DIR, tempDir.toAbsolutePath().toString());
-		ProjectCatalogCommands projectCatalogCommands = new ProjectCatalogCommands(new SpringCliUserConfig());
+		this.contextRunner.run((context) -> {
+			assertThat(context).hasSingleBean(ProjectCatalogCommands.class);
+			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
 
-		// Get empty table, assert header values
-		Table table = projectCatalogCommands.catalogList();
-		//System.out.println(table.render(100));
-		assertThat(table.getModel().getColumnCount()).isEqualTo(4);
-		assertThat(table.getModel().getRowCount()).isEqualTo(1);
-		verifyTableValue(table, 0, 0, "Name");
-		verifyTableValue(table, 0, 1, "URL");
-		verifyTableValue(table, 0, 2, "Description");
-		verifyTableValue(table, 0, 3, "Tags");
+			// Get empty table, assert header values
+			Table table = projectCatalogCommands.catalogList();
+			//System.out.println(table.render(100));
+			assertThat(table.getModel().getColumnCount()).isEqualTo(4);
+			assertThat(table.getModel().getRowCount()).isEqualTo(1);
+			verifyTableValue(table, 0, 0, "Name");
+			verifyTableValue(table, 0, 1, "URL");
+			verifyTableValue(table, 0, 2, "Description");
+			verifyTableValue(table, 0, 3, "Tags");
 
-		// Add a catalog and assert values
-		List<String> tags = new ArrayList<>();
-		tags.add("spring");
-		tags.add("guide");
-		projectCatalogCommands.catalogAdd("getting-started", "https://github.com/rd-1-2022/spring-gs-catalog/", "Spring Getting Started Projects", tags);
-		table = projectCatalogCommands.catalogList();
-		System.out.println(table.render(100));
-		verifyTableValue(table, 1, 0, "getting-started");
-		verifyTableValue(table, 1, 1, "https://github.com/rd-1-2022/spring-gs-catalog/");
-		verifyTableValue(table, 1, 2, "Spring Getting Started Projects");
-		verifyTableValue(table, 1, 3, "[spring, guide]");
-		assertThat(table.getModel().getRowCount()).isEqualTo(2);
+			// Add a catalog and assert values
+			List<String> tags = new ArrayList<>();
+			tags.add("spring");
+			tags.add("guide");
+			projectCatalogCommands.catalogAdd("getting-started", "https://github.com/rd-1-2022/spring-gs-catalog/", "Spring Getting Started Projects", tags);
+			table = projectCatalogCommands.catalogList();
+			System.out.println(table.render(100));
+			verifyTableValue(table, 1, 0, "getting-started");
+			verifyTableValue(table, 1, 1, "https://github.com/rd-1-2022/spring-gs-catalog/");
+			verifyTableValue(table, 1, 2, "Spring Getting Started Projects");
+			verifyTableValue(table, 1, 3, "[spring, guide]");
+			assertThat(table.getModel().getRowCount()).isEqualTo(2);
+		});
+	}
 
+	@Configuration
+	static class MockBaseConfig {
 
+		@Bean
+		SpringCliUserConfig springCliUserConfig() {
+			FileSystem fileSystem = Jimfs.newFileSystem();
+			Function<String, Path> pathProvider = (path) -> fileSystem.getPath(path);
+			return new SpringCliUserConfig(pathProvider);
+		}
+
+		@Bean
+		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig) {
+			ProjectCatalogCommands projectCatalogCommands = new ProjectCatalogCommands(springCliUserConfig);
+			return projectCatalogCommands;
+		}
 	}
 }
