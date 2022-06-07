@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Installation :: Spring CLI</title>
-    <link rel="prev" href="index.html">
-    <link rel="next" href="getting-started.html">
+    <title>Adding to existing projects :: Spring CLI</title>
+    <link rel="prev" href="creating-new-projects.html">
+    <link rel="next" href="key-concepts.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 
@@ -100,7 +100,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Overview</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="installation.html">Installation</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -109,7 +109,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="creating-new-projects.html">Creating New Projects</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="adding-to-existing-projects.html">Adding to Existing Projects</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -149,73 +149,156 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">spring-cli</a></li>
-    <li><a href="installation.html">Installation</a></li>
+    <li><a href="adding-to-existing-projects.html">Adding to Existing Projects</a></li>
   </ul>
 </nav>
 <div class="search">
   <input id="search-input" type="text" placeholder="Search docs">
 </div>
-  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/installation.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/adding-to-existing-projects.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 id="page-title" class="page">Installation</h1>
+<h1 id="page-title" class="page">Adding to existing projects</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Spring CLI is available as a native binary for Windows, Mac and Linux as well as a Spring Boot uber-jar.</p>
+<p>All of the projects that are available in the <code>project list</code> command can be used to addor modify code and configuration to an existing project.</p>
 </div>
 <div class="paragraph">
-<p>As the project is evolving quickly in the early days, you can download the Spring Boot uber-jar, Linux and Mac native binaries from the output of GitHub&#8217;s Continuous Integration Action.</p>
+<p>The CLI does this by</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/spring-projects-experimental/spring-cli/actions/workflows/ci.yml">Download CI artifacts here</a>.  The uber-jar is in the <code>artifacts.zip</code> file</p>
+<p>Merging the Maven build file, so that any missing project properties, dependencies, dependency management, plug-ins are added into the target project.</p>
+</li>
+<li>
+<p>Performing a package refactoring so that the code to be copied into the target project has the same package structure.</p>
+</li>
+<li>
+<p>Adding any missing annotations on the Spring Boot main application in the target project are added.</p>
+</li>
+<li>
+<p>Renaming the <code>README.adoc`</code> file (or, .md file) to <code>README-&lt;project-name&gt;.adoc</code> so that additional information about what code was added can be described to the user.</p>
+</li>
+<li>
+<p>Merging <code>application.yaml</code> and <code>application.properties</code> files</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>When available,  <a href="https://github.com/spring-projects-experimental/spring-cli/actions/workflows/release-milestone.yml">Download Milestone Releases here</a></p>
+<p>The heuristic to perform this task is not 100% complete at this time, so expect a few bumps if you are an early adopter.</p>
 </div>
 <div class="paragraph">
-<p>Follow the instructions on the project&#8217;s README file <a href="https://github.com/spring-projects-experimental/spring-cli#readme">to build the project from source</a> file.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_setting_up_your_path_or_alias"><a class="anchor" href="#_setting_up_your_path_or_alias"></a>Setting up your PATH or alias</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>If you have downloaded the Spring Boot uber-jar, create the following alias with the directory appropriate for you download path.</p>
+<p>For example, let&#8217;s assume we have added the getting started catalog.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">alias spring='java -jar /home/mark/downloads/spring-cli-0.0.1-SNAPSHOT.jar'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring catalog add gs https://github.com/rd-1-2022/spring-gs-catalog</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If you have downloaded the native binary, please add the directory to your <code>$PATH</code>.</p>
+<p>This gives us the following projects to select from</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
+│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
+│          │                                                        │JPA.                                                            │       │              │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
+│          │                                                        │                                                                │       │eureka]       │
+└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can create a new web project and then add JPA functionality to that project by the following steps</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new web --packageName com.xkcd
+cd demo
+spring boot add jpa</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The project tree now contains both the web application and the JPA functionality.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ tree
+.
+├── LICENSE
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+├── README.adoc
+├── README-jpa.md
+└── src
+    ├── main
+    │   └── java
+    │       └── com
+    │           └── xkcd
+    │               ├── Application.java
+    │               ├── customer
+    │               │   ├── CustomerCommandLineRunner.java
+    │               │   ├── Customer.java
+    │               │   └── CustomerRepository.java
+    │               └── greeting
+    │                   ├── GreetingController.java
+    │                   └── Greeting.java
+    └── test
+        └── java
+            └── com
+                └── xkcd
+                    ├── customer
+                    │   └── CustomerRepositoryTests.java
+                    └── greeting
+                        └── GreetingControllerTests.java</code></pre>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_getting_help"><a class="anchor" href="#_getting_help"></a>Getting Help</h2>
+<h2 id="_conventions"><a class="anchor" href="#_conventions"></a>Conventions</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The command <code>spring help</code> will show help for all the commands.</p>
+<p>In order to perform an intelligent merge of the code base when running <code>spring boot add</code> the following conventions in the project must be followed.</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>The main <code>@SpringBootApplication</code> should be placed at the root of the package hiearachy with all other code in subpackages.</p>
+</li>
+<li>
+<p>There should be no additional <code>@Bean</code> annotations in the <code>@SpringBootApplication</code> class.
+Any configuration should live in a separate <code>@Configuration</code> class</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_limitations"><a class="anchor" href="#_limitations"></a>Limitations</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>To get help on a specific command, just type <code>spring help</code> and the command plus sub-command name, e.g. <code>spring help boot new</code></p>
+<p>Curently only single module Maven projects are supported.
+Support for single module Gradle projects is planned for the 1.0 release.
+No timeline is defined for supporting multi-module projects.</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="index.html">Overview</a></span>
-  <span class="next"><a href="getting-started.html">Getting Started</a></span>
+  <span class="prev"><a href="creating-new-projects.html">Creating New Projects</a></span>
+  <span class="next"><a href="key-concepts.html">Key Concepts</a></span>
 </nav>
 </article>
   </div>

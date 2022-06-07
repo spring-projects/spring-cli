@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Creating New Projects :: Spring CLI</title>
     <link rel="prev" href="getting-started.html">
-    <link rel="next" href="key-concepts.html">
+    <link rel="next" href="adding-to-existing-projects.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 
@@ -110,6 +110,9 @@
     <a class="nav-link" href="creating-new-projects.html">Creating New Projects</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="adding-to-existing-projects.html">Adding to Existing Projects</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="key-concepts.html">Key Concepts</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -168,10 +171,10 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_importing_a_project_catalog"><a class="anchor" href="#_importing_a_project_catalog"></a>Importing a Project Catalog</h2>
+<h2 id="_adding_a_project_catalog"><a class="anchor" href="#_adding_a_project_catalog"></a>Adding a Project Catalog</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To import a project catalog with applications that are similar to the Spring Getting Started guides found on <a href="https://spring.io/guides" class="bare">https://spring.io/guides</a>, run the following command to import the catalog</p>
+<p>To add a project catalog that contains applications which are similar to the Spring Getting Started guides found on <a href="https://spring.io/guides" class="bare">https://spring.io/guides</a>, run the following command to add the catalog</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -231,27 +234,145 @@
 │eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
 │          │                                                        │                                                                │       │eureka]       │
 ├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│scheduling│https://github.com/rd-1-2022/rpt-spring-scheduling-tasks│Scheduling Tasks                                                │gs     │[scheduling]  │
 └──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>To create a new Spring Data JPA project, also setting the package name</p>
 </div>
-<div class="paragraph">
-<p>spring boot new jpa –name myjpaproject –packageName com.xkcd</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new jpa –name myjpaproject –packageName com.xkcd</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>To create a new Spring Data JPA project, also setting the package name</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new jpa –name myjpaproject –packageName com.xkcd</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_adding_a_project"><a class="anchor" href="#_adding_a_project"></a>Adding a project</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>spring boot new jpa –name myjpaproject –packageName com.xkcd</p>
+<p>Instead of using a catalog, you can add an individual project using the command <code>project add</code>.  For example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring project add scheduling https://github.com/rd-1-2022/rpt-spring-scheduling-tasks</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now if you run <code>spring project list</code> you will see this project in addition to those from the catalog</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
+│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│scheduling│https://github.com/rd-1-2022/rpt-spring-scheduling-tasks│                                                                │       │[]            │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
+│          │                                                        │JPA.                                                            │       │              │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
+│          │                                                        │                                                                │       │eureka]       │
+└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can now create a new project that showcases how to use scheduling features via the command</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new scheduling</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creating_a_project_using_a_url"><a class="anchor" href="#_creating_a_project_using_a_url"></a>Creating a project using a URL</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Instead of adding a project to the Spring CLI so as to reference it with a short name, you can use the URL of the project&#8217;s source repository directly.</p>
+</div>
+<div class="paragraph">
+<p>For example, to create the Spring JPA project, use the command</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new https://github.com/rd-1-2022/rpt-spring-data-jpa</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_other_options"><a class="anchor" href="#_other_options"></a>Other Options</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>boot new</code> command takes the following options, which can be seen by executing the command</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring help boot new</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which displays</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME
+       boot new - Create a new Spring Boot project from an existing project
+
+SYNOPSIS
+       boot new --from String --name String --packageName String --path String
+
+OPTIONS
+       --from String
+       Create project from existing project name or URL
+       [Optional]
+
+       --name String
+       Name of the new project
+       [Optional]
+
+       --packageName String
+       Package name for the new project
+       [Optional, default = com.example]
+
+       --path String
+       Path
+       [Optional]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The options not yet shown in this documentation are</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>--name</code> - that specifies the name of the project, the default value is <code>demo</code>.</p>
+</li>
+<li>
+<p><code>--packageName</code> - the package name to refactor to</p>
+</li>
+<li>
+<p><code>--path</code>  The path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="getting-started.html">Getting Started</a></span>
-  <span class="next"><a href="key-concepts.html">Key Concepts</a></span>
+  <span class="next"><a href="adding-to-existing-projects.html">Adding to Existing Projects</a></span>
 </nav>
 </article>
   </div>
