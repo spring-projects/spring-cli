@@ -25,6 +25,7 @@ jobs:
           cache: gradle
       - run: ./gradlew build --no-daemon
       - uses: actions/upload-artifact@v3
+        if: ${{ matrix.java == '11' }}
         with:
           path: build/libs/*.jar
           retention-days: 1
