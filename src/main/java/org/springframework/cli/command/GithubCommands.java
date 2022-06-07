@@ -23,7 +23,7 @@ import java.util.Optional;
 import org.jline.utils.AttributedString;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
-import org.kohsuke.github.RateLimitHandler;
+import org.kohsuke.github.RateLimitChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +34,8 @@ import org.springframework.cli.support.SpringCliUserConfig.Host;
 import org.springframework.cli.support.SpringCliUserConfig.Hosts;
 import org.springframework.cli.support.github.GithubDeviceFlow;
 import org.springframework.shell.component.flow.ComponentFlow;
-import org.springframework.shell.component.flow.ResultMode;
 import org.springframework.shell.component.flow.ComponentFlow.ComponentFlowResult;
+import org.springframework.shell.component.flow.ResultMode;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -52,6 +52,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class GithubCommands extends AbstractSpringCliCommands {
 
 	private final static Logger log = LoggerFactory.getLogger(GithubCommands.class);
+
+	private final static RateLimitChecker RATE_LIMIT_CHECKER = new RateLimitChecker.LiteralValue(0);
 
 	@Autowired
 	private WebClient.Builder webClientBuilder;
@@ -151,7 +153,8 @@ public class GithubCommands extends AbstractSpringCliCommands {
 			try {
 				GitHub gh = new GitHubBuilder()
 						.withOAuthToken(host.getOauthToken())
-						.withRateLimitHandler(RateLimitHandler.FAIL).build();
+						.withRateLimitChecker(RATE_LIMIT_CHECKER)
+						.build();
 				loginName = gh.getMyself().getLogin();
 				log.debug("Got loginName {}", loginName);
 			} catch (IOException e) {
