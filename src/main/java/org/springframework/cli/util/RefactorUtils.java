@@ -39,7 +39,7 @@ public class RefactorUtils {
 	private static final Logger logger = LoggerFactory.getLogger(RefactorUtils.class);
 
 	public static void refactorPackage(String newPackage, String oldPackage, Path workingPath) {
-		logger.debug("Refactoring to package name " + newPackage);
+		System.out.println("\nRefactoring to package name " + newPackage);
 		JavaParser javaParser = new Java11Parser.Builder().build();
 		FileTypeCollectingFileVisitor collector = new FileTypeCollectingFileVisitor(".java");
 		try {

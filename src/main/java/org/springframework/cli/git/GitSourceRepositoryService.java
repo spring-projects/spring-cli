@@ -103,7 +103,7 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 		try {
 			File src = ResourceUtils.getFile(source);
 			File dest = targetPath.toFile();
-			logger.debug("Copying file resource: " + src + " to " + dest);
+			logger.debug("Copying files from: " + src + " to: " + dest);
 			FileSystemUtils.copyRecursively(src, dest);
 		}
 		catch (IOException e) {
