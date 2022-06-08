@@ -31,14 +31,14 @@ public class FrontMatterReaderTests {
 	void readTests() {
 		String templateYaml = TestResourceUtils.resourceContents(getClass(), "template1.yaml");
 		CommandActionFileContents commandActionFileContents = FrontMatterReader.read(templateYaml).get();
-		assertThat(commandActionFileContents.getMetadata().getActions().getGenerate()).isEqualTo("org/springframework/cli/commands/hello.yml");
+		assertThat(commandActionFileContents.getFrontMatter().getAction().getGenerate()).isEqualTo("hello.yml");
 	}
 
 	@Test
 	void readMavenDep() {
 		String templateYaml = TestResourceUtils.resourceContents(getClass(), "template2.yaml");
 		CommandActionFileContents commandActionFileContents = FrontMatterReader.read(templateYaml).get();
-		Actions action = commandActionFileContents.getMetadata().getActions();
+		Action action = commandActionFileContents.getFrontMatter().getAction();
 		assertThat(action.getInjectMavenDependency().getTo()).isEqualTo("pom.xml");
 	}
 

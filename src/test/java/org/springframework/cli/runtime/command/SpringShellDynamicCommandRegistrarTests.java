@@ -18,6 +18,7 @@
 package org.springframework.cli.runtime.command;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,6 +26,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import org.springframework.cli.runtime.engine.model.ModelPopulator;
+import org.springframework.cli.runtime.engine.model.SystemModelPopulator;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.shell.command.CommandCatalog;
 
@@ -73,6 +76,9 @@ public class SpringShellDynamicCommandRegistrarTests {
 		SpringShellDynamicCommandRegistrar springCliDynamicCommandRegistrar = new SpringShellDynamicCommandRegistrar();
 		Path cwd = IoUtils.getWorkingDirectory().toAbsolutePath();
 		CommandCatalog commandCatalog = CommandCatalog.of();
+		SystemModelPopulator systemModelPopulator = new SystemModelPopulator();
+		List<ModelPopulator> modelPopulators = new ArrayList<>();
+		modelPopulators.add(systemModelPopulator);
 		springCliDynamicCommandRegistrar.registerSpringCliCommands(commandCatalog,
 				commandScanResults, modelPopulators);
 

@@ -1,5 +1,5 @@
 ---
-actions:
+action:
   generate: hello.yml
 ---
 hello world

@@ -48,21 +48,6 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		this.upCliUserConfig = upCliUserConfig;
 	}
 
-	@ShellMethod(key = "catalog add", value = "Add a project to a project catalog")
-	public void catalogAdd(
-		@ShellOption(help = "Catalog name", arity = 1) String name,
-		@ShellOption(help = "Catalog url", arity = 1) String url,
-		@ShellOption(help = "Catalog description", defaultValue = ShellOption.NULL, arity = 1) String description,
-		@ShellOption(help = "Project tags", defaultValue = ShellOption.NULL, arity = 1) List<String> tags
-	) {
-		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
-		checkIfCatalogNameExists(name, projectCatalogs);
-		projectCatalogs.add(ProjectCatalog.of(name, description, url, tags));
-		ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
-		projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
-		upCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
-	}
-
 	@ShellMethod(key = "catalog list", value = "List catalogs")
 	public Table catalogList() {
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "URL", "Description" , "Tags" });
@@ -84,6 +69,21 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		TableModel model = new ArrayTableModel(data);
 		TableBuilder tableBuilder = new TableBuilder(model);
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
+	}
+
+	@ShellMethod(key = "catalog add", value = "Add a project to a project catalog")
+	public void catalogAdd(
+			@ShellOption(help = "Catalog name", arity = 1) String name,
+			@ShellOption(help = "Catalog url", arity = 1) String url,
+			@ShellOption(help = "Catalog description", defaultValue = ShellOption.NULL, arity = 1) String description,
+			@ShellOption(help = "Project tags", defaultValue = ShellOption.NULL, arity = 1) List<String> tags
+	) {
+		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		checkIfCatalogNameExists(name, projectCatalogs);
+		projectCatalogs.add(ProjectCatalog.of(name, description, url, tags));
+		ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
+		projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
+		upCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
 	}
 
 	@ShellMethod(key = "catalog remove", value = "Remove a project from a catalog")

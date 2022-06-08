@@ -48,7 +48,7 @@ public class DynamicMethodTargetRegistrar implements MethodTargetRegistrar {
 		SpringShellDynamicCommandRegistrar springCliDynamicCommandRegistrar = new SpringShellDynamicCommandRegistrar();
 		Path cwd = IoUtils.getWorkingDirectory().toAbsolutePath();
 		Path pathToUse = Paths.get(cwd.toString(), ".spring", "commands");
-		logger.debug("Looking for dynamic commands in directory " + pathToUse);
+		logger.debug("Looking for user-defined commands in directory " + pathToUse);
 		CommandScanner scanner = new CommandScanner(pathToUse);
 		CommandScanResults commandScanResults = scanner.scan();
 		logger.debug("Found commands " + commandScanResults);

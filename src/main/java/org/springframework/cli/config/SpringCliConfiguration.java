@@ -23,7 +23,9 @@ import io.netty.resolver.DefaultAddressResolverGroup;
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactorNettyHttpClientMapper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cli.initializr.InitializrClient;
+import org.springframework.cli.runtime.engine.model.MavenModelPopulator;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
+import org.springframework.cli.runtime.engine.model.RootPackageModelPopulator;
 import org.springframework.cli.runtime.engine.model.SystemModelPopulator;
 import org.springframework.cli.support.SpringCliUserConfig;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +46,16 @@ public class SpringCliConfiguration {
 	@Bean
 	public ModelPopulator systemModelPopulator() {
 		return new SystemModelPopulator();
+	}
+
+	@Bean
+	public ModelPopulator mavenModelPopulator() {
+		return new MavenModelPopulator();
+	}
+
+	@Bean
+	public ModelPopulator rootPackageModelPopulator() {
+		return new RootPackageModelPopulator();
 	}
 
 	@Bean

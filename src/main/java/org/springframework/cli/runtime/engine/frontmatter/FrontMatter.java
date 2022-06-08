@@ -35,12 +35,12 @@ public class FrontMatter {
 	 * The actions to execute against the template. If {@code null}, the file is not
 	 * processed.
 	 */
-	private final Actions actions;
+	private final Action action;
 
 	private final Conditional conditional;
 
-	public Actions getActions() {
-		return actions;
+	public Action getAction() {
+		return action;
 	}
 
 	public String getEngine() {
@@ -52,10 +52,11 @@ public class FrontMatter {
 	}
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	FrontMatter(@JsonProperty("engine") String engine, @JsonProperty("actions") @Nullable Actions actions,
+	FrontMatter(@JsonProperty("engine") String engine, @JsonProperty("action") @Nullable Action action,
 			@JsonProperty("conditional") Conditional conditional) {
+		// The default is logic-less mustache
 		this.engine = Objects.requireNonNullElse(engine, "mustache");
-		this.actions = Objects.requireNonNull(actions);
+		this.action = Objects.requireNonNull(action);
 		this.conditional = Objects.requireNonNullElse(conditional, new Conditional());
 	}
 
@@ -63,7 +64,7 @@ public class FrontMatter {
 	public String toString() {
 		final StringBuffer sb = new StringBuffer("Metadata{");
 		sb.append("engine='").append(engine).append('\'');
-		sb.append(", actions=").append(actions);
+		sb.append(", action=").append(action);
 		sb.append(", conditional=").append(conditional);
 		sb.append('}');
 		return sb.toString();

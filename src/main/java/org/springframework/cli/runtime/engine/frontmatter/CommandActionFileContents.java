@@ -28,7 +28,7 @@ package org.springframework.cli.runtime.engine.frontmatter;
  * <p>
  * For example <pre>
  * ---
- * actions:
+ * action:
  *   to: hello.txt
  * ---
  * Hello World @ {{now}}.
@@ -49,7 +49,7 @@ public class CommandActionFileContents {
 		this.text = text;
 	}
 
-	public FrontMatter getMetadata() {
+	public FrontMatter getFrontMatter() {
 		return frontMatter;
 	}
 

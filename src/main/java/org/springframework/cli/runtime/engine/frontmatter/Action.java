@@ -26,7 +26,7 @@ import org.springframework.lang.Nullable;
  *
  * @author Mark Pollack
  */
-public class Actions {
+public class Action {
 
 	// These are the three general purpose actions
 
@@ -70,7 +70,7 @@ public class Actions {
 	private final InjectProperties injectProperties;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	Actions(@JsonProperty("generate") @Nullable String generate, @JsonProperty("overwrite") boolean overwrite,
+	Action(@JsonProperty("generate") @Nullable String generate, @JsonProperty("overwrite") boolean overwrite,
 			@JsonProperty("console") boolean console, @JsonProperty("exec") @Nullable Exec exec,
 			@JsonProperty("injectMavenPlugin") @Nullable InjectMavenPlugin injectMavenPlugin,
 			@JsonProperty("injectMavenDependency") @Nullable InjectMavenDependency injectMavenDependency,
@@ -126,7 +126,7 @@ public class Actions {
 
 	@Override
 	public String toString() {
-		return "Actions{" + "to='" + generate + '\'' + ", overwrite=" + overwrite + ", console=" + console + ", exec=" + exec
+		return "Action{" + "to='" + generate + '\'' + ", overwrite=" + overwrite + ", console=" + console + ", exec=" + exec
 				+ ", injectMavenPlugin=" + injectMavenPlugin + ", injectMavenDependency=" + injectMavenDependency
 				+ ", injectProperties=" + injectProperties + ", inject=" + inject + '}';
 	}

@@ -58,7 +58,7 @@ import org.springframework.cli.runtime.command.Command;
 import org.springframework.cli.runtime.command.CommandFileContents;
 import org.springframework.cli.runtime.command.CommandOption;
 import org.springframework.cli.runtime.command.DynamicCommand;
-import org.springframework.cli.runtime.engine.frontmatter.Actions;
+import org.springframework.cli.runtime.engine.frontmatter.Action;
 import org.springframework.cli.runtime.engine.frontmatter.Conditional;
 import org.springframework.cli.runtime.engine.frontmatter.Exec;
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatter;
@@ -277,7 +277,7 @@ import org.springframework.nativex.type.NativeConfiguration;
 		),
 		@TypeHint(
 			types = {
-				Actions.class, Conditional.class, Exec.class, FrontMatter.class, Inject.class, InjectMavenDependency.class,
+				Action.class, Conditional.class, Exec.class, FrontMatter.class, Inject.class, InjectMavenDependency.class,
 				InjectMavenPlugin.class, InjectProperties.class
 			},
 			access = {

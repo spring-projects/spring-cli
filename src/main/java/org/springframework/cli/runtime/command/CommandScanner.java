@@ -97,6 +97,7 @@ public class CommandScanner {
 	 * </p>
 	 */
 	private Command getCommandObject(File directory) {
+		//TODO also look for 'command.yml'
 		File manifestFile = new File(directory, "command.yaml");
 		Command command = new Command();
 

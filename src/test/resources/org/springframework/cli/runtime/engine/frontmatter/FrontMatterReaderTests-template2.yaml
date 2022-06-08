@@ -1,5 +1,5 @@
 ---
-actions:
+action:
   injectMavenDependency:
     to: pom.xml
     skip: spring-boot-starter-jpa

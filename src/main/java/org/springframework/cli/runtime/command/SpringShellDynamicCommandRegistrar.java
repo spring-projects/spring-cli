@@ -68,7 +68,7 @@ public class SpringShellDynamicCommandRegistrar {
 
 				Builder builder = CommandRegistration.builder()
 						.command(commandName + " " + subCommandName)
-						.group("Dynamic Commands")
+						.group("User-defined Commands")
 						.description(subCommand.getDescription())
 						.withTarget()
 							.method(dynamicCommand, "execute")

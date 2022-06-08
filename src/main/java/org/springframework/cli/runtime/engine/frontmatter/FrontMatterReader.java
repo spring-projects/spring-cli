@@ -84,8 +84,8 @@ public class FrontMatterReader {
 			return Optional.of(new CommandActionFileContents(frontMatter, templateText));
 		}
 		catch (Exception ex) {
-			throw new SpringCliException("Could not read the generator with contents\n" + templateContents + "\n"
-					+ "Parsed frontmatter contents = " + stringBuilder.toString(), ex);
+			throw new SpringCliException("Could not read the action file with contents\n" + templateContents + "\n"
+					+ "Parsed frontmatter contents = \n" + stringBuilder.toString(), ex);
 		}
 	}
 
@@ -124,12 +124,12 @@ public class FrontMatterReader {
 					return read(fileContents, delimiter);
 				}
 				else {
-					throw new SpringCliException("Could not read generator in Path = " + path, ex);
+					throw new SpringCliException("Could not read action file in Path = " + path, ex);
 				}
 			}
 		}
 		catch (Exception ex) {
-			throw new SpringCliException("Could not read generator in Path = " + path, ex);
+			throw new SpringCliException("Could not read action file in Path = " + path, ex);
 		}
 	}
 

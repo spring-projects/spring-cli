@@ -36,7 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
-import org.springframework.cli.runtime.engine.frontmatter.Actions;
+import org.springframework.cli.runtime.engine.frontmatter.Action;
 import org.springframework.cli.runtime.engine.frontmatter.CommandActionFileContents;
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatter;
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatterFileVisitor;
@@ -79,7 +79,7 @@ public class DynamicCommand {
 
 	public void execute(CommandContext commandContext) throws IOException {
 
-		System.out.println("Hello world from dynamic command " + commandName + " " + subCommandName);
+		//System.out.println("Hello world from dynamic command " + commandName + " " + subCommandName);
 
 		Map<String, Object> model = new HashMap<>();
 
@@ -95,7 +95,9 @@ public class DynamicCommand {
 			// TODO will value() be populated with defaultValue() if not passed in?
 			String kebabOption = toKebab(commandParserResult.option().getLongNames()[0]);
 			// TODO will value() be populated with defaultValue() if not passed in?
-			model.put(kebabOption, commandParserResult.value());
+			model.put(kebabOption, commandParserResult.value().toString());
+			// TODO - only really necessary if using logic-less template engine.
+			model.put(kebabOption + "-upper", StringUtils.capitalize(commandParserResult.value().toString()));
 		}
 	}
 
@@ -110,7 +112,7 @@ public class DynamicCommand {
 				modelPopulator.contributeToModel(cwd, model);
 			}
 		}
-		System.out.println(model);
+		//System.out.println(model);
 
 		// TODO normalize model keys to camelCase?
 
@@ -126,22 +128,21 @@ public class DynamicCommand {
 
 	private void processCommandActionFiles(Map<Path, CommandActionFileContents> commandActionFiles, Path cwd, Map<String, Object> model) throws IOException {
 
-		// Do all the work here ;)
-
 		for (Entry<Path, CommandActionFileContents> kv : commandActionFiles.entrySet()) {
 			Path path = kv.getKey();
 			CommandActionFileContents commandActionFileContents = kv.getValue();
-			Actions actions = commandActionFileContents.getMetadata().getActions();
-			if (actions == null) {
+			Action action = commandActionFileContents.getFrontMatter().getAction();
+			if (action == null) {
 				System.out.println("No actions to execute in " + path.toAbsolutePath());
 				continue;
 			}
-			TemplateEngine templateEngine = getTemplateEngine(commandActionFileContents.getMetadata());
+			TemplateEngine templateEngine = getTemplateEngine(commandActionFileContents.getFrontMatter());
 
 
-			String toFileName = actions.getGenerate();
+			String generate = action.getGenerate();
+			String toFileName = templateEngine.process(generate, model);
 			if (StringUtils.hasText(toFileName)) {
-				generateFile(commandActionFileContents, templateEngine, toFileName, actions.isOverwrite(), model, cwd);
+				generateFile(commandActionFileContents, templateEngine, toFileName, action.isOverwrite(), model, cwd);
 			}
 
 		}
@@ -189,7 +190,7 @@ public class DynamicCommand {
 			return Optional.of(CommandFileReader.read(commandFilePath));
 		}
 		catch (IOException e) {
-			logger.warn("Could not read command.yaml t path {}", commandFilePath, e);
+			logger.warn("Could not read command.yaml in path {}", commandFilePath, e);
 			return Optional.empty();
 		}
 	}
@@ -201,7 +202,7 @@ public class DynamicCommand {
 			Files.walkFileTree(dynamicSubCommandPath, visitor);
 		}
 		catch (IOException e) {
-			throw new SpringCliException("Error trying to detect actions files", e);
+			throw new SpringCliException("Error trying to detect action files", e);
 		}
 
 		// Then actually parse, retaining only those paths that yielded a result

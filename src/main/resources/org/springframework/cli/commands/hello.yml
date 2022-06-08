@@ -2,4 +2,4 @@
 actions:
   generate: hello.txt
 ---
-Hello World at {{now}}
+Hello {{greeting}} at {{now}} on {{os-name}}.
