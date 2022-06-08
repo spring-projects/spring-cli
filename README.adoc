@@ -1,6 +1,8 @@
 = A CLI focused on developer productivity
 
-* This repository is a work in progress, it should stabilize over the next month
+* Note: this is a work in progress
+
+* https://spring-projects-experimental.github.io/spring-cli/spring-cli/[Read the documentation] for info on *Installing* and *Getting Started*
 
 == Build
 
@@ -42,55 +44,6 @@ cd docs
 
 Output is in `./build/site`
 
-== Docs
-
-=== Overview
-The command `boot new`, for example invoked by calling 'spring boot new' will create a new Spring Boot project named `demo` in a directory named `demo`.
-
-You can configure the Spring CLI to create Spring Boot projects that are based on existing projects hosted on GitHub and GitLab.
-
-It is expected that a user or a company will curate a collection of projects that can bootstrap development for common use cases.
-
-A collection of projects that share a theme of functionality is represented as a Project Catalog.
-
-=== Generic Commands
-
-```
-$ build/native/nativeCompile/spring-cli help
-AVAILABLE COMMANDS
-
-Boot Commands
-        boot add: Merge an existing project into the current Spring Boot project
-        boot new: Create a new Spring Boot project from an existing project
-
-Built-In Commands
-        completion bash: Generate bash completion script
-        help: Display help about available commands.
-        history: Display or save the history of previously run commands
-        script: Read and execute commands from a file.
-        version: Show version info
-
-Github Commands
-        github auth login: Authenticate with a GitHub
-        github auth logout: Log out of a GitHub
-        github auth status: View authentication status
-
-Initializr Commands
-        initializr dependencies: List supported dependencies
-        initializr info: Show the Initializr server being used
-        initializr new: Create a new project from start.spring.io
-
-Project Catalog Commands
-        catalog add: Add a project to a project catalog
-        catalog list: List catalogs
-        catalog remove: Remove a project from a catalog
-
-Project Commands
-        project add: Add a project to use with 'boot new' and 'boot add' commands
-        project list: List projects available for use with 'boot new' and 'boot add' commands
-        project remove: Remove project
-
-```
 
 === Shell Completion
 
