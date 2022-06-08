@@ -134,7 +134,7 @@ public class ProjectMerger {
 	}
 
 	private void mergeSpringBootApplicationClassAnnotations() throws IOException {
-		System.out.println("\n--- Merging Spring Boot Application class ---");
+		System.out.println("\nMerging Spring Boot Application class annotations...");
 		logger.debug("Looking for @SpringBootApplication in directory " + this.toMergeProjectPath.toFile());
 		Optional<File> springBootApplicationFile = RootPackageFinder.findSpringBootApplicationFile(this.toMergeProjectPath.toFile());
 
@@ -277,11 +277,11 @@ public class ProjectMerger {
 				} else if (extension.isPresent() && (extension.get().equals("yaml") || extension.get().equals("yml")) ) {
 					mergeAndWriteYaml(srcFile, destFile);
 				} else {
-					System.out.println("WARNING: Not copying file as it already exists: " + srcFile);
+					//System.out.println("WARNING: Not copying file as it already exists: " + srcFile);
 				}
 				//TODO handle renaming readme.adoc etc.
 			} else {
-				System.out.println("Copying srcFile = " + srcFile + "to destFile = " + destFile);
+				//System.out.println("Copying srcFile = " + srcFile + " to destFile = " + destFile);
 				FileUtils.getFileUtils().copyFile(srcFile, destFile);
 			}
 
@@ -289,6 +289,7 @@ public class ProjectMerger {
 	}
 
 	private void mergeAndWriteYaml(File srcFile, File destFile) throws FileNotFoundException {
+		System.out.println("\nMerging Spring application YAML file...");
 		YamlMapFactoryBean factory = new YamlMapFactoryBean();
 		factory.setResolutionMethod(ResolutionMethod.OVERRIDE_AND_IGNORE);
 		FileSystemResource srcFileResource = new FileSystemResource(srcFile);
@@ -305,7 +306,7 @@ public class ProjectMerger {
 	}
 
 	private void mergeAndWriteProperties(File srcFile, File destFile) throws IOException {
-		System.out.println("\nMerging property files srcFile = " + srcFile + " --- destFile = " + destFile);
+		System.out.println("\nMerging Spring Application property file...");
 		Properties srcProperties = new Properties();
 		Properties destProperties = new Properties();
 		srcProperties.load(new FileInputStream(srcFile));
@@ -332,7 +333,7 @@ public class ProjectMerger {
 	}
 
 	private void refactorToMergeCodebase() {
-		System.out.println("\n--- Reactor code base that is to be merged ---");
+		System.out.println("\nReactoring code base that is to be merged...");
 		logger.debug("Looking for @SpringBootApplication in directory " + this.currentProjectPath.toFile());
 		Optional<String> currentRootPackageName = RootPackageFinder.findRootPackage(this.currentProjectPath.toFile());
 		if (currentRootPackageName.isEmpty()) {
@@ -349,13 +350,13 @@ public class ProjectMerger {
 			return;
 		}
 
-		System.out.println("Refactoring to merge code base.  From package " + toMergeRootPackageName.get() + " to " + currentRootPackageName.get());
+		//System.out.println("Refactoring to merge code base.  From package " + toMergeRootPackageName.get() + " to " + currentRootPackageName.get());
 		refactorPackage(currentRootPackageName.get(), toMergeRootPackageName.get(), this.toMergeProjectPath);
 		System.out.println("look in " + this.toMergeProjectPath + " to see if refactoring of 'to merge code base' was done correctly");
 	}
 
 	private void mergeMavenDependencies(Path currentProjectPomPath, Model currentModel, Model toMergeModel, List<Path> paths, MavenParser mavenParser) throws IOException {
-		System.out.println("\n--- Maven Dependency Merge ---");
+		System.out.println("\nMerging Maven Dependencies...");
 		List<Dependency> toMergeModelDependencies = toMergeModel.getDependencies();
 		List<Dependency> currentDependencies = currentModel.getDependencies();
 
@@ -368,7 +369,7 @@ public class ProjectMerger {
 				if (scope == null) {
 					scope = "compile";
 				}
-				System.out.println("Going to try and add dependency for " + candidateDependency + " scope = " + scope);
+				//System.out.println("Going to try and add dependency for " + candidateDependency + " scope = " + scope);
 				AddDependency addDependency = getRecipeAddDependency(candidateDependency.getGroupId(), candidateDependency.getArtifactId(), candidateDependency.getVersion(), scope, "org.springframework.boot.SpringApplication");
 
 				List<Result> resultList = addDependency.run(parsedPomFiles);
@@ -397,9 +398,9 @@ public class ProjectMerger {
 		if (dependencyManagement != null) {
 			List<Dependency> dependencies = dependencyManagement.getDependencies();
 
-			System.out.println("\n--- Maven Dependency Management Merge ---");
+			//System.out.println("\nMerging Maven Dependency Management...");
 			for (Dependency dependency : dependencies) {
-				System.out.println("Going to try and add dependency management section for " + dependency);
+				//System.out.println("Going to try and add dependency management section for " + dependency);
 				AddManagedDependency addManagedDependency = getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
 						dependency.getType(), dependency.getClassifier());
 
@@ -417,10 +418,10 @@ public class ProjectMerger {
 
 		Properties propertiesToMerge = modelToMerge.getProperties();
 		Set<String> keysToMerge = propertiesToMerge.stringPropertyNames();
-		System.out.println("\n--- Maven Properties Merge ---");
+		System.out.println("\nMerging Maven Properties...");
 		for (String keyToMerge : keysToMerge) {
 			// TODO may want to do something special in case java.version is set to be different
-			System.out.println("Going to merge property key " + keyToMerge);
+			//System.out.println("Going to merge property key " + keyToMerge);
 			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true);
 			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
 			List<Result> resultList = changePropertyValueRecipe.run(pomFiles);

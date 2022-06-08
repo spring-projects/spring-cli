@@ -132,7 +132,7 @@ public class ProjectHandler {
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.GREEN));
 		sb.append(System.lineSeparator());
-		sb.append("--- Done! ---");
+		sb.append("Done!");
 		this.terminalMessage.shellPrint(sb.toAttributedString());
 	}
 

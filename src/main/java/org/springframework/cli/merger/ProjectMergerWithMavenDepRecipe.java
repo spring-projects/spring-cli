@@ -91,10 +91,10 @@ public class ProjectMergerWithMavenDepRecipe {
 
 		Properties propertiesToMerge = modelToMerge.getProperties();
 		Set<String> keysToMerge = propertiesToMerge.stringPropertyNames();
-		System.out.println("\n--- Maven Properties Merge ---");
+		System.out.println("\nMering Maven Properties...");
 		for (String keyToMerge : keysToMerge) {
 			// TODO may want to do something special in case java.version is set to be different
-			System.out.println("Going to merge property key " + keyToMerge);
+			//System.out.println("Going to merge property key " + keyToMerge);
 			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true);
 			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.pathCurrentProject, getExecutionContext());
 			List<Result> resultList = changePropertyValueRecipe.run(pomFiles);
@@ -106,9 +106,9 @@ public class ProjectMergerWithMavenDepRecipe {
 		DependencyManagement dependencyManagement = modelToMerge.getDependencyManagement();
 		List<Dependency> dependencies = dependencyManagement.getDependencies();
 
-		System.out.println("\n--- Maven Dependency Management Merge ---");
+		System.out.println("\nMerging Maven Dependency Management");
 		for (Dependency dependency : dependencies) {
-			System.out.println("Going to try and add dependency management section for " + dependency);
+			//System.out.println("Going to try and add dependency management section for " + dependency);
 			AddManagedDependency addManagedDependency = getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
 					dependency.getType(), dependency.getClassifier());
 
@@ -173,13 +173,13 @@ public class ProjectMergerWithMavenDepRecipe {
 		List untyped = (List)parsedJavaFilesToUse;
 		untyped.addAll(parsedPomFilesToUse);
 
-		System.out.println("\n--- Maven Dependency Merge ---");
+		System.out.println("\nMerging Maven Dependencies...");
 		for (Dependency dependency : dependenciesToMerge) {
 			String scope = dependency.getScope();
 			if (scope == null) {
 				scope = "compile";
 			}
-			System.out.println("Going to try and add dependency for " + dependency + " scope = " + scope);
+			//System.out.println("Going to try and add dependency for " + dependency + " scope = " + scope);
 			AddDependency addDependency = getRecipeAddDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), null, "org.springframework.boot.SpringApplication");
 
 
