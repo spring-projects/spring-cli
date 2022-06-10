@@ -71,7 +71,7 @@ public abstract class AbstractSpringCliCommands extends AbstractShellComponent {
 		AttributedStyle style = null;
 		if (StringUtils.hasText(tag)) {
 			ThemeResolver themeResolver = getThemeResolver();
-			String resolvedStyle = themeResolver.resolveTag(tag);
+			String resolvedStyle = themeResolver.resolveStyleTag(tag);
 			style = themeResolver.resolveStyle(resolvedStyle);
 		}
 		return new AttributedString(text, style);

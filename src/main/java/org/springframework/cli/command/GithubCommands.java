@@ -39,7 +39,7 @@ import org.springframework.shell.component.flow.ResultMode;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.shell.style.ThemeSettings;
+import org.springframework.shell.style.StyleSettings;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -78,10 +78,10 @@ public class GithubCommands extends AbstractSpringCliCommands {
 			GithubDeviceFlow githubDeviceFlow = new GithubDeviceFlow("https://github.com");
 			Map<String, String> response = githubDeviceFlow.requestDeviceFlow(webClientBuilder, clientId, scopes);
 
-			AttributedString styledStr = styledString("!", ThemeSettings.TAG_LEVEL_WARN);
+			AttributedString styledStr = styledString("!", StyleSettings.TAG_LEVEL_WARN);
 			styledStr = join(styledStr,
 					styledString(" Open browser with https://github.com/login/device and paste device code ", null));
-			styledStr = join(styledStr, styledString(response.get("user_code"), ThemeSettings.TAG_HIGHLIGHT));
+			styledStr = join(styledStr, styledString(response.get("user_code"), StyleSettings.TAG_HIGHLIGHT));
 			shellPrint(styledStr);
 
 			Optional<String> token = githubDeviceFlow.waitTokenFromDeviceFlow(webClientBuilder, clientId,
@@ -161,10 +161,10 @@ public class GithubCommands extends AbstractSpringCliCommands {
 				log.error("Error getting github login", e);
 			}
 			AttributedString ret = styledString("You are logged into github as ", null);
-			ret = join(ret, styledString(loginName, ThemeSettings.TAG_HIGHLIGHT));
+			ret = join(ret, styledString(loginName, StyleSettings.TAG_HIGHLIGHT));
 			if (showToken) {
 				ret = join(ret, styledString(", with token ", null));
-				ret = join(ret, styledString(host.getOauthToken(), ThemeSettings.TAG_HIGHLIGHT));
+				ret = join(ret, styledString(host.getOauthToken(), StyleSettings.TAG_HIGHLIGHT));
 			}
 			return ret;
 		}
