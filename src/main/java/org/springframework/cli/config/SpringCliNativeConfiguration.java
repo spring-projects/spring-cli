@@ -70,6 +70,8 @@ import org.springframework.cli.support.SpringCliUserConfig.CommandDefault;
 import org.springframework.cli.support.SpringCliUserConfig.CommandDefaults;
 import org.springframework.cli.support.SpringCliUserConfig.Host;
 import org.springframework.cli.support.SpringCliUserConfig.Hosts;
+import org.springframework.cli.support.SpringCliUserConfig.Initializr;
+import org.springframework.cli.support.SpringCliUserConfig.Initializrs;
 import org.springframework.cli.support.SpringCliUserConfig.Option;
 import org.springframework.nativex.hint.FieldHint;
 import org.springframework.nativex.hint.JdkProxyHint;
@@ -268,7 +270,8 @@ import org.springframework.nativex.type.NativeConfiguration;
 		@TypeHint(
 			types = {
 				CommandDefaults.class, CommandDefault.class, Option.class, CommandFileContents.class, Command.class,
-				CommandOption.class, CommandOption.Builder.class, DynamicCommand.class, Hosts.class, Host.class
+				CommandOption.class, CommandOption.Builder.class, DynamicCommand.class, Hosts.class, Host.class,
+				Initializrs.class, Initializr.class
 			},
 			access = {
 				TypeAccess.PUBLIC_CONSTRUCTORS, TypeAccess.DECLARED_CLASSES, TypeAccess.DECLARED_CONSTRUCTORS,

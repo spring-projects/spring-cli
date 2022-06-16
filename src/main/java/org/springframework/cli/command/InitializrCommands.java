@@ -27,15 +27,19 @@ import java.util.stream.Stream;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cli.config.SpringCliProperties;
 import org.springframework.cli.initializr.InitializrClient;
+import org.springframework.cli.initializr.InitializrClientCache;
 import org.springframework.cli.initializr.InitializrUtils;
 import org.springframework.cli.initializr.model.Metadata;
+import org.springframework.cli.support.SpringCliUserConfig;
+import org.springframework.cli.support.SpringCliUserConfig.Initializr;
+import org.springframework.cli.support.SpringCliUserConfig.Initializrs;
 import org.springframework.shell.component.context.ComponentContext;
 import org.springframework.shell.component.flow.ComponentFlow;
+import org.springframework.shell.component.flow.ComponentFlow.ComponentFlowResult;
 import org.springframework.shell.component.flow.ResultMode;
 import org.springframework.shell.component.flow.SelectItem;
-import org.springframework.shell.component.flow.ComponentFlow.ComponentFlowResult;
 import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
@@ -98,28 +102,37 @@ public class InitializrCommands extends AbstractShellComponent {
 		return NAME_COMPARATOR.compare(o1, o2);
 	};
 
-	@Autowired
-	private InitializrClient client;
+	private final InitializrClientCache clientCache;
+	private final ComponentFlow.Builder componentFlowBuilder;
+	private final SpringCliUserConfig springCliUserConfig;
+	private final SpringCliProperties springCliProperties;
 
-	@Autowired
-	private ComponentFlow.Builder componentFlowBuilder;
+	InitializrCommands(InitializrClientCache clientCache, ComponentFlow.Builder componentFlowBuilder,
+			SpringCliUserConfig springCliUserConfig, SpringCliProperties springCliProperties) {
+		this.clientCache = clientCache;
+		this.componentFlowBuilder = componentFlowBuilder;
+		this.springCliUserConfig = springCliUserConfig;
+		this.springCliProperties = springCliProperties;
+	}
 
 	@ShellMethod(key = "initializr new", value = "Create a new project from start.spring.io")
 	public String init(
+		@ShellOption(value = "--server-id", help = "Server to use", defaultValue = ShellOption.NULL) String serverId,
 		@ShellOption(help = "Path to extract", defaultValue = ShellOption.NULL) String path,
 		@ShellOption(help = "Project", defaultValue = ShellOption.NULL) String project,
 		@ShellOption(help = "Language", defaultValue = ShellOption.NULL) String language,
-		@ShellOption(help = "Language", defaultValue = ShellOption.NULL) String bootVersion,
+		@ShellOption(value = "--boot-version", help = "Language", defaultValue = ShellOption.NULL) String bootVersion,
 		@ShellOption(help = "Version", defaultValue = ShellOption.NULL) String version,
 		@ShellOption(help = "Group", defaultValue = ShellOption.NULL) String group,
 		@ShellOption(help = "Artifact", defaultValue = ShellOption.NULL) String artifact,
 		@ShellOption(help = "Name", defaultValue = ShellOption.NULL) String name,
 		@ShellOption(help = "Description", defaultValue = ShellOption.NULL) String description,
-		@ShellOption(help = "Package Name", defaultValue = ShellOption.NULL) String packageName,
+		@ShellOption(value = "--package-name", help = "Package Name", defaultValue = ShellOption.NULL) String packageName,
 		@ShellOption(help = "Dependencies", defaultValue = ShellOption.NULL) List<String> dependencies,
 		@ShellOption(help = "Packaging", defaultValue = ShellOption.NULL) String packaging,
-		@ShellOption(help = "Java", defaultValue = ShellOption.NULL) String javaVersion
+		@ShellOption(value = "--java-version", help = "Java", defaultValue = ShellOption.NULL) String javaVersion
 	) {
+		InitializrClient client = buildClient(serverId);
 		Metadata metadata = client.getMetadata();
 
 		Map<String, String> projectSelectItems = metadata.getType().getValues().stream()
@@ -311,16 +324,44 @@ public class InitializrCommands extends AbstractShellComponent {
 		return String.format("Extracted to %s", outFile.getAbsolutePath());
 	}
 
-	@ShellMethod(key = "initializr info", value = "Show the Initializr server being used")
-	public String info() {
-		return client.info();
+	@ShellMethod(key = "initializr list", value = "Show the Initializr server environments")
+	public Table list() {
+		Stream<String[]> header = Stream.<String[]>of(new String[] { "ServerId", "Url" });
+		Stream<String[]> rows = this.springCliUserConfig.getInitializrs().entrySet().stream()
+				.map(e -> new String[] { e.getKey(), e.getValue().getUrl() });
+		String[][] data = Stream.concat(header, rows).toArray(String[][]::new);
+
+		TableModel model = new ArrayTableModel(data);
+		TableBuilder tableBuilder = new TableBuilder(model);
+		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
+	}
+
+	@ShellMethod(key = "initializr set", value = "Set the Initializr server environment")
+	public void set(
+		@ShellOption(value = "--server-id", help = "Server to use") String serverId,
+		@ShellOption(value = "--url", help = "Server base url") String url)
+	{
+		Map<String, Initializr> initializrs = this.springCliUserConfig.getInitializrs();
+		initializrs.put(serverId, Initializr.of(url));
+		this.springCliUserConfig.setInitializrs(Initializrs.of(initializrs));
+	}
+
+	@ShellMethod(key = "initializr remove", value = "Remove the Initializr server environment")
+	public void remove(
+		@ShellOption(value = "--server-id", help = "Server to use") String serverId)
+	{
+		Map<String, Initializr> initializrs = this.springCliUserConfig.getInitializrs();
+		initializrs.remove(serverId);
+		this.springCliUserConfig.setInitializrs(Initializrs.of(initializrs));
 	}
 
 	@ShellMethod(key = "initializr dependencies", value = "List supported dependencies")
 	public Table dependencies(
+		@ShellOption(value = "--server-id", help = "Server to use", defaultValue = ShellOption.NULL) String serverId,
 		@ShellOption(help = "Search string to limit results", defaultValue = ShellOption.NULL) String search,
 		@ShellOption(help = "Limit to compatibility version", defaultValue = ShellOption.NULL) String version
 	) {
+		InitializrClient client = buildClient(serverId);
 		Metadata metadata = client.getMetadata();
 
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Id", "Name", "Description", "Required version" });
@@ -334,6 +375,17 @@ public class InitializrCommands extends AbstractShellComponent {
 		TableModel model = new ArrayTableModel(data);
 		TableBuilder tableBuilder = new TableBuilder(model);
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
+	}
+
+	private InitializrClient buildClient(String serverId) {
+		String cacheKey = this.springCliProperties.getInitializr().getBaseUrl();
+		if (StringUtils.hasText(serverId)) {
+			Initializr initializr = this.springCliUserConfig.getInitializrs().get(serverId);
+			if (initializr != null) {
+				cacheKey = initializr.getUrl();
+			}
+		}
+		return clientCache.get(cacheKey);
 	}
 
 	private static boolean matches(String[] array, String search) {

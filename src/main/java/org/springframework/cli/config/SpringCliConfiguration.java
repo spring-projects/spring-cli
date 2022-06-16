@@ -22,7 +22,7 @@ import io.netty.resolver.DefaultAddressResolverGroup;
 
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactorNettyHttpClientMapper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cli.initializr.InitializrClient;
+import org.springframework.cli.initializr.InitializrClientCache;
 import org.springframework.cli.runtime.engine.model.MavenModelPopulator;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.model.RootPackageModelPopulator;
@@ -80,10 +80,8 @@ public class SpringCliConfiguration {
 	}
 
 	@Bean
-	public InitializrClient initializrClient(WebClient.Builder webClientBuilder, SpringCliProperties upCliProperties) {
-		return InitializrClient.builder(webClientBuilder)
-				.target(upCliProperties.getInitializr().getBaseUrl())
-				.build();
+	InitializrClientCache initializrClientCache(WebClient.Builder webClientBuilder) {
+		return new InitializrClientCache(webClientBuilder);
 	}
 
 	@Bean

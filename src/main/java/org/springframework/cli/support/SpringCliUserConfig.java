@@ -57,6 +57,12 @@ public class SpringCliUserConfig {
 	 * {@code command-defaults.yml} store default option values for commands.
 	 */
 	public final static String COMMAND_DEFAULTS_FILE_NAME = "command-defaults.yml";
+
+	/**
+	 * {@code initializr.yml} stores initializr specific info.
+	 */
+	public final static String INITIALIZR_FILE_NAME = "initializr.yml";
+
 	/**
 	 * Base directory name we store our config files.
 	 */
@@ -79,6 +85,9 @@ public class SpringCliUserConfig {
 
 	private final UserConfig<CommandDefaults> commandDefaultsUserConfig;
 
+	private final UserConfig<Initializrs> initializrsUserConfig;
+
+
 	public SpringCliUserConfig() {
 		this(null);
 	}
@@ -92,11 +101,14 @@ public class SpringCliUserConfig {
 				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
 		this.commandDefaultsUserConfig = new UserConfig<>(COMMAND_DEFAULTS_FILE_NAME, CommandDefaults.class,
 				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
+		this.initializrsUserConfig = new UserConfig<>(INITIALIZR_FILE_NAME, Initializrs.class,
+				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
 		if (pathProvider != null) {
 			this.hostsUserConfig.setPathProvider(pathProvider);
 			this.projectCatalogsUserConfig.setPathProvider(pathProvider);
 			this.projectRepositoriesUserConfig.setPathProvider(pathProvider);
 			this.commandDefaultsUserConfig.setPathProvider(pathProvider);
+			this.initializrsUserConfig.setPathProvider(pathProvider);
 		}
 	}
 
@@ -243,6 +255,80 @@ public class SpringCliUserConfig {
 
 		public void setUser(String user) {
 			this.user = user;
+		}
+	}
+
+	public Map<String, Initializr> getInitializrs() {
+		Initializrs initializrs = initializrsUserConfig.getConfig();
+		return initializrs != null ? initializrs.getInitializrs() : new HashMap<>();
+	}
+
+	public void setInitializrs(Initializrs initializrs) {
+		initializrsUserConfig.setConfig(initializrs);
+	}
+
+	public void updateInitializr(String key, Initializr initializr) {
+		Map<String, Initializr> initializrsMap = null;
+		Initializrs initializrs = initializrsUserConfig.getConfig();
+		if (initializrs != null) {
+			initializrsMap = initializrs.getInitializrs();
+		}
+		else {
+			initializrs = new Initializrs();
+		}
+		if (initializrsMap == null) {
+			initializrsMap = new HashMap<>();
+		}
+		initializrsMap.put(key, initializr);
+		initializrs.setInitializrs(initializrsMap);
+		setInitializrs(initializrs);
+	}
+
+	public static class Initializrs {
+
+		private Map<String, Initializr> initializrs = new HashMap<>();
+
+		public Initializrs() {
+		}
+
+		public Initializrs(Map<String, Initializr> initializrs) {
+			this.initializrs.putAll(initializrs);
+		}
+
+		public Map<String, Initializr> getInitializrs() {
+			return initializrs;
+		}
+
+		public static Initializrs of(Map<String, Initializr> initializrs) {
+			return new Initializrs(initializrs);
+		}
+
+		public void setInitializrs(Map<String, Initializr> initializrs) {
+			this.initializrs = initializrs;
+		}
+	}
+
+	public static class Initializr {
+
+		private String url;
+
+		Initializr() {
+		}
+
+		Initializr(String url) {
+			this.url = url;
+		}
+
+		public static Initializr of(String url) {
+			return new Initializr(url);
+		}
+
+		public String getUrl() {
+			return url;
+		}
+
+		public void setUrl(String url) {
+			this.url = url;
 		}
 	}
 

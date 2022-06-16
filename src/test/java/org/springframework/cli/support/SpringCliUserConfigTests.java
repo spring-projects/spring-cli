@@ -121,4 +121,20 @@ public class SpringCliUserConfigTests {
 		assertThat(defaultValue.get()).isEqualTo("com.xkcd");
 	}
 
+	@Test
+	public void testInitializrs() {
+		SpringCliUserConfig config = new SpringCliUserConfig(pathProvider);
+
+		assertThat(config.getInitializrs()).isNotNull();
+		assertThat(config.getInitializrs()).hasSize(0);
+
+		SpringCliUserConfig.Initializrs initializrs = new SpringCliUserConfig.Initializrs();
+		Map<String, SpringCliUserConfig.Initializr> initializrsMap = new HashMap<>();
+		initializrsMap.put("local", new SpringCliUserConfig.Initializr("http://localhost:8080"));
+		initializrs.setInitializrs(initializrsMap);
+		config.setInitializrs(initializrs);
+		assertThat(config.getInitializrs()).isNotNull();
+		assertThat(config.getInitializrs().get("local")).isNotNull();
+		assertThat(config.getInitializrs().get("local").getUrl()).isEqualTo("http://localhost:8080");
+	}
 }
