@@ -5,3 +5,4 @@
 * xref:adding-to-existing-projects.adoc[Adding to Existing Projects]
 * xref:key-concepts.adoc[Key Concepts]
 * xref:comments-on-the-approach.adoc[Commnets on the approach]
+* xref:initializr.adoc[Initializr]

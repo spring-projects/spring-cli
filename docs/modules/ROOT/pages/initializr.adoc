@@ -1,0 +1,245 @@
+= Initializr
+
+Spring CLI can be used as a client for an instance of a https://github.com/spring-io/initializr and defaults to
+https://start.spring.io. Shell style project creation mimics how project is created from an UI and example
+of it can be seen below.
+
+image::initializr-1.svg[initializr-1]
+
+== New Command
+
+Generic use of a `new` command is that options can be defined on a command line and if something is needed
+then shell enters interactive mode to ask various questions from a user.
+
+====
+[source]
+----
+NAME
+       initializr new - Create a new project from start.spring.io
+
+SYNOPSIS
+       initializr new --server-id String --path String --project String --language String --boot-version String
+       --version String --group String --artifact String --name String --description String --package-name String
+       --dependencies List --packaging String --java-version String
+
+OPTIONS
+       --server-id String
+       Server to use
+       [Optional]
+
+       --path String
+       Path to extract
+       [Optional]
+
+       --project String
+       Project
+       [Optional]
+
+       --language String
+       Language
+       [Optional]
+
+       --boot-version String
+       Language
+       [Optional]
+
+       --version String
+       Version
+       [Optional]
+
+       --group String
+       Group
+       [Optional]
+
+       --artifact String
+       Artifact
+       [Optional]
+
+       --name String
+       Name
+       [Optional]
+
+       --description String
+       Description
+       [Optional]
+
+       --package-name String
+       Package Name
+       [Optional]
+
+       --dependencies List
+       Dependencies
+       [Optional]
+
+       --packaging String
+       Packaging
+       [Optional]
+
+       --java-version String
+       Java
+       [Optional]
+----
+====
+
+Below example shows how all options are given and command just pass through without asking anything.
+
+====
+[source, bash]
+----
+$ spring-cli initializr new \
+    --path demo \
+    --project gradle-project \
+    --language java \
+    --boot-version 2.7.0 \
+    --version 0.0.1-SNAPSHOT \
+    --group com.example \
+    --artifact demo \
+    --name demo \
+    --description "Demo project" \
+    --package-name com.example.demo \
+    --dependencies web \
+    --packaging jar \
+    --java-version 17
+----
+====
+
+== List Command
+
+Use `list` command to see what custom _initializr_ servers you have defined.
+
+====
+[source]
+----
+$ spring-cli help initializr list
+NAME
+       initializr list - Show the Initializr server environments
+
+SYNOPSIS
+       initializr list
+
+----
+====
+
+Having one defined you'd see something like.
+
+====
+[source, bash]
+----
+$ spring-cli initializr list
+┌────────┬─────────────────────┐
+│ServerId│Url                  │
+├────────┼─────────────────────┤
+│local   │http://localhost:8080│
+└────────┴─────────────────────┘
+----
+====
+
+
+== Set Command
+
+Use `set` command to define a new server environment.
+
+====
+[source]
+----
+NAME
+       initializr set - Set the Initializr server environment
+
+SYNOPSIS
+       initializr set [--server-id String] [--url String]
+
+OPTIONS
+       --server-id String
+       Server to use
+       [Mandatory]
+
+       --url String
+       Server base url
+       [Mandatory]
+
+----
+====
+
+You can for example define your local _initializr_ server like this.
+
+====
+[source, bash]
+----
+$ spring-cli initializr set --server-id local --url http://localhost:8080
+----
+====
+
+== Remove Command
+
+Use `remove` command to remove a server environment.
+
+====
+[source]
+----
+$ spring-cli help initializr remove
+NAME
+       initializr remove - Remove the Initializr server environment
+
+SYNOPSIS
+       initializr remove [--server-id String]
+
+OPTIONS
+       --server-id String
+       Server to use
+       [Mandatory]
+
+----
+====
+
+You can for example remove your local _initializr_ server like this.
+
+====
+[source, bash]
+----
+$ spring-cli initializr remove --server-id local
+----
+====
+
+== Dependencies Command
+
+Use `dependencies` command to list and search _initializr_ dependencies.
+
+====
+[source]
+----
+$ spring-cli help initializr dependencies
+NAME
+       initializr dependencies - List supported dependencies
+
+SYNOPSIS
+       initializr dependencies --server-id String --search String --version String
+
+OPTIONS
+       --server-id String
+       Server to use
+       [Optional]
+
+       --search String
+       Search string to limit results
+       [Optional]
+
+       --version String
+       Limit to compatibility version
+       [Optional]
+
+----
+====
+
+You can for example search _initializr_ server like this.
+
+====
+[source, bash]
+----
+$ spring-cli initializr dependencies --search webflux
+┌───────┬───────────────────┬──────────────────────────────────────────────────────────────┬────────────────┐
+│Id     │Name               │Description                                                   │Required version│
+├───────┼───────────────────┼──────────────────────────────────────────────────────────────┼────────────────┤
+│webflux│Spring Reactive Web│Build reactive web applications with Spring WebFlux and Netty.│                │
+└───────┴───────────────────┴──────────────────────────────────────────────────────────────┴────────────────┘
+----
+====
