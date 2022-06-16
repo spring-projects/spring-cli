@@ -1,0 +1,39 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.234.0/containers/java
+{
+	"name": "Java",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			// Update the VARIANT arg to pick a Java version: 11, 17
+			// Append -bullseye or -buster to pin to an OS version.
+			// Use the -bullseye variants on local arm64/Apple Silicon.
+			"VARIANT": "11-bullseye",
+			// Options
+			"INSTALL_JAVA": "true",
+			"JAVA_VERSION": "22.1.0.r11-grl",
+			"INSTALL_MAVEN": "false",
+			"INSTALL_GRADLE": "true",
+			"GRADLE_VERSION": "7.3.3",
+			"NODE_VERSION": "none"
+		}
+	},
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"java.jdt.ls.java.home": "/docker-java-home"
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"vscjava.vscode-java-pack"
+	],
+
+	"updateContentCommand": "./gradlew --no-daemon --quiet build -x test || true",
+
+	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode",
+	"features": {
+		"github-cli": "latest"
+	}
+}
