@@ -56,8 +56,8 @@ public class CommandCommands {
 		//TODO check validity of passed in names as directory names.
 		Path commandPath = projectPath.resolve(".spring").resolve("commands").resolve(commandName).resolve(subCommandName);
 		IoUtils.createDirectory(commandPath);
-		ClassPathResource classPathResource = new ClassPathResource("org/springframework/cli/commands/hello.txt");
-		IoUtils.writeToDir(commandPath.toFile(), "hello.txt", classPathResource);
+		ClassPathResource classPathResource = new ClassPathResource("/org/springframework/cli/commands/hello.yml");
+		IoUtils.writeToDir(commandPath.toFile(), "hello.yml", classPathResource);
 		classPathResource = new ClassPathResource("org/springframework/cli/commands/command.yaml");
 		IoUtils.writeToDir(commandPath.toFile(), "command.yaml", classPathResource);
 		System.out.println("Created user defined command " + commandPath);

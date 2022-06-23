@@ -1,5 +1,5 @@
 ---
-actions:
+action:
   generate: hello.txt
 ---
 Hello {{greeting}} at {{now}} on {{os-name}}.
