@@ -1,6 +1,6 @@
 {"version": 2, "width": 80, "height": 22, "timestamp": 1655298585, "env": {"SHELL": "/bin/bash", "TERM": "xterm-256color"}}
 [1.197128, "o", "\u001b[0;32m✔ \u001b[0;33m/tmp/springcli\u001b[0;0m \r\r\n\u001b[0;37m14:09\u001b[0;0m $ "]
-[1.593386, "o", "spring-cli initializr new"]
+[1.593386, "o", "spring initializr new"]
 [2.699207, "o", "\r\n"]
 [3.113901, "o", "\u001b[?1h\u001b=\u001b[?25l"]
 [3.121632, "o", "\u001b[32;1m?\u001b[0m \u001b[97;1mPath\u001b[0m \r"]

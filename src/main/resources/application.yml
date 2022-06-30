@@ -9,7 +9,7 @@ spring:
       name: spring-cli-history.log
     command:
       completion:
-        root-command: spring-cli
+        root-command: spring
       version:
         show-git-short-commit-id: true
   cli:
