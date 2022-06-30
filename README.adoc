@@ -27,7 +27,7 @@ NOTE: You need to have `GRAALVM_HOME` pointing to your _graal_ installation
 
 Which you can then run with:
 ```
-build/native/nativeCompile/spring-cli
+build/native/nativeCompile/spring
 ```
 
 TIP: There is a CI workflow which builds native binaries for linux, macos and windows.
@@ -50,5 +50,5 @@ Output is in `./build/site`
 Shell completion for `bash` can be generate with `completion bash` command:
 
 ```
-$ source <(spring-cli completion bash)
+$ source <(spring completion bash)
 ```
