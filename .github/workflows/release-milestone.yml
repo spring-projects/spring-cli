@@ -168,9 +168,9 @@ jobs:
           --title "$PROJECT_VERSION" \
           --notes-file $RELEASE_NOTES_FILE
         mkdir ${{runner.temp}}/artifacts/out
-        cp ${{runner.temp}}/artifacts/spring-cli-linux/spring-cli ${{runner.temp}}/artifacts/out/spring-cli-linux
-        cp ${{runner.temp}}/artifacts/spring-cli-macos/spring-cli ${{runner.temp}}/artifacts/out/spring-cli-macos
-        cp ${{runner.temp}}/artifacts/spring-cli-windows/spring-cli.exe ${{runner.temp}}/artifacts/out/spring-cli-win.exe
+        cp ${{runner.temp}}/artifacts/spring-cli-linux/spring ${{runner.temp}}/artifacts/out/spring-cli-linux
+        cp ${{runner.temp}}/artifacts/spring-cli-macos/spring ${{runner.temp}}/artifacts/out/spring-cli-macos
+        cp ${{runner.temp}}/artifacts/spring-cli-windows/spring.exe ${{runner.temp}}/artifacts/out/spring-cli-win.exe
         cp ${{runner.temp}}/artifacts/spring-cli-jar/*.jar ${{runner.temp}}/artifacts/out/
         sleep 5
         gh release upload "v$PROJECT_VERSION" ${{runner.temp}}/artifacts/out/*

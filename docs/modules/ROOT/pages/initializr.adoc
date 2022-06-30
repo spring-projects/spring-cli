@@ -86,7 +86,7 @@ Below example shows how all options are given and command just pass through with
 ====
 [source, bash]
 ----
-$ spring-cli initializr new \
+$ spring initializr new \
     --path demo \
     --project gradle-project \
     --language java \
@@ -110,7 +110,7 @@ Use `list` command to see what custom _initializr_ servers you have defined.
 ====
 [source]
 ----
-$ spring-cli help initializr list
+$ spring help initializr list
 NAME
        initializr list - Show the Initializr server environments
 
@@ -125,7 +125,7 @@ Having one defined you'd see something like.
 ====
 [source, bash]
 ----
-$ spring-cli initializr list
+$ spring initializr list
 ┌────────┬─────────────────────┐
 │ServerId│Url                  │
 ├────────┼─────────────────────┤
@@ -165,7 +165,7 @@ You can for example define your local _initializr_ server like this.
 ====
 [source, bash]
 ----
-$ spring-cli initializr set --server-id local --url http://localhost:8080
+$ spring initializr set --server-id local --url http://localhost:8080
 ----
 ====
 
@@ -176,7 +176,7 @@ Use `remove` command to remove a server environment.
 ====
 [source]
 ----
-$ spring-cli help initializr remove
+$ spring help initializr remove
 NAME
        initializr remove - Remove the Initializr server environment
 
@@ -196,7 +196,7 @@ You can for example remove your local _initializr_ server like this.
 ====
 [source, bash]
 ----
-$ spring-cli initializr remove --server-id local
+$ spring initializr remove --server-id local
 ----
 ====
 
@@ -207,7 +207,7 @@ Use `dependencies` command to list and search _initializr_ dependencies.
 ====
 [source]
 ----
-$ spring-cli help initializr dependencies
+$ spring help initializr dependencies
 NAME
        initializr dependencies - List supported dependencies
 
@@ -235,7 +235,7 @@ You can for example search _initializr_ server like this.
 ====
 [source, bash]
 ----
-$ spring-cli initializr dependencies --search webflux
+$ spring initializr dependencies --search webflux
 ┌───────┬───────────────────┬──────────────────────────────────────────────────────────────┬────────────────┐
 │Id     │Name               │Description                                                   │Required version│
 ├───────┼───────────────────┼──────────────────────────────────────────────────────────────┼────────────────┤

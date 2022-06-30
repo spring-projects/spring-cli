@@ -95,6 +95,14 @@ springBoot {
 	buildInfo()
 }
 
+graalvmNative {
+	binaries {
+		main {
+			imageName = 'spring'
+		}
+	}
+}
+
 task milestoneVersion {
 	doLast{
 		def postfix = project.getProperty('springCliMilestone')
