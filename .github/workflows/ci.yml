@@ -60,6 +60,6 @@ jobs:
       - run: ./gradlew build nativeCompile --no-daemon
       - uses: actions/upload-artifact@v3
         with:
-          name: spring-up-${{ matrix.nickname }}
+          name: spring-cli-${{ matrix.nickname }}
           path: build/native/nativeCompile/
           retention-days: 1
