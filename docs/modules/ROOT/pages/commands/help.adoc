@@ -1,0 +1,17 @@
+= help
+Display help about available commands
+
+== NAME
+help
+
+== SYNOPSIS
+====
+[source]
+----
+help --command String
+----
+====
+
+== OPTIONS
+`--command or -C` String The command to obtain help for. *Optional*
+

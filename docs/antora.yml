@@ -4,3 +4,4 @@ prerelease: '-SNAPSHOT'
 start_page: ROOT:index.adoc
 nav:
 - modules/ROOT/nav.adoc
+- modules/ROOT/nav-commands.adoc

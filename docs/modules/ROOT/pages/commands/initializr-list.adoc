@@ -1,0 +1,16 @@
+= initializr list
+Show the Initializr server environments
+
+== NAME
+initializr list
+
+== SYNOPSIS
+====
+[source]
+----
+initializr list 
+----
+====
+
+== OPTIONS
+

@@ -1,0 +1,16 @@
+= completion bash
+Generate bash completion script
+
+== NAME
+completion bash
+
+== SYNOPSIS
+====
+[source]
+----
+completion bash 
+----
+====
+
+== OPTIONS
+

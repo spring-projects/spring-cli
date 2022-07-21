@@ -1,0 +1,16 @@
+= github auth logout
+Log out of a GitHub
+
+== NAME
+github auth logout
+
+== SYNOPSIS
+====
+[source]
+----
+github auth logout 
+----
+====
+
+== OPTIONS
+

@@ -1,0 +1,16 @@
+= clear
+Clear the shell screen.
+
+== NAME
+clear
+
+== SYNOPSIS
+====
+[source]
+----
+clear 
+----
+====
+
+== OPTIONS
+

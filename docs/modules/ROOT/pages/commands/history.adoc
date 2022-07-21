@@ -1,0 +1,17 @@
+= history
+Display or save the history of previously run commands
+
+== NAME
+history
+
+== SYNOPSIS
+====
+[source]
+----
+history --file File
+----
+====
+
+== OPTIONS
+`--file` File A file to save history to. *Optional*
+

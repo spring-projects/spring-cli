@@ -1,0 +1,17 @@
+= initializr remove
+Remove the Initializr server environment
+
+== NAME
+initializr remove
+
+== SYNOPSIS
+====
+[source]
+----
+initializr remove [--server-id String]
+----
+====
+
+== OPTIONS
+`--server-id` String Server to use *Mandatory*
+
