@@ -1,0 +1,16 @@
+= stacktrace
+Display the full stacktrace of the last error.
+
+== NAME
+stacktrace
+
+== SYNOPSIS
+====
+[source]
+----
+stacktrace 
+----
+====
+
+== OPTIONS
+

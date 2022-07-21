@@ -1,0 +1,17 @@
+= project remove
+Remove project
+
+== NAME
+project remove
+
+== SYNOPSIS
+====
+[source]
+----
+project remove [--name String]
+----
+====
+
+== OPTIONS
+`--name` String Project name *Mandatory*
+

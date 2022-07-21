@@ -1,0 +1,17 @@
+= catalog remove
+Remove a project from a catalog
+
+== NAME
+catalog remove
+
+== SYNOPSIS
+====
+[source]
+----
+catalog remove [--name String]
+----
+====
+
+== OPTIONS
+`--name` String Catalog name *Mandatory*
+

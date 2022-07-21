@@ -1,0 +1,15 @@
+command(command) ::= <<
+<command.name>
+>>
+
+commandGroup(commandGroup) ::= <<
+<commandGroup.group>:<commandGroup.commands:{ c | <command(c)>}; separator=":">
+>>
+
+groups(groups) ::= <<
+<groups:{ g | <commandGroup(g)>}; separator="\n">
+>>
+
+main(model) ::= <<
+<groups(model.groups)>
+>>

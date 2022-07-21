@@ -1,0 +1,17 @@
+= command add
+Add a user-defined command
+
+== NAME
+command add
+
+== SYNOPSIS
+====
+[source]
+----
+command add --from String
+----
+====
+
+== OPTIONS
+`--from` String Add user-defined command from a URL *Optional, default = hello*
+

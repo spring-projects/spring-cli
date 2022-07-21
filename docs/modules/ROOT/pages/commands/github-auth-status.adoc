@@ -1,0 +1,17 @@
+= github auth status
+View authentication status
+
+== NAME
+github auth status
+
+== SYNOPSIS
+====
+[source]
+----
+github auth status --showToken boolean
+----
+====
+
+== OPTIONS
+`--showToken` boolean Display the auth token *Optional, default = false*
+

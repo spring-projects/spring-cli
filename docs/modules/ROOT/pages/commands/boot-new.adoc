@@ -1,0 +1,23 @@
+= boot new
+Create a new Spring Boot project from an existing project
+
+== NAME
+boot new
+
+== SYNOPSIS
+====
+[source]
+----
+boot new --from String --name String --packageName String --path String
+----
+====
+
+== OPTIONS
+`--from` String Create project from existing project name or URL *Optional*
+
+`--name` String Name of the new project *Optional*
+
+`--packageName` String Package name for the new project *Optional, default = com.example*
+
+`--path` String Path *Optional*
+

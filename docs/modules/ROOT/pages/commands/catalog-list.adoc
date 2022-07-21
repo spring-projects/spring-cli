@@ -1,0 +1,16 @@
+= catalog list
+List catalogs
+
+== NAME
+catalog list
+
+== SYNOPSIS
+====
+[source]
+----
+catalog list 
+----
+====
+
+== OPTIONS
+

@@ -1,0 +1,21 @@
+= command new
+Create a new user-defined command
+
+== NAME
+command new
+
+== SYNOPSIS
+====
+[source]
+----
+command new --commandName String --subCommandName String --path String
+----
+====
+
+== OPTIONS
+`--commandName` String The name of the user-defined command to create *Optional, default = hello*
+
+`--subCommandName` String The name of the user-defined sub-command to create *Optional, default = new*
+
+`--path` String Path to execute command in *Optional*
+

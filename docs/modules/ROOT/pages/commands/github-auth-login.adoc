@@ -1,0 +1,16 @@
+= github auth login
+Authenticate with a GitHub
+
+== NAME
+github auth login
+
+== SYNOPSIS
+====
+[source]
+----
+github auth login 
+----
+====
+
+== OPTIONS
+

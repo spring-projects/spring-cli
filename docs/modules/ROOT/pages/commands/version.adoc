@@ -1,0 +1,16 @@
+= version
+Show version info
+
+== NAME
+version
+
+== SYNOPSIS
+====
+[source]
+----
+version 
+----
+====
+
+== OPTIONS
+

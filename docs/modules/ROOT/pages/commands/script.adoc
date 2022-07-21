@@ -1,0 +1,17 @@
+= script
+Read and execute commands from a file.
+
+== NAME
+script
+
+== SYNOPSIS
+====
+[source]
+----
+script [--file File]
+----
+====
+
+== OPTIONS
+`--file` File  *Mandatory*
+

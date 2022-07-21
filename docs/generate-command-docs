@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && cd .. && pwd)"
+DOCS_DIR="${BASE_DIR}/docs"
+
+_arg_jar=""
+
+die()
+{
+	local _ret=$2
+	test -n "$_ret" || _ret=1
+	test "$_PRINT_HELP" = yes && print_help >&2
+	echo "ERROR: $1" >&2
+	exit ${_ret}
+}
+
+print_help()
+{
+	printf '%s\n' "Generate asciidoc files for commands"
+	printf 'Usage: %s [--jar <arg>] [-h|--help]\n' "$0"
+	printf '\t%s\n' "--jar: The path to cli jar"
+	printf '\t%s\n' "-h, --help: Prints help"
+}
+
+check_prereq()
+{
+  if ! [ -x "$(command -v $1)" ]; then
+    echo "This script requires '$1' to be installed."
+    exit 1
+  fi
+}
+
+parse_commandline()
+{
+	while test $# -gt 0
+	do
+		_key="$1"
+		case "$_key" in
+			# Since we know that we got the long or short option,
+			# we just reach out for the next argument to get the value.
+			--jar)
+				test $# -lt 2 && _PRINT_HELP=yes die "Missing value for the argument '$_key'." 1
+				_arg_jar="$2"
+				shift
+				;;
+			# The help argurment doesn't accept a value,
+			# we expect the --help or -h, so we watch for them.
+			-h|--help)
+				print_help
+				exit 0
+				;;
+			*)
+				_PRINT_HELP=yes die "Got an unexpected argument '$1'" 1
+				;;
+		esac
+		shift
+	done
+}
+
+get_abs_filename() {
+  echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
+}
+
+generate() {
+    jarabsfile=$(get_abs_filename $_arg_jar)
+    pushd $DOCS_DIR > /dev/null
+    echo ".Commands" > modules/ROOT/nav-commands.adoc
+    mapfile arr < <(java -jar $jarabsfile help)
+    for path in "${arr[@]}"; do
+        IFS=':' read -ra FIELDS <<< "$path"
+        echo ${FIELDS[0]}
+        for F in "${FIELDS[@]:1}"; do
+            echo $F
+            NAME="${F// /-}"
+            java -jar $jarabsfile help $F > modules/ROOT/pages/commands/$NAME.adoc
+            echo "** xref:commands/$NAME.adoc[$F]" >> modules/ROOT/nav-commands.adoc
+        done
+    done
+    popd > /dev/null
+}
+
+parse_commandline "$@"
+
+check_prereq 'java'
+
+if [[ "$_arg_jar" = "" ]]; then
+    echo "Jar path '$_arg_jar' is not set"
+    exit 1
+fi
+
+if [[ -f "$_arg_jar" ]]; then
+    generate
+else
+    echo "Jar path '$_arg_jar' is not a file"
+    exit 1
+fi

@@ -1,0 +1,19 @@
+= command remove
+Delete a user-defined command
+
+== NAME
+command remove
+
+== SYNOPSIS
+====
+[source]
+----
+command remove [--commandName String] [--subCommandName String]
+----
+====
+
+== OPTIONS
+`--commandName` String Command name *Mandatory*
+
+`--subCommandName` String SubCommand name *Mandatory*
+

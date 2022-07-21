@@ -1,0 +1,16 @@
+= config list
+List configuration values
+
+== NAME
+config list
+
+== SYNOPSIS
+====
+[source]
+----
+config list 
+----
+====
+
+== OPTIONS
+

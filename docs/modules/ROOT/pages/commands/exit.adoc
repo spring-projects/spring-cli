@@ -1,0 +1,16 @@
+= exit
+Exit the shell.
+
+== NAME
+exit
+
+== SYNOPSIS
+====
+[source]
+----
+exit 
+----
+====
+
+== OPTIONS
+

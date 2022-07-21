@@ -1,0 +1,19 @@
+= initializr set
+Set the Initializr server environment
+
+== NAME
+initializr set
+
+== SYNOPSIS
+====
+[source]
+----
+initializr set [--server-id String] [--url String]
+----
+====
+
+== OPTIONS
+`--server-id` String Server to use *Mandatory*
+
+`--url` String Server base url *Mandatory*
+
