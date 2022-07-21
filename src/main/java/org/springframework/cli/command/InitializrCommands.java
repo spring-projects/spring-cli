@@ -264,10 +264,10 @@ public class InitializrCommands extends AbstractShellComponent {
 						String bootVersionValue = context.get(BOOT_VERSION_ID);
 						List<SelectItem> dependenciesSelectItems = metadata.getDependencies().getValues().stream()
 								.flatMap(dc -> dc.getValues().stream())
-								.map(dep -> SelectItem.of(dep.getName(), dep.getId(), InitializrUtils.isDependencyCompatible(dep, bootVersionValue)))
+								.map(dep -> SelectItem.of(dep.getName(), dep.getId(), InitializrUtils.isDependencyCompatible(dep, bootVersionValue), false))
 								.collect(Collectors.toList());
 						List<SelectorItem<String>> selectorItems = dependenciesSelectItems.stream()
-								.map(si -> SelectorItem.of(si.name(), si.item(), si.enabled()))
+								.map(si -> SelectorItem.of(si.name(), si.item(), si.enabled(), false))
 								.collect(Collectors.toList());
 						context.setItems(selectorItems);
 					})
