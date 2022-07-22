@@ -137,9 +137,6 @@
     <a class="nav-link" href="help.html">help</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="exit.html">exit</a>
-  </li>
-  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="stacktrace.html">stacktrace</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -332,6 +329,48 @@
 </div>
 <div class="paragraph">
 <p><code>--java-version</code> String Java <strong>Optional</strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples"><a class="anchor" href="#_examples"></a>EXAMPLES</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Create new project.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring initializr new</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Create new project with all given options.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring initializr new \
+  --path demo \
+  --project gradle-project \
+  --language java \
+  --boot-version 2.7.0 \
+  --version 0.0.1-SNAPSHOT \
+  --group com.example \
+  --artifact demo \
+  --name demo \
+  --description "Demo project" \
+  --package-name com.example.demo \
+  --dependencies web \
+  --packaging jar \
+  --java-version 17</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
