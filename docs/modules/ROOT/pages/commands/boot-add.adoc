@@ -17,3 +17,5 @@ boot add [--from String] --path String
 
 `--path` String Path *Optional*
 
+
+include::footers/boot-add-footer.adoc[opts=optional]

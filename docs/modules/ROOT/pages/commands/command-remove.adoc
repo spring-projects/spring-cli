@@ -17,3 +17,5 @@ command remove [--commandName String] [--subCommandName String]
 
 `--subCommandName` String SubCommand name *Mandatory*
 
+
+include::footers/command-remove-footer.adoc[opts=optional]

@@ -19,3 +19,5 @@ config unset [--commandName String] [--subCommandName String] [--optionName Stri
 
 `--optionName` String Name of option *Mandatory*
 
+
+include::footers/config-unset-footer.adoc[opts=optional]

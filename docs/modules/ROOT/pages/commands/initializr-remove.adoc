@@ -15,3 +15,5 @@ initializr remove [--server-id String]
 == OPTIONS
 `--server-id` String Server to use *Mandatory*
 
+
+include::footers/initializr-remove-footer.adoc[opts=optional]

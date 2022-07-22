@@ -14,3 +14,5 @@ completion bash
 
 == OPTIONS
 
+
+include::footers/completion-bash-footer.adoc[opts=optional]

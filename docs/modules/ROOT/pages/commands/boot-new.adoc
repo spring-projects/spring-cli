@@ -21,3 +21,5 @@ boot new --from String --name String --packageName String --path String
 
 `--path` String Path *Optional*
 
+
+include::footers/boot-new-footer.adoc[opts=optional]

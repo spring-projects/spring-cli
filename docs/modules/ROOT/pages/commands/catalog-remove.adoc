@@ -15,3 +15,5 @@ catalog remove [--name String]
 == OPTIONS
 `--name` String Catalog name *Mandatory*
 
+
+include::footers/catalog-remove-footer.adoc[opts=optional]

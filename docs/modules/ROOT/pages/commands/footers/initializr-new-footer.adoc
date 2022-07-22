@@ -1,0 +1,32 @@
+== EXAMPLES
+
+Create new project.
+
+====
+[source, bash]
+----
+spring initializr new
+----
+====
+
+Create new project with all given options.
+
+====
+[source, bash]
+----
+spring initializr new \
+  --path demo \
+  --project gradle-project \
+  --language java \
+  --boot-version 2.7.0 \
+  --version 0.0.1-SNAPSHOT \
+  --group com.example \
+  --artifact demo \
+  --name demo \
+  --description "Demo project" \
+  --package-name com.example.demo \
+  --dependencies web \
+  --packaging jar \
+  --java-version 17
+----
+====

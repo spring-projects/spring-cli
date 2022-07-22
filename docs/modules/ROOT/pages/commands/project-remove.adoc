@@ -15,3 +15,5 @@ project remove [--name String]
 == OPTIONS
 `--name` String Project name *Mandatory*
 
+
+include::footers/project-remove-footer.adoc[opts=optional]

@@ -19,3 +19,5 @@ initializr dependencies --server-id String --search String --version String
 
 `--version` String Limit to compatibility version *Optional*
 
+
+include::footers/initializr-dependencies-footer.adoc[opts=optional]

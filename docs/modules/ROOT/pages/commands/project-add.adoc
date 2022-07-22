@@ -21,3 +21,5 @@ project add [--name String] [--url String] --description String --tags List
 
 `--tags` List Project tags *Optional*
 
+
+include::footers/project-add-footer.adoc[opts=optional]

@@ -15,3 +15,5 @@ script [--file File]
 == OPTIONS
 `--file` File  *Mandatory*
 
+
+include::footers/script-footer.adoc[opts=optional]

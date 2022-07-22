@@ -17,3 +17,5 @@ initializr set [--server-id String] [--url String]
 
 `--url` String Server base url *Mandatory*
 
+
+include::footers/initializr-set-footer.adoc[opts=optional]

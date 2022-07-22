@@ -2,7 +2,6 @@
 ** xref:commands/boot-add.adoc[boot add]
 ** xref:commands/boot-new.adoc[boot new]
 ** xref:commands/help.adoc[help]
-** xref:commands/exit.adoc[exit]
 ** xref:commands/stacktrace.adoc[stacktrace]
 ** xref:commands/clear.adoc[clear]
 ** xref:commands/quit.adoc[quit]

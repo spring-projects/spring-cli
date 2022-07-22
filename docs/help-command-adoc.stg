@@ -65,6 +65,10 @@ options(options) ::= <<
 <options:{ o | <option(o)>}; separator="\n">
 >>
 
+footer(commandNames) ::= <<
+include::footers/<commandNames: { c | <c>}; separator="-">-footer.adoc[opts=optional]
+>>
+
 // main
 main(model) ::= <<
 <title(model.name, model.description)>
@@ -74,4 +78,6 @@ main(model) ::= <<
 <synopsis(model.name, model.parameters)>
 
 <options(model.parameters)>
+
+<footer(model.names)>
 >>

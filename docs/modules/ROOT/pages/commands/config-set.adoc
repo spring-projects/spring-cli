@@ -21,3 +21,5 @@ config set [--commandName String] [--subCommandName String] [--optionName String
 
 `--optionValue` String Default value of option *Mandatory*
 
+
+include::footers/config-set-footer.adoc[opts=optional]

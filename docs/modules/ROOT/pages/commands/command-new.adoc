@@ -19,3 +19,5 @@ command new --commandName String --subCommandName String --path String
 
 `--path` String Path to execute command in *Optional*
 
+
+include::footers/command-new-footer.adoc[opts=optional]

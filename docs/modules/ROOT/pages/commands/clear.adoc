@@ -14,3 +14,5 @@ clear
 
 == OPTIONS
 
+
+include::footers/clear-footer.adoc[opts=optional]

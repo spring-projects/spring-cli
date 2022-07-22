@@ -14,3 +14,5 @@ config list
 
 == OPTIONS
 
+
+include::footers/config-list-footer.adoc[opts=optional]

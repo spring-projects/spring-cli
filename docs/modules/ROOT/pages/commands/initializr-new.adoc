@@ -41,3 +41,5 @@ initializr new --server-id String --path String --project String --language Stri
 
 `--java-version` String Java *Optional*
 
+
+include::footers/initializr-new-footer.adoc[opts=optional]

@@ -15,3 +15,5 @@ history --file File
 == OPTIONS
 `--file` File A file to save history to. *Optional*
 
+
+include::footers/history-footer.adoc[opts=optional]

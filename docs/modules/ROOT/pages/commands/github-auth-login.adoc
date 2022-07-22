@@ -14,3 +14,5 @@ github auth login
 
 == OPTIONS
 
+
+include::footers/github-auth-login-footer.adoc[opts=optional]

@@ -21,3 +21,5 @@ catalog add [--name String] [--url String] --description String --tags List
 
 `--tags` List Project tags *Optional*
 
+
+include::footers/catalog-add-footer.adoc[opts=optional]

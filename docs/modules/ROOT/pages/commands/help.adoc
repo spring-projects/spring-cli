@@ -15,3 +15,5 @@ help --command String
 == OPTIONS
 `--command or -C` String The command to obtain help for. *Optional*
 
+
+include::footers/help-footer.adoc[opts=optional]

@@ -14,3 +14,5 @@ github auth logout
 
 == OPTIONS
 
+
+include::footers/github-auth-logout-footer.adoc[opts=optional]

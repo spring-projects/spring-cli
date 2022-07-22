@@ -15,3 +15,5 @@ github auth status --showToken boolean
 == OPTIONS
 `--showToken` boolean Display the auth token *Optional, default = false*
 
+
+include::footers/github-auth-status-footer.adoc[opts=optional]
