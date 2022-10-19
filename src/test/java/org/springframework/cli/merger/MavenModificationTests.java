@@ -17,7 +17,6 @@
 
 package org.springframework.cli.merger;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -41,6 +40,11 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.util.PomReader;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+/**
+ * Low level test of performing a merge of a maven pom file
+ */
 public class MavenModificationTests {
 
 	private static final Logger logger = LoggerFactory.getLogger(MavenModificationTests.class);
@@ -62,8 +66,7 @@ public class MavenModificationTests {
 		Model modelToMerge = pomReader.readPom(pomToMerge.toFile());
 
 		DependencyManagement dependencyManagement = modelToMerge.getDependencyManagement();
-		List<Dependency> dependencies = dependencyManagement.getDependencies();
-
+		List<Dependency> toMergeDependencyManagementDependencies = dependencyManagement.getDependencies();
 
 		Consumer<Throwable> onError = e -> {
 			logger.error("error in javaParser execution", e);
@@ -72,32 +75,35 @@ public class MavenModificationTests {
 		List<Path> paths = new ArrayList<>();
 		paths.add(mergedPomPath);
 
-		for (Dependency dependency : dependencies) {
-			AddManagedDependency addManagedDependency = getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
+		for (Dependency dependency : toMergeDependencyManagementDependencies) {
+			AddManagedDependency addManagedDependency = ProjectMerger.getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
 					dependency.getType(), dependency.getClassifier());
 
 			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, tempDir, executionContext);
 			List<Result> resultList = addManagedDependency.run(pomFiles);
 
-			if (resultList.isEmpty()) {
-				System.out.println("No dependency management section to add");
-			}
+			assertThat(resultList.size()).isEqualTo(1);
 			for (Result result : resultList) {
 				System.out.println("-------- result -----------");
 				System.out.println(result.getAfter().printAllTrimmed());
-				// write updated file.
-				try (BufferedWriter sourceFileWriter = Files.newBufferedWriter(mergedPomPath)) {
-					sourceFileWriter.write(result.getAfter().printAllTrimmed());
-				}
+
+				PomReader mergedPomReader = new PomReader();
+				Path mergedPom = Paths.get("src/test/resources/pom-project-to-add.xml");
+				Model mergedModel = mergedPomReader.readPom(mergedPom.toFile());
+				DependencyManagement mergedDependencyManagement = mergedModel.getDependencyManagement();
+				List<Dependency> mergedDependencyManagementDependencies = mergedDependencyManagement.getDependencies();
+				assertThat(mergedDependencyManagementDependencies.size()).isEqualTo(1);
+				assertThat(mergedDependencyManagementDependencies.get(0).getGroupId()).isEqualTo("org.springframework.cloud");
+				assertThat(mergedDependencyManagementDependencies.get(0).getArtifactId()).isEqualTo("spring-cloud-dependencies");
+				assertThat(mergedDependencyManagementDependencies.get(0).getVersion()).isEqualTo("2021.0.0");
 			}
 		}
 	}
 
 
-
-	private AddManagedDependency getRecipeAddManagedDependency(String groupId, String artifactId, String version, String scope, String type, String classifier) {
-		return new AddManagedDependency(groupId, artifactId, version, scope, type, classifier,
-				null, null, null, true);
-	}
+//	private AddManagedDependency getRecipeAddManagedDependency(String groupId, String artifactId, String version, String scope, String type, String classifier) {
+//		return new AddManagedDependency(groupId, artifactId, version, scope, type, classifier,
+//				null, null, null, true);
+//	}
 
 }

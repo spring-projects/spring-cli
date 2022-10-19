@@ -52,6 +52,9 @@ import org.springframework.cli.SpringCliException;
 import org.springframework.cli.util.FileTypeCollectingFileVisitor;
 import org.springframework.cli.util.PomReader;
 
+/**
+ * This is a WIP class that tried to use the default AddDependency recpie from OpenRewrite.
+ */
 public class ProjectMergerWithMavenDepRecipe {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectMergerWithMavenDepRecipe.class);

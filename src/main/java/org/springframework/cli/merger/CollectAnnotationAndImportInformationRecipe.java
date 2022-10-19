@@ -29,7 +29,10 @@ import org.openrewrite.java.tree.J.ClassDeclaration;
 import org.openrewrite.java.tree.J.CompilationUnit;
 import org.openrewrite.java.tree.J.Import;
 
-public class CollectAnnotationAndImportInformation extends Recipe {
+/**
+ * Collect declared imports and annotations of a class
+ */
+public class CollectAnnotationAndImportInformationRecipe extends Recipe {
 
 	private final List<String> declaredImports = new ArrayList<>();
 

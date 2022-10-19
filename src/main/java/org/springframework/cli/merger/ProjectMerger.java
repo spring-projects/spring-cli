@@ -79,7 +79,7 @@ import static org.springframework.cli.util.RefactorUtils.refactorPackage;
  */
 public class ProjectMerger {
 
-	private static final Logger logger = LoggerFactory.getLogger(ProjectMergerWithMavenDepRecipe.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProjectMerger.class);
 
 	private Path toMergeProjectPath;
 
@@ -139,7 +139,7 @@ public class ProjectMerger {
 		Optional<File> springBootApplicationFile = RootPackageFinder.findSpringBootApplicationFile(this.toMergeProjectPath.toFile());
 
 		if (springBootApplicationFile.isPresent()) {
-			CollectAnnotationAndImportInformation collectAnnotationAndImportInformation = new CollectAnnotationAndImportInformation();
+			CollectAnnotationAndImportInformationRecipe collectAnnotationAndImportInformationRecipe = new CollectAnnotationAndImportInformationRecipe();
 			Consumer<Throwable> onError = e -> {
 				logger.error("error in javaParser execution", e);
 			};
@@ -148,10 +148,10 @@ public class ProjectMerger {
 			paths.add(springBootApplicationFile.get().toPath());
 			JavaParser javaParser = new Java11Parser.Builder().build();
 			List<? extends SourceFile> compilationUnits = javaParser.parse(paths, null, executionContext);
-			collectAnnotationAndImportInformation.run(compilationUnits);
+			collectAnnotationAndImportInformationRecipe.run(compilationUnits);
 
-			List<Annotation> declaredAnnotations = collectAnnotationAndImportInformation.getDeclaredAnnotations();
-			List<String> declaredImports = collectAnnotationAndImportInformation.getDeclaredImports();
+			List<Annotation> declaredAnnotations = collectAnnotationAndImportInformationRecipe.getDeclaredAnnotations();
+			List<String> declaredImports = collectAnnotationAndImportInformationRecipe.getDeclaredImports();
 
 //			for (String declaredImport : declaredImports) {
 //				System.out.println("Import: " + declaredImport);
@@ -464,11 +464,11 @@ public class ProjectMerger {
 		return new InMemoryExecutionContext(onError);
 	}
 
-	private AddManagedDependency getRecipeAddManagedDependency(String groupId, String artifactId, String version, String scope, String type, String classifier) {
+	public static AddManagedDependency getRecipeAddManagedDependency(String groupId, String artifactId, String version, String scope, String type, String classifier) {
 		return new AddManagedDependency(groupId, artifactId, version, scope, type, classifier,
 				null, null, null, true);
 	}
-	private AddSimpleDependencyRecipe getRecipeAddDependency(String groupId, String artifactId, String version, String scope, String onlyIfUsing) {
+	public static AddSimpleDependencyRecipe getRecipeAddDependency(String groupId, String artifactId, String version, String scope, String onlyIfUsing) {
 
 		return new AddSimpleDependencyRecipe(groupId, artifactId, version, null, scope, true, onlyIfUsing, null, null, false, null);
 	}
