@@ -95,10 +95,6 @@ public class ProjectHandler {
 
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.YELLOW));
-		sb.append("Using project name " + projectNameToUse);
-		sb.append(System.lineSeparator());
-		sb.append("Using package name " + packageNameToUse);
-		sb.append(System.lineSeparator());
 		sb.append("Cloning project from " + urlToUse);
 		sb.append(System.lineSeparator());
 		this.terminalMessage.shellPrint(sb.toAttributedString());
@@ -277,7 +273,9 @@ public class ProjectHandler {
 
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.GREEN));
-		sb.append("Project " + projectName + " created in directory " + toDir.getName());
+		sb.append("Created ");
+		sb.style(sb.style().foreground(AttributedStyle.WHITE));
+		sb.append("project '" + projectName + "' in directory '" + toDir.getName() + "'");
 		this.terminalMessage.shellPrint(sb.toAttributedString());
 	}
 
