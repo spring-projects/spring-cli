@@ -28,10 +28,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cli.support.AbstractSpringCliCommands;
-import org.springframework.cli.support.SpringCliUserConfig;
-import org.springframework.cli.support.SpringCliUserConfig.Host;
-import org.springframework.cli.support.SpringCliUserConfig.Hosts;
+import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.config.SpringCliUserConfig.Host;
+import org.springframework.cli.config.SpringCliUserConfig.Hosts;
 import org.springframework.cli.support.github.GithubDeviceFlow;
 import org.springframework.shell.component.flow.ComponentFlow;
 import org.springframework.shell.component.flow.ComponentFlow.ComponentFlowResult;

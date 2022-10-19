@@ -23,10 +23,9 @@ import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.SpringCliException;
-import org.springframework.cli.support.AbstractSpringCliCommands;
-import org.springframework.cli.support.SpringCliUserConfig;
-import org.springframework.cli.support.SpringCliUserConfig.ProjectCatalog;
-import org.springframework.cli.support.SpringCliUserConfig.ProjectCatalogs;
+import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;

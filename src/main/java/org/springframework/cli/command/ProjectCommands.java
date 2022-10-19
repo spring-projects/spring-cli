@@ -29,10 +29,10 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.git.SourceRepositoryService;
-import org.springframework.cli.support.SpringCliUserConfig;
-import org.springframework.cli.support.SpringCliUserConfig.ProjectCatalog;
-import org.springframework.cli.support.SpringCliUserConfig.ProjectRepositories;
-import org.springframework.cli.support.SpringCliUserConfig.ProjectRepository;
+import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
 import org.springframework.cli.support.configfile.YamlConfigFile;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;

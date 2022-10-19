@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.cli.support;
+package org.springframework.cli.config;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
@@ -28,10 +28,11 @@ import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.cli.support.SpringCliUserConfig.ProjectCatalog;
-import org.springframework.cli.support.SpringCliUserConfig.ProjectCatalogs;
-import org.springframework.cli.support.SpringCliUserConfig.ProjectRepositories;
-import org.springframework.cli.support.SpringCliUserConfig.ProjectRepository;
+import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

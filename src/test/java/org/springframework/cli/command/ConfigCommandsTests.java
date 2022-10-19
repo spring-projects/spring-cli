@@ -26,11 +26,11 @@ import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
 import uk.org.webcompere.systemstubs.jupiter.SystemStub;
 import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
-import org.springframework.cli.support.SpringCliUserConfig;
+import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.shell.table.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.cli.support.SpringCliUserConfig.SPRING_CLI_CONFIG_DIR;
+import static org.springframework.cli.config.SpringCliUserConfig.SPRING_CLI_CONFIG_DIR;
 import static org.springframework.cli.testutil.TableAssertions.verifyTableValue;
 
 @ExtendWith(SystemStubsExtension.class)

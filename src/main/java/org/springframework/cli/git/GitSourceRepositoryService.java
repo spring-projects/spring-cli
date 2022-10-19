@@ -45,8 +45,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
-import org.springframework.cli.support.SpringCliUserConfig;
-import org.springframework.cli.support.SpringCliUserConfig.Host;
+import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.config.SpringCliUserConfig.Host;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.ResourceUtils;

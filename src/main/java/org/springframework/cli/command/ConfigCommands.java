@@ -23,11 +23,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cli.support.AbstractSpringCliCommands;
-import org.springframework.cli.support.SpringCliUserConfig;
-import org.springframework.cli.support.SpringCliUserConfig.CommandDefault;
-import org.springframework.cli.support.SpringCliUserConfig.CommandDefaults;
-import org.springframework.cli.support.SpringCliUserConfig.Option;
+import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.config.SpringCliUserConfig.CommandDefault;
+import org.springframework.cli.config.SpringCliUserConfig.CommandDefaults;
+import org.springframework.cli.config.SpringCliUserConfig.Option;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;

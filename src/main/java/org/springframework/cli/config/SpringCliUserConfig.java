@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.cli.support;
+package org.springframework.cli.config;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -315,7 +315,7 @@ public class SpringCliUserConfig {
 		Initializr() {
 		}
 
-		Initializr(String url) {
+		public Initializr(String url) {
 			this.url = url;
 		}
 

@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cli.git.GitSourceRepositoryService;
 import org.springframework.cli.git.SourceRepositoryService;
-import org.springframework.cli.support.SpringCliUserConfig;
+import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.table.Table;

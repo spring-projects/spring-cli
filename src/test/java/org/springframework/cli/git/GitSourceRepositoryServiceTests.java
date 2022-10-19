@@ -25,7 +25,7 @@ import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import org.springframework.cli.support.SpringCliUserConfig;
+import org.springframework.cli.config.SpringCliUserConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
