@@ -40,17 +40,17 @@ import org.springframework.util.StringUtils;
 @ShellComponent
 public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
-	private final SpringCliUserConfig upCliUserConfig;
+	private final SpringCliUserConfig springCliUserConfig;
 
 	@Autowired
-	public ProjectCatalogCommands(SpringCliUserConfig upCliUserConfig) {
-		this.upCliUserConfig = upCliUserConfig;
+	public ProjectCatalogCommands(SpringCliUserConfig springCliUserConfig) {
+		this.springCliUserConfig = springCliUserConfig;
 	}
 
 	@ShellMethod(key = "catalog list", value = "List catalogs")
 	public Table catalogList() {
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "URL", "Description" , "Tags" });
-		Collection<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		Collection<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 		Stream<String[]> rows = null;
 		if (projectCatalogs != null) {
 			rows = projectCatalogs.stream()
@@ -77,25 +77,25 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 			@ShellOption(help = "Catalog description", defaultValue = ShellOption.NULL, arity = 1) String description,
 			@ShellOption(help = "Project tags", defaultValue = ShellOption.NULL, arity = 1) List<String> tags
 	) {
-		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		List<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 		checkIfCatalogNameExists(name, projectCatalogs);
 		projectCatalogs.add(ProjectCatalog.of(name, description, url, tags));
 		ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
 		projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
-		upCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
+		springCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
 	}
 
 	@ShellMethod(key = "catalog remove", value = "Remove a project from a catalog")
 	public void catalogRemove(
 		@ShellOption(help = "Catalog name", arity = 1) String name
 	) {
-		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		List<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 		projectCatalogs = projectCatalogs.stream()
 			.filter(tc -> !ObjectUtils.nullSafeEquals(tc.getName(), name))
 			.collect(Collectors.toList());
 		ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
 		projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
-		upCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
+		springCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
 	}
 
 	private void checkIfCatalogNameExists(String catalogName, List<ProjectCatalog> projectCatalogs) {
