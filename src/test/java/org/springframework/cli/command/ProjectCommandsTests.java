@@ -62,7 +62,7 @@ public class ProjectCommandsTests {
 			verifyTableValue(table, 1, 0, "jpa");
 			verifyTableValue(table, 1, 1, "https://github.com/rd-1-2022/rpt-spring-data-jpa");
 			verifyTableValue(table, 1, 2, "Learn JPA");
-			verifyTableValue(table, 1, 3, "");
+			verifyTableValue(table, 1, 3, "");  // This project is part of a catalog
 			verifyTableValue(table, 1, 4, "[data, jpa]");
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 

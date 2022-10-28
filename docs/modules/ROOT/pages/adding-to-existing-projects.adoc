@@ -1,4 +1,4 @@
-= Adding to existing projects
+= Adding To Existing Projects
 
 All of the projects that are available in the `project list` command can be used to addor modify code and configuration to an existing project.
 

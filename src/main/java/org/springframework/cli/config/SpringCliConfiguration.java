@@ -39,7 +39,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  * @author Janne Valkealahti
  */
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties(SpringCliProperties.class)
+@EnableConfigurationProperties({SpringCliProperties.class, SpringCliProjectCatalogProperties.class})
 public class SpringCliConfiguration {
 
 	@Bean
@@ -84,7 +84,13 @@ public class SpringCliConfiguration {
 	}
 
 	@Bean
-	public SpringCliUserConfig upCliUserConfig() {
+	public SpringCliUserConfig springCliUserConfig() {
 		return new SpringCliUserConfig();
+	}
+
+	@Bean
+	public ProjectCatalogInitializer projectCatalogInitializer(SpringCliUserConfig springCliUserConfig,
+			SpringCliProjectCatalogProperties springCliProjectCatalogProperties) {
+		return new ProjectCatalogInitializer(springCliUserConfig, springCliProjectCatalogProperties);
 	}
 }

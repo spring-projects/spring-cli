@@ -29,6 +29,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cli.SpringCliException;
+import org.springframework.cli.config.SpringCliProjectCatalogProperties;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +45,7 @@ public class ProjectCatalogCommandsTests {
 		.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
-	void testProjectCatalogCommands(final @TempDir Path tempDir) {
+	void testProjectCatalogCommands() {
 		this.contextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(ProjectCatalogCommands.class);
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
@@ -91,7 +92,12 @@ public class ProjectCatalogCommandsTests {
 		}
 
 		@Bean
-		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig) {
+		SpringCliProjectCatalogProperties springCliProjectCatalogProperties() {
+			return new SpringCliProjectCatalogProperties();
+		}
+
+		@Bean
+		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig, SpringCliProjectCatalogProperties springCliProjectCatalogProperties) {
 			ProjectCatalogCommands projectCatalogCommands = new ProjectCatalogCommands(springCliUserConfig);
 			return projectCatalogCommands;
 		}

@@ -24,6 +24,21 @@ alias spring='java -jar /home/mark/downloads/spring-cli-0.0.1-SNAPSHOT.jar'
 
 If you have downloaded the native binary, please add the directory to your `$PATH`.
 
+== Interactive mode
+
+In addition to running the Spring Boot uber-jar via an alias or running the native binary using `spring` at the command line, you can enter an interactive mode where the Spring CLI will remain up and running.  In this case you do not need to add the `spring` keyword to execute the commands.
+
+The interactive mode provides command option completion but you can also rely on positional option values.
+
+== Command Completion
+
+In non-interactive mode, you can get command completion in your shell by executing the following:
+
+[source, bash]
+----
+source <(spring completion bash)
+----
+
 == Getting Help
 
 The command `spring help` will show help for all the commands.  

@@ -10,8 +10,6 @@ spring boot new
 The output will be
 [source, bash]
 ----
-Using project name demo
-Using package name com.example
 Cloning project from https://github.com/rd-1-2022/rpt-rest-service
 
 Project demo created in directory demo
@@ -43,17 +41,8 @@ which returns the default 'Hello World' greeting
 
 The README.adoc file in the new project contains more information on how the web applications works.
 
-== Interactive mode
+== Next steps
 
-In addition to running the Spring Boot uber-jar via an alias or running the native binary using `spring` at the command line, you can enter an interactive mode where the Spring CLI will remain up and running.  In this case you do not need to add the `spring` keyword to execute the commands.
+The sectios xref:creating-new-projects.adoc[Creating New Projects] shows you how to create applications other than the default application.
 
-The interactive mode provides command option completion but you can also rely on positional option values.
-
-== Command Completion
-
-In non-interactive mode, you can get command completion in your shell by executing the following:
-
-[source, bash]
-----
-source <(spring completion bash)
-----
+The section xref:adding-to-existing-projects.adoc[Adding To Existing Projects] shows you how to add additional applications into your current working project.

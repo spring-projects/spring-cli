@@ -27,7 +27,7 @@ import org.springframework.cli.support.configfile.UserConfig;
 import org.springframework.util.ObjectUtils;
 
 /**
- * Cli access point for user level stored settings.
+ * Access to user level settings stored on the filesystem.
  *
  * @author Janne Valkealahti
  */
