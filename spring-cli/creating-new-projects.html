@@ -113,6 +113,9 @@
     <a class="nav-link" href="adding-to-existing-projects.html">Adding to Existing Projects</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="registering-new-projects.html">Registering Projects</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="key-concepts.html">Key Concepts</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -265,138 +268,111 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>To create other projects, you can register a project with the Spring CLI or import a project catalog.</p>
+<p>When running the command <code>spring boot new</code> a simple web application is created.</p>
+</div>
+<div class="paragraph">
+<p>To create other types of applications you need to pass an additional argument to the <code>spring boot new</code> command that specifies the location of the source code for the project you want to create.</p>
+</div>
+<div class="paragraph">
+<p>You can specify the type of application to create using the name of a registered project or a URL.</p>
+</div>
+<div class="paragraph">
+<p>There are a few command line options to the <code>spring boot new</code> command that let you specify the project name, package name and the location in the filesystem to create the new project.</p>
+</div>
+<div class="paragraph">
+<p>The following sections go over these topics one by one.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_adding_a_project_catalog"><a class="anchor" href="#_adding_a_project_catalog"></a>Adding a Project Catalog</h2>
+<h2 id="_creating_by_name"><a class="anchor" href="#_creating_by_name"></a>Creating by name</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To add a project catalog that contains applications which are similar to the Spring Getting Started guides found on <a href="https://spring.io/guides" class="bare">https://spring.io/guides</a>, run the following command to add the catalog</p>
+<p>By default, a project catalog based off the official Spring Getting Started Guides is registered with the shell.  A project catalog contains a list of name and URL pairs.</p>
+</div>
+<div class="paragraph">
+<p>Executing the command</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring catalog add gs https://github.com/rd-1-2022/spring-gs-catalog</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">spring catalog list</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>or if you prefer you can specify the command option names</p>
-</div>
-<div class="paragraph">
-<p>catalog add --name gs --url <a href="https://github.com/rd-1-2022/spring-gs-catalog" class="bare">https://github.com/rd-1-2022/spring-gs-catalog</a></p>
-</div>
-<div class="paragraph">
-<p>Now you can see what projects you can create using the command</p>
+<p>shows the list of project catalogs registered with the shell.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring project list</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">┌────┬──────────────────────────────────────────────┬───────────────────────┬───────────────────┐
+│Name│URL                                           │Description            │Tags               │
+├────┼──────────────────────────────────────────────┼───────────────────────┼───────────────────┤
+│gs  │https://github.com/rd-1-2022/spring-gs-catalog│Getting Started Catalog│[java-11, boot-2.7]│
+└────┴──────────────────────────────────────────────┴───────────────────────┴───────────────────┘</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To create other projects, you can register a project with the Spring CLI or import a project catalog.</p>
-</div>
-<div class="paragraph">
-<p>To import a project catalog with applications that are similar to the Spring Getting Started guides found on spring.io/guides, run the following command to import the catalog</p>
-</div>
-<div class="paragraph">
-<p>catalog add gs <a href="https://github.com/rd-1-2022/spring-gs-catalog" class="bare">https://github.com/rd-1-2022/spring-gs-catalog</a></p>
-</div>
-<div class="paragraph">
-<p>or if you prefer you can specify the command option names</p>
-</div>
-<div class="paragraph">
-<p>catalog add --name gs --url <a href="https://github.com/rd-1-2022/spring-gs-catalog" class="bare">https://github.com/rd-1-2022/spring-gs-catalog</a></p>
-</div>
-<div class="paragraph">
-<p>Now you can see what projects you can create using the command</p>
+<p>Executing the command</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring project list</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">spring project list</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>That returns the following table</p>
+<p>shows the list of projects that are available to create.  Each project has a name that can be passed to <code>spring boot new</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
-│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
-│          │                                                        │JPA.                                                            │       │              │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
-│          │                                                        │                                                                │       │eureka]       │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">┌─────────────┬────────────────────────────────────────────────────────┬─────────────────────┬───────┬───────────────┐
+│Name         │URL                                                     │Description          │Catalog│Tags           │
+├─────────────┼────────────────────────────────────────────────────────┼─────────────────────┼───────┼───────────────┤
+│web          │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful │gs     │[rest, web]    │
+│             │                                                        │web service.         │       │               │
+├─────────────┼────────────────────────────────────────────────────────┼─────────────────────┼───────┼───────────────┤
+│jpa          │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work    │gs     │[jpa, h2]      │
+│             │                                                        │with JPA data        │       │               │
+│             │                                                        │persistence using    │       │               │
+│             │                                                        │Spring Data JPA.     │       │               │
+├─────────────┼────────────────────────────────────────────────────────┼─────────────────────┼───────┼───────────────┤
+│scheduling   │https://github.com/rd-1-2022/rpt-spring-scheduling-tasks│How to schedule tasks│gs     │[scheduling]   │
+├─────────────┼────────────────────────────────────────────────────────┼─────────────────────┼───────┼───────────────┤
+│config-client│https://github.com/rd-1-2022/rpt-config-client          │Using the Config     │gs     │[config]       │
+│             │                                                        │Client library       │       │               │
+├─────────────┼────────────────────────────────────────────────────────┼─────────────────────┼───────┼───────────────┤
+│eureka       │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka  │gs     │[cloud, eureka]│
+│             │                                                        │Server               │       │               │
+├─────────────┼────────────────────────────────────────────────────────┼─────────────────────┼───────┼───────────────┤
+│graphql      │https://github.com/rd-1-2022/rpt-spring-graphql         │Spring GraphQL       │gs     │[graphql]      │
+└─────────────┴────────────────────────────────────────────────────────┴─────────────────────┴───────┴───────────────┘</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To create a new Spring Data JPA project, also setting the package name</p>
+<p>To create a new project that using Spring Data JPA, execute the command</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new jpa –name myjpaproject –packageName com.xkcd</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">spring boot new jpa</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To create a new Spring Data JPA project, also setting the package name</p>
+<p>And the application that is in the source code repository URL <code><a href="https://github.com/rd-1-2022/rpt-spring-data-jpa" class="bare">https://github.com/rd-1-2022/rpt-spring-data-jpa</a></code> will be used.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new jpa –name myjpaproject –packageName com.xkcd</code></pre>
-</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can also use the name of the project as the argument to the command  <code>spring boot add</code>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_adding_a_project"><a class="anchor" href="#_adding_a_project"></a>Adding a project</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Instead of using a catalog, you can add an individual project using the command <code>project add</code>.  For example</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring project add scheduling https://github.com/rd-1-2022/rpt-spring-scheduling-tasks</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now if you run <code>spring project list</code> you will see this project in addition to those from the catalog</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
-│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│scheduling│https://github.com/rd-1-2022/rpt-spring-scheduling-tasks│                                                                │       │[]            │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
-│          │                                                        │JPA.                                                            │       │              │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
-│          │                                                        │                                                                │       │eureka]       │
-└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You can now create a new project that showcases how to use scheduling features via the command</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new scheduling</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_creating_a_project_using_a_url"><a class="anchor" href="#_creating_a_project_using_a_url"></a>Creating a project using a URL</h2>
+<h2 id="_creating_by_url"><a class="anchor" href="#_creating_by_url"></a>Creating by URL</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Instead of adding a project to the Spring CLI so as to reference it with a short name, you can use the URL of the project&#8217;s source repository directly.</p>
@@ -412,10 +388,10 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_other_options"><a class="anchor" href="#_other_options"></a>Other Options</h2>
+<h2 id="_options"><a class="anchor" href="#_options"></a>Options</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>boot new</code> command takes the following options, which can be seen by executing the command</p>
+<p>The <code>spring boot new</code> command takes the following options, which can be seen by executing the command</p>
 </div>
 <div class="listingblock">
 <div class="content">
