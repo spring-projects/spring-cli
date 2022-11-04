@@ -17,8 +17,11 @@
 
 package org.springframework.cli.runtime.command;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,8 +38,13 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import org.jline.utils.AttributedStringBuilder;
-import org.jline.utils.AttributedStyle;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
+import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,6 +89,7 @@ public class DynamicCommand {
 		this.commandName = commandName;
 		this.subCommandName = subCommandName;
 		this.modelPopulators = modelPopulators;
+
 	}
 
 	public void execute(CommandContext commandContext) throws IOException {
@@ -102,8 +111,6 @@ public class DynamicCommand {
 			String kebabOption = toKebab(commandParserResult.option().getLongNames()[0]);
 			// TODO will value() be populated with defaultValue() if not passed in?
 			model.put(kebabOption, commandParserResult.value().toString());
-			// TODO - only really necessary if using logic-less template engine.
-			model.put(kebabOption + "-upper", StringUtils.capitalize(commandParserResult.value().toString()));
 		}
 	}
 
@@ -155,9 +162,11 @@ public class DynamicCommand {
 			// Add conditional execution
 
 			String generate = action.getGenerate();
-			String toFileName = templateEngine.process(generate, model);
-			if (StringUtils.hasText(toFileName)) {
-				generateFile(commandActionFileContents, templateEngine, toFileName, action.isOverwrite(), model, cwd);
+			if (StringUtils.hasText(generate)) {
+				String toFileName = templateEngine.process(generate, model);
+				if (StringUtils.hasText(toFileName)) {
+					generateFile(commandActionFileContents, templateEngine, toFileName, action.isOverwrite(), model, cwd);
+				}
 			}
 
 			Exec exec = action.getExec();
@@ -193,6 +202,7 @@ public class DynamicCommand {
 			throw new SpringCliException("Error evaluating exec working directory. Expression: " + exec.getDir(), e);
 		}
 
+		// If exec.getTo is set, it is the relative path to which to redirect stdout of the running process.
 		if (exec.getTo() != null) {
 			try {
 				String execto = templateEngine.process(exec.getTo(), model);
@@ -204,6 +214,7 @@ public class DynamicCommand {
 			}
 		}
 
+		// If exec.getErrto() is set, the relative path to which to redirect stderr of the running process.
 		if (exec.getErrto() != null) {
 			try {
 				String execerrto = templateEngine.process(exec.getErrto(), model);
@@ -213,8 +224,12 @@ public class DynamicCommand {
 				throw new SpringCliException("Error evaluating exec error file. Expression: " + exec.getErrto(), e);
 			}
 		}
+
+
 		Path tmpDir = null;
+		//	 If exec.isIn is true, use the rendered body of the template as stdin of the running process.
 		if (exec.isIn()) {
+
 			try {
 				tmpDir = Files.createTempDirectory("exec");
 			}
@@ -232,14 +247,39 @@ public class DynamicCommand {
 
 		try {
 			Process process = processBuilder.start();
+			// capture the output.
+			String stderr = "";
+			String stdout = "";
+			if (exec.getTo() == null && exec.getErrto() == null) {
+				stdout = readStringFromInputStream(process.getInputStream());
+				stderr = readStringFromInputStream(process.getErrorStream());
+			}
+
 			boolean exited = process.waitFor(300, TimeUnit.SECONDS);
 			if (exited) {
 				if (process.exitValue() == 0) {
 					//TODO better writing out to terminal
 					System.out.println("Command '" + StringUtils.collectionToDelimitedString(processedArgs, " ") + "' executed successfully");
+					if (exec.getDefine() != null) {
+						if (exec.getDefine().getName() != null && exec.getDefine().getJsonPath() != null) {
+							ObjectMapper mapper = new ObjectMapper();
+							mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+							mapper.registerModule(new JavaTimeModule());
+							Object data = JsonPath.using(
+									Configuration.builder()
+											.jsonProvider(new JacksonJsonProvider(mapper))
+											.mappingProvider(new JacksonMappingProvider(mapper))
+											.build()
+							).parse(stdout).read(exec.getDefine().getJsonPath());
+							if (data != null) {
+								model.putIfAbsent(exec.getDefine().getName(), data);
+							}
+						}
+					}
 				}
 				else {
 					System.out.println("Command '" + StringUtils.collectionToDelimitedString(processedArgs, " ") + "' exited with value " + process.exitValue());
+					System.out.println("stderr = " + stderr);
 				}
 			}
 		}
@@ -266,6 +306,17 @@ public class DynamicCommand {
 
 	}
 
+	private String readStringFromInputStream(InputStream input) {
+		final String newline = System.getProperty("line.separator");
+		try (BufferedReader buffer = new BufferedReader(new InputStreamReader(input))) {
+			return buffer.lines().collect(Collectors.joining(newline));
+		}
+		catch (IOException e) {
+			logger.error("Could not read command output: " + e.getMessage());
+		}
+		return null;
+	}
+
 	private void generateFile(CommandActionFileContents commandActionFileContents, TemplateEngine templateEngine, String toFileName, boolean overwrite, Map<String, Object> model, Path cwd) throws IOException {
 		Path pathToFile = cwd.resolve(toFileName).toAbsolutePath();
 		if ((pathToFile.toFile().exists() && overwrite) || (!pathToFile.toFile().exists())) {
@@ -288,11 +339,11 @@ public class DynamicCommand {
 	private TemplateEngine getTemplateEngine(FrontMatter frontMatter) {
 		String engine = frontMatter.getEngine();
 		TemplateEngine templateEngine;
-		if (engine.equalsIgnoreCase("handlebars")) {
-			templateEngine = new HandlebarsTemplateEngine();
+		if (engine.equalsIgnoreCase("mustache")) {
+			templateEngine = new MustacheTemplateEngine();
 		}
 		else {
-			templateEngine = new MustacheTemplateEngine();
+			templateEngine = new HandlebarsTemplateEngine();
 		}
 		return templateEngine;
 	}

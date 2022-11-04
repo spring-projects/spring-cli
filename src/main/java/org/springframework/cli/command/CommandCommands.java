@@ -72,7 +72,7 @@ public class CommandCommands {
 		try {
 			FileSystemUtils.copyRecursively(downloadedCommandPath, cwd);
 			// TODO use terminal
-			System.out.println("Added user-defined command.");
+			System.out.println("Added user-defined command(s).");
 		}
 		catch (IOException e) {
 			throw new SpringCliException("Could not add command", e);

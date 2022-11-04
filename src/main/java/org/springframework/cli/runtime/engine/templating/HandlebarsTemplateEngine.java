@@ -22,7 +22,11 @@ import java.util.Map;
 
 import com.github.jknack.handlebars.Context;
 import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.HumanizeHelper;
 import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.helper.StringHelpers;
+
+import org.springframework.util.StringUtils;
 
 import org.springframework.util.StringUtils;
 
@@ -31,12 +35,18 @@ import org.springframework.util.StringUtils;
  */
 public class HandlebarsTemplateEngine implements TemplateEngine {
 
-	private Handlebars handlebars = new Handlebars();
+	private Handlebars handlebars;
+
+	public HandlebarsTemplateEngine() {
+		this.handlebars =  new Handlebars();
+		HumanizeHelper.register(this.handlebars);
+		StringHelpers.register(this.handlebars);
+	}
 
 	@Override
 	public String process(String templateText, Map context) {
 		try {
-			Template template = handlebars.compileInline(templateText);
+			Template template = this.handlebars.compileInline(templateText);
 			if (context == null) {
 				context = new HashMap();
 			}

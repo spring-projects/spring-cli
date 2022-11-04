@@ -1,0 +1,5 @@
+---
+action:
+  generate: "{{output-temp-file}}"
+---
+Hello {{phone-type.[0]}}

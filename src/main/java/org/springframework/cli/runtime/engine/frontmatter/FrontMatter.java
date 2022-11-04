@@ -54,8 +54,8 @@ public class FrontMatter {
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 	FrontMatter(@JsonProperty("engine") String engine, @JsonProperty("action") @Nullable Action action,
 			@JsonProperty("conditional") Conditional conditional) {
-		// The default is logic-less mustache
-		this.engine = Objects.requireNonNullElse(engine, "mustache");
+		// The default is logic-full handlebars
+		this.engine = Objects.requireNonNullElse(engine, "handlebars");
 		this.action = Objects.requireNonNull(action);
 		this.conditional = Objects.requireNonNullElse(conditional, new Conditional());
 	}

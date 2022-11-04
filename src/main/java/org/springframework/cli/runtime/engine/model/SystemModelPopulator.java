@@ -41,6 +41,7 @@ public class SystemModelPopulator implements ModelPopulator {
 		model.put("tmp-dir", environment.getSystemProperties().get("java.io.tmpdir"));
 		model.put("file-separator", environment.getSystemProperties().get("file.separator"));
 		model.put("os-name", environment.getSystemProperties().get("os.name"));
+		model.put("user-name", environment.getSystemProperties().get("user.name"));
 	}
 
 }

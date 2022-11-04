@@ -62,14 +62,17 @@ public class Exec {
 	 */
 	private final String dir;
 
+	private final Define define;
+
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 	Exec(@JsonProperty("args") List<String> args, @JsonProperty("to") String to, @JsonProperty("errto") String errto,
-			@JsonProperty("in") boolean in, @JsonProperty("dir") String dir) {
+			@JsonProperty("in") boolean in, @JsonProperty("dir") String dir, @JsonProperty("define") Define define) {
 		this.args = Objects.requireNonNullElse(args, new ArrayList<>());
 		this.to = to;
 		this.errto = errto;
 		this.in = in;
 		this.dir = Objects.requireNonNullElse(dir, "");
+		this.define = define;
 	}
 
 	public List<String> getArgs() {
@@ -94,9 +97,19 @@ public class Exec {
 		return dir;
 	}
 
-	@Override
-	public String toString() {
-		return "Exec{" + "args=" + args + '}';
+	public Define getDefine() {
+		return define;
 	}
 
+	@Override
+	public String toString() {
+		return "Exec{" +
+				"args=" + args +
+				", to='" + to + '\'' +
+				", errto='" + errto + '\'' +
+				", in=" + in +
+				", dir='" + dir + '\'' +
+				", define=" + define +
+				'}';
+	}
 }

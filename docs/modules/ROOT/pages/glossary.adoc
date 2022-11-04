@@ -1,0 +1,16 @@
+= Glossary
+
+Action File::
+    A file that contains a front matter section describing the action to take for generating code or configuration and is followed text to pass into the template engine.
+
+Front Matter::
+    The first contents in a file that defines YAML between triple-dashed lines.
+
+
+```
+---
+action:
+  generate: hello.txt
+---
+Hello {{user-name}} at {{now}} on {{os-name}}.
+```

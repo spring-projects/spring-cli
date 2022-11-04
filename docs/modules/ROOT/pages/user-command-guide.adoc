@@ -3,14 +3,20 @@
 User defined commands let you add custom commands to the Spring CLI.
 The directory structure commands represents the command and sub-command that are introduced into the shell.
 
-A directory structure of `controller\new` translates to the command `controller new` in the CLI.
+For example, the directory structure of `controller\new` translates to the command `controller new` in the CLI.
 
-Files located in the sub-command directory contains a description of the command and action files that describe what content to add to the project.
+The files located in the sub-command directory are:
+
+  * A file named `command.yaml` that describes the command and its arguments.
+  * One or more Action Files that describe the actions to take to add code or configuration to the project.
+
 User defined commands are registered with the CLI using the command
 ```
 command add --from <repository-url>
 ```
 The contents of that repository are copied into your existing project.
+
+As an example, look at the contents of the repository https://github.com/rd-1-2022/udc-spring-controller
 
 == Structure
 
@@ -19,7 +25,147 @@ The directory structure for all user defined commands are under the path
 ```
 .spring/commands
 ```
-So for a hypothetical user defined command `controller new` the full directory structure where the command description file and action files are located would be
+
+So for the user defined command `controller new` mentioned previously, the full directory structure where the command description file and action files are located would be
 ```
 .spring/commands/controller/new
 ```
+
+Inside this directory you can define
+  * The file `command.yaml` that describes what the command does and the arguments of the command
+  * One or more Action Files that define the actions to execute for this command.
+
+For example, the directory contents of the repository https://github.com/rd-1-2022/udc-spring-controller are
+
+```
+.
+├── README.adoc
+└── .spring
+    └── commands
+        └── controller
+            └── new
+                ├── command.yaml
+                └── Controller.java
+
+```
+
+=== Describing the command
+
+The contents of the `command.yaml` file for the `controller new` command mentioned previously is:
+
+```
+command:
+  description: Generate a new Spring Controller
+  options:
+    #
+    - name: feature
+      description: name of the feature package
+      dataType: string
+      defaultValue: person
+      inputType: text
+      required: true
+```
+
+The file contains a brief description of the command and an array of command line options.
+
+The `name` of the options is required.  The default `dataType` is `string`
+
+The `dataType` can be `int`, `integer`, `bool`, `boolean`, `double`, `float`, `long`, `short`, and `string`.
+
+The CLI incorporates these commands at runtime and appear when asking for general help and the command help.
+
+```
+$spring help
+
+<output truncated>
+
+User-defined Commands
+       controller new: Generate a new Spring Controller
+```
+
+and
+
+```
+$ spring help controller new
+NAME
+       controller new - Generate a new Spring Controller
+
+SYNOPSIS
+       controller new --feature String
+
+OPTIONS
+       --feature String
+       name of the feature package
+       [Optional, default = person]
+```
+
+=== Action Files
+Action files are denoted by having a Front Matter section that describes the actions to take and below the Front Matter section is the text that will be passed to the Template Engine.
+
+The Action File can be named anything you like, only text files with a Front Matter section are executed.
+
+There can be as many action files as you need to accomplish a specific task.  The order of Action Files execution is depth first and alphabetical.
+
+Here is a very simple example
+
+```
+---
+action:
+  generate: hello.txt
+---
+Hello {{user-name}} at {{now}} on {{os-name}}.
+
+```
+
+This will generate the file `hello.txt`, if it does not already exists, in the current working directory.
+The template contents contains kebab-case variable names.
+
+The variables `user-name` and `os-name` come from Java system properties and are automatically registered with the template engine.
+The variable `now` is the value of `new java.util.Date()` when the command was executed.
+
+As a more realistic example to create Java code, the Action File named `Controller.java` in the repository https://github.com/rd-1-2022/udc-spring-controller is shown below.
+
+
+```java
+---
+action:
+  generate: "src/main/java/{{root-package-dir}}/{{feature}}/{{capitalizeFirst feature}}Controller.java"
+---
+package {{root-package}}.{{feature}};
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class {{capitalizeFirst feature}}Controller {
+
+	@GetMapping("/{{feature}}")
+	public String greeting() {
+		return "Hello {{feature}}";
+	}
+}
+```
+
+The `generate` field in the Front Matter section defines the location of the file to be generated.
+The value of the `generate` will often contain template variables.
+
+If the file exists, it will not be overwritten unless the additional field `overwrite` at the same level of `generate` is added to the Front Matter section.
+
+All command line arguments are passed to the template engine as variables, in this case the `feature` option.
+
+One of the useful built-in variables is `root-package-dir` which is the directory where the class containing the `@SpringApplication` annotation is located.
+
+The default template engine is https://github.com/jknack/handlebars.java[Handlebars].
+Several Handlebar helpers are registered by default
+
+  * https://github.com/jknack/handlebars.java#string-helpers[StringHelpers]
+  * https://github.com/jknack/handlebars.java#humanize[HumanizeHelper]
+  * https://github.com/jknack/handlebars.java#conditional-helpers[Conditional Helpers]
+
+The other template engine available is Mustache.  You specify this by adding the `engine: mustache` under the `action:` section in the Front Matter section.
+
+== Learning more
+
+The section xref:front-matter-properties.adoc[Front Matter Properites] describes all the options available for you to use in Action Files to add or modify code and configuration to a project.
+
+>>>>>>> ec6feb1... initial exec functionality with some docs

@@ -9,3 +9,4 @@
 * xref:key-concepts.adoc[Key Concepts]
 * xref:comments-on-the-approach.adoc[Comments on the approach]
 * xref:initializr.adoc[Initializr]
+* xref:glossary.adoc[Glossary]

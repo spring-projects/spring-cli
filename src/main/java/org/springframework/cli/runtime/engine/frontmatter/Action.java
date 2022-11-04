@@ -48,7 +48,7 @@ public class Action {
 	 * If set to false, generation of the template is skipped if the {@link #generate
 	 * destination file} already exists.
 	 */
-	private boolean overwrite; // TODO Perhaps this should be nested inside the generate and inject actions as it only pertains to them.
+	private boolean overwrite; // TODO Perhaps this should be nested inside the generate actions as it only pertains to them.
 
 	/**
 	 * If set to true, the results of the text template engine is printed to the console.

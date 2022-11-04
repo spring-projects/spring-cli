@@ -17,6 +17,7 @@
 
 package org.springframework.cli.runtime.command;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,8 +30,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
-
-import org.springframework.cli.util.IoUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,6 +62,16 @@ public class DynamicCommandExecTests {
 		model.put("work-dir", "src/test/resources/org/springframework/cli/runtime/command/exec/working/dir");
 		runCommand("working", "dir", model, "src/test/resources/org/springframework/cli/runtime/command/exec");
 		assertThat(result).hasContent("ls.txt");
+	}
+
+	@Test
+	@DisabledOnOs(OS.WINDOWS)
+	void testDefine(@TempDir Path tempPath) throws IOException {
+		Map<String, Object> model = new HashMap<>();
+		File tempFile = new File(tempPath.toFile(), "temp.txt");
+		model.put("output-temp-file", tempFile.getAbsolutePath());
+		runCommand("define", "var", model, "src/test/resources/org/springframework/cli/runtime/command/exec");
+		assertThat(tempFile).hasContent("Hello iPhone");
 	}
 
 	public void runCommand(String noun, String verb, Map<String, Object> model, String commandLocation) throws IOException {
