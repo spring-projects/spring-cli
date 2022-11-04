@@ -1,0 +1,95 @@
+= Guide to "boot add"
+
+All of the projects that are available in the `project list` command can be used to addor modify code and configuration to an existing project.
+
+The CLI does this by
+
+* Merging the Maven build file, so that any missing project properties, dependencies, dependency management, plug-ins are added into the target project.
+* Performing a package refactoring so that the code to be copied into the target project has the same package structure.
+* Adding any missing annotations on the Spring Boot main application in the target project are added.
+* Renaming the `README.adoc`` file (or, .md file) to `README-<project-name>.adoc` so that additional information about what code was added can be described to the user.
+* Merging `application.yaml` and `application.properties` files
+
+The heuristic to perform this task is not 100% complete at this time, so expect a few bumps if you are an early adopter.
+
+For example, let's assume we have added the getting started catalog.
+
+[source, bash]
+----
+spring catalog add gs https://github.com/rd-1-2022/spring-gs-catalog
+----
+
+This gives us the following projects to select from
+
+[source, bash]
+----
+┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
+│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
+│          │                                                        │JPA.                                                            │       │              │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
+│          │                                                        │                                                                │       │eureka]       │
+└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘
+----
+
+We can create a new web project and then add JPA functionality to that project by the following steps
+
+[source, bash]
+----
+spring boot new web --packageName com.xkcd
+cd demo
+spring boot add jpa
+----
+
+The project tree now contains both the web application and the JPA functionality.
+
+[source, bash]
+----
+$ tree
+.
+├── LICENSE
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+├── README.adoc
+├── README-jpa.md
+└── src
+    ├── main
+    │   └── java
+    │       └── com
+    │           └── xkcd
+    │               ├── Application.java
+    │               ├── customer
+    │               │   ├── CustomerCommandLineRunner.java
+    │               │   ├── Customer.java
+    │               │   └── CustomerRepository.java
+    │               └── greeting
+    │                   ├── GreetingController.java
+    │                   └── Greeting.java
+    └── test
+        └── java
+            └── com
+                └── xkcd
+                    ├── customer
+                    │   └── CustomerRepositoryTests.java
+                    └── greeting
+                        └── GreetingControllerTests.java
+
+----
+
+== Conventions
+In order to perform an intelligent merge of the code base when running `spring boot add` the following conventions in the project must be followed.
+
+* The main `@SpringBootApplication` should be placed at the root of the package hiearachy with all other code in subpackages.
+* There should be no additional `@Bean` annotations in the `@SpringBootApplication` class.
+Any configuration should live in a separate `@Configuration` class
+
+
+== Limitations
+Curently only single module Maven projects are supported.
+Support for single module Gradle projects is planned for the 1.0 release.
+No timeline is defined for supporting multi-module projects.

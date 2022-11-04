@@ -1,0 +1,8 @@
+---
+action:
+  exec:
+    args:
+      - mkdir
+      - "{{directory-to-create}}"
+---
+IGNORED

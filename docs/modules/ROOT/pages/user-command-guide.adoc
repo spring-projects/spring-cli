@@ -1,0 +1,25 @@
+= Guide to user defined commands
+
+User defined commands let you add custom commands to the Spring CLI.
+The directory structure commands represents the command and sub-command that are introduced into the shell.
+
+A directory structure of `controller\new` translates to the command `controller new` in the CLI.
+
+Files located in the sub-command directory contains a description of the command and action files that describe what content to add to the project.
+User defined commands are registered with the CLI using the command
+```
+command add --from <repository-url>
+```
+The contents of that repository are copied into your existing project.
+
+== Structure
+
+The directory structure for all user defined commands are under the path
+
+```
+.spring/commands
+```
+So for a hypothetical user defined command `controller new` the full directory structure where the command description file and action files are located would be
+```
+.spring/commands/controller/new
+```

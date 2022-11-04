@@ -17,27 +17,33 @@
 
 package org.springframework.cli.runtime.command;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.runtime.engine.frontmatter.Action;
 import org.springframework.cli.runtime.engine.frontmatter.CommandActionFileContents;
+import org.springframework.cli.runtime.engine.frontmatter.Exec;
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatter;
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatterFileVisitor;
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatterReader;
@@ -51,7 +57,7 @@ import org.springframework.shell.command.CommandParser.CommandParserResult;
 import org.springframework.util.StringUtils;
 
 /**
- * Spring Shell command object that is executed for all dynamic commands discovered
+ * Object that is registered and executed for all dynamic commands discovered
  * at runtime.
  *
  * It uses the GeneratorResolver to read files contained in the command/subcommand directory
@@ -85,7 +91,7 @@ public class DynamicCommand {
 
 		addMatchedOptions(model, commandContext);
 
-		runCommand(commandContext, model);
+		runCommand(IoUtils.getWorkingDirectory(), ".spring", "commands", commandContext, model);
 	}
 
 
@@ -101,15 +107,23 @@ public class DynamicCommand {
 		}
 	}
 
-	private void runCommand(CommandContext commandContext, Map<String, Object> model) throws IOException {
-		Path cwd = IoUtils.getWorkingDirectory();
-		Path dynamicSubCommandPath = Paths.get(cwd.toString(), ".spring", "commands")
-				.resolve(this.commandName).resolve(this.subCommandName).toAbsolutePath();
+
+	public void runCommand(Path workingDirectory, String springDir, String commandsDir,
+			CommandContext commandContext, Map<String, Object> model) throws IOException {
+		Path dynamicSubCommandPath;
+		if (StringUtils.hasText(springDir) && StringUtils.hasText(commandsDir)) {
+			dynamicSubCommandPath = Paths.get(workingDirectory.toString(), springDir, commandsDir)
+					.resolve(this.commandName).resolve(this.subCommandName).toAbsolutePath();
+		} else {
+			dynamicSubCommandPath = Paths.get(workingDirectory.toString())
+					.resolve(this.commandName).resolve(this.subCommandName).toAbsolutePath();
+		}
+
 
 		// Enrich the model with detected features of the project, e.g. maven artifact name
 		if (this.modelPopulators != null) {
 			for (ModelPopulator modelPopulator : modelPopulators) {
-				modelPopulator.contributeToModel(cwd, model);
+				modelPopulator.contributeToModel(workingDirectory, model);
 			}
 		}
 		//System.out.println(model);
@@ -121,7 +135,7 @@ public class DynamicCommand {
 			throw new SpringCliException("No command action files found to process in directory " + dynamicSubCommandPath.toAbsolutePath());
 		}
 
-		processCommandActionFiles(commandActionFiles, cwd, model);
+		processCommandActionFiles(commandActionFiles, workingDirectory, model);
 
 
 	}
@@ -138,6 +152,7 @@ public class DynamicCommand {
 			}
 			TemplateEngine templateEngine = getTemplateEngine(commandActionFileContents.getFrontMatter());
 
+			// Add conditional execution
 
 			String generate = action.getGenerate();
 			String toFileName = templateEngine.process(generate, model);
@@ -145,8 +160,109 @@ public class DynamicCommand {
 				generateFile(commandActionFileContents, templateEngine, toFileName, action.isOverwrite(), model, cwd);
 			}
 
+			Exec exec = action.getExec();
+			if (exec != null) {
+				executeShellCommand(exec, templateEngine, model, commandActionFileContents);
+			}
+
 		}
 
+
+	}
+
+	private void executeShellCommand(Exec exec, TemplateEngine templateEngine, Map<String, Object> model, CommandActionFileContents commandActionFileContents) {
+		List<String> args = exec.getArgs();
+		List<String> processedArgs = new ArrayList<>();
+
+		for (String arg : args) {
+			try {
+				String objectResult = templateEngine.process(arg, model);
+				processedArgs.add(objectResult);
+			}
+			catch (Exception ex) {
+				throw new SpringCliException("Error evaluating exec argument expression. Expression: " + arg, ex);
+			}
+		}
+		String[] actionCommandArgs = processedArgs.toArray(new String[0]);
+		ProcessBuilder processBuilder = new ProcessBuilder(actionCommandArgs);
+		try {
+			String dir = templateEngine.process(exec.getDir(), model);
+			processBuilder.directory(new File(dir).getCanonicalFile());
+		}
+		catch (Exception e) {
+			throw new SpringCliException("Error evaluating exec working directory. Expression: " + exec.getDir(), e);
+		}
+
+		if (exec.getTo() != null) {
+			try {
+				String execto = templateEngine.process(exec.getTo(), model);
+				processBuilder.redirectOutput(new File(execto));
+			}
+			catch (Exception e) {
+				throw new SpringCliException("Error evaluating exec destination file. Expression: " + exec.getTo(),
+						e);
+			}
+		}
+
+		if (exec.getErrto() != null) {
+			try {
+				String execerrto = templateEngine.process(exec.getErrto(), model);
+				processBuilder.redirectError(new File(execerrto));
+			}
+			catch (Exception e) {
+				throw new SpringCliException("Error evaluating exec error file. Expression: " + exec.getErrto(), e);
+			}
+		}
+		Path tmpDir = null;
+		if (exec.isIn()) {
+			try {
+				tmpDir = Files.createTempDirectory("exec");
+			}
+			catch (IOException e) {
+				throw new SpringCliException("Could not create temp directory.", e);
+			}
+			try {
+				generateFile(commandActionFileContents, templateEngine, "stdin", true, model, tmpDir);
+			}
+			catch (IOException e) {
+				throw new SpringCliException("Could not generate stdin file.", e);
+			}
+			processBuilder.redirectInput(tmpDir.resolve("stdin").toFile());
+		}
+
+		try {
+			Process process = processBuilder.start();
+			boolean exited = process.waitFor(300, TimeUnit.SECONDS);
+			if (exited) {
+				if (process.exitValue() == 0) {
+					//TODO better writing out to terminal
+					System.out.println("Command '" + StringUtils.collectionToDelimitedString(processedArgs, " ") + "' executed successfully");
+				}
+				else {
+					System.out.println("Command '" + StringUtils.collectionToDelimitedString(processedArgs, " ") + "' exited with value " + process.exitValue());
+				}
+			}
+		}
+		catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new SpringCliException("Execution of command '"
+					+ StringUtils.collectionToDelimitedString(processedArgs, " ") + "' failed", e);
+
+		}
+		catch (IOException e) {
+			throw new SpringCliException("Execution of command '"
+					+ StringUtils.collectionToDelimitedString(processedArgs, " ") + "' failed", e);
+		}
+		finally {
+			if (tmpDir != null) {
+				try {
+					Files.deleteIfExists(tmpDir.resolve("stdin"));
+					Files.deleteIfExists(tmpDir);
+				} catch (IOException e) {
+					System.err.println("Could not delete temp directory " + tmpDir);
+				}
+			}
+		}
 
 	}
 

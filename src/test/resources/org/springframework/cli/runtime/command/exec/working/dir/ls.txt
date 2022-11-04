@@ -1,0 +1,9 @@
+---
+action:
+  exec:
+    to: "{{output}}"
+    dir: "{{work-dir}}"
+    args:
+      - ls
+---
+IGNORED

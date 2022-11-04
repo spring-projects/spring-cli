@@ -1,95 +1,21 @@
 = Adding To Existing Projects
 
-All of the projects that are available in the `project list` command can be used to addor modify code and configuration to an existing project.
+There are two ways to add code to existing projects
 
-The CLI does this by
+* Using the command `boot add`
+* Using user defined commands
 
-* Merging the Maven build file, so that any missing project properties, dependencies, dependency management, plug-ins are added into the target project.  
-* Performing a package refactoring so that the code to be copied into the target project has the same package structure.
-* Adding any missing annotations on the Spring Boot main application in the target project are added.
-* Renaming the `README.adoc`` file (or, .md file) to `README-<project-name>.adoc` so that additional information about what code was added can be described to the user.
-* Merging `application.yaml` and `application.properties` files
+== Overview of the boot add command
 
-The heuristic to perform this task is not 100% complete at this time, so expect a few bumps if you are an early adopter.
+The `boot add` command will intelligently merge an existing project into your current project.
+The code of the existing project is located in a source code repository.
+The existing project that is to be merged is checked out into a temporary directory and it's package structure is refactored to match your current project.
+Then all code and configuration is copied over from the temporary location, creating new files or updating existing ones as needed.
 
-For example, let's assume we have added the getting started catalog.
+== Overview of user defined commands
 
-[source, bash]
-----
-spring catalog add gs https://github.com/rd-1-2022/spring-gs-catalog
-----
+You can register user defined commands with the shell.
+Adding code or configuration to an existing project is done through the use of action files that contain instructions of what code or configuration is to be generated and how it is to be incorporated into the current project.
+A template engine, by default Handlebars, is used to model the contents of the code or configuration to be added to a new file or injected into an existing file.
+Actions can be conditionally executed and can also execute shell actions.
 
-This gives us the following projects to select from
-
-[source, bash]
-----
-┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
-│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
-│          │                                                        │JPA.                                                            │       │              │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
-│          │                                                        │                                                                │       │eureka]       │
-└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘
-----
-
-We can create a new web project and then add JPA functionality to that project by the following steps
-
-[source, bash]
-----
-spring boot new web --packageName com.xkcd
-cd demo
-spring boot add jpa
-----
-
-The project tree now contains both the web application and the JPA functionality.
-
-[source, bash]
-----
-$ tree
-.
-├── LICENSE
-├── mvnw
-├── mvnw.cmd
-├── pom.xml
-├── README.adoc
-├── README-jpa.md
-└── src
-    ├── main
-    │   └── java
-    │       └── com
-    │           └── xkcd
-    │               ├── Application.java
-    │               ├── customer
-    │               │   ├── CustomerCommandLineRunner.java
-    │               │   ├── Customer.java
-    │               │   └── CustomerRepository.java
-    │               └── greeting
-    │                   ├── GreetingController.java
-    │                   └── Greeting.java
-    └── test
-        └── java
-            └── com
-                └── xkcd
-                    ├── customer
-                    │   └── CustomerRepositoryTests.java
-                    └── greeting
-                        └── GreetingControllerTests.java
-
-----
-
-== Conventions
-In order to perform an intelligent merge of the code base when running `spring boot add` the following conventions in the project must be followed.
-
-* The main `@SpringBootApplication` should be placed at the root of the package hiearachy with all other code in subpackages.
-* There should be no additional `@Bean` annotations in the `@SpringBootApplication` class.
-Any configuration should live in a separate `@Configuration` class
-
-
-== Limitations
-Curently only single module Maven projects are supported.
-Support for single module Gradle projects is planned for the 1.0 release.
-No timeline is defined for supporting multi-module projects.

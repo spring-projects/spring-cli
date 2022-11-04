@@ -17,7 +17,7 @@ Project demo created in directory demo
  
 
  
-You can now cd into the `demo` directory and build and run the application, which is a simple web application with a single endpoint by default.
+You can now `cd` into the `demo` directory and build and run the application, which is a simple web application with a single endpoint by default.
 
 [source, bash]
 ----
@@ -43,6 +43,6 @@ The README.adoc file in the new project contains more information on how the web
 
 == Next steps
 
-The sectios xref:creating-new-projects.adoc[Creating New Projects] shows you how to create applications other than the default application.
+The section xref:creating-new-projects.adoc[Creating New Projects] shows you how to create applications other than the default application.
 
 The section xref:adding-to-existing-projects.adoc[Adding To Existing Projects] shows you how to add additional applications into your current working project.

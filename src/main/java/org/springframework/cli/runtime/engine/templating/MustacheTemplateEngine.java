@@ -16,10 +16,13 @@
 
 package org.springframework.cli.runtime.engine.templating;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
+
+import org.springframework.util.StringUtils;
 
 /**
  * @author Mark Pollack
@@ -28,8 +31,15 @@ public class MustacheTemplateEngine implements TemplateEngine {
 
 	@Override
 	public String process(String template, Map context) {
-		Template mustacheTemplate = Mustache.compiler().compile(template);
-		return mustacheTemplate.execute(context);
+		if (StringUtils.hasText(template)) {
+			Template mustacheTemplate = Mustache.compiler().compile(template);
+			if (context == null) {
+				context = new HashMap();
+			}
+			return mustacheTemplate.execute(context);
+		} else {
+			return "";
+		}
 	}
 
 }

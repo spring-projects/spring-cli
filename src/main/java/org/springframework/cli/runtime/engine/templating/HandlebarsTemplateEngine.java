@@ -17,11 +17,14 @@
 package org.springframework.cli.runtime.engine.templating;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.github.jknack.handlebars.Context;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
+
+import org.springframework.util.StringUtils;
 
 /**
  * @author Mark Pollack
@@ -34,8 +37,15 @@ public class HandlebarsTemplateEngine implements TemplateEngine {
 	public String process(String templateText, Map context) {
 		try {
 			Template template = handlebars.compileInline(templateText);
+			if (context == null) {
+				context = new HashMap();
+			}
 			Context handlebarsContext = Context.newBuilder(context).build();
-			return template.apply(handlebarsContext);
+			if (StringUtils.hasText(templateText)) {
+				return template.apply(handlebarsContext);
+			} else {
+				return "";
+			}
 		}
 		catch (IOException e) {
 			throw new RuntimeException(e);
