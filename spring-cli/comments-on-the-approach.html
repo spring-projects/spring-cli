@@ -110,10 +110,16 @@
     <a class="nav-link" href="creating-new-projects.html">Creating New Projects</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="registering-new-projects.html">Registering Projects</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="adding-to-existing-projects.html">Adding to Existing Projects</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="registering-new-projects.html">Registering Projects</a>
+    <a class="nav-link" href="boot-add-guide.html">Guide to "boot add"</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="user-command-guide.html">Guide to user defined commands</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="key-concepts.html">Key Concepts</a>
@@ -266,21 +272,40 @@
 <article class="doc">
 <h1 id="page-title" class="page">Comments on the Approach</h1>
 <div class="paragraph">
-<p>The Spring CLI approach is different from creating a new project from Initializr, aka <a href="https://start.spring.io" class="bare">https://start.spring.io</a>, since it contains fully working code and configuration in addition to your project&#8217;s dependencies.</p>
+<p>The common way to create a new Spring Boot project has been to use Initializr, aka <a href="https://start.spring.io" class="bare">https://start.spring.io</a>.
+The Spring CLI provides you with a command to interact with Initializr, see <a href="initializr.html" class="xref page">Initializr</a>, but also offers other approaches to creating a new project and addresses the <code>day-2</code> use case of adding code or configuration to an existing project.</p>
 </div>
 <div class="paragraph">
-<p>While you do not get to pick your initial dependencies when executing <code>boot new</code>, you can add dependencies afterward as your needs change while developing the application.
-After initial project creation, use the command <code>boot add</code> or a user-provided command to add code or dependencies.</p>
+<p>The command <code>boot new</code> will let you create a new project from an existing one that lives in a source code repository.
+The <code>boot new</code> command lets you specify a small set of options to customize it to your needs, e.g., change the package name, but does not offer the selection of dependencies that you get with Initializr.</p>
 </div>
 <div class="paragraph">
-<p>A goal of the Spring CLI is for a collection of curated projects and user-provided commands to emerge in a company.
-The Spring CLI project offers many examples of projects and user-provided commands to help you get started.</p>
+<p>The approach of <code>boot new</code> is to clone an existing repository that contains fully working code and configuration in addition to your project&#8217;s dependencies.
+This approach makes it very easy for your or members of your team to create several project archetypes ,as they are just regular Spring projects in a source code repository that can be verified to work with a CI process.
+Refer to the section <a href="creating-new-projects.html" class="xref page">Creating New Projects</a> for more information.</p>
 </div>
 <div class="paragraph">
-<p>This approach is also different from projects such as JHipster where you have to create a specific JHipster based project that uses a template engine for code generation of the initial code base.
-The new project template is a separate artifact specific to JHipster.
-This approach is more challanging to create and maintain, in my experience, as compared to using "Plan Old Java Projects" as a starting point.
-You can use a JHipster created project as the basis for some additional customization and then share that project with others for use with the <code>boot new</code> and <code>boot add</code> commands.</p>
+<p>Then after initial project creation, you can add additional code and dependencies as needed using the <code>boot add</code> command.
+This command will intelligently merge an existing project into your current project.
+As with the <code>boot new</code> command, the existing project is a regular Spring project in a source code repository that can be compiled and verified to work with a CI process.
+Refer to the section <a href="boot-add-guide.html" class="xref page">Guide to "boot add"</a> for more information.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively you can add additional code and dependencies by using user defined commands, which rely on using a template engine to create code and configuration.
+Refer to the sectionx ref:user-command-guide.adoc[Guide to user defined commands] for more information</p>
+</div>
+<div class="paragraph">
+<p>While both approaches to add additional code and dependencies have their use-cases, when creating a new project from scratch I&#8217;ve found it easier to start from working projects as not only do I get the approved dependencies that my company requires, but also code, configuration, and tests.
+It is a starting point that removes the busy work and uncertainty of selecting dependencies and cut-and-pasting code from a tutorial.
+Often those tutorial are so basic that they do not follow common best practice conventions, nor have any tests.</p>
+</div>
+<div class="paragraph">
+<p>Creating a new project using templating can be a challange.  In my opinion, templating Java code for a new project is more difficult than cloning a new project from an existing working project.
+The cycle of creating a template, running the template, and then compiling the resulting generated project is brittle.
+However, I&#8217;ve found that creating smaller blocks of code and configuration are more amenable to the templating approach, e.g. <code>spring controller new</code> to add a controller to a current project, or <code>spring feature new</code> that adds a few files, such as classes annotated with @Controller, @Service, and @Repository.</p>
+</div>
+<div class="paragraph">
+<p>Your experience may differ, but both types of code generation approaches are available in the Spring CLI.</p>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="key-concepts.html">Key Concepts</a></span>

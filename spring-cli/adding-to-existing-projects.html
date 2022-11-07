@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Adding To Existing Projects :: Spring CLI</title>
-    <link rel="prev" href="creating-new-projects.html">
-    <link rel="next" href="registering-new-projects.html">
+    <link rel="prev" href="registering-new-projects.html">
+    <link rel="next" href="boot-add-guide.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 
@@ -109,11 +109,17 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="creating-new-projects.html">Creating New Projects</a>
   </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="registering-new-projects.html">Registering Projects</a>
+  </li>
   <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="adding-to-existing-projects.html">Adding to Existing Projects</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="registering-new-projects.html">Registering Projects</a>
+    <a class="nav-link" href="boot-add-guide.html">Guide to "boot add"</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="user-command-guide.html">Guide to user defined commands</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="key-concepts.html">Key Concepts</a>
@@ -268,139 +274,45 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>All of the projects that are available in the <code>project list</code> command can be used to addor modify code and configuration to an existing project.</p>
-</div>
-<div class="paragraph">
-<p>The CLI does this by</p>
+<p>There are two ways to add code to existing projects</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Merging the Maven build file, so that any missing project properties, dependencies, dependency management, plug-ins are added into the target project.</p>
+<p>Using the command <code>boot add</code></p>
 </li>
 <li>
-<p>Performing a package refactoring so that the code to be copied into the target project has the same package structure.</p>
-</li>
-<li>
-<p>Adding any missing annotations on the Spring Boot main application in the target project are added.</p>
-</li>
-<li>
-<p>Renaming the <code>README.adoc`</code> file (or, .md file) to <code>README-&lt;project-name&gt;.adoc</code> so that additional information about what code was added can be described to the user.</p>
-</li>
-<li>
-<p>Merging <code>application.yaml</code> and <code>application.properties</code> files</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The heuristic to perform this task is not 100% complete at this time, so expect a few bumps if you are an early adopter.</p>
-</div>
-<div class="paragraph">
-<p>For example, let&#8217;s assume we have added the getting started catalog.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring catalog add gs https://github.com/rd-1-2022/spring-gs-catalog</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This gives us the following projects to select from</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
-│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
-│          │                                                        │JPA.                                                            │       │              │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
-│          │                                                        │                                                                │       │eureka]       │
-└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>We can create a new web project and then add JPA functionality to that project by the following steps</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new web --packageName com.xkcd
-cd demo
-spring boot add jpa</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The project tree now contains both the web application and the JPA functionality.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ tree
-.
-├── LICENSE
-├── mvnw
-├── mvnw.cmd
-├── pom.xml
-├── README.adoc
-├── README-jpa.md
-└── src
-    ├── main
-    │   └── java
-    │       └── com
-    │           └── xkcd
-    │               ├── Application.java
-    │               ├── customer
-    │               │   ├── CustomerCommandLineRunner.java
-    │               │   ├── Customer.java
-    │               │   └── CustomerRepository.java
-    │               └── greeting
-    │                   ├── GreetingController.java
-    │                   └── Greeting.java
-    └── test
-        └── java
-            └── com
-                └── xkcd
-                    ├── customer
-                    │   └── CustomerRepositoryTests.java
-                    └── greeting
-                        └── GreetingControllerTests.java</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_conventions"><a class="anchor" href="#_conventions"></a>Conventions</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>In order to perform an intelligent merge of the code base when running <code>spring boot add</code> the following conventions in the project must be followed.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The main <code>@SpringBootApplication</code> should be placed at the root of the package hiearachy with all other code in subpackages.</p>
-</li>
-<li>
-<p>There should be no additional <code>@Bean</code> annotations in the <code>@SpringBootApplication</code> class.
-Any configuration should live in a separate <code>@Configuration</code> class</p>
+<p>Using user defined commands</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_limitations"><a class="anchor" href="#_limitations"></a>Limitations</h2>
+<h2 id="_overview_of_the_boot_add_command"><a class="anchor" href="#_overview_of_the_boot_add_command"></a>Overview of the boot add command</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Curently only single module Maven projects are supported.
-Support for single module Gradle projects is planned for the 1.0 release.
-No timeline is defined for supporting multi-module projects.</p>
+<p>The <code>boot add</code> command will intelligently merge an existing project into your current project.
+The code of the existing project is located in a source code repository.
+The existing project that is to be merged is checked out into a temporary directory and it&#8217;s package structure is refactored to match your current project.
+Then all code and configuration is copied over from the temporary location, creating new files or updating existing ones as needed.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overview_of_user_defined_commands"><a class="anchor" href="#_overview_of_user_defined_commands"></a>Overview of user defined commands</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can register user defined commands with the shell.
+Adding code or configuration to an existing project is done through the use of action files that contain instructions of what code or configuration is to be generated and how it is to be incorporated into the current project.
+A template engine, by default Handlebars, is used to model the contents of the code or configuration to be added to a new file or injected into an existing file.
+Actions can be conditionally executed and can also execute shell actions.</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="creating-new-projects.html">Creating New Projects</a></span>
-  <span class="next"><a href="registering-new-projects.html">Registering Projects</a></span>
+  <span class="prev"><a href="registering-new-projects.html">Registering Projects</a></span>
+  <span class="next"><a href="boot-add-guide.html">Guide to "boot add"</a></span>
 </nav>
 </article>
   </div>

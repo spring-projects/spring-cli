@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Spring CLI :: Spring CLI</title>
-    <link rel="next" href="installation.html">
+    <title>Guide to "boot add" :: Spring CLI</title>
+    <link rel="prev" href="adding-to-existing-projects.html">
+    <link rel="next" href="user-command-guide.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 
@@ -96,7 +97,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Overview</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -114,7 +115,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="adding-to-existing-projects.html">Adding to Existing Projects</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="boot-add-guide.html">Guide to "boot add"</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -252,48 +253,160 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="index.html" class="home-link is-current"></a>
+  <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">spring-cli</a></li>
-    <li><a href="index.html">Overview</a></li>
+    <li><a href="boot-add-guide.html">Guide to "boot add"</a></li>
   </ul>
 </nav>
 <div class="search">
   <input id="search-input" type="text" placeholder="Search docs">
 </div>
-  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/boot-add-guide.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 id="page-title" class="page">Spring CLI</h1>
+<h1 id="page-title" class="page">Guide to "boot add"</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>The goal of the Spring CLI is to increase your productivity when creating new projects and adding functionality to existing projects. It does this by providing the following high-level features.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The command <code>boot new</code> clones an external project and performs a package refactoring to your chosen package name. You can also specify the new project’s group id, artifact id, and version</p>
-</li>
-<li>
-<p>The command <code>boot add</code> will add an external project to your current project. It will perform an intelligent merge of project dependencies, plug-ins, annotations, application configuration files, and refactoring of the external project code into your current project’s package structure.</p>
-</li>
-<li>
-<p>User-provided <code>commands</code> are defined declaratively and live side by side with your code to help you perform everyday tasks on your current project. For example, creating a new controller with tests, adding new dependencies, code, and configuration files for specific functionality such as test container support, or creating configuration files for your platform or CI system. User-provided commands often leverage a template engine of your choice to perform code generation that can create new files or update existing files.</p>
-</li>
-</ol>
+<p>All of the projects that are available in the <code>project list</code> command can be used to addor modify code and configuration to an existing project.</p>
 </div>
 <div class="paragraph">
-<p>By basing the <code>boot new</code> and <code>boot add</code> commands on "Plain Old Java Projects" hosted on GitHub or GitLab, it is easy for companies to define a standard set of projects that use a company&#8217;s preferred libraries and coding styles. These projects can also serve as the starting point for education about a particular library or approach to programming, for example, learning more about Spring Data JPA, GraphQL, or using testing libraries such as RESTDocs, Assert4j, and Test Containers.</p>
+<p>The CLI does this by</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Merging the Maven build file, so that any missing project properties, dependencies, dependency management, plug-ins are added into the target project.</p>
+</li>
+<li>
+<p>Performing a package refactoring so that the code to be copied into the target project has the same package structure.</p>
+</li>
+<li>
+<p>Adding any missing annotations on the Spring Boot main application in the target project are added.</p>
+</li>
+<li>
+<p>Renaming the <code>README.adoc`</code> file (or, .md file) to <code>README-&lt;project-name&gt;.adoc</code> so that additional information about what code was added can be described to the user.</p>
+</li>
+<li>
+<p>Merging <code>application.yaml</code> and <code>application.properties</code> files</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>User-provided commands are best suited for performing smaller, repetitive coding tasks during the development process. These command definitions can live side by side with the code so that anyone on the development team can contribute a new command or improve an existing command.   By having commands living side by side with the code, contributing to the project is a simple procedure as there is no other artifact or project to create, update and publish.</p>
+<p>The heuristic to perform this task is not 100% complete at this time, so expect a few bumps if you are an early adopter.</p>
+</div>
+<div class="paragraph">
+<p>For example, let&#8217;s assume we have added the getting started catalog.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring catalog add gs https://github.com/rd-1-2022/spring-gs-catalog</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This gives us the following projects to select from</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
+│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
+│          │                                                        │JPA.                                                            │       │              │
+├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
+│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
+│          │                                                        │                                                                │       │eureka]       │
+└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can create a new web project and then add JPA functionality to that project by the following steps</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new web --packageName com.xkcd
+cd demo
+spring boot add jpa</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The project tree now contains both the web application and the JPA functionality.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ tree
+.
+├── LICENSE
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+├── README.adoc
+├── README-jpa.md
+└── src
+    ├── main
+    │   └── java
+    │       └── com
+    │           └── xkcd
+    │               ├── Application.java
+    │               ├── customer
+    │               │   ├── CustomerCommandLineRunner.java
+    │               │   ├── Customer.java
+    │               │   └── CustomerRepository.java
+    │               └── greeting
+    │                   ├── GreetingController.java
+    │                   └── Greeting.java
+    └── test
+        └── java
+            └── com
+                └── xkcd
+                    ├── customer
+                    │   └── CustomerRepositoryTests.java
+                    └── greeting
+                        └── GreetingControllerTests.java</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conventions"><a class="anchor" href="#_conventions"></a>Conventions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to perform an intelligent merge of the code base when running <code>spring boot add</code> the following conventions in the project must be followed.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The main <code>@SpringBootApplication</code> should be placed at the root of the package hiearachy with all other code in subpackages.</p>
+</li>
+<li>
+<p>There should be no additional <code>@Bean</code> annotations in the <code>@SpringBootApplication</code> class.
+Any configuration should live in a separate <code>@Configuration</code> class</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_limitations"><a class="anchor" href="#_limitations"></a>Limitations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Curently only single module Maven projects are supported.
+Support for single module Gradle projects is planned for the 1.0 release.
+No timeline is defined for supporting multi-module projects.</p>
+</div>
+</div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="installation.html">Installation</a></span>
+  <span class="prev"><a href="adding-to-existing-projects.html">Adding to Existing Projects</a></span>
+  <span class="next"><a href="user-command-guide.html">Guide to user defined commands</a></span>
 </nav>
 </article>
   </div>
