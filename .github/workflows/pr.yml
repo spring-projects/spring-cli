@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ '11', '17' ]
+        java: [ '17' ]
     name: CI Build ${{ matrix.java }}
     steps:
       - uses: actions/checkout@v2

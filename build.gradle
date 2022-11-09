@@ -1,13 +1,13 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.0'
+	id 'org.springframework.boot' version '3.0.0-RC1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'org.springframework.experimental.aot' version '0.12.0'
 	id 'com.gorylenko.gradle-git-properties' version '2.3.2'
+	id 'org.graalvm.buildtools.native' version '0.9.16'
 }
 
 group = 'org.springframework.experimental'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 repositories {
 	maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
@@ -18,7 +18,7 @@ repositories {
 }
 
 ext {
-	set('springShellVersion', '2.1.0')
+	set('springShellVersion', '3.0.0-M2')
 	set('initializrVersion', '0.11.1')
 	set('jarchivelibVersion', '1.2.0')
 	set('kohsukeVersion', '1.301')
@@ -28,9 +28,11 @@ ext {
 	set('mavenModelVersion', '3.5.4')
 	set('tikaVersion', '1.18')
 	set('jimfsVersion', '1.2')
-	set('systemStubsVersion', '1.2.0')
+	set('systemStubsVersion', '2.0.1')
 	set('handlebarsVersion', '4.1.2')
 	set('jmustacheVersion', '1.14')
+	set('jaxbApiVersion', '2.3.1')
+	set('jaxbRuntimeVersion', '2.3.3')
 }
 
 configurations.all {
@@ -46,7 +48,7 @@ dependencies {
 	implementation 'org.rauschig:jarchivelib'
 	implementation 'org.kohsuke:github-api'
 	implementation 'org.gitlab4j:gitlab4j-api'
-	implementation 'org.openrewrite:rewrite-java-11'
+	implementation 'org.openrewrite:rewrite-java-17'
 	implementation 'org.openrewrite:rewrite-maven'
 	implementation 'org.openrewrite:rewrite-xml'
 	implementation 'org.apache.ant:ant'
@@ -54,7 +56,8 @@ dependencies {
 	implementation 'org.apache.tika:tika-core'
 	implementation 'com.github.jknack:handlebars'
 	implementation 'com.samskivert:jmustache'
-	compileOnly 'org.springframework.experimental:spring-aot'
+	implementation 'javax.xml.bind:jaxb-api'
+	implementation 'org.glassfish.jaxb:jaxb-runtime'
 	testImplementation 'uk.org.webcompere:system-stubs-jupiter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'com.google.jimfs:jimfs'
@@ -63,12 +66,11 @@ dependencies {
 
 dependencyManagement {
 	dependencies {
-		dependency "org.springframework.experimental:spring-aot:0.12.0"
 		dependency "org.springframework.shell:spring-shell-starter-jna:${springShellVersion}"
 		dependency "org.rauschig:jarchivelib:${jarchivelibVersion}"
 		dependency "org.kohsuke:github-api:${kohsukeVersion}"
 		dependency "org.gitlab4j:gitlab4j-api:${gitlab4jVersion}"
-		dependency "org.openrewrite:rewrite-java-11:${openrewriteVersion}"
+		dependency "org.openrewrite:rewrite-java-17:${openrewriteVersion}"
 		dependency "org.openrewrite:rewrite-xml:${openrewriteVersion}"
 		dependency("org.openrewrite:rewrite-maven:${openrewriteVersion}") {
 			exclude 'org.slf4j:jcl-over-slf4j'
@@ -80,6 +82,8 @@ dependencyManagement {
 		dependency "com.samskivert:jmustache:${jmustacheVersion}"
 		dependency "com.google.jimfs:jimfs:${jimfsVersion}"
 		dependency "uk.org.webcompere:system-stubs-jupiter:${systemStubsVersion}"
+		dependency "javax.xml.bind:jaxb-api:${jaxbApiVersion}"
+		dependency "org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}"
 	}
 	imports {
 		mavenBom "org.springframework.shell:spring-shell-dependencies:${springShellVersion}"
@@ -100,6 +104,9 @@ graalvmNative {
 		main {
 			imageName = 'spring'
 		}
+	}
+	metadataRepository {
+		enabled = true
 	}
 }
 
