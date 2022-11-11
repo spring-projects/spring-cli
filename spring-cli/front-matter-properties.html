@@ -3,9 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Guide to user defined commands :: Spring CLI</title>
-    <link rel="prev" href="boot-add-guide.html">
-    <link rel="next" href="key-concepts.html">
+    <title>Front Matter properties :: Spring CLI</title>
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 
@@ -118,7 +116,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="boot-add-guide.html">Guide to "boot add"</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="user-command-guide.html">Guide to user defined commands</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -260,170 +258,25 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">spring-cli</a></li>
-    <li><a href="user-command-guide.html">Guide to user defined commands</a></li>
+    <li><a href="front-matter-properties.html">Front Matter properties</a></li>
   </ul>
 </nav>
 <div class="search">
   <input id="search-input" type="text" placeholder="Search docs">
 </div>
-  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/user-command-guide.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/front-matter-properties.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 id="page-title" class="page">Guide to user defined commands</h1>
+<h1 id="page-title" class="page">Front Matter properties</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>User defined commands let you add custom commands to the Spring CLI.
-The directory structure commands represents the command and sub-command that are introduced into the shell.</p>
-</div>
-<div class="paragraph">
-<p>For example, the directory structure of <code>controller\new</code> translates to the command <code>controller new</code> in the CLI.</p>
-</div>
-<div class="paragraph">
-<p>The files located in the sub-command directory are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>A file named <code>command.yaml</code> that describes the command and its arguments.</p>
-</li>
-<li>
-<p>One or more Action Files that describe the actions to take to add code or configuration to the project.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>User defined commands are registered with the CLI using the command</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">command add --from &lt;repository-url&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The contents of that repository are copied into your existing project.</p>
-</div>
-<div class="paragraph">
-<p>As an example, look at the contents of the repository <a href="https://github.com/rd-1-2022/udc-spring-controller" class="bare">https://github.com/rd-1-2022/udc-spring-controller</a></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_structure"><a class="anchor" href="#_structure"></a>Structure</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The directory structure for all user defined commands are under the path</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">.spring/commands</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>So for the user defined command <code>controller new</code> mentioned previously, the full directory structure where the command description file and action files are located would be</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">.spring/commands/controller/new</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Inside this directory you can define
-  * The file <code>command.yaml</code> that describes what the command does and the arguments of the command
-  * One or more Action Files that define the actions to execute for this command.</p>
-</div>
-<div class="paragraph">
-<p>For example, the directory contents of the repository <a href="https://github.com/rd-1-2022/udc-spring-controller" class="bare">https://github.com/rd-1-2022/udc-spring-controller</a> are</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">.
-├── README.adoc
-└── .spring
-    └── commands
-        └── controller
-            └── new
-                ├── command.yaml
-                └── Controller.java</code></pre>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_describing_the_command"><a class="anchor" href="#_describing_the_command"></a>Describing the command</h3>
-<div class="paragraph">
-<p>The contents of the <code>command.yaml</code> file for the <code>controller new</code> command mentioned previously is:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">command:
-  description: Generate a new Spring Controller
-  options:
-    #
-    - name: feature
-      description: name of the feature package
-      dataType: string
-      defaultValue: person
-      inputType: text
-      required: true</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The file contains a brief description of the command and an array of command line options.</p>
-</div>
-<div class="paragraph">
-<p>The <code>name</code> of the options is required.  The default <code>dataType</code> is <code>string</code></p>
-</div>
-<div class="paragraph">
-<p>The <code>dataType</code> can be <code>int</code>, <code>integer</code>, <code>bool</code>, <code>boolean</code>, <code>double</code>, <code>float</code>, <code>long</code>, <code>short</code>, and <code>string</code>.</p>
-</div>
-<div class="paragraph">
-<p>The CLI incorporates these commands at runtime and appear when asking for general help and the command help.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$spring help
-
-&lt;output truncated&gt;
-
-User-defined Commands
-       controller new: Generate a new Spring Controller</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ spring help controller new
-NAME
-       controller new - Generate a new Spring Controller
-
-SYNOPSIS
-       controller new --feature String
-
-OPTIONS
-       --feature String
-       name of the feature package
-       [Optional, default = person]</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_action_files"><a class="anchor" href="#_action_files"></a>Action Files</h3>
-<div class="paragraph">
-<p>Action files are denoted by having a Front Matter section that describes the actions to take and below the Front Matter section is the text that will be passed to the Template Engine.</p>
-</div>
-<div class="paragraph">
-<p>The Action File can be named anything you like, only text files with a Front Matter section are executed.</p>
-</div>
-<div class="paragraph">
-<p>There can be as many action files as you need to accomplish a specific task.  The order of Action Files execution is depth first and alphabetical.</p>
-</div>
-<div class="paragraph">
-<p>Here is a very simple example</p>
+<p>The Front Matter section is YAML between triple-dashed lines and must be the first content in the file.
+Here is a simple example</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -435,88 +288,102 @@ Hello {{user-name}} at {{now}} on {{os-name}}.</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This will generate the file <code>hello.txt</code>, if it does not already exists, in the current working directory.
-The template contents contains kebab-case variable names.</p>
-</div>
-<div class="paragraph">
-<p>The variables <code>user-name</code> and <code>os-name</code> come from Java system properties and are automatically registered with the template engine.
-The variable <code>now</code> is the value of <code>new java.util.Date()</code> when the command was executed.</p>
-</div>
-<div class="paragraph">
-<p>As a more realistic example to create Java code, the Action File named <code>Controller.java</code> in the repository <a href="https://github.com/rd-1-2022/udc-spring-controller" class="bare">https://github.com/rd-1-2022/udc-spring-controller</a> is shown below.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">---
-action:
-  generate: "src/main/java/{{root-package-dir}}/{{feature}}/{{capitalizeFirst feature}}Controller.java"
----
-package {{root-package}}.{{feature}};
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-public class {{capitalizeFirst feature}}Controller {
-
-	@GetMapping("/{{feature}}")
-	public String greeting() {
-		return "Hello {{feature}}";
-	}
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>generate</code> field in the Front Matter section defines the location of the file to be generated.
-The value of the <code>generate</code> will often contain template variables.</p>
-</div>
-<div class="paragraph">
-<p>If the file exists, it will not be overwritten unless the additional field <code>overwrite</code> at the same level of <code>generate</code> is added to the Front Matter section.</p>
-</div>
-<div class="paragraph">
-<p>All command line arguments are passed to the template engine as variables, in this case the <code>feature</code> option.</p>
-</div>
-<div class="paragraph">
-<p>One of the useful built-in variables is <code>root-package-dir</code> which is the directory where the class containing the <code>@SpringApplication</code> annotation is located.</p>
-</div>
-<div class="paragraph">
-<p>The default template engine is <a href="https://github.com/jknack/handlebars.java">Handlebars</a>.
-Several Handlebar helpers are registered by default</p>
+<p>The front matter section starts with the <code>action</code> field.  The available optios for nested fields are:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/jknack/handlebars.java#string-helpers">StringHelpers</a></p>
+<p><code>inject</code> - Adds content <strong>into</strong> an existing file</p>
 </li>
 <li>
-<p><a href="https://github.com/jknack/handlebars.java#humanize">HumanizeHelper</a></p>
+<p><code>exec</code> - Execute a shell command</p>
 </li>
 <li>
-<p><a href="https://github.com/jknack/handlebars.java#conditional-helpers">Conditional Helpers</a></p>
+<p><code>recipe</code> - Execute a recipie such as adding a maven dependency, or adding content to a property file.  (TBD)</p>
+</li>
+<li>
+<p>TBD&#8230;&#8203;</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>The other template engine available is Mustache.  You specify this by adding the <code>engine: mustache</code> under the <code>action:</code> section in the Front Matter section.</p>
-</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_learning_more"><a class="anchor" href="#_learning_more"></a>Learning more</h2>
+<h2 id="_exec"><a class="anchor" href="#_exec"></a>Exec</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The section <a href="front-matter-properties.html" class="xref page">Front Matter Properites</a> describes all the options available for you to use in Action Files to add or modify code and configuration to a project.</p>
+<p>The basic form to execute a shell command is</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">---
+action:
+  exec:
+    args:
+      - mkdir
+      - "{{tmp-dir}}/scratch"
+---</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>&gt;&gt;&gt;&gt;&gt;&gt;&gt; ec6feb1&#8230;&#8203; initial exec functionality with some docs</p>
+<p>Arguments are specified in an array.
+Each value of the array is evaluated using the template engine.</p>
+</div>
+<div class="paragraph">
+<p>The template engine variable <code>tmp-dir</code> is defined by default and is the value of the Java System Property <code>java.io.tmpdir</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_redirecting_output"><a class="anchor" href="#_redirecting_output"></a>Redirecting output</h3>
+<div class="paragraph">
+<p>TBD</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_adding_to_the_template_engine_model"><a class="anchor" href="#_adding_to_the_template_engine_model"></a>Adding to the template engine model</h3>
+<div class="paragraph">
+<p>Sometime you would like to execute a program use its output to define a template engine variable.</p>
+</div>
+<div class="paragraph">
+<p>The <code>define</code> section under <code>exec</code> lets you perform this task.
+It allows you to define a <code>jsonPath</code> expression to select from the output if it is JSON.
+This is common output format in many commnand line utilities.</p>
+</div>
+<div class="paragraph">
+<p>Here is an example.  In the Action File named <code>00-define-var.yml</code> the contents are:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">---
+action:
+  exec:
+    define:
+      name: phone-type
+      jsonPath: $.phoneNumbers[:1].type
+    args:
+      - echo
+      - '{ "firstName": "John", "lastName": "doe", "age": 26, "address": { "streetAddress": "naist street", "city": "Nara", "postalCode": "630-0192" }, "phoneNumbers": [ { "type": "iPhone", "number": "0123-4567-8888" }, { "type": "home", "number": "0123-4567-8910" } ] }'
+---</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The variable named <code>phone-type</code> will be defined as the output from applying the <a href="https://github.com/json-path/JsonPath">JSON Path expression</a> to the output of the command.
+In this case, a simple <code>echo</code> of JSON is done but in a more realistic case, it would be the output of a command line utility.</p>
+</div>
+<div class="paragraph">
+<p>Since the file name starts with <code>00</code> it will be executed before the file <code>10-use-var.txt</code> which is shown below and makes use of the <code>phone-type</code> variable.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">---
+action:
+  generate: hello.txt
+---
+Hello {{phone-type.[0]}}</code></pre>
 </div>
 </div>
 </div>
-<nav class="pagination">
-  <span class="prev"><a href="boot-add-guide.html">Guide to "boot add"</a></span>
-  <span class="next"><a href="key-concepts.html">Key Concepts</a></span>
-</nav>
+</div>
+</div>
 </article>
   </div>
 </main>
