@@ -8,7 +8,7 @@ boot new
 ====
 [source]
 ----
-boot new --from String --name String --packageName String --path String
+boot new --from String --name String --package-name String --path String
 ----
 ====
 
@@ -17,7 +17,7 @@ boot new --from String --name String --packageName String --path String
 
 `--name` String Name of the new project *Optional*
 
-`--packageName` String Package name for the new project *Optional, default = com.example*
+`--package-name` String Package name for the new project *Optional, default = com.example*
 
 `--path` String Path *Optional*
 

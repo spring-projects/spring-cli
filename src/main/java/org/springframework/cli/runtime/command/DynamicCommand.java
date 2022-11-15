@@ -181,6 +181,10 @@ public class DynamicCommand {
 
 	private void executeShellCommand(Exec exec, TemplateEngine templateEngine, Map<String, Object> model, CommandActionFileContents commandActionFileContents) {
 		List<String> args = exec.getArgs();
+		if (args.size() == 0) {
+			// TODO indicate which action file has an issue.
+			throw new SpringCliException("No arguments provided to exec command.  First argument is usually the name of the executable.  Action File contents = " + commandActionFileContents.getText());
+		}
 		List<String> processedArgs = new ArrayList<>();
 
 		for (String arg : args) {
@@ -246,6 +250,7 @@ public class DynamicCommand {
 		}
 
 		try {
+			System.out.println("Executing: " + StringUtils.collectionToDelimitedString(processedArgs, " ") );
 			Process process = processBuilder.start();
 			// capture the output.
 			String stderr = "";
@@ -274,6 +279,8 @@ public class DynamicCommand {
 							if (data != null) {
 								model.putIfAbsent(exec.getDefine().getName(), data);
 							}
+						} else {
+							System.out.println("exec: define: has a null value.  Define = " + exec.getDefine());
 						}
 					}
 				}

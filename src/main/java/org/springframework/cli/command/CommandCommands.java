@@ -34,6 +34,14 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.util.FileSystemUtils;
 
+/**
+ * Commands related to managing user defined commands.
+ *
+ * User defined commands can be added and removed using `command add` and `command delete`
+ *
+ * A simple command that creates a directory structure, aciton file, and command
+ * metadata file is available using `command new`
+ */
 @ShellComponent
 public class CommandCommands {
 

@@ -119,13 +119,7 @@ public class FrontMatterReader {
 				return read(fileContents, delimiter);
 			}
 			catch (Exception ex) {
-				if (isYamlFile) {
-					delimiter = "~";
-					return read(fileContents, delimiter);
-				}
-				else {
 					throw new SpringCliException("Could not read action file in Path = " + path, ex);
-				}
 			}
 		}
 		catch (Exception ex) {

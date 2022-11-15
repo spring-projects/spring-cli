@@ -26,7 +26,7 @@ The commands related to projects catalogs are `catalog list`, `catalog add` and 
 
 *Configuration*: The CLI provides a configuration system to provide default values to commonly used command options.
 
-If you most often create a project with a package name reflecting the name of your company, e.g. `com.xkcd`, then the command `config set boot new `packageName`` com.xkcd` will set the default value for the `packageName` options for the `boot new` command.
+If you most often create a project with a package name reflecting the name of your company, e.g. `com.xkcd`, then the command `config set boot new `package-name`` com.xkcd` will set the default value for the `package-name` options for the `boot new` command.
 
 
 == Commands

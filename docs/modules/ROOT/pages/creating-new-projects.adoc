@@ -102,7 +102,7 @@ NAME
        boot new - Create a new Spring Boot project from an existing project
 
 SYNOPSIS
-       boot new --from String --name String --packageName String --path String
+       boot new --from String --name String --package-name String --path String
 
 OPTIONS
        --from String
@@ -113,7 +113,7 @@ OPTIONS
        Name of the new project
        [Optional]
 
-       --packageName String
+       --package-name String
        Package name for the new project
        [Optional, default = com.example]
 
@@ -125,7 +125,7 @@ OPTIONS
 The options not yet shown in this documentation are
 
 * `--name` - that specifies the name of the project, the default value is `demo`.  
-* `--packageName` - the package name to refactor to
+* `--package-name` - the package name to refactor to
 * `--path`  The path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.
 
 

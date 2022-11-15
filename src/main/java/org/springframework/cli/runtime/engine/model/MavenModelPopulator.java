@@ -17,9 +17,9 @@
 
 package org.springframework.cli.runtime.engine.model;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -33,6 +33,8 @@ public class MavenModelPopulator implements ModelPopulator {
 	public static final String ARTIFACT_ID = "artifact-id";
 
 	public static final String ARTIFACT_VERSION = "artifact-version";
+
+	public static final String ARTIFACT_PATH = "artifact-path";
 
 	public static final String MAVEN_MODEL = "maven-model";
 
@@ -51,6 +53,9 @@ public class MavenModelPopulator implements ModelPopulator {
 			model.putIfAbsent(MAVEN_MODEL, mavenModel);
 			model.putIfAbsent(ARTIFACT_ID, mavenModel.getArtifactId());
 			model.putIfAbsent(ARTIFACT_VERSION, mavenModel.getVersion());
+			String artifactPath = getArtifactPath(pomFile, mavenModel);
+			model.putIfAbsent(ARTIFACT_PATH, artifactPath);
+
 			Properties mavenProperties = new Properties();
 			for (Entry<Object, Object> kv : mavenModel.getProperties().entrySet()) {
 				// can't use 'dots' in template language replacement expressions, change to underscore
@@ -62,5 +67,10 @@ public class MavenModelPopulator implements ModelPopulator {
 		}
 	}
 
+	private String getArtifactPath(Path pomFile, Model mavenModel) {
+		Path artifactPath = Paths.get(pomFile.getParent().toString(), "target", mavenModel.getArtifactId() + "-" + mavenModel.getVersion() + "." + mavenModel.getPackaging());
+		return artifactPath.toAbsolutePath().toString();
+
+	}
 
 }

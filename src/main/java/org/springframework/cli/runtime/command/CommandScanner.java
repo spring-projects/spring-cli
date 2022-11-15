@@ -31,9 +31,8 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
 
-// TODO what about .spring/commands instead
 /**
- * Scans a directory, by default .spring/recipes in the current working
+ * Scans a directory, by default .spring/commands in the current working
  * directory, and finds all command and subcommand directories.
  *
  * For each command/subcommand directory, a Command object is created. The

@@ -61,14 +61,14 @@ To create a new Spring Data JPA project, also setting the package name
 
 [source, bash]
 ----
-spring boot new jpa –name myjpaproject –packageName com.xkcd
+spring boot new jpa –name myjpaproject –package-name com.xkcd
 ----
 
 To create a new Spring Data JPA project, also setting the package name
 
 [source, bash]
 ----
-spring boot new jpa –name myjpaproject –packageName com.xkcd
+spring boot new jpa –name myjpaproject –package-name com.xkcd
 ----
 
 == Adding an individual project
