@@ -94,8 +94,10 @@ public class ProjectHandler {
 		String packageNameToUse = getPackageName("boot", "new", packageName);
 
 		AttributedStringBuilder sb = new AttributedStringBuilder();
-		sb.style(sb.style().foreground(AttributedStyle.YELLOW));
-		sb.append("Cloning project from " + urlToUse);
+		sb.style(sb.style().foreground(AttributedStyle.GREEN));
+		sb.append("Cloning ");
+		sb.style(sb.style().foreground(AttributedStyle.WHITE));
+		sb.append("project from " + urlToUse);
 		sb.append(System.lineSeparator());
 		this.terminalMessage.shellPrint(sb.toAttributedString());
 
@@ -113,11 +115,19 @@ public class ProjectHandler {
 		String urlToUse = getProjectRepositoryUrl(from);
 		// Will return string
 		String projectName = getProjectNameForAdd(from);
+
+		AttributedStringBuilder sb = new AttributedStringBuilder();
+		sb.style(sb.style().foreground(AttributedStyle.WHITE));
+		sb.append(System.lineSeparator());
+		sb.append("Cloning in temp directory project with URL " + urlToUse);
+		this.terminalMessage.shellPrint(sb.toAttributedString());
+
+
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(urlToUse);
 		Path projectDir = IoUtils.getProjectPath(path);
 		Path workingPath = projectDir != null ? projectDir : IoUtils.getWorkingDirectory();
 
-		ProjectMerger projectMerger = new ProjectMerger(repositoryContentsPath, workingPath, projectName);
+		ProjectMerger projectMerger = new ProjectMerger(repositoryContentsPath, workingPath, projectName, this.terminalMessage);
 		projectMerger.merge();
 		try {
 			FileSystemUtils.deleteRecursively(repositoryContentsPath);
@@ -125,7 +135,7 @@ public class ProjectHandler {
 			logger.warn("Could not delete path " + repositoryContentsPath, ex);
 		}
 
-		AttributedStringBuilder sb = new AttributedStringBuilder();
+		sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.GREEN));
 		sb.append(System.lineSeparator());
 		sb.append("Done!");
@@ -223,6 +233,13 @@ public class ProjectHandler {
 
 		// Refactor packages if package name is available
 		if (StringUtils.hasText(packageName) && existingPackageName.isPresent()) {
+			AttributedStringBuilder sb = new AttributedStringBuilder();
+			sb.style(sb.style().foreground(AttributedStyle.GREEN));
+			sb.append("Refactoring ");
+			sb.style(sb.style().foreground(AttributedStyle.WHITE));
+			sb.append("package to " + packageName);
+			sb.append(System.lineSeparator());
+			this.terminalMessage.shellPrint(sb.toAttributedString());
 			RefactorUtils.refactorPackage(packageName, existingPackageName.get(), repositoryContentsPath);
 		}
 
@@ -275,7 +292,7 @@ public class ProjectHandler {
 		sb.style(sb.style().foreground(AttributedStyle.GREEN));
 		sb.append("Created ");
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
-		sb.append("project '" + projectName + "' in directory '" + toDir.getName() + "'");
+		sb.append("project in directory '" + toDir.getName() + "'");
 		this.terminalMessage.shellPrint(sb.toAttributedString());
 	}
 
