@@ -17,10 +17,15 @@
 
 package org.springframework.cli.command;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.util.IoUtils;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -43,11 +49,13 @@ import org.springframework.util.FileSystemUtils;
  * metadata file is available using `command new`
  */
 @ShellComponent
-public class CommandCommands {
+public class CommandCommands extends AbstractSpringCliCommands  {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommandCommands.class);
 
 	private final SourceRepositoryService sourceRepositoryService;
+
+	private TerminalMessage terminalMessage = new DefaultTerminalMessage();
 
 	@Autowired
 	public CommandCommands(SourceRepositoryService sourceRepositoryService) {
@@ -74,16 +82,51 @@ public class CommandCommands {
 
 	@ShellMethod(key = "command add", value = "Add a user-defined command")
 	public void commandAdd(
-			@ShellOption(help = "Add user-defined command from a URL", arity = 1, defaultValue = "hello") String from) {
+			@ShellOption(help = "Add user-defined command from a URL", arity = 1) String from) {
 		Path downloadedCommandPath = sourceRepositoryService.retrieveRepositoryContents(from);
+		logger.debug("downloaded command path ", downloadedCommandPath);
 		Path cwd = IoUtils.getWorkingDirectory().toAbsolutePath();
+
 		try {
 			FileSystemUtils.copyRecursively(downloadedCommandPath, cwd);
-			// TODO use terminal
-			System.out.println("Added user-defined command(s).");
 		}
 		catch (IOException e) {
 			throw new SpringCliException("Could not add command", e);
+		}
+
+		// Display which commands were added.
+		Path commandsPath = Paths.get(downloadedCommandPath.toString(), ".spring", "commands");
+
+		if (Files.exists(commandsPath)) {
+			AttributedStringBuilder sb = new AttributedStringBuilder();
+			sb.style(sb.style().foreground(AttributedStyle.WHITE));
+			File[] files = commandsPath.toFile().listFiles();
+			for (File file : files) {
+				if (file.isDirectory()) {
+					sb.append("Command " + file.getName() + " added.");
+					sb.append(System.lineSeparator());
+				}
+			}
+
+			// TODO need to rename the readme.md on copy, not rely on it already having a suffix.
+			for (File file : files) {
+				String readmeName = "README-" + file.getName() + ".md";
+				Path readmePath = Paths.get(cwd.toString(), readmeName);
+				System.out.println("README PATH = "+ readmePath);
+				if (Files.exists(readmePath)) {
+					sb.append("Refer to " + readmeName + " for more information.");
+					sb.append(System.lineSeparator());
+				}
+			}
+			sb.append("Execute 'spring help' for more information on User-defined commands.");
+			this.terminalMessage.shellPrint(sb.toAttributedString());
+
+
+			try {
+				FileSystemUtils.deleteRecursively(downloadedCommandPath);
+			} catch (IOException ex) {
+				logger.warn("Could not delete path " + downloadedCommandPath, ex);
+			}
 		}
 	}
 
@@ -100,6 +143,19 @@ public class CommandCommands {
 		}
 		catch (IOException e) {
 			throw new SpringCliException("Could not delete " + dynamicSubCommandPath, e);
+		}
+	}
+
+	private class DefaultTerminalMessage implements TerminalMessage {
+
+		@Override
+		public void shellPrint(String... text) {
+			CommandCommands.this.shellPrint(text);
+		}
+
+		@Override
+		public void shellPrint(AttributedString... text) {
+			CommandCommands.this.shellPrint(text);
 		}
 	}
 }

@@ -193,7 +193,6 @@ public class ProjectMerger {
 
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
-					sb.append(System.lineSeparator());
 					sb.append("Merging Main Spring Boot Application class annotation: " + annotation);
 					this.terminalMessage.shellPrint(sb.toAttributedString());
 
@@ -215,11 +214,6 @@ public class ProjectMerger {
 			int injectIndex = indexFromMarkerString("@SpringBootApplication", lines);
 			if (injectIndex != -1) {
 				lines.add(injectIndex + 1, annotation);
-				AttributedStringBuilder sb = new AttributedStringBuilder();
-				sb.style(sb.style().foreground(AttributedStyle.WHITE));
-				sb.append(System.lineSeparator());
-				sb.append("Added annotation " + annotation);
-				this.terminalMessage.shellPrint(sb.toAttributedString());
 				Files.write(pathToFile, lines, Charset.defaultCharset());
 			} else {
 				logger.debug("Did not add annotation" + annotation + " to file " + pathToFile);
@@ -338,7 +332,6 @@ public class ProjectMerger {
 
 			AttributedStringBuilder sb = new AttributedStringBuilder();
 			sb.style(sb.style().foreground(AttributedStyle.WHITE));
-			sb.append(System.lineSeparator());
 			sb.append("Merging Spring Application property file...");
 			this.terminalMessage.shellPrint(sb.toAttributedString());
 
@@ -477,11 +470,17 @@ public class ProjectMerger {
 		}
 	}
 
+
 	private void updateSpringApplicationClass(Path pathToCurrentSpringApplicationClass, List<Result> resultList) throws IOException {
 		if (resultList.isEmpty()) {
-			System.out.println("No update of SpringApplication class in " + pathToCurrentSpringApplicationClass);
+			logger.debug("No update of SpringApplication class in " + pathToCurrentSpringApplicationClass);
 		}
-		System.out.println("Adding import statements and annotations to @SpringApplication class");
+
+		AttributedStringBuilder sb = new AttributedStringBuilder();
+		sb.style(sb.style().foreground(AttributedStyle.WHITE));
+		sb.append("Adding import statements and annotations to @SpringApplication class");
+		this.terminalMessage.shellPrint(sb.toAttributedString());
+
 		for (Result result : resultList) {
 			// write updated file.
 			try (BufferedWriter sourceFileWriter = Files.newBufferedWriter(pathToCurrentSpringApplicationClass)) {

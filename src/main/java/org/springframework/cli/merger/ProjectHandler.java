@@ -22,12 +22,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
-import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.CommandDefaults;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
+import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.support.configfile.YamlConfigFile;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.cli.util.PackageNameUtils;
@@ -98,7 +98,6 @@ public class ProjectHandler {
 		sb.append("Cloning ");
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
 		sb.append("project from " + urlToUse);
-		sb.append(System.lineSeparator());
 		this.terminalMessage.shellPrint(sb.toAttributedString());
 
 		generateFromUrl(IoUtils.getProjectPath(path), projectNameToUse, urlToUse, packageNameToUse);
@@ -118,7 +117,6 @@ public class ProjectHandler {
 
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
-		sb.append(System.lineSeparator());
 		sb.append("Cloning in temp directory project with URL " + urlToUse);
 		this.terminalMessage.shellPrint(sb.toAttributedString());
 
@@ -238,7 +236,6 @@ public class ProjectHandler {
 			sb.append("Refactoring ");
 			sb.style(sb.style().foreground(AttributedStyle.WHITE));
 			sb.append("package to " + packageName);
-			sb.append(System.lineSeparator());
 			this.terminalMessage.shellPrint(sb.toAttributedString());
 			RefactorUtils.refactorPackage(packageName, existingPackageName.get(), repositoryContentsPath);
 		}
