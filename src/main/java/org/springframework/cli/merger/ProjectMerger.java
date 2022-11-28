@@ -52,7 +52,7 @@ import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.Result;
 import org.openrewrite.SourceFile;
 import org.openrewrite.java.AddImport;
-import org.openrewrite.java.Java11Parser;
+import org.openrewrite.java.Java17Parser;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.java.tree.J.Annotation;
 import org.openrewrite.maven.AddDependency;
@@ -154,7 +154,7 @@ public class ProjectMerger {
 			InMemoryExecutionContext executionContext = new InMemoryExecutionContext(onError);
 			List<Path> paths = new ArrayList<>();
 			paths.add(springBootApplicationFile.get().toPath());
-			JavaParser javaParser = new Java11Parser.Builder().build();
+			JavaParser javaParser = new Java17Parser.Builder().build();
 			List<? extends SourceFile> compilationUnits = javaParser.parse(paths, null, executionContext);
 			collectAnnotationAndImportInformationRecipe.run(compilationUnits);
 
@@ -181,7 +181,7 @@ public class ProjectMerger {
 				executionContext = new InMemoryExecutionContext(onError);
 				paths = new ArrayList<>();
 				paths.add(currentSpringBootApplicationFile.get().toPath());
-				javaParser = new Java11Parser.Builder().build();
+				javaParser = new Java17Parser.Builder().build();
 				compilationUnits = javaParser.parse(paths, null, executionContext);
 				for (Entry<String, String> annotationImportEntry : annotationImportMap.entrySet()) {
 					String annotation = annotationImportEntry.getKey();

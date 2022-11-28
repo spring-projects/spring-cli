@@ -36,7 +36,7 @@ import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.Result;
 import org.openrewrite.SourceFile;
 import org.openrewrite.Tree;
-import org.openrewrite.java.Java11Parser;
+import org.openrewrite.java.Java17Parser;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.java.marker.JavaProject;
 import org.openrewrite.java.tree.J.CompilationUnit;
@@ -135,7 +135,7 @@ public class ProjectMergerWithMavenDepRecipe {
 
 		// Need to get source files
 		// TODO detect if java 11 or 8 or whatever....? JavaParser.fromJavaVersion() ?
-		JavaParser javaParser = new Java11Parser.Builder()
+		JavaParser javaParser = new Java17Parser.Builder()
 				.logCompilationWarningsAndErrors(true)
 				.classpath("spring-boot")
 				.build();

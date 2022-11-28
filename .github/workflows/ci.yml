@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ '11', '17' ]
+        java: [ '17' ]
     name: CI Build ${{ matrix.java }}
     steps:
       - uses: actions/checkout@v2
@@ -48,12 +48,12 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: adopt
-          java-version: 11
+          java-version: 17
           cache: gradle
       - uses: graalvm/setup-graalvm@v1
         with:
           version: ${{ matrix.graal }}
-          java-version: 11
+          java-version: 17
           components: native-image
           set-java-home: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
