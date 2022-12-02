@@ -1,9 +1,9 @@
 plugins {
-	id 'org.springframework.boot' version '3.0.0-RC1'
+	id 'org.springframework.boot' version '3.0.0'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'com.gorylenko.gradle-git-properties' version '2.3.2'
-	id 'org.graalvm.buildtools.native' version '0.9.16'
+	id 'org.graalvm.buildtools.native' version '0.9.18'
 }
 
 group = 'org.springframework.experimental'
@@ -18,7 +18,7 @@ repositories {
 }
 
 ext {
-	set('springShellVersion', '3.0.0-M2')
+	set('springShellVersion', '3.0.0-M3')
 	set('initializrVersion', '0.11.1')
 	set('jarchivelibVersion', '1.2.0')
 	set('kohsukeVersion', '1.301')
