@@ -11,55 +11,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [ '17' ]
-    name: CI Build ${{ matrix.java }}
+    name: CI Build
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v2
         with:
           distribution: adopt
-          java-version: ${{ matrix.java }}
+          java-version: 17
           cache: gradle
       - run: ./gradlew build --no-daemon
       - uses: actions/upload-artifact@v3
-        if: ${{ matrix.java == '11' }}
         with:
           path: build/libs/*.jar
-          retention-days: 1
-  native:
-    needs: [build]
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - nickname: macos
-            os: macos-latest
-            graal: 22.1.0
-          - nickname: linux
-            os: ubuntu-latest
-            graal: 22.1.0
-    name: CI Native ${{ matrix.nickname }}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
-        with:
-          distribution: adopt
-          java-version: 17
-          cache: gradle
-      - uses: graalvm/setup-graalvm@v1
-        with:
-          version: ${{ matrix.graal }}
-          java-version: 17
-          components: native-image
-          set-java-home: false
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - run: ./gradlew build nativeCompile --no-daemon
-      - uses: actions/upload-artifact@v3
-        with:
-          name: spring-cli-${{ matrix.nickname }}
-          path: build/native/nativeCompile/
           retention-days: 1
