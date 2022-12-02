@@ -15,8 +15,11 @@
  */
 package org.springframework.cli;
 
+import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cli.config.SpringCliRuntimeHints;
+import org.springframework.context.annotation.ImportRuntimeHints;
 
 /**
  * Main boot app.
@@ -24,6 +27,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Janne Valkealahti
  */
 @SpringBootApplication
+@ImportRuntimeHints(SpringCliRuntimeHints.class)
 public class SpringCliApplication {
 
 	public static void main(String[] args) {

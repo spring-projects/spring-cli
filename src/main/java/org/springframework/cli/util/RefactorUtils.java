@@ -56,7 +56,8 @@ public class RefactorUtils {
 		ResultsExecutor container = new ResultsExecutor();
 
 		Recipe recipe = new ChangePackage(oldPackage, newPackage, true);
-		container.addAll(recipe.run(compilationUnits));
+
+		container.addAll(recipe.run(compilationUnits).getResults());
 		try {
 			container.execute();
 		}

@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.cli.support.configfile.UserConfig;
 import org.springframework.util.ObjectUtils;
 
@@ -31,6 +32,17 @@ import org.springframework.util.ObjectUtils;
  *
  * @author Janne Valkealahti
  */
+@RegisterReflectionForBinding({SpringCliUserConfig.ProjectCatalogs.class,
+		SpringCliUserConfig.ProjectCatalog.class,
+		SpringCliUserConfig.ProjectRepositories.class,
+		SpringCliUserConfig.ProjectRepository.class,
+		SpringCliUserConfig.CommandDefaults.class,
+		SpringCliUserConfig.CommandDefault.class,
+		SpringCliUserConfig.Option.class,
+		SpringCliUserConfig.Initializrs.class,
+		SpringCliUserConfig.Initializr.class,
+		SpringCliUserConfig.Hosts.class,
+		SpringCliUserConfig.Host.class})
 public class SpringCliUserConfig {
 
 	/**

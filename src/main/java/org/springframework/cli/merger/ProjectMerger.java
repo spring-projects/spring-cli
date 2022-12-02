@@ -188,7 +188,7 @@ public class ProjectMerger {
 					String importStatement = annotationImportEntry.getValue();
 					AddImport addImport = new AddImport(importStatement, null, false);
 					AddImportRecipe addImportRecipe = new AddImportRecipe(addImport);
-					List<Result> results = addImportRecipe.run(compilationUnits);
+					List<Result> results = addImportRecipe.run(compilationUnits).getResults();
 					updateSpringApplicationClass(currentSpringBootApplicationFile.get().toPath(), results);
 
 					AttributedStringBuilder sb = new AttributedStringBuilder();
@@ -397,7 +397,7 @@ public class ProjectMerger {
 				}
 				AddDependency addDependency = getRecipeAddDependency(candidateDependency.getGroupId(), candidateDependency.getArtifactId(), candidateDependency.getVersion(), scope, "org.springframework.boot.SpringApplication");
 
-				List<Result> resultList = addDependency.run(parsedPomFiles);
+				List<Result> resultList = addDependency.run(parsedPomFiles).getResults();
 				if (!resultList.isEmpty()) {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
@@ -434,7 +434,7 @@ public class ProjectMerger {
 						dependency.getType(), dependency.getClassifier());
 
 				List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
-				List<Result> resultList = addManagedDependency.run(pomFiles);
+				List<Result> resultList = addManagedDependency.run(pomFiles).getResults();
 				if (!resultList.isEmpty()) {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
@@ -456,9 +456,9 @@ public class ProjectMerger {
 
 		for (String keyToMerge : keysToMerge) {
 			// TODO may want to do something special in case java.version is set to be different
-			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true);
+			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true, true);
 			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
-			List<Result> resultList = changePropertyValueRecipe.run(pomFiles);
+			List<Result> resultList = changePropertyValueRecipe.run(pomFiles).getResults();
 			if (!resultList.isEmpty()) {
 				AttributedStringBuilder sb = new AttributedStringBuilder();
 				sb.style(sb.style().foreground(AttributedStyle.WHITE));

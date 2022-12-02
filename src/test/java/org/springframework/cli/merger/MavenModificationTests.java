@@ -80,7 +80,7 @@ public class MavenModificationTests {
 					dependency.getType(), dependency.getClassifier());
 
 			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, tempDir, executionContext);
-			List<Result> resultList = addManagedDependency.run(pomFiles);
+			List<Result> resultList = addManagedDependency.run(pomFiles).getResults();
 
 			assertThat(resultList.size()).isEqualTo(1);
 			for (Result result : resultList) {

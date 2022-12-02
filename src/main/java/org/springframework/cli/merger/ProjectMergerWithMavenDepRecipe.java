@@ -98,9 +98,9 @@ public class ProjectMergerWithMavenDepRecipe {
 		for (String keyToMerge : keysToMerge) {
 			// TODO may want to do something special in case java.version is set to be different
 			//System.out.println("Going to merge property key " + keyToMerge);
-			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true);
+			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true, true);
 			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.pathCurrentProject, getExecutionContext());
-			List<Result> resultList = changePropertyValueRecipe.run(pomFiles);
+			List<Result> resultList = changePropertyValueRecipe.run(pomFiles).getResults();
 			updatePomFile(currentProjectPomPath, resultList);
 			System.out.println("");
  		}
@@ -116,7 +116,7 @@ public class ProjectMergerWithMavenDepRecipe {
 					dependency.getType(), dependency.getClassifier());
 
 			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.pathCurrentProject, getExecutionContext());
-			List<Result> resultList = addManagedDependency.run(pomFiles);
+			List<Result> resultList = addManagedDependency.run(pomFiles).getResults();
 			updatePomFile(currentProjectPomPath, resultList);
 		}
 
@@ -186,7 +186,7 @@ public class ProjectMergerWithMavenDepRecipe {
 			AddDependency addDependency = getRecipeAddDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), null, "org.springframework.boot.SpringApplication");
 
 
-			List<Result> resultList = addDependency.run(untyped);
+			List<Result> resultList = addDependency.run(untyped).getResults();
 			updatePomFile(currentProjectPomPath, resultList);
 		}
 
