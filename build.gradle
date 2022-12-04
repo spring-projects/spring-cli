@@ -18,7 +18,7 @@ repositories {
 }
 
 ext {
-	set('springShellVersion', '3.0.0-M3')
+	set('springShellVersion', '3.0.0-SNAPSHOT')
 	set('initializrVersion', '0.11.1')
 	set('jarchivelibVersion', '1.2.0')
 	set('kohsukeVersion', '1.301')
