@@ -52,7 +52,6 @@ public class RootPackageFinder {
 				}
 			}
 			catch (IOException e) {
-				e.printStackTrace();
 				throw new SpringCliException("Exception reading " + fileName + " " + e.getMessage(), e);
 
 			}

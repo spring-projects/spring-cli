@@ -11,11 +11,11 @@ The output will be
 [source, bash]
 ----
 Cloning project from https://github.com/rd-1-2022/rpt-rest-service
-
-Project demo created in directory demo
+Refactoring package to com.example
+Created project in directory 'demo'
 ----
- 
 
+`**Note**` If the CLI seems to be stuck at the cloning step, you might be hitting GitHub rate limiting.  Use the command `spring github auth login` to authenticate.
  
 You can now `cd` into the `demo` directory and build and run the application, which is a simple web application with a single endpoint by default.
 

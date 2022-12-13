@@ -124,6 +124,9 @@ public class ProjectMerger {
 		paths.add(currentProjectPomPath);
 		MavenParser mavenParser = MavenParser.builder().build();
 
+		MergerPreCheck mergerPreCheck = new MergerPreCheck();
+		mergerPreCheck.canMergeProject(currentModel, toMergeModel, this.toMergeProjectPath);
+
 		try {
 			// Maven merges
 			mergeMavenProperties(currentProjectPomPath, toMergeModel);
@@ -140,6 +143,10 @@ public class ProjectMerger {
 			throw new SpringCliException("Error merging projects.", ex);
 		}
 	}
+
+
+
+
 
 	private void mergeSpringBootApplicationClassAnnotations() throws IOException {
 
