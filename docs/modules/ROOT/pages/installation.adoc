@@ -13,6 +13,14 @@ When available,  https://github.com/spring-projects-experimental/spring-cli/acti
 
 Follow the instructions on the project's README file https://github.com/spring-projects-experimental/spring-cli#readme[to build the project from source] file.
 
+== Java 17 installation required
+
+Even if you are using the Spring CLI on a Java 11 or Java 8 based project, the CLI itself needs to have access to an installation of Java 17.
+
+Create a `JAVA_HOME` environment variable that points to your Java 17 installation.
+
+This is required by https://github.com/openrewrite/rewrite[OpenRewrite], which is used internally.
+
 == Setting up your PATH or alias
 
 If you have downloaded the Spring Boot uber-jar, create the following alias with the directory appropriate for you download path.
