@@ -115,7 +115,7 @@ public class ProjectMerger {
 		}
 		Path currentProjectPomPath = this.currentProjectPath.resolve("pom.xml");
 		if (currentProjectPomPath == null) {
-			throw new SpringCliException("Could not find pom.xml in " + this.currentProjectPath);
+			throw new SpringCliException("Could not find pom.xml in " + this.currentProjectPath + ".  Make sure you are running the command in the project's root directory or specify the --path option.");
 		}
 		Model currentModel = pomReader.readPom(currentProjectPomPath.toFile());
 		Model toMergeModel = pomReader.readPom(toMergeProjectPomPath.toFile());

@@ -45,7 +45,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 	public void bootNew(
 			@ShellOption(help = "Create project from existing project name or URL", defaultValue = ShellOption.NULL, arity = 1) String from,
 			@ShellOption(help = "Name of the new project", defaultValue = ShellOption.NULL, arity = 1) String name,
-			@ShellOption(help = "Package name for the new project", defaultValue = FALLBACK_DEFAULT_PACKAGE_NAME, arity = 1, value="--package-name") String packageName,
+			@ShellOption(help = "Package name for the new project", defaultValue = ShellOption.NULL, arity = 1, value="--package-name") String packageName,
 			@ShellOption(help = "Path", defaultValue = ShellOption.NULL, arity = 1) String path) {
 		ProjectHandler handler = new ProjectHandler(springCliUserConfig, sourceRepositoryService, terminalMessage);
 		handler.create(from, name, packageName, path);

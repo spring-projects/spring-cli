@@ -23,7 +23,7 @@ ext {
 	set('jarchivelibVersion', '1.2.0')
 	set('kohsukeVersion', '1.301')
 	set('gitlab4jVersion', '4.19.0')
-	set('openrewriteVersion', '7.33.0')
+	set('openrewriteVersion', '7.34.2')
 	set('antVersion', '1.10.9')
 	set('mavenModelVersion', '3.5.4')
 	set('tikaVersion', '1.18')

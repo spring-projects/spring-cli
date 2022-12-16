@@ -1,8 +1,11 @@
 = Comments on the Approach
 
+## Initializr
 The common way to create a new Spring Boot project has been to use Initializr, aka https://start.spring.io.
 The Spring CLI provides you with a command to interact with Initializr, see xref:initializr.adoc[Initializr], but also offers other approaches to creating a new project and addresses the `day-2` use case of adding code or configuration to an existing project.
 
+
+## boot new
 The command `boot new` will let you create a new project from an existing one that lives in a source code repository.
 The `boot new` command lets you specify a small set of options to customize it to your needs, e.g., change the package name, but does not offer the selection of dependencies that you get with Initializr.
 
@@ -10,19 +13,24 @@ The approach of `boot new` is to clone an existing repository that contains full
 This approach makes it very easy for your or members of your team to create several project archetypes ,as they are just regular Spring projects in a source code repository that can be verified to work with a CI process.
 Refer to the section xref:creating-new-projects.adoc[Creating New Projects] for more information.
 
+## boot add
 Then after initial project creation, you can add additional code and dependencies as needed using the `boot add` command.
 This command will intelligently merge an existing project into your current project.
 As with the `boot new` command, the existing project is a regular Spring project in a source code repository that can be compiled and verified to work with a CI process.
 Refer to the section xref:boot-add-guide.adoc[Guide to "boot add"] for more information.
 
-Alternatively you can add additional code and dependencies by using user defined commands, which rely on using a template engine to create code and configuration.
-Refer to the sectionx ref:user-command-guide.adoc[Guide to user defined commands] for more information
+## Templating code and configuration
 
+Alternatively you can add additional code and dependencies by using user defined commands, which rely on using a template engine to create code and configuration.
+Refer to the sectionx ref:user-command-guide.adoc[Guide to user defined commands] for more information.
+The approach to using a template engine and making it easy for users to contribute commands that invoke those template was insipired from the project https://github.com/jondot/hygen/[hygen]
+
+## Conclusion
 While both approaches to add additional code and dependencies have their use-cases, when creating a new project from scratch I've found it easier to start from working projects as not only do I get the approved dependencies that my company requires, but also code, configuration, and tests.
 It is a starting point that removes the busy work and uncertainty of selecting dependencies and cut-and-pasting code from a tutorial.
 Often those tutorial are so basic that they do not follow common best practice conventions, nor have any tests.
 
-Creating a new project using templating can be a challange.  In my opinion, templating Java code for a new project is more difficult than cloning a new project from an existing working project.
+Creating a new project using templating can be a challenge.  In my opinion, templating Java code for a new project is more difficult than cloning a new project from an existing working project.
 The cycle of creating a template, running the template, and then compiling the resulting generated project is brittle.
 However, I've found that creating smaller blocks of code and configuration are more amenable to the templating approach, e.g. `spring controller new` to add a controller to a current project, or `spring feature new` that adds a few files, such as classes annotated with @Controller, @Service, and @Repository.
 

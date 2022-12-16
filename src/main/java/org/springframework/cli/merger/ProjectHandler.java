@@ -53,7 +53,6 @@ public class ProjectHandler {
 	private static final Logger logger = LoggerFactory.getLogger(ProjectHandler.class);
 	private static final String FALLBACK_DEFAULT_REPO_URL = "https://github.com/rd-1-2022/rpt-rest-service";
 	private static final String FALLBACK_DEFAULT_PROJECT_NAME = "demo";
-	private static final String FALLBACK_DEFAULT_PACKAGE_NAME = "com.example";
 
 	private final SpringCliUserConfig springCliUserConfig;
 	private final SourceRepositoryService sourceRepositoryService;
@@ -90,8 +89,8 @@ public class ProjectHandler {
 		String urlToUse = !StringUtils.hasText(from) ? FALLBACK_DEFAULT_REPO_URL : getProjectRepositoryUrl(from);
 		// Will return string, never null
 		String projectNameToUse = getProjectName("boot", "new", name);
-		// Will return string, never null
-		String packageNameToUse = getPackageName("boot", "new", packageName);
+		// User may want not to provide a package name different that the package name in the existing project that is being cloned
+		Optional<String> packageNameToUse = getPackageName("boot", "new", packageName);
 
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.GREEN));
@@ -100,7 +99,7 @@ public class ProjectHandler {
 		sb.append("project from " + urlToUse);
 		this.terminalMessage.shellPrint(sb.toAttributedString());
 
-		generateFromUrl(IoUtils.getProjectPath(path), projectNameToUse, urlToUse, packageNameToUse);
+		createFromUrl(IoUtils.getProjectPath(path), projectNameToUse, urlToUse, packageNameToUse);
 	}
 
 	/**
@@ -132,7 +131,6 @@ public class ProjectHandler {
 		} catch (IOException ex) {
 			logger.warn("Could not delete path " + repositoryContentsPath, ex);
 		}
-
 		sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.GREEN));
 		sb.append(System.lineSeparator());
@@ -221,7 +219,7 @@ public class ProjectHandler {
 		return projectDirectory;
 	}
 
-	private void generateFromUrl(Path projectDir, String projectName, String url, String packageName) {
+	private void createFromUrl(Path projectDir, String projectName, String url, Optional<String> packageName) {
 		logger.debug("Generating project {} from url {} with Java package name {} ", projectName, url, packageName);
 		File toDir = createProjectDirectory(projectDir, projectName).toFile();
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(url);
@@ -229,15 +227,15 @@ public class ProjectHandler {
 		// Get existing package name
 		Optional<String> existingPackageName = this.getRootPackageName(repositoryContentsPath);
 
-		// Refactor packages if package name is available
-		if (StringUtils.hasText(packageName) && existingPackageName.isPresent()) {
+		// Refactor package name if have both a new package name and can identify the package name in newly cloned project
+		if (packageName.isPresent() && existingPackageName.isPresent()) {
 			AttributedStringBuilder sb = new AttributedStringBuilder();
 			sb.style(sb.style().foreground(AttributedStyle.GREEN));
 			sb.append("Refactoring ");
 			sb.style(sb.style().foreground(AttributedStyle.WHITE));
-			sb.append("package to " + packageName);
+			sb.append("package to " + packageName.get());
 			this.terminalMessage.shellPrint(sb.toAttributedString());
-			RefactorUtils.refactorPackage(packageName, existingPackageName.get(), repositoryContentsPath);
+			RefactorUtils.refactorPackage(packageName.get(), existingPackageName.get(), repositoryContentsPath);
 		}
 
 		// Derive existing project name
@@ -291,6 +289,7 @@ public class ProjectHandler {
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
 		sb.append("project in directory '" + toDir.getName() + "'");
 		this.terminalMessage.shellPrint(sb.toAttributedString());
+
 	}
 
 	private String getProjectName(String commandName, String subCommandName, String optionProjectNameValue) {
@@ -306,14 +305,14 @@ public class ProjectHandler {
 		}
 	}
 
-	private String getPackageName(String commandName, String subCommandName, String packageName) {
+	private Optional<String> getPackageName(String commandName, String subCommandName, String packageName) {
 		// If user provided, make sure it is sanitized
-		if (packageName != null && !packageName.equals(FALLBACK_DEFAULT_PACKAGE_NAME) && StringUtils.hasText(packageName)) {
-			return PackageNameUtils.getTargetPackageName(packageName, packageName);
+		if (StringUtils.hasText(packageName)) {
+			return Optional.of(PackageNameUtils.getTargetPackageName(packageName, packageName));
 		}
+		// Check for the default value of package-name that was set using "config set boot new"
 		CommandDefaults commandDefaults = this.springCliUserConfig.getCommandDefaults();
-		Optional<String> newPackageName = commandDefaults.findDefaultOptionValue(commandName, subCommandName, "package-name");
-		return newPackageName.orElse(FALLBACK_DEFAULT_PACKAGE_NAME);
+		return commandDefaults.findDefaultOptionValue(commandName, subCommandName, "package-name");
 	}
 
 	@Nullable

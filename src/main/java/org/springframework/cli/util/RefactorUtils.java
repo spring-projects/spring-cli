@@ -25,6 +25,8 @@ import java.util.function.Consumer;
 
 import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.Recipe;
+import org.openrewrite.RecipeRun;
+import org.openrewrite.Result;
 import org.openrewrite.SourceFile;
 import org.openrewrite.java.ChangePackage;
 import org.openrewrite.java.Java17Parser;
@@ -55,9 +57,10 @@ public class RefactorUtils {
 		List<? extends SourceFile> compilationUnits = javaParser.parse(matches, null, executionContext);
 		ResultsExecutor container = new ResultsExecutor();
 
-		Recipe recipe = new ChangePackage(oldPackage, newPackage, true);
-
-		container.addAll(recipe.run(compilationUnits).getResults());
+		ChangePackage recipe = new ChangePackage(oldPackage, newPackage, true);
+		RecipeRun run = recipe.run(compilationUnits);
+		List<Result> results = run.getResults();
+		container.addAll(results);
 		try {
 			container.execute();
 		}

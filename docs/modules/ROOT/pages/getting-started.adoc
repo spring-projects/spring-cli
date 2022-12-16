@@ -11,7 +11,6 @@ The output will be
 [source, bash]
 ----
 Cloning project from https://github.com/rd-1-2022/rpt-rest-service
-Refactoring package to com.example
 Created project in directory 'demo'
 ----
 

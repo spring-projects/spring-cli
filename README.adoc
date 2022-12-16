@@ -1,8 +1,6 @@
 = A CLI focused on developer productivity
 
-* Note: this is a work in progress.  
-
-* **main branch is currently broken after latest upgrade to openrewrite - sorry, will fix asap.  Dec 13, 2022.**
+* Note: this is a work in progress.
 
 * https://spring-projects-experimental.github.io/spring-cli/spring-cli/[Read the documentation] for info on *Installing* and *Getting Started*
 
