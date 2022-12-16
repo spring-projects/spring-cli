@@ -7,6 +7,11 @@
     <link rel="prev" href="quit.html">
     <link rel="next" href="history.html">
     <meta name="generator" content="Antora 3.0.0">
+    <script>
+!function (theme) {
+  if (theme === 'dark') document.documentElement.classList.add('dark-theme')
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'))
+    </script>
     <link rel="stylesheet" href="../../_/css/site.css">
     <link rel="stylesheet" href="../../_/css/vendor/spring-tabs.css">
     <link rel="stylesheet" href="../../_/css/vendor/docsearch.css">
@@ -325,6 +330,5 @@
 <script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
 <script async src="../../_/js/vendor/highlight.js"></script>
 <script async src="../../_/js/vendor/spring-tabs.js"></script>
-<script src="../../_/js/vendor/switchtheme.js"></script>
   </body>
 </html>
