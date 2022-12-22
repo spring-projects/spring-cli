@@ -31,6 +31,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorResourceFactory;
 import org.springframework.shell.MethodTargetRegistrar;
+import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
@@ -41,6 +42,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({SpringCliProperties.class, SpringCliProjectCatalogProperties.class})
 public class SpringCliConfiguration {
+
+	@Bean
+	public CommandExceptionResolver commandExceptionResolver() {
+		return new SpringCliExceptionResolver();
+	}
 
 	@Bean
 	public ModelPopulator systemModelPopulator() {

@@ -359,7 +359,7 @@ public class ProjectHandler {
 		}
 
 		throw new SpringCliException("Could not resolve project name " + projectName
-				+ " to URL.  Command `project list` shows available project names.");
+				+ " to URL.  The command `project list` shows the available project names.");
 	}
 
 	@Nullable

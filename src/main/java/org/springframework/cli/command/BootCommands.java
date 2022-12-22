@@ -29,7 +29,6 @@ import org.springframework.shell.standard.ShellOption;
 @ShellComponent
 public class BootCommands extends AbstractSpringCliCommands {
 
-	private static final String FALLBACK_DEFAULT_PACKAGE_NAME = "com.example";
 	private final  SpringCliUserConfig springCliUserConfig;
 	private final SourceRepositoryService sourceRepositoryService;
 	private TerminalMessage terminalMessage = new DefaultTerminalMessage();

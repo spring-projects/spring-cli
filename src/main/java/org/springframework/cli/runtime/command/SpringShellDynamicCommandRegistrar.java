@@ -25,6 +25,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.cli.SpringCliException;
+import org.springframework.cli.config.SpringCliExceptionResolver;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
@@ -35,7 +37,7 @@ import org.springframework.util.StringUtils;
 /**
  * Helper object for registering commands with Spring CLI at runtime.
  *
- * It takes the results of scanning the `.spring/recipes` directory and registers
+ * It takes the results of scanning the `.spring/commands` directory and registers
  * found commands with Spring Shell's CommandCatalog.
  *
  * All commands execute the same code, an instance of SpringShellGeneratorCommand.
@@ -72,6 +74,9 @@ public class SpringShellDynamicCommandRegistrar {
 						.description(subCommand.getDescription())
 						.withTarget()
 							.method(dynamicCommand, "execute")
+						.and()
+						.withErrorHandling()
+						//.resolver(new SpringCliExceptionResolver())
 						.and();
 
 				List<CommandOption> commandOptions = subCommand.getOptions();
