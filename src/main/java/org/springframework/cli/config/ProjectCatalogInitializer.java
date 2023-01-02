@@ -18,12 +18,10 @@
 package org.springframework.cli.config;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
-import org.springframework.util.ObjectUtils;
 
 /**
  * Registers a project catalog if there are no project catalogs already registered.

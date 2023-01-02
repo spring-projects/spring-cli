@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.SpringCliException;
-import org.springframework.cli.config.SpringCliProjectCatalogProperties;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;

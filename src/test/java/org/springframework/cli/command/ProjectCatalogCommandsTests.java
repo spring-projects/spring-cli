@@ -25,7 +25,6 @@ import java.util.function.Function;
 
 import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cli.SpringCliException;

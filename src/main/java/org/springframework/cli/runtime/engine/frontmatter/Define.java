@@ -17,7 +17,6 @@
 package org.springframework.cli.runtime.engine.frontmatter;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.lang.Nullable;

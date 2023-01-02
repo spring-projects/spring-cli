@@ -28,8 +28,6 @@ import com.github.jknack.handlebars.helper.StringHelpers;
 
 import org.springframework.util.StringUtils;
 
-import org.springframework.util.StringUtils;
-
 /**
  * @author Mark Pollack
  */

@@ -15,7 +15,6 @@
  */
 package org.springframework.cli;
 
-import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cli.config.SpringCliRuntimeHints;

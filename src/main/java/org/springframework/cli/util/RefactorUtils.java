@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.openrewrite.InMemoryExecutionContext;
-import org.openrewrite.Recipe;
 import org.openrewrite.RecipeRun;
 import org.openrewrite.Result;
 import org.openrewrite.SourceFile;

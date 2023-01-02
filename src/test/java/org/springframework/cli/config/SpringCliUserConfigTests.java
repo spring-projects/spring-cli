@@ -28,7 +28,6 @@ import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
