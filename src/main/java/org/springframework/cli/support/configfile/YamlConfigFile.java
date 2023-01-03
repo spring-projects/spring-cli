@@ -28,6 +28,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import org.springframework.cli.SpringCliException;
+
 public class YamlConfigFile implements ConfigFile {
 
 	private final ObjectMapper mapper;
@@ -45,7 +47,7 @@ public class YamlConfigFile implements ConfigFile {
 			InputStream in = new DataInputStream(Files.newInputStream(path));
 			return mapper.readValue(in, type);
 		} catch (Exception e) {
-			throw new RuntimeException("Unable to read from path " + path, e);
+			throw new RuntimeException("Unable to read YAML file from path " + path, e);
 		}
 	}
 
@@ -55,7 +57,7 @@ public class YamlConfigFile implements ConfigFile {
 			OutputStream out = new DataOutputStream(Files.newOutputStream(path));
 			mapper.writeValue(out, value);
 		} catch (Exception e) {
-			throw new RuntimeException("Unable to write to path " + path, e);
+			throw new RuntimeException("Unable to write YAML file to path " + path, e);
 		}
 	}
 }

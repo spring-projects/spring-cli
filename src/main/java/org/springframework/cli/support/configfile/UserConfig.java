@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Function;
 
+import org.springframework.cli.SpringCliException;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -57,7 +58,12 @@ public class UserConfig<T> {
 		if (!Files.exists(path)) {
 			return null;
 		}
-		return file.read(path, type);
+		try {
+			return file.read(path, type);
+		} catch (RuntimeException ex) {
+			System.out.println("warning: " + ex.getMessage());
+			return null;
+		}
 	}
 
 	public void setConfig(T config) {
