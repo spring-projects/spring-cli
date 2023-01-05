@@ -22,10 +22,21 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Arrays;
 
+import org.jline.terminal.Terminal;
+
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.shell.command.CommandHandlingResult;
 
-public class SpringCliExceptionResolver implements CommandExceptionResolver {
+public class SpringCliExceptionResolver implements CommandExceptionResolver, ApplicationContextAware, InitializingBean {
+
+	private ApplicationContext applicationContext;
+
+	private ObjectProvider<Terminal> terminalProvider;
 
 	@Override
 	public CommandHandlingResult resolve(Exception ex) {
@@ -34,9 +45,37 @@ public class SpringCliExceptionResolver implements CommandExceptionResolver {
 			ex.printStackTrace(new PrintStream(stackTraceFile));
 		}
 		catch (FileNotFoundException e) {
-			System.out.println("Could not write stack trace to file " + stackTraceFile);
-			System.out.println(Arrays.toString(e.getStackTrace()));
+			shellPrint("Could not write stack trace to file " + stackTraceFile);
+			shellPrint(Arrays.toString(e.getStackTrace()));
 		}
 		return CommandHandlingResult.of(ex.getMessage(), 1);
 	}
+
+	private Terminal getTerminal() {
+		return terminalProvider.getObject();
+	}
+
+	protected void shellPrint(String... text) {
+		for (String t : text) {
+			getTerminal().writer().println(t);
+		}
+		shellFlush();
+	}
+
+	protected void shellFlush() {
+		getTerminal().writer().flush();
+	}
+
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		terminalProvider = applicationContext.getBeanProvider(Terminal.class);
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
+
+
 }
