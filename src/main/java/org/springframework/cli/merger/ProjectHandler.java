@@ -11,13 +11,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
-import org.apache.maven.model.Model;
-import org.apache.tika.Tika;
 import org.apache.tools.ant.util.FileUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
+import org.openrewrite.InMemoryExecutionContext;
+import org.openrewrite.Result;
+import org.openrewrite.xml.XmlParser;
+import org.openrewrite.xml.tree.Xml.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,10 +31,10 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
 import org.springframework.cli.git.SourceRepositoryService;
+import org.springframework.cli.recipe.RecipeUtils;
 import org.springframework.cli.support.configfile.YamlConfigFile;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.cli.util.PackageNameUtils;
-import org.springframework.cli.util.PomReader;
 import org.springframework.cli.util.ProjectInfo;
 import org.springframework.cli.util.RefactorUtils;
 import org.springframework.cli.util.RootPackageFinder;
@@ -76,21 +79,32 @@ public class ProjectHandler {
 	}
 
 	/**
-	 * Creates a project.
-	 *
-	 * @param from the from
-	 * @param name the project name
-	 * @param packageName the package name
-	 * @param path the project path
+	 * Create a new project
+	 * @param from the URL or the name of a registered project
+	 * @param path the path where the new project will be created
+	 * @param projectInfo project info such as GAV, name, description
 	 */
-	public void create(String from, String name, String packageName, String path) {
+	public void create(String from, String path, ProjectInfo projectInfo) {
 
-		// Will return string or throw exception
-		String urlToUse = !StringUtils.hasText(from) ? FALLBACK_DEFAULT_REPO_URL : getProjectRepositoryUrl(from);
-		// Will return string, never null
-		String projectNameToUse = getProjectName("boot", "new", name);
-		// User may want not to provide a package name different that the package name in the existing project that is being cloned
-		Optional<String> packageNameToUse = getPackageName("boot", "new", packageName);
+		// Determine the URL to use
+		String urlToUse;
+
+		// if from is empty ,e.g. spring boot new, then the Url is the FALLBACK_DEFAULT
+		// and the name is derived from the URL
+		if (!StringUtils.hasText(from)) {
+			urlToUse = FALLBACK_DEFAULT_REPO_URL;
+		} else {
+			// if from is not empty, then get a URL,
+			// possibly translating from a project name that is already registered
+			urlToUse = getProjectRepositoryUrl(from);
+		}
+
+		String directoryNameToUse;
+		if (StringUtils.hasText(projectInfo.getName())) {
+			directoryNameToUse = projectInfo.getName();
+		} else {
+			directoryNameToUse = getProjectNameUsingFrom(urlToUse);
+		}
 
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.GREEN));
@@ -99,7 +113,7 @@ public class ProjectHandler {
 		sb.append("project from " + urlToUse);
 		this.terminalMessage.shellPrint(sb.toAttributedString());
 
-		createFromUrl(IoUtils.getProjectPath(path), projectNameToUse, urlToUse, packageNameToUse);
+		createFromUrl(IoUtils.getProjectPath(path), directoryNameToUse, urlToUse, projectInfo);
 	}
 
 	/**
@@ -112,7 +126,7 @@ public class ProjectHandler {
 		// Will return string or throw exception
 		String urlToUse = getProjectRepositoryUrl(from);
 		// Will return string
-		String projectName = getProjectNameForAdd(from);
+		String projectName = getProjectNameUsingFrom(from);
 
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
@@ -138,7 +152,7 @@ public class ProjectHandler {
 		this.terminalMessage.shellPrint(sb.toAttributedString());
 	}
 
-	private String getProjectNameForAdd(String from) {
+	private String getProjectNameUsingFrom(String from) {
 		// Check it if is a URL, then use just the last part of the name as the 'project name'
 		try {
 			if (from.startsWith("https:")) {
@@ -158,7 +172,7 @@ public class ProjectHandler {
 	private void replaceString(String projectName, Optional<ProjectInfo> projectInfo, File destFile,
 			List<String> replacedLines, String originalLine) {
 		boolean replaced = false;
-		if (originalLine.contains(projectInfo.get().getName())) {
+		if (projectInfo.isPresent() && originalLine.contains(projectInfo.get().getName())) {
 			replaced = true;
 			// can only replace one token per line with this algorithm
 			String processedLine = originalLine.replace(projectInfo.get().getName(), projectName);
@@ -188,20 +202,6 @@ public class ProjectHandler {
 		return rootPackage;
 	}
 
-	private Optional<ProjectInfo> getProjectInfo(Path repositoryContentsPath) {
-		File contentDirectory = repositoryContentsPath.toFile();
-		File pomFile = new File(contentDirectory, "pom.xml");
-		if (pomFile.exists()) {
-			PomReader pomReader = new PomReader();
-			Model model = pomReader.readPom(pomFile);
-			ProjectInfo projectInfo = new ProjectInfo(model.getName(), model.getGroupId(), model.getArtifactId(),
-					model.getVersion());
-			return Optional.of(projectInfo);
-		}
-		// TODO search settings.gradle
-		return Optional.empty();
-	}
-
 	private Path getProjectDirectoryFromProjectName(Path projectDir, String projectName) {
 		Path workingPath = projectDir != null ? projectDir : IoUtils.getWorkingDirectory();
 		Path projectDirectoryPath = Paths.get(workingPath.toString(), projectName);
@@ -212,35 +212,36 @@ public class ProjectHandler {
 		return projectDirectoryPath;
 	}
 
-	private Path createProjectDirectory(Path projectDir, String projectName) {
-		Path projectDirectory = getProjectDirectoryFromProjectName(projectDir, projectName);
+	private Path createProjectDirectory(Path path, String directoryName) {
+		Path projectDirectory = getProjectDirectoryFromProjectName(path, directoryName);
 		IoUtils.createDirectory(projectDirectory);
 		logger.debug("Created directory " + projectDirectory);
 		return projectDirectory;
 	}
 
-	private void createFromUrl(Path projectDir, String projectName, String url, Optional<String> packageName) {
-		logger.debug("Generating project {} from url {} with Java package name {} ", projectName, url, packageName);
-		File toDir = createProjectDirectory(projectDir, projectName).toFile();
+	private void createFromUrl(Path projectDir, String directoryName, String url, ProjectInfo projectInfo) {
+		logger.debug("Generating project from url {} with ProjectInfo {} ", url, projectInfo);
+		File toDir = createProjectDirectory(projectDir, directoryName).toFile();
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(url);
 
 		// Get existing package name
 		Optional<String> existingPackageName = this.getRootPackageName(repositoryContentsPath);
 
 		// Refactor package name if have both a new package name and can identify the package name in newly cloned project
-		if (packageName.isPresent() && existingPackageName.isPresent()) {
+		if (StringUtils.hasText(projectInfo.getPackageName()) && existingPackageName.isPresent()) {
 			AttributedStringBuilder sb = new AttributedStringBuilder();
 			sb.style(sb.style().foreground(AttributedStyle.GREEN));
 			sb.append("Refactoring ");
 			sb.style(sb.style().foreground(AttributedStyle.WHITE));
-			sb.append("package to " + packageName.get());
+			sb.append("package to " + projectInfo.getPackageName());
 			this.terminalMessage.shellPrint(sb.toAttributedString());
-			RefactorUtils.refactorPackage(packageName.get(), existingPackageName.get(), repositoryContentsPath);
+			RefactorUtils.refactorPackage(projectInfo.getPackageName(), existingPackageName.get(), repositoryContentsPath);
 		}
 
-		// Derive existing project name
-		Optional<ProjectInfo> projectInfo = getProjectInfo(repositoryContentsPath);
-		logger.debug("Existing project = " + projectInfo);
+
+		// Update GroupId, ArtfiactId, Version, name, Description as needed.
+		updatePom(repositoryContentsPath, projectInfo);
+
 
 		// Copy files
 		File fromDir = repositoryContentsPath.toFile();
@@ -255,22 +256,10 @@ public class ProjectHandler {
 			File srcFile = new File(fromDir, fileName);
 			File destFile = new File(toDir, fileName);
 			logger.debug("Copy from " + srcFile + " to " + destFile);
-			Tika tika = new Tika();
 			try {
 				FileUtils.getFileUtils().copyFile(srcFile, destFile);
-				if (projectInfo.isPresent()) {
-					if (tika.detect(destFile).startsWith("text") || tika.detect(destFile).contains("xml")) {
-						List<String> replacedLines = new ArrayList<>();
-						List<String> originalLines = Files.readAllLines(destFile.toPath());
-						for (String originalLine : originalLines) {
-							replaceString(projectName, projectInfo, destFile, replacedLines, originalLine);
-						}
-						Files.write(destFile.toPath(), replacedLines);
-					}
-					// set executable file system permissions if needed.
-					if (srcFile.canExecute()) {
-						destFile.setExecutable(true);
-					}
+				if (srcFile.canExecute()) {
+					destFile.setExecutable(true);
 				}
 			} catch (IOException e) {
 				throw new SpringCliException(
@@ -289,6 +278,26 @@ public class ProjectHandler {
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
 		sb.append("project in directory '" + toDir.getName() + "'");
 		this.terminalMessage.shellPrint(sb.toAttributedString());
+
+	}
+
+	private void updatePom(Path repositoryContentsPath, ProjectInfo projectInfo) {
+		// Get Files
+		List<Path> paths = new ArrayList<>();
+		Path pomPath = repositoryContentsPath.resolve("pom.xml");
+		paths.add(pomPath);
+		XmlParser xmlParser = new XmlParser();
+		Consumer<Throwable> onError = e -> {
+			logger.error("error in xml parser execution", e);
+		};
+		List<Document> documentList = xmlParser.parse(paths, repositoryContentsPath, new InMemoryExecutionContext(onError));
+
+		// Execute Recipe
+		ChangeNewlyClonedPomRecipe changeNewlyClonedPomRecipe = new ChangeNewlyClonedPomRecipe(projectInfo);
+		List<Result> resultList = changeNewlyClonedPomRecipe.run(documentList).getResults();
+
+		// Write Results
+		RecipeUtils.writeResults("ChangeNewlyClonedPomRecipe", pomPath, resultList);
 
 	}
 

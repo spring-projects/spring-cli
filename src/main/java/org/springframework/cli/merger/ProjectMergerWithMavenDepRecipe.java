@@ -98,11 +98,10 @@ public class ProjectMergerWithMavenDepRecipe {
 		for (String keyToMerge : keysToMerge) {
 			// TODO may want to do something special in case java.version is set to be different
 			//System.out.println("Going to merge property key " + keyToMerge);
-			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true, true);
+			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true, false);
 			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.pathCurrentProject, getExecutionContext());
 			List<Result> resultList = changePropertyValueRecipe.run(pomFiles).getResults();
 			updatePomFile(currentProjectPomPath, resultList);
-			System.out.println("");
  		}
 
 		// Dependency Management Section

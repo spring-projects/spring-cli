@@ -21,10 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.merger.ProjectHandler;
 import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.util.ProjectInfo;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.util.StringUtils;
 
 @ShellComponent
 public class BootCommands extends AbstractSpringCliCommands {
@@ -44,11 +46,17 @@ public class BootCommands extends AbstractSpringCliCommands {
 	public void bootNew(
 			@ShellOption(help = "Create project from existing project name or URL", defaultValue = ShellOption.NULL, arity = 1) String from,
 			@ShellOption(help = "Name of the new project", defaultValue = ShellOption.NULL, arity = 1) String name,
+			@ShellOption(help = "Group ID of the new project", defaultValue = ShellOption.NULL, arity = 1, value="--group-id") String groupId,
+			@ShellOption(help = "Artifact ID of the new project", defaultValue = ShellOption.NULL, arity = 1, value="--artifact-id") String artifactId,
+			@ShellOption(help = "Version of the new project", defaultValue = ShellOption.NULL, arity = 1) String version,
+			@ShellOption(help = "Description of the new project", defaultValue = ShellOption.NULL, arity = 1) String description,
 			@ShellOption(help = "Package name for the new project", defaultValue = ShellOption.NULL, arity = 1, value="--package-name") String packageName,
 			@ShellOption(help = "Path", defaultValue = ShellOption.NULL, arity = 1) String path) {
+		ProjectInfo projectInfo = new ProjectInfo(groupId, artifactId, version, name, description, packageName);
 		ProjectHandler handler = new ProjectHandler(springCliUserConfig, sourceRepositoryService, terminalMessage);
-		handler.create(from, name, packageName, path);
+		handler.create(from, path, projectInfo.getDefaults());
 	}
+
 
 	@ShellMethod(key = "boot add", value = "Merge an existing project into the current Spring Boot project")
 	public void bootAdd(

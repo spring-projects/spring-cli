@@ -108,7 +108,6 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 				}
 			}
 
-			// TODO need to rename the readme.md on copy, not rely on it already having a suffix.
 			for (File file : files) {
 				String readmeName = "README-" + file.getName() + ".md";
 				Path readmePath = Paths.get(cwd.toString(), readmeName);

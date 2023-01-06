@@ -49,6 +49,7 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.InMemoryExecutionContext;
+import org.openrewrite.RecipeRun;
 import org.openrewrite.Result;
 import org.openrewrite.SourceFile;
 import org.openrewrite.java.AddImport;
@@ -462,10 +463,11 @@ public class ProjectMerger {
 		Set<String> keysToMerge = propertiesToMerge.stringPropertyNames();
 
 		for (String keyToMerge : keysToMerge) {
-			// TODO may want to do something special in case java.version is set to be different
-			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true, true);
+			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true, false);
+			// TODO - parse is expensive call, move out of loop?
 			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
-			List<Result> resultList = changePropertyValueRecipe.run(pomFiles).getResults();
+			RecipeRun recipeRun = changePropertyValueRecipe.run(pomFiles);
+			List<Result> resultList = recipeRun.getResults();
 			if (!resultList.isEmpty()) {
 				AttributedStringBuilder sb = new AttributedStringBuilder();
 				sb.style(sb.style().foreground(AttributedStyle.WHITE));
@@ -517,7 +519,7 @@ public class ProjectMerger {
 	}
 
 	public static AddManagedDependency getRecipeAddManagedDependency(String groupId, String artifactId, String version, String scope, String type, String classifier) {
-		return new AddManagedDependency(groupId, artifactId, version, scope, type, classifier,
+		return new AddSimpleManagedDependencyRecipe(groupId, artifactId, version, scope, type, classifier,
 				null, null, null, true);
 	}
 	public static AddSimpleDependencyRecipe getRecipeAddDependency(String groupId, String artifactId, String version, String scope, String onlyIfUsing) {

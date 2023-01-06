@@ -17,9 +17,13 @@
 
 package org.springframework.cli.util;
 
+import org.springframework.util.StringUtils;
+
 public class ProjectInfo {
 
 	private String name;
+
+	private String description;
 
 	private String groupId;
 
@@ -27,20 +31,30 @@ public class ProjectInfo {
 
 	private String version;
 
-	public ProjectInfo(String name, String groupId, String artifactId, String version) {
-		this.name = name;
+	private String packageName;
+
+	public ProjectInfo(String groupId, String artifactId, String version, String name, String description, String packageName) {
 		this.groupId = groupId;
 		this.artifactId = artifactId;
 		this.version = version;
+		this.name = name;
+		this.description = description;
+		this.packageName = packageName;
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getGroupId() {
 		return groupId;
 	}
+
+
 
 	public String getArtifactId() {
 		return artifactId;
@@ -50,13 +64,42 @@ public class ProjectInfo {
 		return version;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
 	@Override
 	public String toString() {
-		return "PomInfo{" +
+		return "ProjectInfo{" +
 				"name='" + name + '\'' +
+				", description='" + description + '\'' +
 				", groupId='" + groupId + '\'' +
 				", artifactId='" + artifactId + '\'' +
 				", version='" + version + '\'' +
+				", packageName='" + packageName + '\'' +
 				'}';
 	}
+
+	public ProjectInfo getDefaults() {
+		// if no artifact name is specified, fall back to using the name, which may or
+		// may not be specified.
+		String artifactIdToUse = (StringUtils.hasText(artifactId)) ? artifactId : name;
+
+		// if no package name is specified, try to derive from groupId and artifactId
+		String packageNameToUse;
+		if (StringUtils.hasText(packageName)) {
+			packageNameToUse = packageName;
+		} else if (StringUtils.hasText(groupId) && StringUtils.hasText(artifactIdToUse)) {
+			packageNameToUse = groupId + "." + artifactIdToUse;
+		} else {
+			packageNameToUse = null;
+		}
+		return new ProjectInfo(groupId, artifactIdToUse, version, name, description, packageNameToUse);
+	}
+
+
 }

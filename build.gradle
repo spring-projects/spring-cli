@@ -23,7 +23,7 @@ ext {
 	set('jarchivelibVersion', '1.2.0')
 	set('kohsukeVersion', '1.301')
 	set('gitlab4jVersion', '4.19.0')
-	set('openrewriteVersion', '7.34.2')
+	set('openrewriteVersion', '7.34.3')
 	set('antVersion', '1.10.9')
 	set('mavenModelVersion', '3.5.4')
 	set('tikaVersion', '1.18')
@@ -61,6 +61,7 @@ dependencies {
 	implementation 'com.jayway.jsonpath:json-path'
 	implementation 'javax.xml.bind:jaxb-api'
 	implementation 'org.glassfish.jaxb:jaxb-runtime'
+	testImplementation 'org.openrewrite:rewrite-test'
 	testImplementation 'uk.org.webcompere:system-stubs-jupiter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'com.google.jimfs:jimfs'
@@ -73,6 +74,7 @@ dependencyManagement {
 		dependency "org.rauschig:jarchivelib:${jarchivelibVersion}"
 		dependency "org.kohsuke:github-api:${kohsukeVersion}"
 		dependency "org.gitlab4j:gitlab4j-api:${gitlab4jVersion}"
+		dependency "org.openrewrite:rewrite-test:${openrewriteVersion}"
 		dependency "org.openrewrite:rewrite-java-17:${openrewriteVersion}"
 		dependency "org.openrewrite:rewrite-xml:${openrewriteVersion}"
 		dependency("org.openrewrite:rewrite-maven:${openrewriteVersion}") {

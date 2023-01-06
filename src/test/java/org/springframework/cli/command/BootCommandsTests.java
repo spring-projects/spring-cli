@@ -53,22 +53,36 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 
 			String path = workingDir.toAbsolutePath().toString();
-			bootCommands.bootNew(null, null, null, path);
+			bootCommands.bootNew(null, null, null, null, null, null, null, path);
 			assertThat(workingDir).exists().isDirectory();
-			assertThat(workingDir.resolve("demo")).exists();
-			assertThat(workingDir.resolve("demo/src/main/java/com/example/restservice/greeting")).exists();
-			assertThat(workingDir.resolve("demo/src/test/java/com/example/restservice/greeting")).exists();
+			assertThat(workingDir.resolve("rpt-rest-service")).exists();
+			assertThat(workingDir.resolve("rpt-rest-service/src/main/java/com/example/restservice/greeting")).exists();
+			assertThat(workingDir.resolve("rpt-rest-service/src/test/java/com/example/restservice/greeting")).exists();
 		});
 	}
 
 	@Test
-	void canCreateAndChangeNameAndPackage(final @TempDir Path workingDir) {
+	void canCreateAndChangeNameAndPackageBasedOnGroupId(final @TempDir Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 			assertThat(context).hasSingleBean(BootCommands.class);
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew(null, "demo2", "com.xkcd", path);
+			bootCommands.bootNew(null, "demo2", "com.xkcd", null, null, null, null, path);
+			assertThat(workingDir.resolve("demo2")).exists();
+			assertThat(workingDir.resolve("demo2/src/main/java/com/xkcd/demo2/greeting")).exists();
+			assertThat(workingDir.resolve("demo2/src/test/java/com/xkcd/demo2/greeting")).exists();
+		});
+	}
+
+	@Test
+	void canCreateAndChangeNameAndPackageBasedOnPackageName(final @TempDir Path workingDir) {
+		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
+			assertThat(context).hasSingleBean(BootCommands.class);
+			BootCommands bootCommands = context.getBean(BootCommands.class);
+			String path = workingDir.toAbsolutePath().toString();
+
+			bootCommands.bootNew(null, "demo2", null, null, null, null, "com.xkcd", path);
 			assertThat(workingDir.resolve("demo2")).exists();
 			assertThat(workingDir.resolve("demo2/src/main/java/com/xkcd/greeting")).exists();
 			assertThat(workingDir.resolve("demo2/src/test/java/com/xkcd/greeting")).exists();
@@ -82,7 +96,7 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew("https://github.com/rd-1-2022/rpt-spring-data-jpa", "jpa", "com.xkcd", path);
+			bootCommands.bootNew("https://github.com/rd-1-2022/rpt-spring-data-jpa", "jpa", null, null, null, null, "com.xkcd", path);
 			assertThat(workingDir.resolve("jpa")).exists();
 			assertThat(workingDir.resolve("jpa/src/main/java/com/xkcd/customer")).exists();
 			assertThat(workingDir.resolve("jpa/src/test/java/com/xkcd/customer")).exists();
@@ -96,7 +110,7 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew("jpa", "jpa2", "com.xkcd", path);
+			bootCommands.bootNew("jpa", "jpa2", null, null, null, null, "com.xkcd", path);
 			assertThat(workingDir.resolve("jpa2")).exists();
 			assertThat(workingDir.resolve("jpa2/src/main/java/com/xkcd/customer")).exists();
 			assertThat(workingDir.resolve("jpa2/src/test/java/com/xkcd/customer")).exists();
@@ -110,7 +124,7 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew("scheduling", "scheduling", "com.xkcd", path);
+			bootCommands.bootNew("scheduling", "scheduling", null, null, null, null, "com.xkcd", path);
 			assertThat(workingDir.resolve("scheduling")).exists();
 			assertThat(workingDir.resolve("scheduling/src/main/java/com/xkcd/scheduling")).exists();
 			assertThat(workingDir.resolve("scheduling/src/test/java/com/xkcd/scheduling")).exists();
@@ -124,7 +138,7 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew(null, "test-add", "com.xkcd", path);
+			bootCommands.bootNew(null, "test-add", null, null, null, null, "com.xkcd", path);
 			assertThat(workingDir).exists().isDirectory();
 			assertThat(workingDir.resolve("test-add")).exists();
 			assertThat(workingDir.resolve("test-add/src/main/java/com/xkcd/greeting")).exists();

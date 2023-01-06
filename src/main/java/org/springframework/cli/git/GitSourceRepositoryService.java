@@ -120,9 +120,21 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 		try {
 			URI gitUri = new URI(url.getRepoUrl().toString());
 			String token = getToken(gitUri.getHost());
-			GitHub github;
+			GitHub github = null;
 			if (token == null) {
-				github = GitHub.connectAnonymously();
+				// try to use an environment variable
+				if (StringUtils.hasText(System.getenv("GITHUB_OAUTH"))) {
+					github = GitHubBuilder.fromEnvironment().build();
+				}
+				// fallback to property file
+				if (github == null) {
+					github = GitHubBuilder.fromPropertyFile().build();
+				}
+				// connect anonymously
+				if (github == null) {
+					//TODO terminal warning about rate limiting
+					github = GitHub.connectAnonymously();
+				}
 			}
 			else {
 				github = new GitHubBuilder().withOAuthToken(token).build();

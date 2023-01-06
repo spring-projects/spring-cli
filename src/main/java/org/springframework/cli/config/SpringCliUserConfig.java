@@ -68,7 +68,7 @@ public class SpringCliUserConfig {
 	/**
 	 * {@code command-defaults.yml} store default option values for commands.
 	 */
-	public final static String COMMAND_DEFAULTS_FILE_NAME = "command-defaults.yml";
+	public final static String 	COMMAND_DEFAULTS_FILE_NAME = "command-defaults.yml";
 
 	/**
 	 * {@code initializr.yml} stores initializr specific info.
