@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Cli Interactive",
+            "request": "launch",
+            "mainClass": "org.springframework.cli.SpringCliApplication",
+            "projectName": "spring-cli"
+        }
+    ]
+}
