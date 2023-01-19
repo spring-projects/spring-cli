@@ -54,7 +54,7 @@ import org.springframework.util.StringUtils;
 public class ProjectHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectHandler.class);
-	private static final String FALLBACK_DEFAULT_REPO_URL = "https://github.com/rd-1-2022/rpt-rest-service";
+	private static final String FALLBACK_DEFAULT_REPO_URL = "https://github.com/rd-1-2022/rest-service";
 	private static final String FALLBACK_DEFAULT_PROJECT_NAME = "demo";
 
 	private final SpringCliUserConfig springCliUserConfig;

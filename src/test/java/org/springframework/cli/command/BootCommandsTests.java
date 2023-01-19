@@ -55,9 +55,9 @@ public class BootCommandsTests {
 			String path = workingDir.toAbsolutePath().toString();
 			bootCommands.bootNew(null, null, null, null, null, null, null, path);
 			assertThat(workingDir).exists().isDirectory();
-			assertThat(workingDir.resolve("rpt-rest-service")).exists();
-			assertThat(workingDir.resolve("rpt-rest-service/src/main/java/com/example/restservice/greeting")).exists();
-			assertThat(workingDir.resolve("rpt-rest-service/src/test/java/com/example/restservice/greeting")).exists();
+			assertThat(workingDir.resolve("rest-service")).exists();
+			assertThat(workingDir.resolve("rest-service/src/main/java/com/example/restservice/greeting")).exists();
+			assertThat(workingDir.resolve("rest-service/src/test/java/com/example/restservice/greeting")).exists();
 		});
 	}
 

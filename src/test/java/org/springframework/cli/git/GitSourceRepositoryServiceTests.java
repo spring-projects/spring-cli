@@ -39,7 +39,7 @@ public class GitSourceRepositoryServiceTests {
 	@Test
 	void testRetrieval(@TempDir Path tempDir) throws IOException {
 		GitSourceRepositoryService urlRepositoryService = new GitSourceRepositoryService(new SpringCliUserConfig());
-		Path contentPath = urlRepositoryService.retrieveRepositoryContents("https://github.com/rd-1-2022/rpt-rest-service");
+		Path contentPath = urlRepositoryService.retrieveRepositoryContents("https://github.com/rd-1-2022/rest-service");
 		assertThat(PathUtils.isEmpty(contentPath)).isFalse();
 		String[] pathToFile = new String[] { "src", "main", "java", "com", "example", "restservice",
 				"greeting", "GreetingController.java"};

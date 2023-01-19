@@ -21,7 +21,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Function;
 
-import org.springframework.cli.SpringCliException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -31,6 +33,9 @@ import org.springframework.util.StringUtils;
  * @author Janne Valkealahti
  */
 public class UserConfig<T> {
+
+	private static final Logger logger = LoggerFactory.getLogger(UserConfig.class);
+
 
 	private final static String XDG_CONFIG_HOME = "XDG_CONFIG_HOME";
 	private final static String APP_DATA = "APP_DATA";
@@ -72,6 +77,8 @@ public class UserConfig<T> {
 			Files.createDirectories(path.getParent());
 		} catch (IOException e) {
 		}
+		logger.debug("Writing config to path " + path);
+		logger.debug("config = " + config);
 		file.write(path, config);
 	}
 

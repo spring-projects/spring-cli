@@ -395,6 +395,13 @@ public class SpringCliUserConfig {
 		public void setProjectCatalogs(List<ProjectCatalog> projectCatalogs) {
 			this.projectCatalogs = projectCatalogs;
 		}
+
+		@Override
+		public String toString() {
+			return "ProjectCatalogs{" +
+					"projectCatalogs=" + projectCatalogs +
+					'}';
+		}
 	}
 
 	public static class ProjectRepositories {
@@ -416,6 +423,12 @@ public class SpringCliUserConfig {
 				.findFirst();
 		}
 
+		@Override
+		public String toString() {
+			return "ProjectRepositories{" +
+					"projectRepositories=" + projectRepositories +
+					'}';
+		}
 	}
 
 	public static class ProjectCatalog extends BaseProjectCommon {
@@ -440,6 +453,16 @@ public class SpringCliUserConfig {
 
 		public void setTags(List<String> tags) {
 			this.tags = tags;
+		}
+
+		@Override
+		public String toString() {
+			return "ProjectCatalog{" +
+					"tags=" + tags +
+					", name='" + getName() + '\'' +
+					", description='" + getDescription() + '\'' +
+					", url='" + getUrl() + '\'' +
+					'}';
 		}
 	}
 
@@ -467,7 +490,15 @@ public class SpringCliUserConfig {
 			this.tags = tags;
 		}
 
-
+		@Override
+		public String toString() {
+			return "ProjectRepository{" +
+					"tags=" + tags +
+					", name='" + getName() + '\'' +
+					", description='" + getDescription() + '\'' +
+					", url='" + getUrl() + '\'' +
+					'}';
+		}
 	}
 
 	public static class CommandDefaults {

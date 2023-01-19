@@ -50,14 +50,8 @@ public class ProjectCatalogCommandsTests {
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
 
 			// Get empty table, assert header values
-			Table table = projectCatalogCommands.catalogList();
-			//System.out.println(table.render(100));
-			assertThat(table.getModel().getColumnCount()).isEqualTo(4);
-			assertThat(table.getModel().getRowCount()).isEqualTo(1);
-			verifyTableValue(table, 0, 0, "Name");
-			verifyTableValue(table, 0, 1, "URL");
-			verifyTableValue(table, 0, 2, "Description");
-			verifyTableValue(table, 0, 3, "Tags");
+			verifyEmptyCatalog(projectCatalogCommands);
+			Table table;
 
 			// Add a catalog and assert values
 			List<String> tags = new ArrayList<>();
@@ -77,7 +71,21 @@ public class ProjectCatalogCommandsTests {
 			}).isInstanceOf(SpringCliException.class)
 					.hasMessageContaining("Catalog named getting-started already exists.  Choose another name.");
 
+			// Remove added catalog
+			projectCatalogCommands.catalogRemove("getting-started");
+			verifyEmptyCatalog(projectCatalogCommands);
 		});
+	}
+
+	private static void verifyEmptyCatalog(ProjectCatalogCommands projectCatalogCommands) {
+		Table table = projectCatalogCommands.catalogList();
+		System.out.println(table.render(100));
+		assertThat(table.getModel().getColumnCount()).isEqualTo(4);
+		assertThat(table.getModel().getRowCount()).isEqualTo(1);
+		verifyTableValue(table, 0, 0, "Name");
+		verifyTableValue(table, 0, 1, "URL");
+		verifyTableValue(table, 0, 2, "Description");
+		verifyTableValue(table, 0, 3, "Tags");
 	}
 
 	@Configuration
