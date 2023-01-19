@@ -1,6 +1,6 @@
 = Creating New Projects
 
-When running the command `spring boot new` a simple web application is created.
+When running the command `spring boot new` a simple RESTful web application is created.
 
 To create other types of applications you need to pass an additional argument to the `spring boot new` command that specifies the location of the source code for the project you want to create.
 
@@ -20,7 +20,7 @@ Executing the command
 spring catalog list
 ```
 
-shows the list of project catalogs registered with the shell.
+shows the list of project catalogs registered with the shell.  The project catalog contains a list of projects that can be used with the `boot new` or `boot add` commands.
 
 ```
 ┌────┬──────────────────────────────────────────────┬───────────────────────┬───────────────────┐
@@ -36,13 +36,13 @@ Executing the command
 spring project list
 ```
 
-shows the list of projects that are available to create.  Each project has a name that can be passed to `spring boot new`
+shows the list of projects that are available to use.  Each project has a name that can be passed to `spring boot new`
 
 ```
 ┌─────────────┬────────────────────────────────────────────────────────┬─────────────────────┬───────┬───────────────┐
 │Name         │URL                                                     │Description          │Catalog│Tags           │
 ├─────────────┼────────────────────────────────────────────────────────┼─────────────────────┼───────┼───────────────┤
-│web          │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful │gs     │[rest, web]    │
+│web          │https://github.com/rd-1-2022/rest-service               │Hello, World RESTful │gs     │[rest, web]    │
 │             │                                                        │web service.         │       │               │
 ├─────────────┼────────────────────────────────────────────────────────┼─────────────────────┼───────┼───────────────┤
 │jpa          │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work    │gs     │[jpa, h2]      │
@@ -91,7 +91,7 @@ The `spring boot new` command takes the following options, which can be seen by 
 
 [source, bash]
 ----
-spring help boot new
+spring boot new --help
 ----
 
 Which displays
@@ -102,7 +102,7 @@ NAME
        boot new - Create a new Spring Boot project from an existing project
 
 SYNOPSIS
-       boot new --from String --name String --package-name String --path String
+       boot new --from String --name String --group-id String --artifact-id String --version String --description String --package-name String --path String --help
 
 OPTIONS
        --from String
@@ -113,20 +113,113 @@ OPTIONS
        Name of the new project
        [Optional]
 
+       --group-id String
+       Group ID of the new project
+       [Optional]
+
+       --artifact-id String
+       Artifact ID of the new project
+       [Optional]
+
+       --version String
+       Version of the new project
+       [Optional]
+
+       --description String
+       Description of the new project
+       [Optional]
+
        --package-name String
        Package name for the new project
-       [Optional, default = com.example]
+       [Optional]
 
        --path String
-       Path
+       Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.
        [Optional]
+
+       --help or -h
+       help for boot new
+       [Optional]
+
+
 ----
 
-The options not yet shown in this documentation are
+== Options and Default Values
 
-* `--name` - that specifies the name of the project, the default value is `demo`.  
-* `--package-name` - the package name to refactor to
-* `--path`  The path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.
+The most common options to specify are `--name` and `--group-id`.
+By specifying just the `--name` option, the `artifactId` will default to the value of the `--name` option.
+For example
 
+[source, bash]
+----
+spring boot new --name myapp
+Cloning project from https://github.com/rd-1-2022/rest-service
+Created project in directory 'myapp'
+----
+
+Looking into the generated `pom.xml` the name `myapp` is used as the `artifactId` and the `name` of the project
+
+[source, xml]
+----
+	<groupId>com.example</groupId>
+	<artifactId>myapp</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>myapp</name>
+	<description>RESTful web application</description>
+----
+
+Adding the option `--groupid` will not only change the value of the `groupId` tag, but also the package name.
+A refactoring of the project to the new package name will be performed.
+For example:
+
+[source, bash]
+----
+$ spring boot new --name myapp --group-id com.xkcd
+Cloning project from https://github.com/rd-1-2022/rest-service
+Refactoring package to com.xkcd.myapp
+Created project in directory 'myapp'
+----
+
+The generated `pom.xml` contains
+
+[source, xml]
+----
+	<groupId>com.xkcd</groupId>
+	<artifactId>myapp</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>myapp</name>
+	<description>RESTful web application</description>
+----
+
+and the directory structure of the project is
+
+[source]
+----
+$ tree myapp/
+myapp/
+├── LICENSE
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+├── README.adoc
+└── src
+    ├── main
+    │   └── java
+    │       └── com
+    │           └── xkcd
+    │               └── myapp
+    │                   ├── Application.java
+    │                   └── greeting
+    │                       ├── GreetingController.java
+    │                       └── Greeting.java
+    └── test
+        └── java
+            └── com
+                └── xkcd
+                    └── myapp
+                        └── greeting
+                            └── GreetingControllerTests.java
+
+----
 
 

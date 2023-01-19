@@ -51,7 +51,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 			@ShellOption(help = "Version of the new project", defaultValue = ShellOption.NULL, arity = 1) String version,
 			@ShellOption(help = "Description of the new project", defaultValue = ShellOption.NULL, arity = 1) String description,
 			@ShellOption(help = "Package name for the new project", defaultValue = ShellOption.NULL, arity = 1, value="--package-name") String packageName,
-			@ShellOption(help = "Path", defaultValue = ShellOption.NULL, arity = 1) String path) {
+			@ShellOption(help = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.", defaultValue = ShellOption.NULL, arity = 1) String path) {
 		ProjectInfo projectInfo = new ProjectInfo(groupId, artifactId, version, name, description, packageName);
 		ProjectHandler handler = new ProjectHandler(springCliUserConfig, sourceRepositoryService, terminalMessage);
 		handler.create(from, path, projectInfo.getDefaults());

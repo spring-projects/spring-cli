@@ -6,7 +6,7 @@
 
 == Build
 
-NOTE: Use either JDK11 or JDK17
+NOTE: Use JDK17
 
 Normal build without _native_:
 ```
