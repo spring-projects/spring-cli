@@ -274,11 +274,11 @@ public class ProjectMerger {
 			}
 			// Change readme file name have the project name that is being merged into the code base
 			if (FilenameUtils.getBaseName(srcFile.getName()).equalsIgnoreCase("README")) {
-				Path path = Paths.get(FilenameUtils.getPath(destFile.getName()),
+				Path newFile = Paths.get(FilenameUtils.getPath(destFile.getName()),
 						FilenameUtils.getBaseName(destFile.getName())
 								+ "-" + projectName +
 								"." + FilenameUtils.getExtension(destFile.getName()));
-				destFile = path.toFile();
+				destFile = new File(toDir, newFile.toFile().getName());
 			}
 			if (springBootApplicationFile.isPresent()) {
 				if (srcFile.equals(springBootApplicationFile.get())) {

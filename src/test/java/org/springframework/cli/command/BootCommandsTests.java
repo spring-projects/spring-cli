@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.function.Function;
 
 import com.google.common.jimfs.Jimfs;
+import org.apache.maven.model.DependencyManagement;
+import org.apache.maven.model.Model;
 import org.jline.terminal.Terminal;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -33,6 +35,7 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
+import org.springframework.cli.util.PomReader;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -153,6 +156,47 @@ public class BootCommandsTests {
 			bootCommands.bootAdd("scheduling", addPath);
 			assertThat(workingDir.resolve("test-add/src/main/java/com/xkcd/scheduling")).exists();
 			assertThat(workingDir.resolve("test-add/src/test/java/com/xkcd/scheduling")).exists();
+		});
+	}
+
+	@Test
+	void canCreateAndAddProjectThatModifiesManagedDepsAndMergesProperties(final @TempDir Path workingDir) {
+		this.contextRunner.withUserConfiguration(MockFakeUserConfig.class).run((context) -> {
+			assertThat(context).hasSingleBean(BootCommands.class);
+			BootCommands bootCommands = context.getBean(BootCommands.class);
+			String path = workingDir.toAbsolutePath().toString();
+
+			bootCommands.bootNew(null, "test-add", null, null, null, null, "com.xkcd", path);
+			assertThat(workingDir).exists().isDirectory();
+			assertThat(workingDir.resolve("test-add")).exists();
+			assertThat(workingDir.resolve("test-add/src/main/java/com/xkcd/greeting")).exists();
+			assertThat(workingDir.resolve("test-add/src/test/java/com/xkcd/greeting")).exists();
+
+			String addPath = workingDir.resolve("test-add").toAbsolutePath().toString();
+
+			PomReader pomReader = new PomReader();
+			Model model = pomReader.readPom(workingDir.resolve("test-add/pom.xml").toFile());
+			assertThat(model.getProperties()).doesNotContainKey("spring-cloud.version");
+			DependencyManagement dependencyManagement = model.getDependencyManagement();
+			assertThat(dependencyManagement).isNull();
+
+			bootCommands.bootAdd("https://github.com/rd-1-2022/rpt-config-client", addPath);
+
+			assertThat(workingDir).exists().isDirectory();
+			assertThat(workingDir.resolve("test-add/src/main/java/com/xkcd/controller")).exists();
+			assertThat(workingDir.resolve("test-add/README-rpt-config-client.md")).exists();
+
+			model = pomReader.readPom(workingDir.resolve("test-add/pom.xml").toFile());
+			assertThat(model.getProperties()).containsKey("spring-cloud.version");
+			dependencyManagement = model.getDependencyManagement();
+			assertThat(dependencyManagement.getDependencies().size()).isEqualTo(1);
+			assertThat(dependencyManagement.getDependencies().get(0).getGroupId()).isEqualTo("org.springframework.cloud");
+			assertThat(dependencyManagement.getDependencies().get(0).getArtifactId()).isEqualTo("spring-cloud-dependencies");
+			assertThat(dependencyManagement.getDependencies().get(0).getVersion()).isEqualTo("${spring-cloud.version}");
+			assertThat(dependencyManagement.getDependencies().get(0).getType()).isEqualTo("pom");
+			assertThat(dependencyManagement.getDependencies().get(0).getScope()).isEqualTo("import");
+
+
 		});
 	}
 
