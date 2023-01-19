@@ -14,7 +14,6 @@
     </script>
     <link rel="stylesheet" href="../_/css/site.css">
     <link rel="stylesheet" href="../_/css/vendor/spring-tabs.css">
-    <link rel="stylesheet" href="../_/css/vendor/docsearch.css">
     <link rel="icon" href="../_/img/favicon.ico" type="image/vnd.microsoft.icon">
   </head>
   <body class="article">
@@ -246,9 +245,6 @@
     <li class="component is-current">
       <a class="title" href="index.html">spring-cli</a>
       <ul class="versions">
-        <li class="version is-current is-latest">
-          <a href="index.html">1.0.0-SNAPSHOT</a>
-        </li>
       </ul>
     </li>
   </ul>
@@ -267,7 +263,12 @@
   </ul>
 </nav>
 <div class="search">
-  <input id="search-input" type="text" placeholder="Search docs">
+  <div id="search" class="field has-filter">
+    <input class="query" type="text" placeholder="Search docs">
+    <label class="filter checkbox">
+      <input type="checkbox" data-facet-filter="version:1.0.0" checked> 1.0.0 only
+    </label>
+  </div>
 </div>
   <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/creating-new-projects.adoc">Edit this Page</a></div>
   </div>
@@ -280,7 +281,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>When running the command <code>spring boot new</code> a simple web application is created.</p>
+<p>When running the command <code>spring boot new</code> a simple RESTful web application is created.</p>
 </div>
 <div class="paragraph">
 <p>To create other types of applications you need to pass an additional argument to the <code>spring boot new</code> command that specifies the location of the source code for the project you want to create.</p>
@@ -311,7 +312,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>shows the list of project catalogs registered with the shell.</p>
+<p>shows the list of project catalogs registered with the shell.  The project catalog contains a list of projects that can be used with the <code>boot new</code> or <code>boot add</code> commands.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -331,14 +332,14 @@
 </div>
 </div>
 <div class="paragraph">
-<p>shows the list of projects that are available to create.  Each project has a name that can be passed to <code>spring boot new</code></p>
+<p>shows the list of projects that are available to use.  Each project has a name that can be passed to <code>spring boot new</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">┌─────────────┬────────────────────────────────────────────────────────┬─────────────────────┬───────┬───────────────┐
 │Name         │URL                                                     │Description          │Catalog│Tags           │
 ├─────────────┼────────────────────────────────────────────────────────┼─────────────────────┼───────┼───────────────┤
-│web          │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful │gs     │[rest, web]    │
+│web          │https://github.com/rd-1-2022/rest-service               │Hello, World RESTful │gs     │[rest, web]    │
 │             │                                                        │web service.         │       │               │
 ├─────────────┼────────────────────────────────────────────────────────┼─────────────────────┼───────┼───────────────┤
 │jpa          │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work    │gs     │[jpa, h2]      │
@@ -407,7 +408,7 @@ You can also use the name of the project as the argument to the command  <code>s
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring help boot new</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new --help</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -419,7 +420,7 @@ You can also use the name of the project as the argument to the command  <code>s
        boot new - Create a new Spring Boot project from an existing project
 
 SYNOPSIS
-       boot new --from String --name String --package-name String --path String
+       boot new --from String --name String --group-id String --artifact-id String --version String --description String --package-name String --path String --help
 
 OPTIONS
        --from String
@@ -430,30 +431,119 @@ OPTIONS
        Name of the new project
        [Optional]
 
+       --group-id String
+       Group ID of the new project
+       [Optional]
+
+       --artifact-id String
+       Artifact ID of the new project
+       [Optional]
+
+       --version String
+       Version of the new project
+       [Optional]
+
+       --description String
+       Description of the new project
+       [Optional]
+
        --package-name String
        Package name for the new project
-       [Optional, default = com.example]
+       [Optional]
 
        --path String
-       Path
+       Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.
+       [Optional]
+
+       --help or -h
+       help for boot new
        [Optional]</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The options not yet shown in this documentation are</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>--name</code> - that specifies the name of the project, the default value is <code>demo</code>.</p>
-</li>
-<li>
-<p><code>--package-name</code> - the package name to refactor to</p>
-</li>
-<li>
-<p><code>--path</code>  The path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.</p>
-</li>
-</ul>
+</div>
+<div class="sect1">
+<h2 id="_options_and_default_values"><a class="anchor" href="#_options_and_default_values"></a>Options and Default Values</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The most common options to specify are <code>--name</code> and <code>--group-id</code>.
+By specifying just the <code>--name</code> option, the <code>artifactId</code> will default to the value of the <code>--name</code> option.
+For example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new --name myapp
+Cloning project from https://github.com/rd-1-2022/rest-service
+Created project in directory 'myapp'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Looking into the generated <code>pom.xml</code> the name <code>myapp</code> is used as the <code>artifactId</code> and the <code>name</code> of the project</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">	&lt;groupId&gt;com.example&lt;/groupId&gt;
+	&lt;artifactId&gt;myapp&lt;/artifactId&gt;
+	&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+	&lt;name&gt;myapp&lt;/name&gt;
+	&lt;description&gt;RESTful web application&lt;/description&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Adding the option <code>--groupid</code> will not only change the value of the <code>groupId</code> tag, but also the package name.
+A refactoring of the project to the new package name will be performed.
+For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ spring boot new --name myapp --group-id com.xkcd
+Cloning project from https://github.com/rd-1-2022/rest-service
+Refactoring package to com.xkcd.myapp
+Created project in directory 'myapp'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The generated <code>pom.xml</code> contains</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">	&lt;groupId&gt;com.xkcd&lt;/groupId&gt;
+	&lt;artifactId&gt;myapp&lt;/artifactId&gt;
+	&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+	&lt;name&gt;myapp&lt;/name&gt;
+	&lt;description&gt;RESTful web application&lt;/description&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and the directory structure of the project is</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ tree myapp/
+myapp/
+├── LICENSE
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+├── README.adoc
+└── src
+    ├── main
+    │   └── java
+    │       └── com
+    │           └── xkcd
+    │               └── myapp
+    │                   ├── Application.java
+    │                   └── greeting
+    │                       ├── GreetingController.java
+    │                       └── Greeting.java
+    └── test
+        └── java
+            └── com
+                └── xkcd
+                    └── myapp
+                        └── greeting
+                            └── GreetingControllerTests.java</code></pre>
+</div>
 </div>
 </div>
 </div>

@@ -14,7 +14,6 @@
     </script>
     <link rel="stylesheet" href="../_/css/site.css">
     <link rel="stylesheet" href="../_/css/vendor/spring-tabs.css">
-    <link rel="stylesheet" href="../_/css/vendor/docsearch.css">
     <link rel="icon" href="../_/img/favicon.ico" type="image/vnd.microsoft.icon">
   </head>
   <body class="article">
@@ -246,9 +245,6 @@
     <li class="component is-current">
       <a class="title" href="index.html">spring-cli</a>
       <ul class="versions">
-        <li class="version is-current is-latest">
-          <a href="index.html">1.0.0-SNAPSHOT</a>
-        </li>
       </ul>
     </li>
   </ul>
@@ -267,7 +263,12 @@
   </ul>
 </nav>
 <div class="search">
-  <input id="search-input" type="text" placeholder="Search docs">
+  <div id="search" class="field has-filter">
+    <input class="query" type="text" placeholder="Search docs">
+    <label class="filter checkbox">
+      <input type="checkbox" data-facet-filter="version:1.0.0" checked> 1.0.0 only
+    </label>
+  </div>
 </div>
   <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/getting-started.adoc">Edit this Page</a></div>
   </div>
@@ -292,19 +293,19 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Cloning project from https://github.com/rd-1-2022/rpt-rest-service
-Created project in directory 'demo'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Cloning project from https://github.com/rd-1-2022/rest-service
+Created project in directory 'rest-service'</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p><code><strong>Note</strong></code> If the CLI seems to be stuck at the cloning step, you might be hitting GitHub rate limiting.  Use the command <code>spring github auth login</code> to authenticate.</p>
 </div>
 <div class="paragraph">
-<p>You can now <code>cd</code> into the <code>demo</code> directory and build and run the application, which is a simple web application with a single endpoint by default.</p>
+<p>You can now <code>cd</code> into the <code>rest-service</code> directory and build and run the application, which is a simple web application with a single endpoint by default.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd demo
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd rest-service
 ./mnvw spring-boot:run</code></pre>
 </div>
 </div>

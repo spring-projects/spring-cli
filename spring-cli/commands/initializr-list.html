@@ -14,7 +14,6 @@
     </script>
     <link rel="stylesheet" href="../../_/css/site.css">
     <link rel="stylesheet" href="../../_/css/vendor/spring-tabs.css">
-    <link rel="stylesheet" href="../../_/css/vendor/docsearch.css">
     <link rel="icon" href="../../_/img/favicon.ico" type="image/vnd.microsoft.icon">
   </head>
   <body class="article">
@@ -246,9 +245,6 @@
     <li class="component is-current">
       <a class="title" href="../index.html">spring-cli</a>
       <ul class="versions">
-        <li class="version is-current is-latest">
-          <a href="../index.html">1.0.0-SNAPSHOT</a>
-        </li>
       </ul>
     </li>
   </ul>
@@ -268,7 +264,12 @@
   </ul>
 </nav>
 <div class="search">
-  <input id="search-input" type="text" placeholder="Search docs">
+  <div id="search" class="field has-filter">
+    <input class="query" type="text" placeholder="Search docs">
+    <label class="filter checkbox">
+      <input type="checkbox" data-facet-filter="version:1.0.0" checked> 1.0.0 only
+    </label>
+  </div>
 </div>
   <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/commands/initializr-list.adoc">Edit this Page</a></div>
   </div>

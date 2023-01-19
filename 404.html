@@ -12,7 +12,6 @@
     </script>
     <link rel="stylesheet" href="/spring-cli/_/css/site.css">
     <link rel="stylesheet" href="/spring-cli/_/css/vendor/spring-tabs.css">
-    <link rel="stylesheet" href="/spring-cli/_/css/vendor/docsearch.css">
     <link rel="icon" href="/spring-cli/_/img/favicon.ico" type="image/vnd.microsoft.icon">
   </head>
   <body class="status-404">
@@ -97,9 +96,6 @@
     <li class="component">
       <a class="title" href="/spring-cli/spring-cli/index.html">spring-cli</a>
       <ul class="versions">
-        <li class="version is-latest">
-          <a href="/spring-cli/spring-cli/index.html">1.0.0-SNAPSHOT</a>
-        </li>
       </ul>
     </li>
   </ul>
@@ -114,7 +110,12 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
 </nav>
 <div class="search">
-  <input id="search-input" type="text" placeholder="Search docs">
+  <div id="search" class="field has-filter">
+    <input class="query" type="text" placeholder="Search docs">
+    <label class="filter checkbox">
+      <input type="checkbox" data-facet-filter="version:" checked>  only
+    </label>
+  </div>
 </div>
 </div>
   <div class="content">

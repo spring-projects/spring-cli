@@ -13,7 +13,6 @@
     </script>
     <link rel="stylesheet" href="../_/css/site.css">
     <link rel="stylesheet" href="../_/css/vendor/spring-tabs.css">
-    <link rel="stylesheet" href="../_/css/vendor/docsearch.css">
     <link rel="icon" href="../_/img/favicon.ico" type="image/vnd.microsoft.icon">
   </head>
   <body class="article">
@@ -245,9 +244,6 @@
     <li class="component is-current">
       <a class="title" href="index.html">spring-cli</a>
       <ul class="versions">
-        <li class="version is-current is-latest">
-          <a href="index.html">1.0.0-SNAPSHOT</a>
-        </li>
       </ul>
     </li>
   </ul>
@@ -266,7 +262,12 @@
   </ul>
 </nav>
 <div class="search">
-  <input id="search-input" type="text" placeholder="Search docs" autofocus>
+  <div id="search" class="field has-filter">
+    <input class="query" type="text" placeholder="Search docs" autofocus>
+    <label class="filter checkbox">
+      <input type="checkbox" data-facet-filter="version:1.0.0" checked> 1.0.0 only
+    </label>
+  </div>
 </div>
   <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
   </div>
@@ -293,10 +294,10 @@
 </ol>
 </div>
 <div class="paragraph">
-<p>By basing the <code>boot new</code> and <code>boot add</code> commands on "Plain Old Java Projects" hosted on GitHub or GitLab, it is easy for companies to define a standard set of projects that use a company&#8217;s preferred libraries and coding styles. These projects can also serve as the starting point for education about a particular library or approach to programming, for example, learning more about Spring Data JPA, GraphQL, or using testing libraries such as RESTDocs, Assert4j, and Test Containers.</p>
+<p>By basing the <code>boot new</code> and <code>boot add</code> commands on "Plain Old Java Projects" hosted on GitHub or GitLab, it is easy for companies to define a standard set of projects that use a company&#8217;s preferred libraries and coding styles. By providing a <code>README.md</code> file in these projects, it allows for an obvious starting point for education about a particular library or approach to programming.  For example, executing the command <code>boot add jpa</code> would result in not just code added to the current project, but aldo a file named <code>README-jpa.md</code>.</p>
 </div>
 <div class="paragraph">
-<p>User-provided commands are best suited for performing smaller, repetitive coding tasks during the development process. These command definitions can live side by side with the code so that anyone on the development team can contribute a new command or improve an existing command.   By having commands living side by side with the code, contributing to the project is a simple procedure as there is no other artifact or project to create, update and publish.</p>
+<p>User-provided commands are well suited for performing smaller, repetitive coding tasks during the development process. These command definitions can live side by side with the code so that anyone on the development team can contribute a new command or improve an existing command.   By having commands living side by side with the code, contributing to the project is a simple procedure as there is no other artifact or project to create, update and publish.</p>
 </div>
 <nav class="pagination">
   <span class="next"><a href="installation.html">Installation</a></span>
