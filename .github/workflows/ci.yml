@@ -24,3 +24,9 @@ jobs:
         with:
           path: build/libs/*.jar
           retention-days: 1
+      - uses: actions/upload-artifact@v3
+        if: ${{ failure() }}
+        with:
+          name: buildreports
+          path: build/reports
+          retention-days: 1
