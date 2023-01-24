@@ -18,6 +18,7 @@ package org.springframework.cli.git;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -124,11 +125,21 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 			if (token == null) {
 				// try to use an environment variable
 				if (StringUtils.hasText(System.getenv("GITHUB_OAUTH"))) {
-					github = GitHubBuilder.fromEnvironment().build();
+					try {
+						github = GitHubBuilder.fromEnvironment().build();
+					} catch (IOException e) {
+						logger.trace("No environment variable GITHUB_AUTH found.", e.getMessage());
+						// do nothing
+					}
 				}
 				// fallback to property file
 				if (github == null) {
-					github = GitHubBuilder.fromPropertyFile().build();
+					try {
+						github = GitHubBuilder.fromPropertyFile().build();
+					} catch (IOException e) {
+						logger.trace("No .github directory found under the base user.dir.", e.getMessage());
+						// ignore as there is not a .github directory under the user.dir
+					}
 				}
 				// connect anonymously
 				if (github == null) {
