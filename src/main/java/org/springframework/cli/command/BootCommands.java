@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,14 @@ package org.springframework.cli.command;
 import org.jline.utils.AttributedString;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.merger.ProjectHandler;
-import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.util.ProjectInfo;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.util.StringUtils;
 
 @ShellComponent
 public class BootCommands extends AbstractSpringCliCommands {
