@@ -49,9 +49,8 @@ public class SpringShellDynamicCommandRegistrar {
 
 	private final Logger logger = LoggerFactory.getLogger(SpringShellDynamicCommandRegistrar.class);
 
-	public void registerSpringCliCommands(CommandCatalog commandCatalog,
-			CommandScanResults results, Collection<ModelPopulator> modelPopulators) {
-
+	public void registerSpringCliCommands(CommandCatalog commandCatalog, CommandScanResults results,
+			Collection<ModelPopulator> modelPopulators, CommandRegistration.BuilderSupplier builderSupplier) {
 
 
 		final Map<Command, List<Command>> commandSubcommandMap = results.getCommandSubcommandMap();
@@ -68,7 +67,7 @@ public class SpringShellDynamicCommandRegistrar {
 				DynamicCommand dynamicCommand
 						= new DynamicCommand(commandName, subCommandName, modelPopulators);
 
-				Builder builder = CommandRegistration.builder()
+				Builder builder = builderSupplier.get()
 						.command(commandName + " " + subCommandName)
 						.group("User-defined Commands")
 						.description(subCommand.getDescription())

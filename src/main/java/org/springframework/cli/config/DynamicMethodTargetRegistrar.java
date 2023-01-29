@@ -31,6 +31,7 @@ import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.CommandRegistration;
 
 public class DynamicMethodTargetRegistrar implements MethodTargetRegistrar {
 
@@ -38,9 +39,12 @@ public class DynamicMethodTargetRegistrar implements MethodTargetRegistrar {
 	private static final Logger logger = LoggerFactory.getLogger(DynamicMethodTargetRegistrar.class);
 
 	private Collection<ModelPopulator> modelPopulators;
+	private final CommandRegistration.BuilderSupplier builder;
 
-	public DynamicMethodTargetRegistrar(Collection<ModelPopulator> modelPopulators) {
+	public DynamicMethodTargetRegistrar(Collection<ModelPopulator> modelPopulators,
+			CommandRegistration.BuilderSupplier builder) {
 		this.modelPopulators = modelPopulators;
+		this.builder = builder;
 	}
 
 	@Override
@@ -53,7 +57,7 @@ public class DynamicMethodTargetRegistrar implements MethodTargetRegistrar {
 		CommandScanResults commandScanResults = scanner.scan();
 		logger.debug("Found commands " + commandScanResults);
 		springCliDynamicCommandRegistrar.registerSpringCliCommands(commandCatalog,
-				commandScanResults, modelPopulators);
+				commandScanResults, modelPopulators, builder);
 
 	}
 }

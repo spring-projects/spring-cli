@@ -32,6 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorResourceFactory;
 import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.command.CommandExceptionResolver;
+import org.springframework.shell.command.CommandRegistration;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
@@ -64,8 +65,9 @@ public class SpringCliConfiguration {
 	}
 
 	@Bean
-	public MethodTargetRegistrar dynamicMethodTargetRegistrar(Collection<ModelPopulator> modelPopulators) {
-		return new DynamicMethodTargetRegistrar(modelPopulators);
+	public MethodTargetRegistrar dynamicMethodTargetRegistrar(Collection<ModelPopulator> modelPopulators,
+			CommandRegistration.BuilderSupplier builder) {
+		return new DynamicMethodTargetRegistrar(modelPopulators, builder);
 	}
 
     @Bean

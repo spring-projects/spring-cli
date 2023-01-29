@@ -30,6 +30,7 @@ import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.model.SystemModelPopulator;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.command.CommandRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -80,7 +81,7 @@ public class SpringShellDynamicCommandRegistrarTests {
 		List<ModelPopulator> modelPopulators = new ArrayList<>();
 		modelPopulators.add(systemModelPopulator);
 		springCliDynamicCommandRegistrar.registerSpringCliCommands(commandCatalog,
-				commandScanResults, modelPopulators);
+				commandScanResults, modelPopulators, () -> CommandRegistration.builder());
 
 		assertThat(commandCatalog.getRegistrations()).hasSize(2);
 		assertThat(commandCatalog.getRegistrations().get("k8s-simple new")).satisfies(registration -> {
