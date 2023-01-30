@@ -19,7 +19,7 @@ describe('config commands', () => {
 
   // config list runs without error test
   const configListDoesNotErrorDesc = 'config list does not error';
-  const configListDoesNotErrorCommand = ['config list'];
+  const configListDoesNotErrorCommand = ['config', 'list'];
   const configListDoesNotError = async (cli: Cli) => {
     cli.run();
     await expect(cli.exitCode()).resolves.toBe(0);
