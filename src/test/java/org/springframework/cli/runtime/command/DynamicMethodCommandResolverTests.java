@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package org.springframework.cli.runtime.command;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -25,21 +22,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.model.SystemModelPopulator;
-import org.springframework.cli.util.IoUtils;
-import org.springframework.shell.command.CommandCatalog;
 import org.springframework.shell.command.CommandRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
-public class SpringShellDynamicCommandRegistrarTests {
+class DynamicMethodCommandResolverTests {
 
 	@Test
-	void testRegistrar() {
-
+	void testResolving() {
 		// Create the objects that represent commands to be registered at runtime
 		Map<Command, List<Command>> commands = new LinkedHashMap<>();
 
@@ -74,31 +68,37 @@ public class SpringShellDynamicCommandRegistrarTests {
 		// package up the commands in a result object
 		CommandScanResults commandScanResults = new CommandScanResults(commands);
 
-		SpringShellDynamicCommandRegistrar springCliDynamicCommandRegistrar = new SpringShellDynamicCommandRegistrar();
-		Path cwd = IoUtils.getWorkingDirectory().toAbsolutePath();
-		CommandCatalog commandCatalog = CommandCatalog.of();
 		SystemModelPopulator systemModelPopulator = new SystemModelPopulator();
 		List<ModelPopulator> modelPopulators = new ArrayList<>();
 		modelPopulators.add(systemModelPopulator);
-		springCliDynamicCommandRegistrar.registerSpringCliCommands(commandCatalog,
-				commandScanResults, modelPopulators, () -> CommandRegistration.builder());
+		DynamicMethodCommandResolver resolver = new DynamicMethodCommandResolver(modelPopulators,
+				() -> CommandRegistration.builder());
+		// Move to mock scan so that we control results
+		DynamicMethodCommandResolver spy = Mockito.spy(resolver);
+		Mockito.when(spy.scanCommands()).thenReturn(commandScanResults);
+		List<CommandRegistration> resolved = spy.resolve();
 
-		assertThat(commandCatalog.getRegistrations()).hasSize(2);
-		assertThat(commandCatalog.getRegistrations().get("k8s-simple new")).satisfies(registration -> {
-			assertThat(registration.getDescription()).isEqualTo("subcommand description");
-			assertThat(registration.getOptions()).hasSize(2);
-			assertThat(registration.getOptions().get(0)).satisfies(option -> {
-				assertThat(option.getLongNames()).contains("with-gusto");
-				assertThat(option.getType().getType()).isEqualTo(Boolean.class);
-				assertThat(option.getDescription()).isEqualTo("what a nice simple option");
-				assertThat(option.getDefaultValue()).isEqualTo("true");
-				assertThat(option.isRequired()).isTrue();
-			});
-			assertThat(registration.getOptions().get(1)).satisfies(option -> {
-				assertThat(option.getLongNames()).contains("with-greeting");
-				assertThat(option.getType().getType()).isEqualTo(String.class);
-			});
-		});
-
+		assertThat(resolved).hasSize(2);
+		assertThat(resolved).satisfiesExactly(
+			registration -> {
+				assertThat(registration.getCommand()).isEqualTo("k8s-simple new");
+				assertThat(registration.getDescription()).isEqualTo("subcommand description");
+				assertThat(registration.getOptions()).hasSize(2);
+				assertThat(registration.getOptions().get(0)).satisfies(option -> {
+					assertThat(option.getLongNames()).contains("with-gusto");
+					assertThat(option.getType().getType()).isEqualTo(Boolean.class);
+					assertThat(option.getDescription()).isEqualTo("what a nice simple option");
+					assertThat(option.getDefaultValue()).isEqualTo("true");
+					assertThat(option.isRequired()).isTrue();
+				});
+				assertThat(registration.getOptions().get(1)).satisfies(option -> {
+					assertThat(option.getLongNames()).contains("with-greeting");
+					assertThat(option.getType().getType()).isEqualTo(String.class);
+				});
+			},
+			registration -> {
+				assertThat(registration.getCommand()).isEqualTo("k8s-simple new-services");
+			}
+		);
 	}
 }

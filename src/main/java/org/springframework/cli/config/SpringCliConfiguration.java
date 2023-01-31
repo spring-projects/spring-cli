@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import io.netty.resolver.DefaultAddressResolverGroup;
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactorNettyHttpClientMapper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cli.initializr.InitializrClientCache;
+import org.springframework.cli.runtime.command.DynamicMethodCommandResolver;
 import org.springframework.cli.runtime.engine.model.MavenModelPopulator;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.model.RootPackageModelPopulator;
@@ -30,7 +31,6 @@ import org.springframework.cli.runtime.engine.model.SystemModelPopulator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorResourceFactory;
-import org.springframework.shell.MethodTargetRegistrar;
 import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -65,9 +65,9 @@ public class SpringCliConfiguration {
 	}
 
 	@Bean
-	public MethodTargetRegistrar dynamicMethodTargetRegistrar(Collection<ModelPopulator> modelPopulators,
+	public DynamicMethodCommandResolver dynamicMethodTargetRegistrar(Collection<ModelPopulator> modelPopulators,
 			CommandRegistration.BuilderSupplier builder) {
-		return new DynamicMethodTargetRegistrar(modelPopulators, builder);
+		return new DynamicMethodCommandResolver(modelPopulators, builder);
 	}
 
     @Bean
