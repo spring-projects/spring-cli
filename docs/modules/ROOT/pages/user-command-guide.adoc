@@ -32,6 +32,7 @@ So for the user defined command `controller new` mentioned previously, the full 
 ```
 
 Inside this directory you can define
+
   * The file `command.yaml` that describes what the command does and the arguments of the command
   * One or more Action Files that define the actions to execute for this command.
 

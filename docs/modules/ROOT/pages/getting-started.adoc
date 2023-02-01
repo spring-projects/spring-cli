@@ -21,7 +21,7 @@ You can now `cd` into the `rest-service` directory and build and run the applica
 [source, bash]
 ----
 cd rest-service
-./mnvw spring-boot:run
+./mvnw spring-boot:run
 ----
 
 Then in another terminal windows, interact with the endpoint using curl.
