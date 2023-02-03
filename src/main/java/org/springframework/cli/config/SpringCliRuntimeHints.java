@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.openrewrite.internal.EncodingDetectingInputStream;
+
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.ReflectionHints;
 import org.springframework.aot.hint.RuntimeHints;
@@ -67,16 +69,18 @@ public class SpringCliRuntimeHints implements RuntimeHintsRegistrar {
 				JavaVersion.class, JavaVersionValues.class, Language.class, LanguageValues.class, Metadata.class,
 				Name.class, PackageName.class, Packaging.class, PackagingValues.class, ProjectType.class,
 				ProjectTypeValue.class, Version.class);
+		registerForMostReflection(hints.reflection(), EncodingDetectingInputStream.class);
 	}
 
 	private void registerForMostReflection(ReflectionHints reflectionHints, Class<?>... classes) {
 		for (Class<?> clazz : classes) {
 			reflectionHints.registerType(clazz, hint -> {
 				hint.withMembers(
-					MemberCategory.DECLARED_CLASSES, MemberCategory.DECLARED_FIELDS,
-					MemberCategory.PUBLIC_CLASSES, MemberCategory.PUBLIC_FIELDS,
-					MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS,
-					MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INTROSPECT_DECLARED_METHODS);
+						MemberCategory.DECLARED_CLASSES, MemberCategory.DECLARED_FIELDS,
+						MemberCategory.PUBLIC_CLASSES, MemberCategory.PUBLIC_FIELDS,
+						MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS,
+						MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INTROSPECT_DECLARED_METHODS,
+						MemberCategory.INVOKE_DECLARED_METHODS);
 			});
 		}
 	}
@@ -88,7 +92,8 @@ public class SpringCliRuntimeHints implements RuntimeHintsRegistrar {
 							MemberCategory.DECLARED_CLASSES, MemberCategory.DECLARED_FIELDS,
 							MemberCategory.PUBLIC_CLASSES, MemberCategory.PUBLIC_FIELDS,
 							MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS,
-							MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INTROSPECT_DECLARED_METHODS);
+							MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INTROSPECT_DECLARED_METHODS,
+							MemberCategory.INVOKE_DECLARED_METHODS);
 				});
 	}
 

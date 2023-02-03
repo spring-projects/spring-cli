@@ -20,13 +20,13 @@ spring:
 ## disable console logging
 logging:
   pattern:
-    console:
+#    console:
 # log debug from a cli
-#  file:
-#    name: shell.log
-#  level:
-#    root: debug
-#    org:
-#      springframework:
-#        cli: debug
-#        shell: debug
+  file:
+    name: shell.log
+  level:
+    root: debug
+    org:
+      springframework:
+        cli: debug
+        shell: debug
