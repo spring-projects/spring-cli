@@ -99,7 +99,7 @@ public class ProjectMerger {
 	 * @param toMergeProjectPath The Path where the new project to merge is located
 	 * @param currentProjectPath The Path where the current project is located
 	 * @param projectName used to change the name of README files
-	 * @param terminalMessage
+	 * @param terminalMessage terminal to write user messages to
 	 */
 	public ProjectMerger(Path toMergeProjectPath, Path currentProjectPath, String projectName, TerminalMessage terminalMessage) {
 		this.toMergeProjectPath = toMergeProjectPath;
@@ -202,7 +202,7 @@ public class ProjectMerger {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
 					sb.append("Merging Main Spring Boot Application class annotation: " + annotation);
-					this.terminalMessage.shellPrint(sb.toAttributedString());
+					terminalMessage.print(sb.toAttributedString());
 
 					injectAnnotation(currentSpringBootApplicationFile.get().toPath() ,annotation);
 					//AddAnnotationToClassRecipe addAnnotationToClassRecipe = new AddAnnotationToClassRecipe(annotation);
@@ -309,7 +309,7 @@ public class ProjectMerger {
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
 		sb.append(System.lineSeparator());
 		sb.append("Merging Spring Boot application.yaml file...");
-		this.terminalMessage.shellPrint(sb.toAttributedString());
+		terminalMessage.print(sb.toAttributedString());
 
 
 		YamlMapFactoryBean factory = new YamlMapFactoryBean();
@@ -341,7 +341,7 @@ public class ProjectMerger {
 			AttributedStringBuilder sb = new AttributedStringBuilder();
 			sb.style(sb.style().foreground(AttributedStyle.WHITE));
 			sb.append("Merging Spring Application property file...");
-			this.terminalMessage.shellPrint(sb.toAttributedString());
+			terminalMessage.print(sb.toAttributedString());
 
 			mergedProperties.store(new FileWriter(destFile), "updated by spring cli");
 		}
@@ -384,7 +384,7 @@ public class ProjectMerger {
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
 		sb.append("Refactoring code base that is to be merged to package name " + currentRootPackageName.get());
-		this.terminalMessage.shellPrint(sb.toAttributedString());
+		terminalMessage.print(sb.toAttributedString());
 		refactorPackage(currentRootPackageName.get(), toMergeRootPackageName.get(), this.toMergeProjectPath);
 		logger.debug("look in " + this.toMergeProjectPath + " to see if refactoring of 'to merge code base' was done correctly");
 	}
@@ -410,7 +410,7 @@ public class ProjectMerger {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
 					sb.append("Merging dependency " + candidateDependency.getGroupId() + ":" + candidateDependency.getArtifactId());
-					this.terminalMessage.shellPrint(sb.toAttributedString());
+					terminalMessage.print(sb.toAttributedString());
 				}
 				updatePomFile(currentProjectPomPath, resultList);
 			}
@@ -447,7 +447,7 @@ public class ProjectMerger {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
 					sb.append("Merging dependency management section " + dependency.getGroupId() + ":" + dependency.getArtifactId());
-					this.terminalMessage.shellPrint(sb.toAttributedString());
+					terminalMessage.print(sb.toAttributedString());
 				}
 				updatePomFile(currentProjectPomPath, resultList);
 			}
@@ -472,7 +472,7 @@ public class ProjectMerger {
 				AttributedStringBuilder sb = new AttributedStringBuilder();
 				sb.style(sb.style().foreground(AttributedStyle.WHITE));
 				sb.append("Merging maven property key " + keyToMerge);
-				this.terminalMessage.shellPrint(sb.toAttributedString());
+				terminalMessage.print(sb.toAttributedString());
 			}
 			updatePomFile(currentProjectPomPath, resultList);
 
@@ -488,7 +488,7 @@ public class ProjectMerger {
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
 		sb.append("Adding import statements and annotations to @SpringApplication class");
-		this.terminalMessage.shellPrint(sb.toAttributedString());
+		terminalMessage.print(sb.toAttributedString());
 
 		for (Result result : resultList) {
 			// write updated file.
@@ -523,7 +523,6 @@ public class ProjectMerger {
 				null, null, null, true);
 	}
 	public static AddSimpleDependencyRecipe getRecipeAddDependency(String groupId, String artifactId, String version, String scope, String onlyIfUsing) {
-
 		return new AddSimpleDependencyRecipe(groupId, artifactId, version, null, scope, true, onlyIfUsing, null, null, false, null);
 	}
 

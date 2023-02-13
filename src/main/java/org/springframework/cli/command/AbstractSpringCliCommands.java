@@ -15,18 +15,11 @@
  */
 package org.springframework.cli.command;
 
-import java.util.Arrays;
-
-import org.jline.utils.AttributedString;
-import org.jline.utils.AttributedStyle;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.cli.config.SpringCliProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.shell.standard.AbstractShellComponent;
-import org.springframework.shell.style.ThemeResolver;
-import org.springframework.util.StringUtils;
 
 /**
  * Base class for all cli commands.
@@ -47,37 +40,4 @@ public abstract class AbstractSpringCliCommands extends AbstractShellComponent {
 		return this.cliPropertiesProvider.getObject();
 	}
 
-	// TODO: when shell print commands mature, move those to AbstractShellComponent
-
-	protected void shellPrint(String... text) {
-		for (String t : text) {
-			getTerminal().writer().println(t);
-		}
-		shellFlush();
-	}
-
-	protected void shellPrint(AttributedString... text) {
-		for (AttributedString t : text) {
-			getTerminal().writer().println(t.toAnsi(getTerminal()));
-		}
-		shellFlush();
-	}
-
-	protected void shellFlush() {
-		getTerminal().writer().flush();
-	}
-
-	protected AttributedString styledString(String text, String tag) {
-		AttributedStyle style = null;
-		if (StringUtils.hasText(tag)) {
-			ThemeResolver themeResolver = getThemeResolver();
-			String resolvedStyle = themeResolver.resolveStyleTag(tag);
-			style = themeResolver.resolveStyle(resolvedStyle);
-		}
-		return new AttributedString(text, style);
-	}
-
-	protected AttributedString join(AttributedString left, AttributedString right) {
-		return AttributedString.join(null, Arrays.asList(left, right));
-	}
 }

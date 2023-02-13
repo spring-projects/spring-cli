@@ -15,8 +15,6 @@
  */
 package org.springframework.cli.command;
 
-import org.jline.utils.AttributedString;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.git.SourceRepositoryService;
@@ -32,13 +30,16 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	private final  SpringCliUserConfig springCliUserConfig;
 	private final SourceRepositoryService sourceRepositoryService;
-	private TerminalMessage terminalMessage = new DefaultTerminalMessage();
+
+	private final TerminalMessage terminalMessage;
 
 	@Autowired
 	public BootCommands(SpringCliUserConfig springCliUserConfig,
-			SourceRepositoryService sourceRepositoryService) {
+			SourceRepositoryService sourceRepositoryService,
+			TerminalMessage terminalMessage) {
 		this.springCliUserConfig = springCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
+		this.terminalMessage = terminalMessage;
 	}
 
 	@ShellMethod(key = "boot new", value = "Create a new Spring Boot project from an existing project")
@@ -65,20 +66,4 @@ public class BootCommands extends AbstractSpringCliCommands {
 		handler.add(from, path);
 	}
 
-	public void setTerminalMessage(TerminalMessage terminalMessage) {
-		this.terminalMessage = terminalMessage;
-	}
-
-	private class DefaultTerminalMessage implements TerminalMessage {
-
-		@Override
-		public void shellPrint(String... text) {
-			BootCommands.this.shellPrint(text);
-		}
-
-		@Override
-		public void shellPrint(AttributedString... text) {
-			BootCommands.this.shellPrint(text);
-		}
-	}
 }

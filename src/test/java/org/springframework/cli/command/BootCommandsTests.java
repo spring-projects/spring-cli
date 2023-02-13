@@ -28,17 +28,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.cli.git.GitSourceRepositoryService;
-import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
+import org.springframework.cli.git.GitSourceRepositoryService;
+import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.util.PomReader;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.shell.style.ThemeResolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -210,15 +211,20 @@ public class BootCommandsTests {
 		}
 
 		@Bean
+		ThemeResolver themeResolver() {
+			ThemeResolver mockThemeResolver = mock(ThemeResolver.class);
+			return mockThemeResolver;
+		}
+
+		@Bean
 		GitSourceRepositoryService gitSourceRepositoryService(SpringCliUserConfig springCliUserConfig) {
 			return new GitSourceRepositoryService(springCliUserConfig);
 		}
 
 		@Bean
 		BootCommands bootCommands(SpringCliUserConfig springCliUserConfig,
-				SourceRepositoryService sourceRepositoryService) {
-			BootCommands bootCommands = new BootCommands(springCliUserConfig, sourceRepositoryService);
-			bootCommands.setTerminalMessage(TerminalMessage.noop());
+				SourceRepositoryService sourceRepositoryService) {;
+			BootCommands bootCommands = new BootCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
 			return bootCommands;
 		}
 	}

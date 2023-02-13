@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.slf4j.Logger;
@@ -33,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.util.IoUtils;
-import org.springframework.cli.util.TerminalMessage;
+import org.springframework.cli.util.SpringCliTerminal;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -55,11 +54,12 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 
 	private final SourceRepositoryService sourceRepositoryService;
 
-	private TerminalMessage terminalMessage = new DefaultTerminalMessage();
+	private final SpringCliTerminal springCliTerminal;
 
 	@Autowired
-	public CommandCommands(SourceRepositoryService sourceRepositoryService) {
+	public CommandCommands(SourceRepositoryService sourceRepositoryService, SpringCliTerminal springCliTerminal) {
 		this.sourceRepositoryService = sourceRepositoryService;
+		this.springCliTerminal = springCliTerminal;
 	}
 
 	@ShellMethod(key = "command new", value = "Create a new user-defined command")
@@ -111,15 +111,14 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 			for (File file : files) {
 				String readmeName = "README-" + file.getName() + ".md";
 				Path readmePath = Paths.get(cwd.toString(), readmeName);
-				System.out.println("README PATH = "+ readmePath);
+				logger.debug("README PATH = "+ readmePath);
 				if (Files.exists(readmePath)) {
 					sb.append("Refer to " + readmeName + " for more information.");
 					sb.append(System.lineSeparator());
 				}
 			}
 			sb.append("Execute 'spring help' for more information on User-defined commands.");
-			this.terminalMessage.shellPrint(sb.toAttributedString());
-
+			springCliTerminal.print(sb.toAttributedString());
 
 			try {
 				FileSystemUtils.deleteRecursively(downloadedCommandPath);
@@ -138,23 +137,11 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 				.resolve(commandName).resolve(subCommandName).toAbsolutePath();
 		try {
 			FileSystemUtils.deleteRecursively(dynamicSubCommandPath);
-			System.out.println("Deleted " + dynamicSubCommandPath);
+			logger.debug("Deleted " + dynamicSubCommandPath);
 		}
 		catch (IOException e) {
 			throw new SpringCliException("Could not delete " + dynamicSubCommandPath, e);
 		}
 	}
 
-	private class DefaultTerminalMessage implements TerminalMessage {
-
-		@Override
-		public void shellPrint(String... text) {
-			CommandCommands.this.shellPrint(text);
-		}
-
-		@Override
-		public void shellPrint(AttributedString... text) {
-			CommandCommands.this.shellPrint(text);
-		}
-	}
 }

@@ -19,6 +19,7 @@ import java.time.Duration;
 import java.util.Collection;
 
 import io.netty.resolver.DefaultAddressResolverGroup;
+import org.jline.terminal.Terminal;
 
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactorNettyHttpClientMapper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -28,11 +29,13 @@ import org.springframework.cli.runtime.engine.model.MavenModelPopulator;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.model.RootPackageModelPopulator;
 import org.springframework.cli.runtime.engine.model.SystemModelPopulator;
+import org.springframework.cli.util.SpringCliTerminal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorResourceFactory;
 import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.style.ThemeResolver;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
@@ -47,6 +50,11 @@ public class SpringCliConfiguration {
 	@Bean
 	public CommandExceptionResolver commandExceptionResolver() {
 		return new SpringCliExceptionResolver();
+	}
+
+	@Bean
+	public SpringCliTerminal springCliTerminalMessage(Terminal terminal, ThemeResolver themeResolver) {
+		return new SpringCliTerminal(terminal, themeResolver);
 	}
 
 	@Bean

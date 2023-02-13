@@ -17,16 +17,16 @@ spring:
       client-id: 10a18d1837ecdac59ba2
       default-scopes: repo,read:org
 
-## disable console logging
+## disable/enable console logging
 logging:
   pattern:
-#    console:
+    console:
 # log debug from a cli
-  file:
-    name: shell.log
+#  file:
+#    name: shell.log
   level:
-    root: debug
+    root: DEBUG
     org:
       springframework:
-        cli: debug
-        shell: debug
+        cli: DEBUG
+        shell: DEBUG

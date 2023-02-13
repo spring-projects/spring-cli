@@ -59,6 +59,7 @@ public class ProjectHandler {
 
 	private final SpringCliUserConfig springCliUserConfig;
 	private final SourceRepositoryService sourceRepositoryService;
+
 	private final TerminalMessage terminalMessage;
 
 	/**
@@ -66,7 +67,7 @@ public class ProjectHandler {
 	 *
 	 * @param springCliUserConfig the user config
 	 * @param sourceRepositoryService the repo service
-	 * @param terminalMessage the terminal message
+	 * @param terminalMessage the terminal to write user messages to
 	 */
 	public ProjectHandler(SpringCliUserConfig springCliUserConfig, SourceRepositoryService sourceRepositoryService,
 			TerminalMessage terminalMessage) {
@@ -75,7 +76,7 @@ public class ProjectHandler {
 		Assert.notNull(terminalMessage, "terminalMessage must be set");
 		this.springCliUserConfig = springCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
-		this.terminalMessage = terminalMessage;
+		this.terminalMessage = terminalMessage;;
 	}
 
 	/**
@@ -111,7 +112,7 @@ public class ProjectHandler {
 		sb.append("Cloning ");
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
 		sb.append("project from " + urlToUse);
-		this.terminalMessage.shellPrint(sb.toAttributedString());
+		terminalMessage.print(sb.toAttributedString());
 
 		createFromUrl(IoUtils.getProjectPath(path), directoryNameToUse, urlToUse, projectInfo);
 	}
@@ -131,7 +132,7 @@ public class ProjectHandler {
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
 		sb.append("Cloning in temp directory project with URL " + urlToUse);
-		this.terminalMessage.shellPrint(sb.toAttributedString());
+		this.terminalMessage.print(sb.toAttributedString());
 
 
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(urlToUse);
@@ -149,7 +150,7 @@ public class ProjectHandler {
 		sb.style(sb.style().foreground(AttributedStyle.GREEN));
 		sb.append(System.lineSeparator());
 		sb.append("Done!");
-		this.terminalMessage.shellPrint(sb.toAttributedString());
+		terminalMessage.print(sb.toAttributedString());
 	}
 
 	private String getProjectNameUsingFrom(String from) {
@@ -195,7 +196,7 @@ public class ProjectHandler {
 			AttributedStringBuilder sb = new AttributedStringBuilder();
 			sb.style(sb.style().foreground(AttributedStyle.YELLOW));
 			sb.append("Could find root package containing class with @SpringBootApplication.  No Java Package refactoring on the project will occur.");
-			this.terminalMessage.shellPrint(sb.toAttributedString());
+			terminalMessage.print(sb.toAttributedString());
 			return Optional.empty();
 		}
 
@@ -234,7 +235,7 @@ public class ProjectHandler {
 			sb.append("Refactoring ");
 			sb.style(sb.style().foreground(AttributedStyle.WHITE));
 			sb.append("package to " + projectInfo.getPackageName());
-			this.terminalMessage.shellPrint(sb.toAttributedString());
+			terminalMessage.print(sb.toAttributedString());
 			RefactorUtils.refactorPackage(projectInfo.getPackageName(), existingPackageName.get(), repositoryContentsPath);
 		}
 
@@ -277,7 +278,7 @@ public class ProjectHandler {
 		sb.append("Created ");
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
 		sb.append("project in directory '" + toDir.getName() + "'");
-		this.terminalMessage.shellPrint(sb.toAttributedString());
+		terminalMessage.print(sb.toAttributedString());
 
 	}
 

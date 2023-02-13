@@ -32,6 +32,7 @@ import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.Host;
 import org.springframework.cli.config.SpringCliUserConfig.Hosts;
 import org.springframework.cli.support.github.GithubDeviceFlow;
+import org.springframework.cli.util.SpringCliTerminal;
 import org.springframework.shell.component.flow.ComponentFlow;
 import org.springframework.shell.component.flow.ComponentFlow.ComponentFlowResult;
 import org.springframework.shell.component.flow.ResultMode;
@@ -41,6 +42,7 @@ import org.springframework.shell.standard.ShellOption;
 import org.springframework.shell.style.StyleSettings;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClient.Builder;
 
 /**
  * Commands for github authentication.
@@ -54,14 +56,21 @@ public class GithubCommands extends AbstractSpringCliCommands {
 
 	private final static RateLimitChecker RATE_LIMIT_CHECKER = new RateLimitChecker.LiteralValue(0);
 
-	@Autowired
 	private WebClient.Builder webClientBuilder;
 
-	@Autowired
 	private ComponentFlow.Builder componentFlowBuilder;
 
-	@Autowired
 	private SpringCliUserConfig userConfig;
+
+	private SpringCliTerminal terminal;
+
+	@Autowired
+	public GithubCommands(Builder webClientBuilder, ComponentFlow.Builder componentFlowBuilder, SpringCliUserConfig userConfig, SpringCliTerminal springCliTerminal) {
+		this.webClientBuilder = webClientBuilder;
+		this.componentFlowBuilder = componentFlowBuilder;
+		this.userConfig = userConfig;
+		this.terminal = springCliTerminal;
+	}
 
 	/**
 	 * Login command for github. Makes user to choose either starting a device flow
@@ -77,11 +86,11 @@ public class GithubCommands extends AbstractSpringCliCommands {
 			GithubDeviceFlow githubDeviceFlow = new GithubDeviceFlow("https://github.com");
 			Map<String, String> response = githubDeviceFlow.requestDeviceFlow(webClientBuilder, clientId, scopes);
 
-			AttributedString styledStr = styledString("!", StyleSettings.TAG_LEVEL_WARN);
-			styledStr = join(styledStr,
-					styledString(" Open browser with https://github.com/login/device and paste device code ", null));
-			styledStr = join(styledStr, styledString(response.get("user_code"), StyleSettings.TAG_HIGHLIGHT));
-			shellPrint(styledStr);
+			AttributedString styledStr = terminal.styledString("!", StyleSettings.TAG_LEVEL_WARN);
+			styledStr = terminal.join(styledStr,
+					terminal.styledString(" Open browser with https://github.com/login/device and paste device code ", null));
+			styledStr = terminal.join(styledStr, terminal.styledString(response.get("user_code"), StyleSettings.TAG_HIGHLIGHT));
+			terminal.print(styledStr);
 
 			Optional<String> token = githubDeviceFlow.waitTokenFromDeviceFlow(webClientBuilder, clientId,
 					response.get("device_code"),
@@ -89,18 +98,18 @@ public class GithubCommands extends AbstractSpringCliCommands {
 					Integer.parseInt(response.get("interval")));
 			if (token.isPresent()) {
 				userConfig.updateHost("github.com", new Host(token.get(), null));
-				shellPrint("logged in to github");
+				terminal.print("logged in to github");
 			}
 			else {
-				shellPrint("failed logging in to github");
+				terminal.print("failed logging in to github");
 			}
 		}
 		else if (ObjectUtils.nullSafeEquals(authType, "paste")) {
-			shellPrint("Tip: you can generate a Personal Access Token here https://github.com/settings/tokens");
-			shellPrint("The minimum required scopes are 'repo', 'read:org'");
+			terminal.print("Tip: you can generate a Personal Access Token here https://github.com/settings/tokens");
+			terminal.print("The minimum required scopes are 'repo', 'read:org'");
 			String token = askToken();
 			userConfig.updateHost("github.com", new Host(token, null));
-			shellPrint("logged in to github");
+			terminal.print("logged in to github");
 		}
 	}
 
@@ -118,14 +127,14 @@ public class GithubCommands extends AbstractSpringCliCommands {
 			host = hostsMap.get("github.com");
 		}
 		if (host == null) {
-			shellPrint("not logged in to github");
+			terminal.print("not logged in to github");
 		}
 		else {
 			hostsMap.remove("github.com");
 			Hosts hosts = new Hosts();
 			hosts.setHosts(hostsMap);
 			userConfig.setHosts(hosts);
-			shellPrint("removed authentication token");
+			terminal.print("removed authentication token");
 		}
 	}
 
@@ -159,11 +168,11 @@ public class GithubCommands extends AbstractSpringCliCommands {
 			} catch (IOException e) {
 				log.error("Error getting github login", e);
 			}
-			AttributedString ret = styledString("You are logged into github as ", null);
-			ret = join(ret, styledString(loginName, StyleSettings.TAG_HIGHLIGHT));
+			AttributedString ret = terminal.styledString("You are logged into github as ", null);
+			ret = terminal.join(ret, terminal.styledString(loginName, StyleSettings.TAG_HIGHLIGHT));
 			if (showToken) {
-				ret = join(ret, styledString(", with token ", null));
-				ret = join(ret, styledString(host.getOauthToken(), StyleSettings.TAG_HIGHLIGHT));
+				ret = terminal.join(ret, terminal.styledString(", with token ", null));
+				ret = terminal.join(ret, terminal.styledString(host.getOauthToken(), StyleSettings.TAG_HIGHLIGHT));
 			}
 			return ret;
 		}

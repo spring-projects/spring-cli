@@ -29,14 +29,14 @@ public interface TerminalMessage {
 	 *
 	 * @param text a text
 	 */
-	void shellPrint(String... text);
+	void print(String... text);
 
 	/**
 	 * Print an attributed text
 	 *
 	 * @param text a text
 	 */
-	void shellPrint(AttributedString... text);
+	void print(AttributedString... text);
 
 	/**
 	 * Gets an implementation which does nothing.
@@ -47,11 +47,11 @@ public interface TerminalMessage {
 		return new TerminalMessage() {
 
 			@Override
-			public void shellPrint(String... text) {
+			public void print(String... text) {
 			}
 
 			@Override
-			public void shellPrint(AttributedString... text) {
+			public void print(AttributedString... text) {
 			}
 		};
 	}
