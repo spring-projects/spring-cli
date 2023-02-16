@@ -30,6 +30,7 @@ import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.model.RootPackageModelPopulator;
 import org.springframework.cli.runtime.engine.model.SystemModelPopulator;
 import org.springframework.cli.util.SpringCliTerminal;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorResourceFactory;
@@ -74,8 +75,8 @@ public class SpringCliConfiguration {
 
 	@Bean
 	public DynamicMethodCommandResolver dynamicMethodTargetRegistrar(Collection<ModelPopulator> modelPopulators,
-			CommandRegistration.BuilderSupplier builder) {
-		return new DynamicMethodCommandResolver(modelPopulators, builder);
+			CommandRegistration.BuilderSupplier builder, TerminalMessage terminalMessage) {
+		return new DynamicMethodCommandResolver(modelPopulators, builder, terminalMessage);
 	}
 
     @Bean

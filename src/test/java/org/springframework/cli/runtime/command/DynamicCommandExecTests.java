@@ -31,6 +31,8 @@ import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 
+import org.springframework.cli.util.TerminalMessage;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DynamicCommandExecTests {
@@ -75,7 +77,7 @@ public class DynamicCommandExecTests {
 	}
 
 	public void runCommand(String noun, String verb, Map<String, Object> model, String commandLocation) throws IOException {
-		DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, Collections.emptyList());
+		DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, Collections.emptyList(), TerminalMessage.noop());
 		dynamicCommand.runCommand(Paths.get(commandLocation), null, null, null, model);
 	}
 

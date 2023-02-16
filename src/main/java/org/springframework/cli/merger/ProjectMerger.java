@@ -366,20 +366,18 @@ public class ProjectMerger {
 		logger.debug("Looking for @SpringBootApplication in directory " + this.currentProjectPath.toFile());
 		Optional<String> currentRootPackageName = RootPackageFinder.findRootPackage(this.currentProjectPath.toFile());
 		if (currentRootPackageName.isEmpty()) {
-			System.out.println("Could find root package containing class with @SpringBootApplication in " + this.currentProjectPath.toFile());
-			System.out.println("Stopping");
+			terminalMessage.print("Could find root package containing class with @SpringBootApplication in " + this.currentProjectPath.toFile());
+			terminalMessage.print("Stopping");
 			return;
 		}
 
 		logger.debug("Looking for @SpringBootApplication in directory " + this.toMergeProjectPath.toFile());
 		Optional<String> toMergeRootPackageName = RootPackageFinder.findRootPackage(this.toMergeProjectPath.toFile());
 		if (toMergeRootPackageName.isEmpty()) {
-			System.out.println("Could find root package containing class with @SpringBootApplication in " + this.toMergeProjectPath.toFile());
-			System.out.println("Stopping");
+			terminalMessage.print("Could find root package containing class with @SpringBootApplication in " + this.toMergeProjectPath.toFile());
+			terminalMessage.print("Stopping");
 			return;
 		}
-
-		//System.out.println("Refactoring to merge code base.  From package " + toMergeRootPackageName.get() + " to " + currentRootPackageName.get());
 
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
@@ -493,7 +491,6 @@ public class ProjectMerger {
 		for (Result result : resultList) {
 			// write updated file.
 			try (BufferedWriter sourceFileWriter = Files.newBufferedWriter(pathToCurrentSpringApplicationClass)) {
-				//System.out.println("Updating pom.xml in " + pathToCurrentSpringApplicationClass);
 				sourceFileWriter.write(result.getAfter().printAllTrimmed());
 			}
 		}

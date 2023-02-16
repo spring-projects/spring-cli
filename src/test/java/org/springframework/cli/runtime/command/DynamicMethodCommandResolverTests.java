@@ -26,6 +26,8 @@ import org.mockito.Mockito;
 
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.model.SystemModelPopulator;
+import org.springframework.cli.util.SpringCliTerminal;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.CommandRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,7 +74,7 @@ class DynamicMethodCommandResolverTests {
 		List<ModelPopulator> modelPopulators = new ArrayList<>();
 		modelPopulators.add(systemModelPopulator);
 		DynamicMethodCommandResolver resolver = new DynamicMethodCommandResolver(modelPopulators,
-				() -> CommandRegistration.builder());
+				() -> CommandRegistration.builder(), TerminalMessage.noop());
 		// Move to mock scan so that we control results
 		DynamicMethodCommandResolver spy = Mockito.spy(resolver);
 		Mockito.when(spy.scanCommands()).thenReturn(commandScanResults);

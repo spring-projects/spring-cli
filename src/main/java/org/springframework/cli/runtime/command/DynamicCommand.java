@@ -52,13 +52,13 @@ import org.springframework.cli.SpringCliException;
 import org.springframework.cli.runtime.engine.frontmatter.Action;
 import org.springframework.cli.runtime.engine.frontmatter.CommandActionFileContents;
 import org.springframework.cli.runtime.engine.frontmatter.Exec;
-import org.springframework.cli.runtime.engine.frontmatter.FrontMatter;
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatterFileVisitor;
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatterReader;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.templating.HandlebarsTemplateEngine;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
 import org.springframework.cli.util.IoUtils;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.CommandContext;
 import org.springframework.shell.command.CommandParser.CommandParserResult;
 import org.springframework.util.StringUtils;
@@ -84,21 +84,18 @@ public class DynamicCommand {
 
 	private Iterable<ModelPopulator> modelPopulators;
 
-	public DynamicCommand(String commandName, String subCommandName, Iterable<ModelPopulator> modelPopulators) {
+	private TerminalMessage terminalMessage;
+
+	public DynamicCommand(String commandName, String subCommandName, Iterable<ModelPopulator> modelPopulators, TerminalMessage terminalMessage) {
 		this.commandName = commandName;
 		this.subCommandName = subCommandName;
 		this.modelPopulators = modelPopulators;
-
+		this.terminalMessage = terminalMessage;
 	}
 
 	public void execute(CommandContext commandContext) throws IOException {
-
-		//System.out.println("Hello world from dynamic command " + commandName + " " + subCommandName);
-
 		Map<String, Object> model = new HashMap<>();
-
 		addMatchedOptions(model, commandContext);
-
 		runCommand(IoUtils.getWorkingDirectory(), ".spring", "commands", commandContext, model);
 	}
 
@@ -132,9 +129,6 @@ public class DynamicCommand {
 				modelPopulator.contributeToModel(workingDirectory, model);
 			}
 		}
-		//System.out.println(model);
-
-		// TODO normalize model keys to camelCase?
 
 		final Map<Path, CommandActionFileContents> commandActionFiles = findCommandActionFiles(dynamicSubCommandPath);
 		if (commandActionFiles.size() == 0) {
@@ -153,7 +147,7 @@ public class DynamicCommand {
 			CommandActionFileContents commandActionFileContents = kv.getValue();
 			Action action = commandActionFileContents.getFrontMatter().getAction();
 			if (action == null) {
-				System.out.println("No actions to execute in " + path.toAbsolutePath());
+				terminalMessage.print("No actions to execute in " + path.toAbsolutePath());
 				continue;
 			}
 			TemplateEngine templateEngine = new HandlebarsTemplateEngine();
@@ -249,7 +243,7 @@ public class DynamicCommand {
 		}
 
 		try {
-			System.out.println("Executing: " + StringUtils.collectionToDelimitedString(processedArgs, " ") );
+			terminalMessage.print("Executing: " + StringUtils.collectionToDelimitedString(processedArgs, " ") );
 			Process process = processBuilder.start();
 			// capture the output.
 			String stderr = "";
@@ -262,8 +256,7 @@ public class DynamicCommand {
 			boolean exited = process.waitFor(300, TimeUnit.SECONDS);
 			if (exited) {
 				if (process.exitValue() == 0) {
-					//TODO better writing out to terminal
-					System.out.println("Command '" + StringUtils.collectionToDelimitedString(processedArgs, " ") + "' executed successfully");
+					terminalMessage.print("Command '" + StringUtils.collectionToDelimitedString(processedArgs, " ") + "' executed successfully");
 					if (exec.getDefine() != null) {
 						if (exec.getDefine().getName() != null && exec.getDefine().getJsonPath() != null) {
 							ObjectMapper mapper = new ObjectMapper();
@@ -279,13 +272,13 @@ public class DynamicCommand {
 								model.putIfAbsent(exec.getDefine().getName(), data);
 							}
 						} else {
-							System.out.println("exec: define: has a null value.  Define = " + exec.getDefine());
+							terminalMessage.print("exec: define: has a null value.  Define = " + exec.getDefine());
 						}
 					}
 				}
 				else {
-					System.out.println("Command '" + StringUtils.collectionToDelimitedString(processedArgs, " ") + "' exited with value " + process.exitValue());
-					System.out.println("stderr = " + stderr);
+					terminalMessage.print("Command '" + StringUtils.collectionToDelimitedString(processedArgs, " ") + "' exited with value " + process.exitValue());
+					terminalMessage.print("stderr = " + stderr);
 				}
 			}
 		}
@@ -305,7 +298,7 @@ public class DynamicCommand {
 					Files.deleteIfExists(tmpDir.resolve("stdin"));
 					Files.deleteIfExists(tmpDir);
 				} catch (IOException e) {
-					System.err.println("Could not delete temp directory " + tmpDir);
+					logger.debug("Could not delete temp directory " + tmpDir);
 				}
 			}
 		}
@@ -329,7 +322,7 @@ public class DynamicCommand {
 			writeFile(commandActionFileContents, templateEngine, model, pathToFile);
 		}
 		else {
-			System.out.println("Skipping generation of " + pathToFile);
+			terminalMessage.print("Skipping generation of " + pathToFile + ".  File exists and overwrite option not specified.");
 		}
 	}
 
@@ -339,7 +332,7 @@ public class DynamicCommand {
 		String result = templateEngine.process(commandActionFileContents.getText(), model);
 		Files.write(pathToFile, result.getBytes());
 		// TODO: keep log of action taken so can report later.
-		System.out.println("Generated "+ pathToFile);
+		terminalMessage.print("Generated "+ pathToFile);
 	}
 
 	private Optional<CommandFileContents> getCommandFileContents(Path dynamicSubCommandPath) {

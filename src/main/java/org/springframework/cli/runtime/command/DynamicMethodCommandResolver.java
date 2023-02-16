@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.util.IoUtils;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandResolver;
 import org.springframework.shell.command.CommandRegistration.OptionSpec;
@@ -51,10 +52,14 @@ public class DynamicMethodCommandResolver implements CommandResolver {
 	private final Collection<ModelPopulator> modelPopulators;
 	private final CommandRegistration.BuilderSupplier builder;
 
+	private final TerminalMessage terminalMessage;
+
 	public DynamicMethodCommandResolver(Collection<ModelPopulator> modelPopulators,
-			CommandRegistration.BuilderSupplier builder) {
+			CommandRegistration.BuilderSupplier builder,
+			TerminalMessage terminalMessage) {
 		this.modelPopulators = modelPopulators;
 		this.builder = builder;
+		this.terminalMessage = terminalMessage;
 	}
 
 	@Override
@@ -86,7 +91,7 @@ public class DynamicMethodCommandResolver implements CommandResolver {
 			for (Command subCommand : subCommandList) {
 				String subCommandName = subCommand.getName();
 
-				DynamicCommand dynamicCommand = new DynamicCommand(commandName, subCommandName, modelPopulators);
+				DynamicCommand dynamicCommand = new DynamicCommand(commandName, subCommandName, modelPopulators, terminalMessage);
 
 				CommandRegistration.Builder builder = builderSupplier.get()
 					.command(commandName + " " + subCommandName)

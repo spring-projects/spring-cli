@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.util.IoUtils;
-import org.springframework.cli.util.SpringCliTerminal;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -54,12 +54,12 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 
 	private final SourceRepositoryService sourceRepositoryService;
 
-	private final SpringCliTerminal springCliTerminal;
+	private final TerminalMessage terminalMessage;
 
 	@Autowired
-	public CommandCommands(SourceRepositoryService sourceRepositoryService, SpringCliTerminal springCliTerminal) {
+	public CommandCommands(SourceRepositoryService sourceRepositoryService, TerminalMessage terminalMessage) {
 		this.sourceRepositoryService = sourceRepositoryService;
-		this.springCliTerminal = springCliTerminal;
+		this.terminalMessage = terminalMessage;
 	}
 
 	@ShellMethod(key = "command new", value = "Create a new user-defined command")
@@ -76,7 +76,7 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 		IoUtils.writeToDir(commandPath.toFile(), "hello.yml", classPathResource);
 		classPathResource = new ClassPathResource("org/springframework/cli/commands/command.yaml");
 		IoUtils.writeToDir(commandPath.toFile(), "command.yaml", classPathResource);
-		System.out.println("Created user defined command " + commandPath);
+		terminalMessage.print("Created user defined command " + commandPath);
 
 	}
 
@@ -118,7 +118,7 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 				}
 			}
 			sb.append("Execute 'spring help' for more information on User-defined commands.");
-			springCliTerminal.print(sb.toAttributedString());
+			terminalMessage.print(sb.toAttributedString());
 
 			try {
 				FileSystemUtils.deleteRecursively(downloadedCommandPath);

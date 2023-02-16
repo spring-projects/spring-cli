@@ -28,11 +28,15 @@ import org.openrewrite.java.tree.J.Annotation;
 import org.openrewrite.java.tree.J.ClassDeclaration;
 import org.openrewrite.java.tree.J.CompilationUnit;
 import org.openrewrite.java.tree.J.Import;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Collect declared imports and annotations of a class
  */
 public class CollectAnnotationAndImportInformationRecipe extends Recipe {
+
+	private static final Logger logger = LoggerFactory.getLogger(CollectAnnotationAndImportInformationRecipe.class);
 
 	private final List<String> declaredImports = new ArrayList<>();
 
@@ -40,7 +44,7 @@ public class CollectAnnotationAndImportInformationRecipe extends Recipe {
 
 	@Override
 	public String getDisplayName() {
-		return "Add or Update anntoations on @SpringBootApplication class";
+		return "Add or Update annotations on @SpringBootApplication class";
 	}
 
 	public List<String> getDeclaredImports() {
@@ -57,36 +61,21 @@ public class CollectAnnotationAndImportInformationRecipe extends Recipe {
 
 			@Override
 			public CompilationUnit visitCompilationUnit(CompilationUnit cu, ExecutionContext executionContext) {
-				//J.CompilationUnit jCu = super.visitCompilationUnit(cu, executionContext);
-
 				List<Import> imports = cu.getImports();
 				for (Import anImport : imports) {
-					//System.out.println("import = " + anImport);
+					logger.debug("import = " + anImport);
 					declaredImports.add(anImport.getTypeName());
 				}
 				List<ClassDeclaration> classes = cu.getClasses();
 				for (ClassDeclaration aClass : classes) {
 					List<Annotation> allAnnotations = aClass.getAllAnnotations();
 					for (Annotation allAnnotation : allAnnotations) {
-						//System.out.println("annotation = " + allAnnotation.printTrimmed());
+						logger.debug("annotation = " + allAnnotation.printTrimmed());
 						declaredAnnotations.add(allAnnotation);
 					}
 				}
 				return cu;
 			}
-
-//			@Override
-//			public ClassDeclaration visitClassDeclaration(ClassDeclaration classDecl, ExecutionContext executionContext) {
-//				//J.ClassDeclaration cd = super.visitClassDeclaration(classDecl, executionContext);
-//
-//				List<Annotation> allAnnotations = classDecl.getAllAnnotations();
-//				for (Annotation allAnnotation : allAnnotations) {
-//					System.out.println("annotation = " + allAnnotation.printTrimmed());
-//					declaredAnnotations.add(allAnnotation);
-//				}
-//
-//				return cd;
-//			}
 		};
 	}
 }
