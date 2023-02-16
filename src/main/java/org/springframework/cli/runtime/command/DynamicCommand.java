@@ -57,7 +57,6 @@ import org.springframework.cli.runtime.engine.frontmatter.FrontMatterFileVisitor
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatterReader;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.templating.HandlebarsTemplateEngine;
-import org.springframework.cli.runtime.engine.templating.MustacheTemplateEngine;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.shell.command.CommandContext;
@@ -157,7 +156,7 @@ public class DynamicCommand {
 				System.out.println("No actions to execute in " + path.toAbsolutePath());
 				continue;
 			}
-			TemplateEngine templateEngine = getTemplateEngine(commandActionFileContents.getFrontMatter());
+			TemplateEngine templateEngine = new HandlebarsTemplateEngine();
 
 			// Add conditional execution
 
@@ -341,18 +340,6 @@ public class DynamicCommand {
 		Files.write(pathToFile, result.getBytes());
 		// TODO: keep log of action taken so can report later.
 		System.out.println("Generated "+ pathToFile);
-	}
-
-	private TemplateEngine getTemplateEngine(FrontMatter frontMatter) {
-		String engine = frontMatter.getEngine();
-		TemplateEngine templateEngine;
-		if (engine.equalsIgnoreCase("mustache")) {
-			templateEngine = new MustacheTemplateEngine();
-		}
-		else {
-			templateEngine = new HandlebarsTemplateEngine();
-		}
-		return templateEngine;
 	}
 
 	private Optional<CommandFileContents> getCommandFileContents(Path dynamicSubCommandPath) {

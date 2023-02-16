@@ -155,14 +155,12 @@ All command line arguments are passed to the template engine as variables, in th
 
 One of the useful built-in variables is `root-package-dir` which is the directory where the class containing the `@SpringApplication` annotation is located.
 
-The default template engine is https://github.com/jknack/handlebars.java[Handlebars].
+The template engine is https://github.com/jknack/handlebars.java[Handlebars].
 Several Handlebar helpers are registered by default
 
   * https://github.com/jknack/handlebars.java#string-helpers[StringHelpers]
   * https://github.com/jknack/handlebars.java#humanize[HumanizeHelper]
   * https://github.com/jknack/handlebars.java#conditional-helpers[Conditional Helpers]
-
-The other template engine available is Mustache.  You specify this by adding the `engine: mustache` under the `action:` section in the Front Matter section.
 
 == Learning more
 

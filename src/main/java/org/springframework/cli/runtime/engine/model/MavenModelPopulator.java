@@ -44,6 +44,8 @@ public class MavenModelPopulator implements ModelPopulator {
 
 	public static final String PROJECT_DESCRIPTION = "project-description";
 
+	public static final String JAVA_VERSION = "java-version";
+
 	@Override
 	public void contributeToModel(Path rootDirectory, Map<String, Object> model) {
 		Path pomFile = rootDirectory.resolve("pom.xml");
@@ -57,9 +59,10 @@ public class MavenModelPopulator implements ModelPopulator {
 			model.putIfAbsent(ARTIFACT_PATH, artifactPath);
 
 			Properties mavenProperties = new Properties();
+			// This will take care of properties such as 'java-version'
 			for (Entry<Object, Object> kv : mavenModel.getProperties().entrySet()) {
 				// can't use 'dots' in template language replacement expressions, change to underscore
-				mavenProperties.put(kv.getKey().toString().replace('.', '_'), kv.getValue());
+				mavenProperties.put(kv.getKey().toString().replace('.', '-'), kv.getValue());
 			}
 			model.putIfAbsent(MAVEN_PROPERTIES, mavenProperties);
 			model.putIfAbsent(PROJECT_NAME, mavenModel.getName());

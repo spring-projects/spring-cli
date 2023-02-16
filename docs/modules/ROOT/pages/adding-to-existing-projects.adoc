@@ -16,6 +16,6 @@ Then all code and configuration is copied over from the temporary location, crea
 
 You can register user defined commands with the shell.
 Adding code or configuration to an existing project is done through the use of action files that contain instructions of what code or configuration is to be generated and how it is to be incorporated into the current project.
-A template engine, by default Handlebars, is used to model the contents of the code or configuration to be added to a new file or injected into an existing file.
+The template engine is Handlebars and is used to model the contents of the code or configuration to be added to a new file or injected into an existing file.
 Actions can be conditionally executed and can also execute shell actions.
 

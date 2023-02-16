@@ -30,7 +30,6 @@ ext {
 	set('jimfsVersion', '1.2')
 	set('systemStubsVersion', '2.0.1')
 	set('handlebarsVersion', '4.1.2')
-	set('jmustacheVersion', '1.14')
 	set('jsonpathVersion', '2.7.0')
 	set('jaxbApiVersion', '2.3.1')
 	set('jaxbRuntimeVersion', '2.3.3')
@@ -57,7 +56,6 @@ dependencies {
 	implementation 'org.apache.tika:tika-core'
 	implementation 'com.github.jknack:handlebars'
 	implementation 'com.github.jknack:handlebars-humanize'
-	implementation 'com.samskivert:jmustache'
 	implementation 'com.jayway.jsonpath:json-path'
 	implementation 'javax.xml.bind:jaxb-api'
 	implementation 'org.glassfish.jaxb:jaxb-runtime'
@@ -85,7 +83,6 @@ dependencyManagement {
 		dependency "org.apache.tika:tika-core:${tikaVersion}"
 		dependency "com.github.jknack:handlebars:${handlebarsVersion}"
 		dependency "com.github.jknack:handlebars-humanize:${handlebarsVersion}"
-		dependency "com.samskivert:jmustache:${jmustacheVersion}"
 		dependency "com.jayway.jsonpath:json-path:${jsonpathVersion}"
 		dependency "com.google.jimfs:jimfs:${jimfsVersion}"
 		dependency "uk.org.webcompere:system-stubs-jupiter:${systemStubsVersion}"

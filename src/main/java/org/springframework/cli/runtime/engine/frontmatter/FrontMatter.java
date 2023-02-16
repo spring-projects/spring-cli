@@ -43,10 +43,6 @@ public class FrontMatter {
 		return action;
 	}
 
-	public String getEngine() {
-		return engine;
-	}
-
 	public Conditional getConditional() {
 		return conditional;
 	}
