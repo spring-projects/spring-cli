@@ -22,9 +22,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,11 +51,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
+import org.springframework.cli.runtime.command.action.InjectAction;
 import org.springframework.cli.runtime.engine.frontmatter.Action;
 import org.springframework.cli.runtime.engine.frontmatter.CommandActionFileContents;
 import org.springframework.cli.runtime.engine.frontmatter.Exec;
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatterFileVisitor;
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatterReader;
+import org.springframework.cli.runtime.engine.frontmatter.Inject;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.templating.HandlebarsTemplateEngine;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
@@ -156,10 +160,17 @@ public class DynamicCommand {
 
 			String generate = action.getGenerate();
 			if (StringUtils.hasText(generate)) {
+				// This allows for variable replacement in the name of the generated file
 				String toFileName = templateEngine.process(generate, model);
 				if (StringUtils.hasText(toFileName)) {
 					generateFile(commandActionFileContents, templateEngine, toFileName, action.isOverwrite(), model, cwd);
 				}
+			}
+
+			Inject inject = action.getInject();
+			if (inject != null) {
+				InjectAction injectAction = new InjectAction(templateEngine, model, cwd, terminalMessage);
+				injectAction.execute(inject, commandActionFileContents);
 			}
 
 			Exec exec = action.getExec();

@@ -28,6 +28,7 @@ ext {
 	set('mavenModelVersion', '3.5.4')
 	set('tikaVersion', '1.18')
 	set('jimfsVersion', '1.2')
+	set('diffUtilsVersion', '4.12')
 	set('systemStubsVersion', '2.0.1')
 	set('handlebarsVersion', '4.1.2')
 	set('jsonpathVersion', '2.7.0')
@@ -64,6 +65,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'com.google.jimfs:jimfs'
 	testImplementation 'com.squareup.okhttp3:mockwebserver'
+	testImplementation 'io.github.java-diff-utils:java-diff-utils'
 }
 
 dependencyManagement {
@@ -85,6 +87,7 @@ dependencyManagement {
 		dependency "com.github.jknack:handlebars-humanize:${handlebarsVersion}"
 		dependency "com.jayway.jsonpath:json-path:${jsonpathVersion}"
 		dependency "com.google.jimfs:jimfs:${jimfsVersion}"
+		dependency "io.github.java-diff-utils:java-diff-utils:${diffUtilsVersion}"
 		dependency "uk.org.webcompere:system-stubs-jupiter:${systemStubsVersion}"
 		dependency "javax.xml.bind:jaxb-api:${jaxbApiVersion}"
 		dependency "org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}"

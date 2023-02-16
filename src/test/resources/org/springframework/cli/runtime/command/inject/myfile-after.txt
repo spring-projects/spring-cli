@@ -1,0 +1,7 @@
+hello there
+this is a test file
+we are going to insert after the line that has the word marker1
+   HELLO
+   INJECTED
+   WORLD
+marker2

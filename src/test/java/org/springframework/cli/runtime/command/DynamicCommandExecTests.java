@@ -19,10 +19,8 @@ package org.springframework.cli.runtime.command;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,11 +29,9 @@ import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 
-import org.springframework.cli.util.TerminalMessage;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DynamicCommandExecTests {
+public class DynamicCommandExecTests extends AbstractCommandTests {
 
 	@Test
 	@DisabledOnOs(OS.WINDOWS)
@@ -74,19 +70,6 @@ public class DynamicCommandExecTests {
 		model.put("output-temp-file", tempFile.getAbsolutePath());
 		runCommand("define", "var", model, "src/test/resources/org/springframework/cli/runtime/command/exec");
 		assertThat(tempFile).hasContent("Hello iPhone");
-	}
-
-	public void runCommand(String noun, String verb, Map<String, Object> model, String commandLocation) throws IOException {
-		DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, Collections.emptyList(), TerminalMessage.noop());
-		dynamicCommand.runCommand(Paths.get(commandLocation), null, null, null, model);
-	}
-
-
-	private void deleteIfExists(Path dir) throws IOException {
-		if (Files.exists(dir)) {
-			// Delete from previous run
-			Files.delete(dir);
-		}
 	}
 
 }

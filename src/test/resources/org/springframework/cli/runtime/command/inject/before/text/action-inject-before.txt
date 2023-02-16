@@ -1,0 +1,10 @@
+---
+action:
+  inject:
+    before: marker1
+    to: myfile-before.txt
+    skip: INJECTED
+---
+   HELLO
+   INJECTED
+   WORLD
