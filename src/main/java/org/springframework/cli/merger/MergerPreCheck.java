@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import org.apache.maven.model.Model;
 
 import org.springframework.cli.SpringCliException;
+import org.springframework.cli.util.JavaVersionUtils;
 
 /**
  * When using the spring boot add command, this class is invoked to check if the
@@ -42,11 +43,11 @@ public class MergerPreCheck {
 	 * @param toMergeProjectPath the location of the code base for the project to merge
 	 * @throws SpringCliException if the two projects are incompatible.
 	 */
-	public void canMergeProject(Model currentModel, Model modelToMerge, Path toMergeProjectPath) {
+	public static void canMergeProject(Model currentModel, Model modelToMerge, Path toMergeProjectPath) {
 		checkJavaVersionCompatibility(currentModel, modelToMerge, toMergeProjectPath);
 	}
 
-	private void checkJavaVersionCompatibility(Model currentModel, Model modelToMerge, Path toMergeProjectPath) {
+	private static void checkJavaVersionCompatibility(Model currentModel, Model modelToMerge, Path toMergeProjectPath) {
 		if (currentModel == null) {
 			throw new SpringCliException("Working directory does not contain pom.xml");
 		}
@@ -58,8 +59,8 @@ public class MergerPreCheck {
 			throw new SpringCliException("Can not determine the Java project version of the project to add to the current project." +
 					"  Check that maven property 'java.version' is present in pom.xml in the Path = " + toMergeProjectPath.toAbsolutePath());
 		}
-		int javaVersion = getJavaVersion(currentModel.getProperties().getProperty("java.version"));
-		int javaVersionToMerge = getJavaVersion(modelToMerge.getProperties().getProperty("java.version"));
+		int javaVersion = JavaVersionUtils.getJavaVersion(currentModel.getProperties().getProperty("java.version"));
+		int javaVersionToMerge = JavaVersionUtils.getJavaVersion(modelToMerge.getProperties().getProperty("java.version"));
 		if (javaVersionToMerge > javaVersion) {
 			throw new SpringCliException("Current project is a Java " + javaVersion +
 					" project.  The project to be added is a Java " + javaVersionToMerge +
@@ -67,11 +68,4 @@ public class MergerPreCheck {
 		}
 	}
 
-	private int getJavaVersion(String javaVersionString) {
-		if ("1.8".equals(javaVersionString)) {
-			return 8;
-		} else {
-			return Integer.valueOf(javaVersionString);
-		}
-	}
 }

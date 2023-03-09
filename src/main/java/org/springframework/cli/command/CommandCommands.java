@@ -73,7 +73,7 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 		Path commandPath = projectPath.resolve(".spring").resolve("commands").resolve(commandName).resolve(subCommandName);
 		IoUtils.createDirectory(commandPath);
 		ClassPathResource classPathResource = new ClassPathResource("/org/springframework/cli/commands/hello.yml");
-		IoUtils.writeToDir(commandPath.toFile(), "hello.yml", classPathResource);
+		IoUtils.writeToDir(commandPath.toFile(), "hello.yaml", classPathResource);
 		classPathResource = new ClassPathResource("org/springframework/cli/commands/command.yaml");
 		IoUtils.writeToDir(commandPath.toFile(), "command.yaml", classPathResource);
 		terminalMessage.print("Created user defined command " + commandPath);

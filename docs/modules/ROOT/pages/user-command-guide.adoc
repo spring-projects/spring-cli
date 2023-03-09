@@ -155,6 +155,9 @@ All command line arguments are passed to the template engine as variables, in th
 
 One of the useful built-in variables is `root-package-dir` which is the directory where the class containing the `@SpringApplication` annotation is located.
 
+
+== Template Engine
+
 The template engine is https://github.com/jknack/handlebars.java[Handlebars].
 Several Handlebar helpers are registered by default
 
@@ -162,8 +165,132 @@ Several Handlebar helpers are registered by default
   * https://github.com/jknack/handlebars.java#humanize[HumanizeHelper]
   * https://github.com/jknack/handlebars.java#conditional-helpers[Conditional Helpers]
 
+In the previous example, the template variable `{{capitalizeFirst feature}}` is an example of using a Handlebar helper
+
+Several system variables are exposed to the template engine by default.
+
+  * `System.getProperties()` is available under `{{system-properties}}`
+  * `System.getenv()` is available under `{{system-environment}}`
+  * The current time defined by `new Date().toString()` is available under `{{now}}`
+  * The System Property `java.io.tmpdir` is available under `{{tmp-dir}}`
+  * The System Property `file.separator` is available under `{{file-separator}}`
+  * The System Property `os.name` is available under `{{os-name}}`
+  * The System Property `user.name` is available under `{{user.name}}`
+
+The Java package name where the Spring Boot main application class resides is available under `{{root-package}}`
+
+The directory where the Spring Boot main applicaiton class resides is available under `{{root-package-dir}}`
+
+The Maven model exposes several variables:
+
+  * `{{artifact-id}}`
+  * `{{artifact-version}}`
+  * `{{artifact-path}}`
+  * `{{project-name}}`
+  * `{{project-descriptoin}}`
+  * `{{maven-model}` - This the class https://maven.apache.org/ref/3.9.0/maven-model/apidocs/org/apache/maven/model/Model.html[org.apache.maven.model.Model]
+  * `{{maven-properties}}` - This is a Java Properties object that has as keys, the values of what each entry in the POM's `<properties>` section.
+  * `{{java-version}}` - This looks for a Maven Property in the POM of the name `java.version`.  If it the value is `1.8`, it is converted to the value `8`.
+
+== Creating a new user defined command
+
+A simple way to get started is to run the command
+
+```
+spring command new hello create
+```
+
+This creates an user defined command named `hello` with the sub-command named `create`.
+
+You can view the full set of options for `spring command new` by executing `spring command new --help`.
+The output is shown below.
+
+```
+$ spring command new --help
+NAME
+       command new - Create a new user-defined command
+
+SYNOPSIS
+       command new --commandName String --subCommandName String --path String --help
+
+OPTIONS
+       --commandName String
+       The name of the user-defined command to create
+       [Optional, default = hello]
+
+       --subCommandName String
+       The name of the user-defined sub-command to create
+       [Optional, default = new]
+
+       --path String
+       Path to execute command in
+       [Optional]
+
+       --help or -h
+       help for command new
+       [Optional]
+```
+
+Executing `spring command new hello create` generates following directory structure and files as discussed previously.
+
+```
+.
+├── README.adoc
+└── .spring
+    └── commands
+        └── hello
+            └── create
+                ├── command.yaml
+                └── hello.yaml
+
+```
+
+The contents of the `command.yaml` file is shown below.  It contains one command line argument, named `greeting`
+
+```
+command:
+  description: Generate a new file with a hello message
+  options:
+    #
+    - name: greeting
+      description: who or what to say hello to
+      dataType: string
+      defaultValue: World
+      inputType: text     # TEXT
+```
+
+And the action file `hello.yaml` is shown below.  It generates the file named `hello.txt`
+
+```
+---
+action:
+  generate: hello.txt
+---
+Hello {{greeting}} at {{now}} on {{os-name}}.
+```
+
+The command is listed under the heading `User-defined Commands` when executing the command `spring help`.
+
+```
+...
+User-defined Commands
+       hello create: Generate a new file with a hello message
+```
+
+
+Executing the command `spring hello create` generates the file hello.txt with the following contents:
+
+```
+Hello World at Mar 9, 2023 on Linux.
+```
+
+
+
+
+
+
+
+
 == Learning more
 
 The section xref:front-matter-properties.adoc[Front Matter Properites] describes all the options available for you to use in Action Files to add or modify code and configuration to a project.
-
->>>>>>> ec6feb1... initial exec functionality with some docs
