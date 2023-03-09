@@ -14,6 +14,8 @@
     </script>
     <link rel="stylesheet" href="../_/css/site.css">
     <link rel="stylesheet" href="../_/css/vendor/spring-tabs.css">
+    <meta name="version" content="1.0.0">
+    <meta name="component" content="spring-cli">
     <link rel="icon" href="../_/img/favicon.ico" type="image/vnd.microsoft.icon">
   </head>
   <body class="article">
@@ -480,6 +482,12 @@ The value of the <code>generate</code> will often contain template variables.</p
 <div class="paragraph">
 <p>One of the useful built-in variables is <code>root-package-dir</code> which is the directory where the class containing the <code>@SpringApplication</code> annotation is located.</p>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_template_engine"><a class="anchor" href="#_template_engine"></a>Template Engine</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>The template engine is <a href="https://github.com/jknack/handlebars.java">Handlebars</a>.
 Several Handlebar helpers are registered by default</p>
@@ -497,6 +505,181 @@ Several Handlebar helpers are registered by default</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>In the previous example, the template variable <code>{{capitalizeFirst feature}}</code> is an example of using a Handlebar helper</p>
+</div>
+<div class="paragraph">
+<p>Several system variables are exposed to the template engine by default.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>System.getProperties()</code> is available under <code>{{system-properties}}</code></p>
+</li>
+<li>
+<p><code>System.getenv()</code> is available under <code>{{system-environment}}</code></p>
+</li>
+<li>
+<p>The current time defined by <code>new Date().toString()</code> is available under <code>{{now}}</code></p>
+</li>
+<li>
+<p>The System Property <code>java.io.tmpdir</code> is available under <code>{{tmp-dir}}</code></p>
+</li>
+<li>
+<p>The System Property <code>file.separator</code> is available under <code>{{file-separator}}</code></p>
+</li>
+<li>
+<p>The System Property <code>os.name</code> is available under <code>{{os-name}}</code></p>
+</li>
+<li>
+<p>The System Property <code>user.name</code> is available under <code>{{user.name}}</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The Java package name where the Spring Boot main application class resides is available under <code>{{root-package}}</code></p>
+</div>
+<div class="paragraph">
+<p>The directory where the Spring Boot main applicaiton class resides is available under <code>{{root-package-dir}}</code></p>
+</div>
+<div class="paragraph">
+<p>The Maven model exposes several variables:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>{{artifact-id}}</code></p>
+</li>
+<li>
+<p><code>{{artifact-version}}</code></p>
+</li>
+<li>
+<p><code>{{artifact-path}}</code></p>
+</li>
+<li>
+<p><code>{{project-name}}</code></p>
+</li>
+<li>
+<p><code>{{project-descriptoin}}</code></p>
+</li>
+<li>
+<p><code>{{maven-model}</code> - This the class <a href="https://maven.apache.org/ref/3.9.0/maven-model/apidocs/org/apache/maven/model/Model.html">org.apache.maven.model.Model</a></p>
+</li>
+<li>
+<p><code>{{maven-properties}}</code> - This is a Java Properties object that has as keys, the values of what each entry in the POM&#8217;s <code>&lt;properties&gt;</code> section.</p>
+</li>
+<li>
+<p><code>{{java-version}}</code> - This looks for a Maven Property in the POM of the name <code>java.version</code>.  If it the value is <code>1.8</code>, it is converted to the value <code>8</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creating_a_new_user_defined_command"><a class="anchor" href="#_creating_a_new_user_defined_command"></a>Creating a new user defined command</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A simple way to get started is to run the command</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">spring command new hello create</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This creates an user defined command named <code>hello</code> with the sub-command named <code>create</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can view the full set of options for <code>spring command new</code> by executing <code>spring command new --help</code>.
+The output is shown below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ spring command new --help
+NAME
+       command new - Create a new user-defined command
+
+SYNOPSIS
+       command new --commandName String --subCommandName String --path String --help
+
+OPTIONS
+       --commandName String
+       The name of the user-defined command to create
+       [Optional, default = hello]
+
+       --subCommandName String
+       The name of the user-defined sub-command to create
+       [Optional, default = new]
+
+       --path String
+       Path to execute command in
+       [Optional]
+
+       --help or -h
+       help for command new
+       [Optional]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Executing <code>spring command new hello create</code> generates following directory structure and files as discussed previously.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">.
+├── README.adoc
+└── .spring
+    └── commands
+        └── hello
+            └── create
+                ├── command.yaml
+                └── hello.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The contents of the <code>command.yaml</code> file is shown below.  It contains one command line argument, named <code>greeting</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">command:
+  description: Generate a new file with a hello message
+  options:
+    #
+    - name: greeting
+      description: who or what to say hello to
+      dataType: string
+      defaultValue: World
+      inputType: text     # TEXT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the action file <code>hello.yaml</code> is shown below.  It generates the file named <code>hello.txt</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">---
+action:
+  generate: hello.txt
+---
+Hello {{greeting}} at {{now}} on {{os-name}}.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command is listed under the heading <code>User-defined Commands</code> when executing the command <code>spring help</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">...
+User-defined Commands
+       hello create: Generate a new file with a hello message</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Executing the command <code>spring hello create</code> generates the file hello.txt with the following contents:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Hello World at Mar 9, 2023 on Linux.</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -505,9 +688,6 @@ Several Handlebar helpers are registered by default</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The section <a href="front-matter-properties.html" class="xref page">Front Matter Properites</a> describes all the options available for you to use in Action Files to add or modify code and configuration to a project.</p>
-</div>
-<div class="paragraph">
-<p>&gt;&gt;&gt;&gt;&gt;&gt;&gt; ec6feb1&#8230;&#8203; initial exec functionality with some docs</p>
 </div>
 </div>
 </div>
