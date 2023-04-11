@@ -1,0 +1,18 @@
+---
+action:
+  conditional:
+    onArtifactId:  spring-cloud-azure-starter-jdbc-postgresql
+  exec:
+    args:
+      - az
+      - postgres
+      - flexible-server
+      - create
+      - --name
+      - {{POSTGRESQL_SERVER}}
+      - --database-name
+      - {{POSTGRESQL_DB}}
+      - --active-directory-auth
+      - Enabled
+---
+IGNORED

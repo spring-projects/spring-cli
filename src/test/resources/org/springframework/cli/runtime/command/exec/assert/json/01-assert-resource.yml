@@ -1,0 +1,18 @@
+---
+action:
+  show-time-estimate: true
+  exec:
+    assertions: |
+      #jsonPath(output, '$.registrationState') == 'Registered'
+    fail-message: "You need to register the provider 'Microsoft.ServiceLinker'"
+    success-message: "Microsoft.ServiceLinker provider is already registered."
+    args:
+      - az
+      - provider
+      - list
+      - --query
+      - "[?namespace == 'Microsoft.ServiceLinker']"
+      - --output
+      - json
+---
+IGNORED

@@ -1,0 +1,15 @@
+---
+action:
+  exec:
+    assertions: |
+      #semver(#jsonPath(output, ‘$.azure-cli’), “>=2.46.0”)
+      #semver(#jsonPath(output, ‘$.extensions.spring’), “>1.7.0”)
+    fail-message: "You need upgrade Azure CLI to > 2.46.0 and Spring Extensions to version > 1.7.0"
+    success-message: "Azure CLI version satisfied."
+    args:
+      - az
+      - version
+      - --output
+      - json
+---
+IGNORED
