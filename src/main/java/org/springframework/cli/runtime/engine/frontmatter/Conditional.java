@@ -17,26 +17,26 @@
 package org.springframework.cli.runtime.engine.frontmatter;
 
 /**
+ * Conditions that need to be satisfied for the Action to execute
+ *
  * @author Mark Pollack
  */
 public class Conditional {
 
-	private String onDependency;
+	private String artifactId;
 
-	public String getOnDependency() {
-		return onDependency;
+	public String getArtifactId() {
+		return artifactId;
 	}
 
-	public void setOnDependency(String onDependency) {
-		this.onDependency = onDependency;
+	public void setArtifactId(String artifactId) {
+		this.artifactId = artifactId;
 	}
 
 	@Override
 	public String toString() {
-		final StringBuffer sb = new StringBuffer("Conditional{");
-		sb.append("onDependency='").append(onDependency).append('\'');
-		sb.append('}');
-		return sb.toString();
+		return "Conditional{" +
+				"artifactId='" + artifactId + '\'' +
+				'}';
 	}
-
 }

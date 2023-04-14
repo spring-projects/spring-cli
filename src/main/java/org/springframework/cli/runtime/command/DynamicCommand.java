@@ -47,6 +47,9 @@ import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
+import org.apache.maven.model.Model;
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +57,9 @@ import org.springframework.cli.SpringCliException;
 import org.springframework.cli.runtime.command.action.InjectAction;
 import org.springframework.cli.runtime.engine.frontmatter.Action;
 import org.springframework.cli.runtime.engine.frontmatter.CommandActionFileContents;
+import org.springframework.cli.runtime.engine.frontmatter.Conditional;
 import org.springframework.cli.runtime.engine.frontmatter.Exec;
+import org.springframework.cli.runtime.engine.frontmatter.FrontMatter;
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatterFileVisitor;
 import org.springframework.cli.runtime.engine.frontmatter.FrontMatterReader;
 import org.springframework.cli.runtime.engine.frontmatter.Inject;
@@ -66,6 +71,8 @@ import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.CommandContext;
 import org.springframework.shell.command.CommandParser.CommandParserResult;
 import org.springframework.util.StringUtils;
+
+import static org.springframework.cli.runtime.engine.model.MavenModelPopulator.MAVEN_MODEL;
 
 /**
  * Object that is registered and executed for all dynamic commands discovered
@@ -139,31 +146,47 @@ public class DynamicCommand {
 			throw new SpringCliException("No command action files found to process in directory " + dynamicSubCommandPath.toAbsolutePath());
 		}
 
-		processCommandActionFiles(commandActionFiles, workingDirectory, model);
-
+		try {
+			processCommandActionFiles(commandActionFiles, workingDirectory, model);
+		} catch (SpringCliException e) {
+			AttributedStringBuilder sb = new AttributedStringBuilder();
+			sb.style(sb.style().foreground(AttributedStyle.RED));
+			sb.append(e.getMessage());
+			terminalMessage.print(sb.toAttributedString());
+		}
 
 	}
 
-	private void processCommandActionFiles(Map<Path, CommandActionFileContents> commandActionFiles, Path cwd, Map<String, Object> model) throws IOException {
+	private void processCommandActionFiles(Map<Path, CommandActionFileContents> commandActionFiles, Path cwd, Map<String, Object> model) {
 
 		for (Entry<Path, CommandActionFileContents> kv : commandActionFiles.entrySet()) {
 			Path path = kv.getKey();
 			CommandActionFileContents commandActionFileContents = kv.getValue();
-			Action action = commandActionFileContents.getFrontMatter().getAction();
+
+			FrontMatter frontMatter = commandActionFileContents.getFrontMatter();
+			if (frontMatter.getConditional() != null) {
+				checkConditional(frontMatter.getConditional(), model, cwd, path);
+			}
+
+			Action action = frontMatter.getAction();
 			if (action == null) {
 				terminalMessage.print("No actions to execute in " + path.toAbsolutePath());
 				continue;
 			}
 			TemplateEngine templateEngine = new HandlebarsTemplateEngine();
 
-			// Add conditional execution
-
 			String generate = action.getGenerate();
 			if (StringUtils.hasText(generate)) {
 				// This allows for variable replacement in the name of the generated file
 				String toFileName = templateEngine.process(generate, model);
 				if (StringUtils.hasText(toFileName)) {
-					generateFile(commandActionFileContents, templateEngine, toFileName, action.isOverwrite(), model, cwd);
+					try {
+						generateFile(commandActionFileContents, templateEngine, toFileName, action.isOverwrite(), model, cwd);
+					}
+					catch (IOException e) {
+						terminalMessage.print("Could not generate file " + toFileName);
+						terminalMessage.print(e.getMessage());
+					}
 				}
 			}
 
@@ -181,6 +204,18 @@ public class DynamicCommand {
 		}
 
 
+	}
+
+	private void checkConditional(Conditional conditional, Map<String, Object> model, Path cwd, Path actionFilePath) {
+		Model mavenModel = (Model) model.get(MAVEN_MODEL);
+		String artifactId = conditional.getArtifactId();
+		if (StringUtils.hasText(artifactId) && mavenModel != null) {
+			boolean hasArtifactId = mavenModel.getDependencies().stream()
+					.anyMatch((dependency) -> dependency.getArtifactId().equalsIgnoreCase(artifactId.trim()));
+			if (!hasArtifactId) {
+				throw new SpringCliException("Conditional on artifact-id not satisfied.  Expected artifact-id " + artifactId.trim() + " but was not found.");
+			}
+		}
 	}
 
 	private void executeShellCommand(Exec exec, TemplateEngine templateEngine, Map<String, Object> model, CommandActionFileContents commandActionFileContents) {
