@@ -1,0 +1,29 @@
+action:
+  conditional:
+    artifact-id: regex blah blah
+    missing-file: {{artifact-path}}
+    env-var: FOO
+    expression: >
+      spel expression here
+  run: |
+    az foo bar {{asdf}}
+
+
+https://stackoverflow:
+  com/questions/5928225/how-to-make-pipes-work-with-runtime-exec:
+
+  String[] cmd = {
+  "/bin/sh",
+  "-c",
+  "ls /etc | grep release"
+};
+  
+  Process p = Runtime.getRuntime().exec(cmd);
+
+  -----
+  String[] cmd = {
+  "cmd",
+  "/C",
+  "dir /B | findstr /R /C:"release""
+};
+  Process p = Runtime.getRuntime().exec(cmd);

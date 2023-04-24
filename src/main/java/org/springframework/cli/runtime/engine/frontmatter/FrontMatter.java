@@ -27,10 +27,6 @@ import org.springframework.lang.Nullable;
  * @author Mark Pollack
  */
 public class FrontMatter {
-
-	// Default only because GraalVM is having trouble with handlebars
-	private final String engine;
-
 	/**
 	 * The actions to execute against the template. If {@code null}, the file is not
 	 * processed.
@@ -48,22 +44,17 @@ public class FrontMatter {
 	}
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	FrontMatter(@JsonProperty("engine") String engine, @JsonProperty("action") @Nullable Action action,
+	FrontMatter(@JsonProperty("action") @Nullable Action action,
 			@JsonProperty("conditional") Conditional conditional) {
-		// The default is logic-full handlebars
-		this.engine = Objects.requireNonNullElse(engine, "handlebars");
 		this.action = Objects.requireNonNull(action);
 		this.conditional = Objects.requireNonNullElse(conditional, new Conditional());
 	}
 
 	@Override
 	public String toString() {
-		final StringBuffer sb = new StringBuffer("Metadata{");
-		sb.append("engine='").append(engine).append('\'');
-		sb.append(", action=").append(action);
-		sb.append(", conditional=").append(conditional);
-		sb.append('}');
-		return sb.toString();
+		return "FrontMatter{" +
+				"action=" + action +
+				", conditional=" + conditional +
+				'}';
 	}
-
 }
