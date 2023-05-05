@@ -15,35 +15,21 @@
  */
 package org.springframework.cli.command;
 
-import java.nio.file.FileSystem;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.function.Function;
 
-import com.google.common.jimfs.Jimfs;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
-import org.jline.terminal.Terminal;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.cli.config.SpringCliUserConfig;
-import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
-import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
-import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
-import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
-import org.springframework.cli.git.GitSourceRepositoryService;
-import org.springframework.cli.git.SourceRepositoryService;
+import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
+import org.springframework.cli.support.MockConfigurations.MockFakeUserConfig;
+import org.springframework.cli.support.MockConfigurations.MockUserConfig;
 import org.springframework.cli.util.PomReader;
-import org.springframework.cli.util.TerminalMessage;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.style.ThemeResolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class BootCommandsTests {
 
@@ -201,64 +187,4 @@ public class BootCommandsTests {
 		});
 	}
 
-	@Configuration
-	static class MockBaseConfig {
-
-		@Bean
-		Terminal terminal() {
-			Terminal mockTerminal = mock(Terminal.class);
-			return mockTerminal;
-		}
-
-		@Bean
-		ThemeResolver themeResolver() {
-			ThemeResolver mockThemeResolver = mock(ThemeResolver.class);
-			return mockThemeResolver;
-		}
-
-		@Bean
-		GitSourceRepositoryService gitSourceRepositoryService(SpringCliUserConfig springCliUserConfig) {
-			return new GitSourceRepositoryService(springCliUserConfig);
-		}
-
-		@Bean
-		BootCommands bootCommands(SpringCliUserConfig springCliUserConfig,
-				SourceRepositoryService sourceRepositoryService) {;
-			BootCommands bootCommands = new BootCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
-			return bootCommands;
-		}
-	}
-
-	@Configuration
-	static class MockUserConfig {
-
-		@Bean
-		SpringCliUserConfig springCliUserConfig() {
-			FileSystem fileSystem = Jimfs.newFileSystem();
-			Function<String, Path> pathProvider = (path) -> fileSystem.getPath(path);
-			return new SpringCliUserConfig(pathProvider);
-		}
-	}
-
-	@Configuration
-	static class MockFakeUserConfig {
-
-		@Bean
-		SpringCliUserConfig springCliUserConfig() {
-			SpringCliUserConfig mock = mock(SpringCliUserConfig.class);
-			ProjectRepository pr1 = ProjectRepository.of("jpa", "Learn JPA",
-					"https://github.com/rd-1-2022/rpt-spring-data-jpa", null);
-			ProjectRepository pr2 = ProjectRepository.of("scheduling", "Scheduling",
-					"https://github.com/rd-1-2022/rpt-spring-scheduling-tasks", null);
-			ProjectRepositories prs = new ProjectRepositories();
-			prs.setProjectRepositories(Arrays.asList(pr1, pr2));
-			when(mock.getProjectRepositories()).thenReturn(prs);
-			ProjectCatalogs pcs = new ProjectCatalogs();
-			ProjectCatalog pc = ProjectCatalog.of("getting-started", "Spring Getting Started Projects",
-					"https://github.com/rd-1-2022/spring-gs-catalog/", null);
-			pcs.setProjectCatalogs(Arrays.asList(pc));
-			when(mock.getProjectCatalogs()).thenReturn(pcs);
-			return mock;
-		}
-	}
 }

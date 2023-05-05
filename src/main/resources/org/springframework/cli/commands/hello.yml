@@ -1,5 +1,4 @@
----
-action:
-  generate: hello.txt
----
-Hello {{greeting}} at {{now}} on {{os-name}}.
+actions:
+  - generate:
+      to: hello.txt
+      text: Hello {{greeting}} on {{os-name}}.

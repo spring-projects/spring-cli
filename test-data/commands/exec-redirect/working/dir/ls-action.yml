@@ -1,0 +1,6 @@
+actions:
+  - exec:
+      command: ls
+      to: "{{output}}"
+      dir: "{{work-dir}}"
+

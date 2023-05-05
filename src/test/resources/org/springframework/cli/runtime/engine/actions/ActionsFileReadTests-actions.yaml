@@ -1,0 +1,6 @@
+conditional:
+  artifact-id:  spring-cloud-azure-starter-jdbc-postgresql
+actions:
+  - generate:
+      to: hello.txt
+      text: Hello World

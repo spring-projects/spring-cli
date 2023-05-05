@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '3.0.2'
+	id 'org.springframework.boot' version '3.0.6'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'com.gorylenko.gradle-git-properties' version '2.3.2'
@@ -34,6 +34,7 @@ ext {
 	set('jsonpathVersion', '2.7.0')
 	set('jaxbApiVersion', '2.3.1')
 	set('jaxbRuntimeVersion', '2.3.3')
+	set('jacksonVersion', '2.15.0')
 }
 
 configurations.all {
@@ -91,6 +92,7 @@ dependencyManagement {
 		dependency "uk.org.webcompere:system-stubs-jupiter:${systemStubsVersion}"
 		dependency "javax.xml.bind:jaxb-api:${jaxbApiVersion}"
 		dependency "org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}"
+		dependency "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
 	}
 	imports {
 		mavenBom "org.springframework.shell:spring-shell-dependencies:${springShellVersion}"
