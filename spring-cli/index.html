@@ -12,7 +12,9 @@
 }(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'))
     </script>
     <link rel="stylesheet" href="../_/css/site.css">
+    <link rel="stylesheet" href="../_/css/vendor/docsearch.css">
     <link rel="stylesheet" href="../_/css/vendor/spring-tabs.css">
+
     <meta name="version" content="1.0.0">
     <meta name="component" content="spring-cli">
     <link rel="icon" href="../_/img/favicon.ico" type="image/vnd.microsoft.icon">
@@ -71,8 +73,20 @@
             <a class="navbar-item navbar-item-special-2" href="https://start.spring.io">Spring Initializr <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><polyline points="15 10.94 15 15 1 15 1 1 5.06 1" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></polyline><polyline points="8.93 1 15 1 15 7.07" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></polyline><line x1="15" y1="1" x2="8" y2="8" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></line></svg></a>
           </div>
         </div>
-
-        <a class="navbar-item" href="https://spring.io/training">Training</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Academy</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://spring.academy/courses">Courses</a>
+            <a class="navbar-item" href="https://spring.academy/learning-path">Get Certified</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable is-community">
+          <a class="navbar-link" href="#">Support</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://spring.io/support">Overview</a>
+            <a class="navbar-item" href="https://spring.io/security">Security Advisories</a>
+          </div>
+        </div>
         <a class="navbar-item" href="https://spring.io/support">Support</a>
         <div class="navbar-item has-dropdown is-hoverable is-community">
           <a class="navbar-link" href="#">Community</a>
@@ -246,6 +260,9 @@
     <li class="component is-current">
       <a class="title" href="index.html">spring-cli</a>
       <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">1.0.0-SNAPSHOT</a>
+        </li>
       </ul>
     </li>
   </ul>
@@ -263,11 +280,6 @@
     <li><a href="index.html">Overview</a></li>
   </ul>
 </nav>
-<div class="search">
-  <div id="search" class="field has-filter">
-    <input class="query" type="text" placeholder="Search docs" autofocus>
-  </div>
-</div>
   <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
@@ -282,21 +294,21 @@
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>The command <code>boot new</code> clones an external project and performs a package refactoring to your chosen package name. You can also specify the new project’s group id, artifact id, and version</p>
+<p>The command <code>boot new</code> clones an external project and optinally perform a package refactoring to your chosen package name. You can also optionally specify the new project’s group id, artifact id, and version</p>
 </li>
 <li>
-<p>The command <code>boot add</code> will add an external project to your current project. It will perform an intelligent merge of project dependencies, plug-ins, annotations, application configuration files, and refactoring of the external project code into your current project’s package structure.</p>
+<p>The command <code>boot add</code> will merge an external project to your current project. It performs an intelligent merge of project dependencies, plug-ins, annotations, application configuration files, and refactoring of the external project code into your current project’s package structure.</p>
 </li>
 <li>
-<p>User-provided <code>commands</code> are defined declaratively and live side by side with your code to help you perform everyday tasks on your current project. For example, creating a new controller with tests, adding new dependencies, code, and configuration files for specific functionality such as test container support, or creating configuration files for your platform or CI system. User-provided commands often leverage a template engine of your choice to perform code generation that can create new files or update existing files.</p>
+<p>User-provided <code>commands</code> provides a user-friendly way to define and execute custom commands that can perform everyday tasks on your project. With declarative command definitions living alongside your code, you can easily create new controllers, add dependencies, or configure files. You can also execute other command-line applications as needed resembling a client-side GitHub Actions like experience.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>By basing the <code>boot new</code> and <code>boot add</code> commands on "Plain Old Java Projects" hosted on GitHub or GitLab, it is easy for companies to define a standard set of projects that use a company&#8217;s preferred libraries and coding styles. By providing a <code>README.md</code> file in these projects, it allows for an obvious starting point for education about a particular library or approach to programming.  For example, executing the command <code>boot add jpa</code> would result in not just code added to the current project, but aldo a file named <code>README-jpa.md</code>.</p>
+<p>Following a "Plain Old Java Projects" approach to code generation, implemented in the <code>boot new</code> and <code>boot add</code> commands, allows companies to define a standard set of projects with preferred libraries and coding styles. By including a <code>README.md`</code> file in these projects, it&#8217;s easy for team members to get started with new libraries or programming approaches. For instance, running boot add jpa not only adds code to your project, but also renames the <code>README.md</code> file to <code>README-jpa.md</code> file for easy discovery.</p>
 </div>
 <div class="paragraph">
-<p>User-provided commands are well suited for performing smaller, repetitive coding tasks during the development process. These command definitions can live side by side with the code so that anyone on the development team can contribute a new command or improve an existing command.   By having commands living side by side with the code, contributing to the project is a simple procedure as there is no other artifact or project to create, update and publish.</p>
+<p>User-defined commands are ideal for repetitive coding tasks. Since command definitions living alongside the your code, anyone on the your team can contribute or improve existing commands without the need to create, update, and publish additional artifacts or projects.</p>
 </div>
 <nav class="pagination">
   <span class="next"><a href="installation.html">Installation</a></span>

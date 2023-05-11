@@ -13,7 +13,9 @@
 }(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'))
     </script>
     <link rel="stylesheet" href="../_/css/site.css">
+    <link rel="stylesheet" href="../_/css/vendor/docsearch.css">
     <link rel="stylesheet" href="../_/css/vendor/spring-tabs.css">
+
     <meta name="version" content="1.0.0">
     <meta name="component" content="spring-cli">
     <link rel="icon" href="../_/img/favicon.ico" type="image/vnd.microsoft.icon">
@@ -72,8 +74,20 @@
             <a class="navbar-item navbar-item-special-2" href="https://start.spring.io">Spring Initializr <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><polyline points="15 10.94 15 15 1 15 1 1 5.06 1" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></polyline><polyline points="8.93 1 15 1 15 7.07" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></polyline><line x1="15" y1="1" x2="8" y2="8" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></line></svg></a>
           </div>
         </div>
-
-        <a class="navbar-item" href="https://spring.io/training">Training</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Academy</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://spring.academy/courses">Courses</a>
+            <a class="navbar-item" href="https://spring.academy/learning-path">Get Certified</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable is-community">
+          <a class="navbar-link" href="#">Support</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://spring.io/support">Overview</a>
+            <a class="navbar-item" href="https://spring.io/security">Security Advisories</a>
+          </div>
+        </div>
         <a class="navbar-item" href="https://spring.io/support">Support</a>
         <div class="navbar-item has-dropdown is-hoverable is-community">
           <a class="navbar-link" href="#">Community</a>
@@ -247,6 +261,9 @@
     <li class="component is-current">
       <a class="title" href="index.html">spring-cli</a>
       <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">1.0.0-SNAPSHOT</a>
+        </li>
       </ul>
     </li>
   </ul>
@@ -264,11 +281,6 @@
     <li><a href="user-command-guide.html">Guide to user defined commands</a></li>
   </ul>
 </nav>
-<div class="search">
-  <div id="search" class="field has-filter">
-    <input class="query" type="text" placeholder="Search docs">
-  </div>
-</div>
   <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/user-command-guide.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
@@ -351,7 +363,8 @@ The directory structure commands represents the command and sub-command that are
         └── controller
             └── new
                 ├── command.yaml
-                └── Controller.java</code></pre>
+                ├── create-controller.yaml
+                └── RestController.java</code></pre>
 </div>
 </div>
 <div class="sect2">
@@ -417,10 +430,10 @@ OPTIONS
 <div class="sect2">
 <h3 id="_action_files"><a class="anchor" href="#_action_files"></a>Action Files</h3>
 <div class="paragraph">
-<p>Action files are denoted by having a Front Matter section that describes the actions to take and below the Front Matter section is the text that will be passed to the Template Engine.</p>
+<p>Action files are structred similar to GitHub Action files.</p>
 </div>
 <div class="paragraph">
-<p>The Action File can be named anything you like, only text files with a Front Matter section are executed.</p>
+<p>Acitons files can be named anything you like, the CLI will look for files with a <code>.yaml</code> or <code>.yml</code> file extension</p>
 </div>
 <div class="paragraph">
 <p>There can be as many action files as you need to accomplish a specific task.  The order of Action Files execution is depth first and alphabetical.</p>
@@ -430,11 +443,10 @@ OPTIONS
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">---
-action:
-  generate: hello.txt
----
-Hello {{user-name}} at {{now}} on {{os-name}}.</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">actions:
+  - generate:
+      to: hello.txt
+      text: Hello at {{now}} on {{os-name}}.</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -446,15 +458,56 @@ The template contents contains kebab-case variable names.</p>
 The variable <code>now</code> is the value of <code>new java.util.Date()</code> when the command was executed.</p>
 </div>
 <div class="paragraph">
-<p>As a more realistic example to create Java code, the Action File named <code>Controller.java</code> in the repository <a href="https://github.com/rd-1-2022/udc-spring-controller" class="bare">https://github.com/rd-1-2022/udc-spring-controller</a> is shown below.</p>
+<p>As a more realistic example to create Java code, the Action File named <code>Controller.java</code> in the repository <a href="https://github.com/rd-1-2022/udc-spring-controller" class="bare">https://github.com/rd-1-2022/udc-spring-controller</a> is shown below.  The <code>feature</code> variable is a command option</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Command File</p>
+</li>
+</ul>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">---
-action:
-  generate: "src/main/java/{{root-package-dir}}/{{feature}}/{{capitalizeFirst feature}}Controller.java"
----
-package {{root-package}}.{{feature}};
+<pre class="highlightjs highlight"><code class="language-none hljs">command:
+  description: Generate a new Spring Controller
+  options:
+    #
+    - name: feature
+      description: name of the feature package
+      dataType: string
+      defaultValue: person
+      inputType: text</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Action File</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">actions:
+  - generate:
+      to: src/main/java/{{root-package-dir}}/{{feature}}/{{capitalizeFirst feature}}Controller.java
+      from: RestController.java</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Templated Java File</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The file <code>RestController.java</code> is a templated text file shown below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package {{root-package}}.{{feature}};
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -470,11 +523,10 @@ public class {{capitalizeFirst feature}}Controller {
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>generate</code> field in the Front Matter section defines the location of the file to be generated.
-The value of the <code>generate</code> will often contain template variables.</p>
+<p>The <code>to:</code> field defines the location of the file to be generated.</p>
 </div>
 <div class="paragraph">
-<p>If the file exists, it will not be overwritten unless the additional field <code>overwrite</code> at the same level of <code>generate</code> is added to the Front Matter section.</p>
+<p>If the file to generate already exists, it will not be overwritten unless the additional field <code>overwrite:</code> at the same level of <code>generate</code> is added at the same level of the <code>to:</code> field.</p>
 </div>
 <div class="paragraph">
 <p>All command line arguments are passed to the template engine as variables, in this case the <code>feature</code> option.</p>
@@ -656,11 +708,10 @@ OPTIONS
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">---
-action:
-  generate: hello.txt
----
-Hello {{greeting}} at {{now}} on {{os-name}}.</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">actions:
+  - generate:
+      to: hello.txt
+      text: Hello {{greeting}} at {{now}} on {{os-name}}.</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -687,7 +738,7 @@ User-defined Commands
 <h2 id="_learning_more"><a class="anchor" href="#_learning_more"></a>Learning more</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The section <a href="front-matter-properties.html" class="xref page">Front Matter Properites</a> describes all the options available for you to use in Action Files to add or modify code and configuration to a project.</p>
+<p>The section <a href="action-syntax.html" class="xref page">Action Syntax</a> describes all the options available for you to use in Action Files to add or modify code and configuration to a project.</p>
 </div>
 </div>
 </div>
