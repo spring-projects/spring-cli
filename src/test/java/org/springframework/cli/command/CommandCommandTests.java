@@ -45,23 +45,6 @@ public class CommandCommandTests extends AbstractCommandTests {
 	@TempDir(cleanup = CleanupMode.NEVER)
 	Path workingDir;
 
-	void dsl(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
-		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
-
-
-
-//			CommandRunner commandRunner = new CommandRunner.Builder(context)
-//					.prepareProject("rest-service", workingDir)
-//					.installCommandGroup("exec")
-//					.executeCommand("util/mkdir")
-//					.withArguments("directory-to-create", dir.toFile().getAbsolutePath())
-//					.build();
-//			commandRunner.run();
-
-
-		});
-	}
-
 	@Test
 	void testCommandNew() {
 		Path projectPath = Path.of("test-data").resolve("projects").resolve("rest-service");

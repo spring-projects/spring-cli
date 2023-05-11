@@ -45,7 +45,8 @@ For example, the directory contents of the repository https://github.com/rd-1-20
         └── controller
             └── new
                 ├── command.yaml
-                └── Controller.java
+                ├── create-controller.yaml
+                └── RestController.java
 
 ```
 
@@ -100,21 +101,19 @@ OPTIONS
 ```
 
 === Action Files
-Action files are denoted by having a Front Matter section that describes the actions to take and below the Front Matter section is the text that will be passed to the Template Engine.
+Action files are structred similar to GitHub Action files.
 
-The Action File can be named anything you like, only text files with a Front Matter section are executed.
+Acitons files can be named anything you like, the CLI will look for files with a `.yaml` or `.yml` file extension
 
 There can be as many action files as you need to accomplish a specific task.  The order of Action Files execution is depth first and alphabetical.
 
 Here is a very simple example
 
 ```
----
-action:
-  generate: hello.txt
----
-Hello {{user-name}} at {{now}} on {{os-name}}.
-
+actions:
+  - generate:
+      to: hello.txt
+      text: Hello at {{now}} on {{os-name}}.
 ```
 
 This will generate the file `hello.txt`, if it does not already exists, in the current working directory.
@@ -123,14 +122,37 @@ The template contents contains kebab-case variable names.
 The variables `user-name` and `os-name` come from Java system properties and are automatically registered with the template engine.
 The variable `now` is the value of `new java.util.Date()` when the command was executed.
 
-As a more realistic example to create Java code, the Action File named `Controller.java` in the repository https://github.com/rd-1-2022/udc-spring-controller is shown below.
+As a more realistic example to create Java code, the Action File named `Controller.java` in the repository https://github.com/rd-1-2022/udc-spring-controller is shown below.  The `feature` variable is a command option
 
+* Command File
+
+```
+command:
+  description: Generate a new Spring Controller
+  options:
+    #
+    - name: feature
+      description: name of the feature package
+      dataType: string
+      defaultValue: person
+      inputType: text
+
+```
+
+* Action File
+
+```yml
+actions:
+  - generate:
+      to: src/main/java/{{root-package-dir}}/{{feature}}/{{capitalizeFirst feature}}Controller.java
+      from: RestController.java
+```
+
+* Templated Java File
+
+The file `RestController.java` is a templated text file shown below:
 
 ```java
----
-action:
-  generate: "src/main/java/{{root-package-dir}}/{{feature}}/{{capitalizeFirst feature}}Controller.java"
----
 package {{root-package}}.{{feature}};
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -146,10 +168,10 @@ public class {{capitalizeFirst feature}}Controller {
 }
 ```
 
-The `generate` field in the Front Matter section defines the location of the file to be generated.
-The value of the `generate` will often contain template variables.
+The `to:` field defines the location of the file to be generated.
 
-If the file exists, it will not be overwritten unless the additional field `overwrite` at the same level of `generate` is added to the Front Matter section.
+
+If the file to generate already exists, it will not be overwritten unless the additional field `overwrite:` at the same level of `generate` is added at the same level of the `to:` field.
 
 All command line arguments are passed to the template engine as variables, in this case the `feature` option.
 
@@ -262,11 +284,10 @@ command:
 And the action file `hello.yaml` is shown below.  It generates the file named `hello.txt`
 
 ```
----
-action:
-  generate: hello.txt
----
-Hello {{greeting}} at {{now}} on {{os-name}}.
+actions:
+  - generate: 
+      to: hello.txt
+      text: Hello {{greeting}} at {{now}} on {{os-name}}.
 ```
 
 The command is listed under the heading `User-defined Commands` when executing the command `spring help`.
@@ -293,4 +314,4 @@ Hello World at Mar 9, 2023 on Linux.
 
 == Learning more
 
-The section xref:front-matter-properties.adoc[Front Matter Properites] describes all the options available for you to use in Action Files to add or modify code and configuration to a project.
+The section xref:action-syntax.adoc[Action Syntax] describes all the options available for you to use in Action Files to add or modify code and configuration to a project.

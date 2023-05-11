@@ -26,6 +26,8 @@ public class Generate {
 
 	private final String text;
 
+	private final String from;
+
 	/**
 	 * If set to false, generation of the template is skipped if the {@link #generate
 	 * destination file} already exists.
@@ -34,9 +36,11 @@ public class Generate {
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 	Generate(@JsonProperty("to") String to,  @JsonProperty("text") String text,
+			@JsonProperty("from") String from,
 			@JsonProperty("overwrite") boolean overwrite){
 		this.to = to;
 		this.text = text;
+		this.from = from;
 		this.overwrite = overwrite;
 	}
 
@@ -44,12 +48,16 @@ public class Generate {
 		return to;
 	}
 
-	public boolean isOverwrite() {
-		return overwrite;
-	}
-
 	public String getText() {
 		return text;
+	}
+
+	public String getFrom() {
+		return from;
+	}
+
+	public boolean isOverwrite() {
+		return overwrite;
 	}
 
 	@Override
@@ -57,6 +65,8 @@ public class Generate {
 		return "Generate{" +
 				"to='" + to + '\'' +
 				", text='" + text + '\'' +
+				", from='" + from + '\'' +
+				", overwrite=" + overwrite +
 				'}';
 	}
 }

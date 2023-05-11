@@ -85,10 +85,10 @@ public class ExecActionHandler {
 					commandToUse = templateEngine.process(lines.get(0), model);
 				}
 				catch (IOException e) {
-					throw new RuntimeException(e);
+					throw new SpringCliException("Can not read from file " + commandFilePath.toAbsolutePath(), e);
 				}
 			} else {
-				throw new SpringCliException("Can not read file: " + commandFilePath.toAbsolutePath());
+				throw new SpringCliException("Can not read from file: " + commandFilePath.toAbsolutePath());
 			}
 		}
 

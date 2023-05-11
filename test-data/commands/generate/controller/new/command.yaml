@@ -1,0 +1,10 @@
+command:
+  description: Generate a new Spring Controller
+  options:
+    #
+    - name: feature
+      description: name of the feature package
+      dataType: string
+      defaultValue: person
+      inputType: text     # TEXT
+  

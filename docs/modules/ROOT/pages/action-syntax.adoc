@@ -1,0 +1,60 @@
+= Action syntax
+
+The content of action files are similar in struture to GitHub Action files. Here is a simple example
+
+```
+actions:
+  - generate: 
+      to:  hello.txt
+      text: Hello {{user-name}} at {{now}} on {{os-name}}.
+
+
+The file starts with the `actions:` field.  The available options for nested fields are:
+
+* `generate` - Creates a new file
+* `exec` - Execute a shell command
+* `inject` - Adds content into an existing file
+
+== Exec
+
+The basic form to execute a shell command is
+
+```
+actions:
+  - exec:
+      command: mkdir {{tmp-dir}}/scratch
+```
+
+
+The template engine variable `tmp-dir` is defined by default and is the value of the Java System Property `java.io.tmpdir`.
+
+=== Redirecting output
+
+TBD
+
+=== Adding to the template engine model
+Sometime you would like to execute a program use its output to define a template engine variable.
+
+The `define` section under `exec` lets you perform this task.
+It allows you to define a `jsonPath` expression to select from the output if it is JSON.
+This is common output format in many commnand line utilities.
+
+Here is an example.  In the Action File named `00-define-var.yml` the contents are:
+
+```
+actions:
+  - exec:
+      command-file: echo-command.txt
+      define:
+        name: phone-type
+        jsonPath: $.phoneNumbers[:1].type
+```
+
+and the file `echo-command.txt` contains
+
+```
+echo '{ "firstName": "John", "lastName": "doe", "age": 26, "address": { "streetAddress": "naist street", "city": "Nara", "postalCode": "630-0192" }, "phoneNumbers": [ { "type": "iPhone", "number": "0123-4567-8888" }, { "type": "home", "number": "0123-4567-8910" } ] }'
+```
+
+The variable named `phone-type` will be defined as the output from applying the https://github.com/json-path/JsonPath[JSON Path expression] to the output of the command.
+In this case, a simple `echo` of JSON is done but in a more realistic case, it would be the output of a command line utility.

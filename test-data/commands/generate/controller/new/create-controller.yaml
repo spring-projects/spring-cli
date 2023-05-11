@@ -1,0 +1,6 @@
+actions:
+  - generate:
+      to: src/main/java/{{root-package-dir}}/{{feature}}/{{capitalizeFirst feature}}Controller.java
+      from: RestController.java
+
+

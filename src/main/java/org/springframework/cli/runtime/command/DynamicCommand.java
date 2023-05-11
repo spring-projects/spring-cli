@@ -126,7 +126,7 @@ public class DynamicCommand {
 		// Enrich the model with detected features of the project, e.g. maven artifact name
 		if (this.modelPopulators != null) {
 			for (ModelPopulator modelPopulator : modelPopulators) {
-				modelPopulator.contributeToModel(IoUtils.getWorkingDirectory(), model);
+				modelPopulator.contributeToModel(workingDirectory, model);
 			}
 		}
 
@@ -165,7 +165,7 @@ public class DynamicCommand {
 			for (Action action : actions) {
 				Generate generate = action.getGenerate();
 				if (generate != null) {
-					GenerateActionHandler generateActionHandler = new GenerateActionHandler(templateEngine, model, cwd, terminalMessage);
+					GenerateActionHandler generateActionHandler = new GenerateActionHandler(templateEngine, model, cwd, dynamicSubCommandPath, terminalMessage);
 					generateActionHandler.execute(generate);
 				}
 
