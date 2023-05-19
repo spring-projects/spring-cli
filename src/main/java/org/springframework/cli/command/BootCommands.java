@@ -28,7 +28,7 @@ import org.springframework.shell.standard.ShellOption;
 @ShellComponent
 public class BootCommands extends AbstractSpringCliCommands {
 
-	private final  SpringCliUserConfig springCliUserConfig;
+	private final SpringCliUserConfig springCliUserConfig;
 	private final SourceRepositoryService sourceRepositoryService;
 
 	private final TerminalMessage terminalMessage;

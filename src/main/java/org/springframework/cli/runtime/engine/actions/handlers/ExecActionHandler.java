@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -130,8 +131,8 @@ public class ExecActionHandler {
 			terminalMessage.print("Executing: " + StringUtils.arrayToDelimitedString(commands, " ") );
 			Process process = processBuilder.start();
 			// capture the output.
-			String stderr = "";
-			String stdout = "";
+			Optional<String> stderr = Optional.empty();
+			Optional<String> stdout = Optional.empty();
 			if (exec.getTo() == null && exec.getErrto() == null) {
 				stdout = readStringFromInputStream(process.getInputStream());
 				stderr = readStringFromInputStream(process.getErrorStream());
@@ -143,17 +144,19 @@ public class ExecActionHandler {
 					terminalMessage.print("Command '" + StringUtils.arrayToDelimitedString(commands, " ") + "' executed successfully");
 					if (exec.getDefine() != null) {
 						if (exec.getDefine().getName() != null && exec.getDefine().getJsonPath() != null) {
-							ObjectMapper mapper = new ObjectMapper();
-							mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-							mapper.registerModule(new JavaTimeModule());
-							Object data = JsonPath.using(
-									Configuration.builder()
-											.jsonProvider(new JacksonJsonProvider(mapper))
-											.mappingProvider(new JacksonMappingProvider(mapper))
-											.build()
-							).parse(stdout).read(exec.getDefine().getJsonPath());
-							if (data != null) {
-								model.putIfAbsent(exec.getDefine().getName(), data);
+							if (stdout.isPresent()) {
+								ObjectMapper mapper = new ObjectMapper();
+								mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+								mapper.registerModule(new JavaTimeModule());
+								Object data = JsonPath.using(
+										Configuration.builder()
+												.jsonProvider(new JacksonJsonProvider(mapper))
+												.mappingProvider(new JacksonMappingProvider(mapper))
+												.build()
+								).parse(stdout.get()).read(exec.getDefine().getJsonPath());
+								if (data != null) {
+									model.putIfAbsent(exec.getDefine().getName(), data);
+								}
 							}
 						} else {
 							terminalMessage.print("exec: define: has a null value.  Define = " + exec.getDefine());
@@ -162,7 +165,7 @@ public class ExecActionHandler {
 				}
 				else {
 					terminalMessage.print("Command '" + StringUtils.arrayToDelimitedString(commands, " ") + "' exited with value " + process.exitValue());
-					terminalMessage.print("stderr = " + stderr);
+					terminalMessage.print("stderr = " + stderr.get());
 				}
 			}
 		}
@@ -178,15 +181,15 @@ public class ExecActionHandler {
 		}
 	}
 
-	private String readStringFromInputStream(InputStream input) {
+	private Optional<String> readStringFromInputStream(InputStream input) {
 		final String newline = System.getProperty("line.separator");
 		try (BufferedReader buffer = new BufferedReader(new InputStreamReader(input))) {
-			return buffer.lines().collect(Collectors.joining(newline));
+			return Optional.of(buffer.lines().collect(Collectors.joining(newline)));
 		}
 		catch (IOException e) {
 			logger.error("Could not read command output: " + e.getMessage());
 		}
-		return null;
+		return Optional.empty();
 	}
 
 }

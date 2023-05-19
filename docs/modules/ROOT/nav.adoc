@@ -5,6 +5,7 @@
 * xref:registering-new-projects.adoc[Registering Projects]
 * xref:adding-to-existing-projects.adoc[Adding to Existing Projects]
 * xref:boot-add-guide.adoc[Guide to "boot add"]
+* xref:ai-guide.adoc[Guide to "ai commands"]
 * xref:user-command-guide.adoc[Guide to user defined commands]
 * xref:key-concepts.adoc[Key Concepts]
 * xref:comments-on-the-approach.adoc[Comments on the approach]

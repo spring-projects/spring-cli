@@ -24,33 +24,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * @author Mark Pollack
  */
+//@JsonRootName("inject-maven-dependency")
 public class InjectMavenDependency {
 
-	private final String to;
-
-	private final String skip;
-
-	public String getTo() {
-		return to;
-	}
-
-	public String getSkip() {
-		return skip;
-	}
+	private String text;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	InjectMavenDependency(@JsonProperty("to") String to, @JsonProperty("skip") String skip) {
-		this.to = Objects.requireNonNull(to);
-		this.skip = Objects.requireNonNull(skip);
+	public InjectMavenDependency(@JsonProperty("text") String text) {
+		this.text = Objects.requireNonNull(text);
+	}
+
+	public String getText() {
+		return text;
 	}
 
 	@Override
 	public String toString() {
-		final StringBuffer sb = new StringBuffer("InjectMavenDependency{");
-		sb.append("to='").append(to).append('\'');
-		sb.append(", skip='").append(skip).append('\'');
-		sb.append('}');
-		return sb.toString();
+		return "InjectMavenDependency{" +
+				"text='" + text + '\'' +
+				'}';
 	}
-
 }

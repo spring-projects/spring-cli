@@ -1,0 +1,79 @@
+= Guide to AI Commands
+
+== Prerequisite
+You need to get a developer token from OpenAI and put the secret key in a file under your home directory, named `.openai`.
+You will need to https://platform.openai.com/signup[create an account] and https://platform.openai.com/account/api-keys[generate the token].
+
+Here is a sample of what should be in the file `~/.openai`
+
+----
+OPEN_AI_API_KEY=<paste your key here>
+----
+
+== Guide for `ai add`
+The command `ai add` will take a brief description of the code you want to add to the project, send the request off to OpenAI's ChatGPT, and then apply the code changes to your local project.
+
+Here is a short example,
+
+[source, bash]
+----
+spring ai add jpa
+----
+
+or
+
+[source, bash]
+----
+spring ai add jpa --preview true
+----
+
+This command will create the file `READAME-ai-jpa.md` that contains the response from OpenAI.
+
+If `--preview false` (the default) then the command will update your project with source and test code along with adding necessary build dependencies.
+
+
+== Iterating to get what you want
+
+Often you don't get exactly the solution you want in a first try, so you should specify additional information in the description.
+To avoid modifying files in your project, you can use the `--preview true` option so that only the `README` file is created.
+
+For example, in the previous case, the code that was created had two things that I wanted to be different.
+The first was that I wanted all the generated code to be in a single package, following a "package by feature" best practice.
+The second was that I wanted a unit test for the Repository layer, but a unit test only for the Controller layer was generated.
+
+Running the command with the following description, gave me the results I wanted.
+
+[source,bash]
+----
+spring ai add "A Spring Data JPA project with all Java code in the same package and an integration test for the Repository layer" --preview true
+----
+
+Here is a sample xref:ai-readme-sample.md[README-ai-jpa.md] file that was created using the previous command.
+
+== Guide for `ai apply`
+
+The command `ai apply` takes as an argument the name of the `README` file generated via the command `ai add` with the `--preview true` option.
+
+This lets you iterate to get the results you want and only when you are satified with the results, you can apply the code changes.
+
+For example:
+
+[source, bash]
+----
+spring ai add jpa --preview true
+----
+
+Now change the description
+[source,bash]
+----
+spring ai add "A Spring Data JPA project with all Java code in the same package and a unit test for the Repository layer" --preview true
+----
+
+Now that you are satisfied with the result, apply the changes to the code.
+
+[source, bash]
+----
+spring ai apply README-ai-jpa.md
+----
+
+

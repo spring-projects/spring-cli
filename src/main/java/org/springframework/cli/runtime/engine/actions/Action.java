@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.lang.Nullable;
 
 /**
- * The actions to undergo with the template file.
+ * The actions that can be executed
  *
  * @author Mark Pollack
  */
@@ -52,7 +52,7 @@ public class Action {
 	private final InjectMavenPlugin injectMavenPlugin;
 
 	@Nullable
-	private final InjectMavenDependency injectMavenDependency;
+	private InjectMavenDependency injectMavenDependency;
 
 	@Nullable
 	private final InjectProperties injectProperties;

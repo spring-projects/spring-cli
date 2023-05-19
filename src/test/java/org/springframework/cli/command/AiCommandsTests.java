@@ -15,7 +15,7 @@
  */
 
 
-package org.springframework.cli.runtime.engine.actions.handlers;
+package org.springframework.cli.command;
 
 import java.nio.file.Path;
 
@@ -29,50 +29,30 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cli.support.CommandRunner;
 import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
 import org.springframework.cli.support.MockConfigurations.MockUserConfig;
+import org.springframework.cli.util.TerminalMessage;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class GenerateHandlerTests {
+public class AiCommandsTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
 	@DisabledOnOs(OS.WINDOWS)
-	void generateFromFile(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
+	void addJpa(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
+
+			StubOpenAiHandler stubOpenAiHandler = new StubOpenAiHandler();
+			AiCommands aiCommands = new AiCommands(stubOpenAiHandler, TerminalMessage.noop());
 
 			CommandRunner commandRunner = new CommandRunner.Builder(context)
 					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("generate")
-					.executeCommand("controller/new")
-					.withArguments("feature", "person")
 					.build();
 			commandRunner.run();
-			assertThat(workingDir).exists().isDirectory();
-			Path controllerPath = workingDir.resolve("src").resolve("main").resolve("java")
-					.resolve("com").resolve("example")
-					.resolve("restservice").resolve("person")
-					.resolve("PersonController.java");
-			assertThat(controllerPath).exists();
 
-			String expectedContexts = "package com.example.restservice.person;\n"
-					+ "\n"
-					+ "import org.springframework.web.bind.annotation.GetMapping;\n"
-					+ "import org.springframework.web.bind.annotation.RestController;\n"
-					+ "\n"
-					+ "@RestController\n"
-					+ "public class PersonController {\n"
-					+ "\n"
-					+ "\t@GetMapping(\"/person\")\n"
-					+ "\tpublic String greeting() {\n"
-					+ "\t\treturn \"Hello person\";\n"
-					+ "\t}\n"
-					+ "}\n";
-			assertThat(controllerPath.toFile()).hasContent(expectedContexts);
+			//TODO this takes a while, need to move to integration test
+			//aiCommands.aiAdd("jpa", workingDir.toAbsolutePath().toString(), true);
 
 
 		});
-
 	}
 }

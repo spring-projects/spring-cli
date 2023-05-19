@@ -79,7 +79,7 @@ public class ProjectMergerWithMavenDepRecipe {
 			throw new SpringCliException("Could not find pom.xml in " + this.pathToMerge);
 		}
 		Path currentProjectPomPath = this.pathCurrentProject.resolve("pom.xml");
-		if (currentProjectPomPath == null) {
+		if (Files.notExists(currentProjectPomPath)) {
 			throw new SpringCliException("Could not find pom.xml in " + this.pathCurrentProject);
 		}
 		Model modelToMerge = pomReader.readPom(pomToMerge.toFile());

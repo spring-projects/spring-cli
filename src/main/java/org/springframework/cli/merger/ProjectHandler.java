@@ -109,7 +109,7 @@ public class ProjectHandler {
 
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.GREEN));
-		sb.append("Cloning ");
+		sb.append("Getting ");
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
 		sb.append("project from " + urlToUse);
 		terminalMessage.print(sb.toAttributedString());
@@ -131,7 +131,7 @@ public class ProjectHandler {
 
 		AttributedStringBuilder sb = new AttributedStringBuilder();
 		sb.style(sb.style().foreground(AttributedStyle.WHITE));
-		sb.append("Cloning in temp directory project with URL " + urlToUse);
+		sb.append("Getting project with URL " + urlToUse);
 		this.terminalMessage.print(sb.toAttributedString());
 
 

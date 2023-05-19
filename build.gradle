@@ -35,6 +35,8 @@ ext {
 	set('jaxbApiVersion', '2.3.1')
 	set('jaxbRuntimeVersion', '2.3.3')
 	set('jacksonVersion', '2.15.0')
+	set('openaiVersion', '0.12.0')
+	set('commonmarkVersion', '0.21.0')
 }
 
 configurations.all {
@@ -61,6 +63,8 @@ dependencies {
 	implementation 'com.jayway.jsonpath:json-path'
 	implementation 'javax.xml.bind:jaxb-api'
 	implementation 'org.glassfish.jaxb:jaxb-runtime'
+	implementation 'com.theokanning.openai-gpt3-java:service'
+	implementation 'org.commonmark:commonmark'
 	testImplementation 'org.openrewrite:rewrite-test'
 	testImplementation 'uk.org.webcompere:system-stubs-jupiter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -93,6 +97,8 @@ dependencyManagement {
 		dependency "javax.xml.bind:jaxb-api:${jaxbApiVersion}"
 		dependency "org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}"
 		dependency "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
+		dependency "com.theokanning.openai-gpt3-java:service:${openaiVersion}"
+		dependency "org.commonmark:commonmark:${commonmarkVersion}"
 	}
 	imports {
 		mavenBom "org.springframework.shell:spring-shell-dependencies:${springShellVersion}"

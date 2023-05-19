@@ -46,9 +46,11 @@ import org.springframework.cli.runtime.engine.actions.Conditional;
 import org.springframework.cli.runtime.engine.actions.Exec;
 import org.springframework.cli.runtime.engine.actions.Generate;
 import org.springframework.cli.runtime.engine.actions.Inject;
+import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
 import org.springframework.cli.runtime.engine.actions.handlers.ExecActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.GenerateActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.InjectActionHandler;
+import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenDependencyActionHandler;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.templating.HandlebarsTemplateEngine;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
@@ -175,11 +177,18 @@ public class DynamicCommand {
 					injectActionHandler.execute(inject);
 				}
 
+				InjectMavenDependency injectMavenDependency = action.getInjectMavenDependency();
+				if (injectMavenDependency != null) {
+					InjectMavenDependencyActionHandler injectMavenDependencyActionHandler = new InjectMavenDependencyActionHandler(cwd, terminalMessage);
+					injectMavenDependencyActionHandler.execute(injectMavenDependency);
+				}
+
 				Exec exec = action.getExec();
 				if (exec != null) {
 					ExecActionHandler execActionHandler = new ExecActionHandler(templateEngine, model, dynamicSubCommandPath, terminalMessage);
 					execActionHandler.executeShellCommand(exec);
 				}
+
 			}
 		}
 

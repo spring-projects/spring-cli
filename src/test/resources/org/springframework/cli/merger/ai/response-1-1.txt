@@ -1,0 +1,198 @@
+*Note: The code provided is just an example and may not be suitable for production use.*
+
+To add Spring Data JPA to an existing Maven project, the following steps can be taken:
+
+1. Add the Spring Data JPA dependency to the pom.xml file.
+
+```xml
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+```
+
+2. If using a database, add the H2 database dependency to the pom.xml file.
+
+```xml
+<dependency>
+   <groupId>com.h2database</groupId>
+   <artifactId>h2</artifactId>
+   <scope>runtime</scope>
+</dependency>
+```
+
+3. Create the package structure "com.xkcd.sample.ai.jpa"
+
+4. Create the Person entity class with the name and phone number properties, and generate constructor, getters, and setters.
+
+```java
+package com.xkcd.sample.ai.jpa;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Person {
+
+   @Id
+   @GeneratedValue(strategy=GenerationType.AUTO)
+   private Long id;
+
+   private String name;
+
+   private String phoneNumber;
+
+   public Person() {}
+
+   public Person(String name, String phoneNumber) {
+       this.name = name;
+       this.phoneNumber = phoneNumber;
+   }
+
+   public Long getId() {
+       return id;
+   }
+
+   public void setId(Long id) {
+       this.id = id;
+   }
+
+   public String getName() {
+       return name;
+   }
+
+   public void setName(String name) {
+       this.name = name;
+   }
+
+   public String getPhoneNumber() {
+       return phoneNumber;
+   }
+
+   public void setPhoneNumber(String phoneNumber) {
+       this.phoneNumber = phoneNumber;
+   }
+
+}
+```
+
+5. Create the PersonRepository interface that extends JpaRepository.
+
+```java
+package com.xkcd.sample.ai.jpa;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PersonRepository extends JpaRepository<Person, Long> {}
+```
+
+6. Create the PersonService class with a save method that calls the PersonRepository save method.
+
+```java
+package com.xkcd.sample.ai.jpa;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class PersonService {
+
+   @Autowired
+   private PersonRepository personRepository;
+
+   public void save(Person person) {
+       personRepository.save(person);
+   }
+
+}
+```
+
+7. Create the PersonController class with a POST endpoint that accepts a JSON payload with name and phoneNumber properties, and calls the PersonService save method.
+
+```java
+package com.xkcd.sample.ai.jpa;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class PersonController {
+
+   @Autowired
+   private PersonService personService;
+
+   @PostMapping("/person")
+   public ResponseEntity<Void> createPerson(@RequestBody Person person) {
+       personService.save(person);
+       return new ResponseEntity<>(HttpStatus.CREATED);
+   }
+
+}
+```
+
+8. Create the PersonControllerTest class with a test method that sends a POST request to the "/person" endpoint with a JSON payload containing name and phoneNumber properties, and verifies that the response status is CREATED.
+
+```java
+package com.xkcd.sample.ai.jpa;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class PersonControllerTest {
+
+   @Autowired
+   private MockMvc mockMvc;
+
+   @Test
+   public void createPersonTest() throws Exception {
+       String json = "{\"name\":\"John Doe\",\"phoneNumber\":\"1234567890\"}";
+       MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/person")
+               .contentType(MediaType.APPLICATION_JSON).content(json))
+               .andExpect(MockMvcResultMatchers.status().isCreated())
+               .andReturn();
+       assertThat(mvcResult.getResponse().getStatus()).isEqualTo(201);
+   }
+
+}
+```
+
+9. Add the @SpringBootApplication annotation and the @EnableJpaRepositories annotation to the main application class.
+
+```java
+package com.xkcd.sample.ai.jpa;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
+@SpringBootApplication
+@EnableJpaRepositories
+public class JpaApplication {
+
+   public static void main(String[] args) {
+       SpringApplication.run(JpaApplication.class, args);
+   }
+
+}
+```
+
+Tutorials to learn more about Spring Data JPA:
+- https://spring.io/guides/gs/accessing-data-jpa/
+- https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa

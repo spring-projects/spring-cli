@@ -21,8 +21,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.cli.testutil.TestResourceUtils;
@@ -36,18 +41,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ActionsFileReadTests {
 
 	@Test
-	void readTest() throws JsonProcessingException {
+	void readConditional() throws JsonProcessingException {
 		ClassPathResource classPathResource = TestResourceUtils.qualifiedResource(getClass(), "actions.yaml");
 		ActionFileReader actionFileReader = new ActionFileReader();
 		ActionsFile actionsFile = actionFileReader.read(classPathResource);
 		assertThat(actionsFile.getConditional().getArtifactId()).isEqualTo("spring-cloud-azure-starter-jdbc-postgresql");
 	}
 
-	public static String asString(Resource resource) {
-		try (Reader reader = new InputStreamReader(resource.getInputStream(), UTF_8)) {
-			return FileCopyUtils.copyToString(reader);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
+	@Test
+	void readInjectMavenDep() {
+		ClassPathResource classPathResource = TestResourceUtils.qualifiedResource(getClass(), "inject-maven-deps.yaml");
+
+		ActionFileReader actionFileReader = new ActionFileReader();
+		ActionsFile actionsFile = actionFileReader.read(classPathResource);
+		assertThat(actionsFile.getActions().size()).isEqualTo(1);
+		assertThat(actionsFile.getActions().get(0).getInjectMavenDependency().getText().contains("spring-boot-starter-data-jpa"));
+		assertThat(actionsFile.getActions().get(0).getInjectMavenDependency().getText().contains("com.h2database"));
+		assertThat(actionsFile.getActions().get(0).getInjectMavenDependency().getText().contains("spring-boot-starter-test"));
+		//.getArtifactId()).isEqualTo("spring-cloud-azure-starter-jdbc-postgresql");
 	}
+
+
+//	public static String asString(Resource resource) {
+//		try (Reader reader = new InputStreamReader(resource.getInputStream(), UTF_8)) {
+//			return FileCopyUtils.copyToString(reader);
+//		} catch (IOException e) {
+//			throw new UncheckedIOException(e);
+//		}
+//	}
 }

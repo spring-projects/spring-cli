@@ -1,6 +1,6 @@
 = Guide to "boot add"
 
-All of the projects that are available in the `project list` command can be used to addor modify code and configuration to an existing project.
+All the projects that are available in the `project list` command can be used to add code and configuration to an existing project.
 
 The CLI does this by
 

@@ -25,6 +25,7 @@ import java.util.function.Function;
 import com.google.common.jimfs.Jimfs;
 import org.jline.terminal.Terminal;
 
+import org.springframework.cli.command.AiCommands;
 import org.springframework.cli.command.BootCommands;
 import org.springframework.cli.command.CommandCommands;
 import org.springframework.cli.config.SpringCliUserConfig;

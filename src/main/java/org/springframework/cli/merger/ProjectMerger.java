@@ -25,6 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -111,11 +112,11 @@ public class ProjectMerger {
 	public void merge() {
 		PomReader pomReader = new PomReader();
 		Path toMergeProjectPomPath = this.toMergeProjectPath.resolve("pom.xml");
-		if (toMergeProjectPomPath == null) {
+		if (Files.notExists(toMergeProjectPomPath)) {
 			throw new SpringCliException("Could not find pom.xml in " + this.toMergeProjectPath);
 		}
 		Path currentProjectPomPath = this.currentProjectPath.resolve("pom.xml");
-		if (currentProjectPomPath == null) {
+		if (Files.notExists(currentProjectPomPath)) {
 			throw new SpringCliException("Could not find pom.xml in " + this.currentProjectPath + ".  Make sure you are running the command in the project's root directory or specify the --path option.");
 		}
 		Model currentModel = pomReader.readPom(currentProjectPomPath.toFile());
@@ -502,7 +503,7 @@ public class ProjectMerger {
 		}
 		for (Result result : resultList) {
 			// write updated file.
-			try (BufferedWriter sourceFileWriter = Files.newBufferedWriter(currentProjectPomPath)) {
+			try (BufferedWriter sourceFileWriter = Files.newBufferedWriter(currentProjectPomPath, StandardCharsets.UTF_8)) {
 				sourceFileWriter.write(result.getAfter().printAllTrimmed());
 			}
 		}

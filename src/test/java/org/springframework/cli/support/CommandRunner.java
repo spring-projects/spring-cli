@@ -59,27 +59,28 @@ public class CommandRunner {
 
 	public void run() {
 
-		String[] commandAndSubCommand = executeCommand.split("\\/");
-		Map<String, ModelPopulator> modelPopulatorMap = context.getBeansOfType(ModelPopulator.class);
-		DynamicCommand dynamicCommand = new DynamicCommand(commandAndSubCommand[0], commandAndSubCommand[1],
-				new ArrayList<>(modelPopulatorMap.values()), TerminalMessage.noop());
+		if (executeCommand != null) {
+			String[] commandAndSubCommand = executeCommand.split("\\/");
+			Map<String, ModelPopulator> modelPopulatorMap = context.getBeansOfType(ModelPopulator.class);
+			DynamicCommand dynamicCommand = new DynamicCommand(commandAndSubCommand[0], commandAndSubCommand[1],
+					new ArrayList<>(modelPopulatorMap.values()), TerminalMessage.noop());
 
-		Map<String, Object> model = new HashMap<>();
-		for (Entry<String, String> argument : arguments) {
-			model.put(argument.getKey(), argument.getValue());
+			Map<String, Object> model = new HashMap<>();
+			for (Entry<String, String> argument : arguments) {
+				model.put(argument.getKey(), argument.getValue());
+			}
+
+			if (commandGroup != null) {
+				Path commandPath = workingDir.resolve(".spring").resolve("commands")
+						.resolve(commandAndSubCommand[0])
+						.resolve(commandAndSubCommand[1]);
+				assertThat(commandPath).withFailMessage("Directory for command "
+						+ commandAndSubCommand + " could not be found.\n  Looked in directory "
+						+ commandGroup +
+						".\n  Check that 'installCommandGroup' and 'executeCommand' are not mismatched.\n");
+				dynamicCommand.runCommand(workingDir, ".spring", "commands", model);
+			}
 		}
-
-		Path commandPath = workingDir.resolve(".spring").resolve("commands")
-				.resolve(commandAndSubCommand[0])
-				.resolve(commandAndSubCommand[1]);
-		/*					.installCommandGroup("exec-redirect")
-					.executeCommand("working/dir")*/
-		assertThat(commandPath).withFailMessage("Directory for command "
-				+ commandAndSubCommand + " could not be found.\n  Looked in directory "
-				+ commandGroup +
-				".\n  Check that 'installCommandGroup' and 'executeCommand' are not mismatched.\n");
-		dynamicCommand.runCommand(workingDir, ".spring", "commands", model);
-
 	}
 
 	public static class Builder {
@@ -152,12 +153,10 @@ public class CommandRunner {
 					.isNotNull();
 			IntegrationTestSupport.installInWorkingDirectory(projectPath, workingDir);
 
-			assertThat(commandGroup)
-					.withFailMessage("Please invoke the method 'installCommandGroup' with the name of the command group to install.")
-					.isNotNull();
-			Path commandInstallPath = workingDir.resolve(".spring").resolve("commands");
-			IntegrationTestSupport.installInWorkingDirectory(commandGroupPath, commandInstallPath);
-
+			if (commandGroupPath != null) {
+				Path commandInstallPath = workingDir.resolve(".spring").resolve("commands");
+				IntegrationTestSupport.installInWorkingDirectory(commandGroupPath, commandInstallPath);
+			}
 			return new CommandRunner(this);
 		}
 	}

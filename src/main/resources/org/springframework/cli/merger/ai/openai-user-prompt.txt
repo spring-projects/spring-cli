@@ -1,0 +1,6 @@
+Create the Spring Java application with the following placeholder information
+
+Spring Project Name: {{spring-project-name}}
+Description: {{description}}
+Build Tool: {{build-tool}}
+Package Name:  {{package-name}}
