@@ -27,6 +27,8 @@ Ensure that your solution meets the following criteria:
 10. Utilize classes from the Java Jackson library for JSON manipulation.
 11. Include unit tests for each architectural layer (Controller, Service, Repository) as appropriate.
 12. Include an integration test if there are multiple architectural layers.
-13. Add any required annotations to the main application class (class with the @SpringBootApplication annotation).
-14. Ensure the sample code resembles that available in the GitHub repositories of the organization located at https://github.com/spring-guides.
-15. When generating markdown for code blocks in the final response, include an appropriate value for the "info" field.
+13. Include import statements in all code files.
+14. Add any required annotations to the main application class (class with the @SpringBootApplication annotation).
+15. Ensure the sample code resembles that available in the GitHub repositories of the organization located at https://github.com/spring-guides.
+16. When generating markdown for code blocks in the final response, include an appropriate value for the "info" field.
+17. Include the value 'properties' for the markdown 'info' field when generating markdown for Spring Boot 'application.properties'

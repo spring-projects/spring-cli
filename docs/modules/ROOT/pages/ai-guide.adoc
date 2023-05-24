@@ -11,7 +11,7 @@ OPEN_AI_API_KEY=<paste your key here>
 ----
 
 == Guide for `ai add`
-The command `ai add` will take a brief description of the code you want to add to the project, send the request off to OpenAI's ChatGPT, and then apply the code changes to your local project.
+The command `ai add` will take a brief description of the code you want to add to the project, send the request off to OpenAI's API, and then apply the code changes to your local project.
 
 Here is a short example,
 
@@ -29,6 +29,8 @@ spring ai add jpa --preview true
 
 This command will create the file `READAME-ai-jpa.md` that contains the response from OpenAI.
 
+*NOTE:* The code generation on OpenAI takes 2-3 minutes, depending on the weather ;)  Be patient.
+
 If `--preview false` (the default) then the command will update your project with source and test code along with adding necessary build dependencies.
 
 
@@ -36,6 +38,11 @@ If `--preview false` (the default) then the command will update your project wit
 
 Often you don't get exactly the solution you want in a first try, so you should specify additional information in the description.
 To avoid modifying files in your project, you can use the `--preview true` option so that only the `README` file is created.
+
+There is a base set of criteria that is provided to OpenAI that defines common requirements for the code to be generated.
+You can see that file here.  Information such as the package name and build tool to use are determined from your project's structure.
+
+The description you pass in the `ai command` adds to that set of common criteria.
 
 For example, in the previous case, the code that was created had two things that I wanted to be different.
 The first was that I wanted all the generated code to be in a single package, following a "package by feature" best practice.
