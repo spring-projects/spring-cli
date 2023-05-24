@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Registering Projects :: Spring CLI</title>
-    <link rel="prev" href="creating-new-projects.html">
-    <link rel="next" href="adding-to-existing-projects.html">
+    <title>Guide to AI Commands :: Spring CLI</title>
+    <link rel="prev" href="boot-add-guide.html">
+    <link rel="next" href="user-command-guide.html">
     <meta name="generator" content="Antora 3.0.0">
     <script>
 !function (theme) {
@@ -127,7 +127,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="creating-new-projects.html">Creating New Projects</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="registering-new-projects.html">Registering Projects</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -136,7 +136,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="boot-add-guide.html">Guide to "boot add"</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="ai-guide.html">Guide to "ai commands"</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -281,153 +281,137 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">spring-cli</a></li>
-    <li><a href="registering-new-projects.html">Registering Projects</a></li>
+    <li><a href="ai-guide.html">Guide to "ai commands"</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/registering-new-projects.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/ai-guide.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
-<aside class="toc sidebar" data-title="Registering Projects" data-levels="2">
+<aside class="toc sidebar" data-title="Guide to AI Commands" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 id="page-title" class="page">Registering Projects</h1>
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>You can register your own project catalog and individual projects to reflect the types of applications that are most frequenly used by you and your team.</p>
-</div>
-</div>
-</div>
+<h1 id="page-title" class="page">Guide to AI Commands</h1>
 <div class="sect1">
-<h2 id="_adding_a_project_catalog"><a class="anchor" href="#_adding_a_project_catalog"></a>Adding a Project Catalog</h2>
+<h2 id="_prerequisite"><a class="anchor" href="#_prerequisite"></a>Prerequisite</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To add a project catalog that contains applications which are similar to the Spring Getting Started guides found on <a href="https://spring.io/guides" class="bare">https://spring.io/guides</a>, run the following command to add the catalog</p>
+<p>You need to get a developer token from OpenAI and put the secret key in a file under your home directory, named <code>.openai</code>.
+You will need to <a href="https://platform.openai.com/signup">create an account</a> and <a href="https://platform.openai.com/account/api-keys">generate the token</a>.</p>
+</div>
+<div class="paragraph">
+<p>Here is a sample of what should be in the file <code>~/.openai</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring catalog add gs https://github.com/rd-1-2022/spring-gs-catalog</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>or if you prefer you can specify the command option names</p>
-</div>
-<div class="paragraph">
-<p>catalog add --name gs --url <a href="https://github.com/rd-1-2022/spring-gs-catalog" class="bare">https://github.com/rd-1-2022/spring-gs-catalog</a></p>
-</div>
-<div class="paragraph">
-<p>Now you can see what projects you can create using the command</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring project list</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To create other projects, you can register a project with the Spring CLI or import a project catalog.</p>
-</div>
-<div class="paragraph">
-<p>To import a project catalog with applications that are similar to the Spring Getting Started guides found on spring.io/guides, run the following command to import the catalog</p>
-</div>
-<div class="paragraph">
-<p>catalog add gs <a href="https://github.com/rd-1-2022/spring-gs-catalog" class="bare">https://github.com/rd-1-2022/spring-gs-catalog</a></p>
-</div>
-<div class="paragraph">
-<p>or if you prefer you can specify the command option names</p>
-</div>
-<div class="paragraph">
-<p>catalog add --name gs --url <a href="https://github.com/rd-1-2022/spring-gs-catalog" class="bare">https://github.com/rd-1-2022/spring-gs-catalog</a></p>
-</div>
-<div class="paragraph">
-<p>Now you can see what projects you can create using the command</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring project list</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>That returns the following table</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
-│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
-│          │                                                        │JPA.                                                            │       │              │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
-│          │                                                        │                                                                │       │eureka]       │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To create a new Spring Data JPA project, also setting the package name</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new jpa –name myjpaproject –package-name com.xkcd</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To create a new Spring Data JPA project, also setting the package name</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new jpa –name myjpaproject –package-name com.xkcd</code></pre>
+<pre>OPEN_AI_API_KEY=&lt;paste your key here&gt;</pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_adding_an_individual_project"><a class="anchor" href="#_adding_an_individual_project"></a>Adding an individual project</h2>
+<h2 id="_guide_for_ai_add"><a class="anchor" href="#_guide_for_ai_add"></a>Guide for <code>ai add</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Instead of using a catalog, you can add an individual project using the command <code>project add</code>.  For example</p>
+<p>The command <code>ai add</code> will take a brief description of the code you want to add to the project, send the request off to OpenAI&#8217;s API, and then apply the code changes to your local project.</p>
+</div>
+<div class="paragraph">
+<p>Here is a short example,</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring project add scheduling https://github.com/rd-1-2022/rpt-spring-scheduling-tasks</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add jpa</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Now if you run <code>spring project list</code> you will see this project in addition to those from the catalog</p>
+<p>or</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
-│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│scheduling│https://github.com/rd-1-2022/rpt-spring-scheduling-tasks│                                                                │       │[]            │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
-│          │                                                        │JPA.                                                            │       │              │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
-│          │                                                        │                                                                │       │eureka]       │
-└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add jpa --preview true</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can now create a new project that showcases how to use scheduling features via the command</p>
+<p>This command will create the file <code>READAME-ai-jpa.md</code> that contains the response from OpenAI.</p>
+</div>
+<div class="paragraph">
+<p><strong>NOTE:</strong> The code generation on OpenAI takes 2-3 minutes, depending on the weather ;)  Be patient.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--preview false</code> (the default) then the command will update your project with source and test code along with adding necessary build dependencies.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_iterating_to_get_what_you_want"><a class="anchor" href="#_iterating_to_get_what_you_want"></a>Iterating to get what you want</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Often you don&#8217;t get exactly the solution you want in a first try, so you should specify additional information in the description.
+To avoid modifying files in your project, you can use the <code>--preview true</code> option so that only the <code>README</code> file is created.</p>
+</div>
+<div class="paragraph">
+<p>There is a base set of criteria that is provided to OpenAI that defines common requirements for the code to be generated.
+You can see that file here.  Information such as the package name and build tool to use are determined from your project&#8217;s structure.</p>
+</div>
+<div class="paragraph">
+<p>The description you pass in the <code>ai command</code> adds to that set of common criteria.</p>
+</div>
+<div class="paragraph">
+<p>For example, in the previous case, the code that was created had two things that I wanted to be different.
+The first was that I wanted all the generated code to be in a single package, following a "package by feature" best practice.
+The second was that I wanted a unit test for the Repository layer, but a unit test only for the Controller layer was generated.</p>
+</div>
+<div class="paragraph">
+<p>Running the command with the following description, gave me the results I wanted.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new scheduling</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add "A Spring Data JPA project with all Java code in the same package and an integration test for the Repository layer" --preview true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is a sample <a href="#ai-readme-sample.md" class="xref unresolved">README-ai-jpa.md</a> file that was created using the previous command.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_guide_for_ai_apply"><a class="anchor" href="#_guide_for_ai_apply"></a>Guide for <code>ai apply</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The command <code>ai apply</code> takes as an argument the name of the <code>README</code> file generated via the command <code>ai add</code> with the <code>--preview true</code> option.</p>
+</div>
+<div class="paragraph">
+<p>This lets you iterate to get the results you want and only when you are satified with the results, you can apply the code changes.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add jpa --preview true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now change the description</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add "A Spring Data JPA project with all Java code in the same package and a unit test for the Repository layer" --preview true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now that you are satisfied with the result, apply the changes to the code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai apply README-ai-jpa.md</code></pre>
 </div>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="creating-new-projects.html">Creating New Projects</a></span>
-  <span class="next"><a href="adding-to-existing-projects.html">Adding to Existing Projects</a></span>
+  <span class="prev"><a href="boot-add-guide.html">Guide to "boot add"</a></span>
+  <span class="next"><a href="user-command-guide.html">Guide to user defined commands</a></span>
 </nav>
 </article>
   </div>
