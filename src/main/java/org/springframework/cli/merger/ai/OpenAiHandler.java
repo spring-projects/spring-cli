@@ -19,11 +19,13 @@ package org.springframework.cli.merger.ai;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -42,7 +44,10 @@ import java.util.regex.Pattern;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
@@ -57,8 +62,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.springframework.cli.util.PropertyFileUtils.mergeProperties;
 
 public class OpenAiHandler implements AiHandler {
+
+	private static final Logger logger = LoggerFactory.getLogger(OpenAiHandler.class);
 
 	private final HandlebarsTemplateEngine handlebarsTemplateEngine = new HandlebarsTemplateEngine();
 
@@ -66,13 +74,13 @@ public class OpenAiHandler implements AiHandler {
 		Path projectPath = getProjectPath(path);
 
 		ProjectNameHeuristic projectNameHeuristic = new ProjectNameHeuristic();
-		terminalMessage.print("Deriving main Spring project required...");
+		logger.debug("Deriving main Spring project required...");
 		ProjectName projectName = projectNameHeuristic.deriveProjectName(description);
-		terminalMessage.print("Done.  The code will primarily use " + projectName.getSpringProjectName());
+		logger.debug("Done.  The code will primarily use " + projectName.getSpringProjectName());
 
 		Map<String, String> context = getContext(description, projectName, projectPath);
 		PromptRequest promptRequest = createPrompt(context);
-		terminalMessage.print("Generating code ...");
+		terminalMessage.print("Generating code.  This will take a few minutes ...");
 		String response = generate(promptRequest);
 		terminalMessage.print("Done.");
 
@@ -274,26 +282,73 @@ public class OpenAiHandler implements AiHandler {
 						writeMavenDependencies(projectArtifact, projectPath, terminalMessage);
 						break;
 					case APPLICATION_PROPERTIES:
+						writeApplicationProperties(projectArtifact, projectPath);
 						break;
 					case MAIN_CLASS:
+						updateMainApplicationClassAnnotations(projectArtifact, projectPath, terminalMessage);
+						break;
+					case HTML:
+						writeHtml(projectArtifact, projectPath);
 						break;
 					default:
 						break;
 				}
 			}
 			catch (IOException ex) {
-				System.err.println(ex);
 				ex.printStackTrace();
 				throw new SpringCliException("Could not write project artifact.", ex);
 			}
 		}
 	}
 
+	private void updateMainApplicationClassAnnotations(ProjectArtifact projectArtifact, Path projectPath, TerminalMessage terminalMessage) {
+		// TODO mer
+	}
+
+	private void writeHtml(ProjectArtifact projectArtifact, Path projectPath) throws IOException {
+		String html = projectArtifact.getText();
+		String fileName = extractFilenameFromComment(html, "<!--\\s*filename:\\s*(\\S+\\.html)\\s*-->");
+		if (fileName != null) {
+			Path htmlFile = projectPath.resolve(fileName);
+			createFile(htmlFile);
+			try (Writer writer = new BufferedWriter(new FileWriter(htmlFile.toFile()))) {
+				writer.write(projectArtifact.getText());
+			}
+		}
+	}
+
+	private static String extractFilenameFromComment(String content, String commentPattern) {
+		Pattern pattern = Pattern.compile(commentPattern);
+		Matcher matcher = pattern.matcher(content);
+		if (matcher.find()) {
+			return matcher.group(1);
+		}
+		return null;
+	}
+
+	private void writeApplicationProperties(ProjectArtifact projectArtifact, Path projectPath) throws IOException {
+		Path applicationPropertiesPath =  projectPath.resolve("src").resolve("main").resolve("resources").resolve("application.properties");
+
+		if (Files.notExists(applicationPropertiesPath)) {
+			createFile(applicationPropertiesPath);
+		}
+		Properties srcProperties = new Properties();
+		Properties destProperties = new Properties();
+		srcProperties.load(IOUtils.toInputStream(projectArtifact.getText(), StandardCharsets.UTF_8));
+		destProperties.load(new FileInputStream(applicationPropertiesPath.toFile()));
+		Properties mergedProperties = mergeProperties(srcProperties, destProperties);
+		mergedProperties.store(new FileWriter(applicationPropertiesPath.toFile()), "updated by spring ai add");
+	}
+
 	private void writeMavenDependencies(ProjectArtifact projectArtifact, Path projectPath, TerminalMessage terminalMessage) {
 		InjectMavenDependencyActionHandler injectMavenDependencyActionHandler =
 				new InjectMavenDependencyActionHandler(projectPath, terminalMessage);
 		InjectMavenDependency injectMavenDependency = new InjectMavenDependency(projectArtifact.getText());
-		injectMavenDependencyActionHandler.execute(injectMavenDependency);
+		try {
+			injectMavenDependencyActionHandler.execute(injectMavenDependency);
+		} catch (Exception ex) {
+			terminalMessage.print("Could not inject Maven dependencies:  " + ex.getMessage());
+		}
 	}
 
 	private void writeTestCode(ProjectArtifact projectArtifact, Path projectPath) throws IOException {

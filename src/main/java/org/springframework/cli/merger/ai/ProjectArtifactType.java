@@ -27,6 +27,8 @@ public enum ProjectArtifactType {
 
 	TEST_CODE,
 
-	MAVEN_DEPENDENCIES
+	MAVEN_DEPENDENCIES,
+
+	HTML
 
 }

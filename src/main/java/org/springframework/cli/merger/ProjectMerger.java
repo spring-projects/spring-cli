@@ -75,6 +75,7 @@ import org.springframework.cli.util.RootPackageFinder;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.FileSystemResource;
 
+import static org.springframework.cli.util.PropertyFileUtils.mergeProperties;
 import static org.springframework.cli.util.RefactorUtils.refactorPackage;
 
 /**
@@ -354,13 +355,7 @@ public class ProjectMerger {
 				.map(f -> f.substring(filename.lastIndexOf(".") + 1));
 	}
 
-	private Properties mergeProperties(Properties... properties) {
-		Properties mergedProperties = new Properties();
-		for (Properties property : properties) {
-			mergedProperties.putAll(property);
-		}
-		return mergedProperties;
-	}
+
 
 	private void refactorToMergeCodebase() {
 

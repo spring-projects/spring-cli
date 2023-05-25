@@ -42,4 +42,12 @@ public class PropertyFileUtils {
 			IOUtils.closeQuietly(in);
 		}
 	}
+
+	public static Properties mergeProperties(Properties... properties) {
+		Properties mergedProperties = new Properties();
+		for (Properties property : properties) {
+			mergedProperties.putAll(property);
+		}
+		return mergedProperties;
+	}
 }

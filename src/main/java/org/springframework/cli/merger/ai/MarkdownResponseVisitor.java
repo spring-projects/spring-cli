@@ -31,11 +31,6 @@ public class MarkdownResponseVisitor extends AbstractVisitor {
 	private List<ProjectArtifact> projectArtifacts = new ArrayList<>();
 
 	@Override
-	public void visit(Paragraph paragraph) {
-		super.visit(paragraph);
-	}
-
-	@Override
 	public void visit(FencedCodeBlock fencedCodeBlock) {
 		String info = fencedCodeBlock.getInfo();
 		String code = fencedCodeBlock.getLiteral();
@@ -44,6 +39,12 @@ public class MarkdownResponseVisitor extends AbstractVisitor {
 		}
 		if (info.equalsIgnoreCase("xml")) {
 			addMavenDependencies(code);
+		}
+		if (info.equalsIgnoreCase("properties")) {
+			addApplicationProperties(code);
+		}
+		if (info.equalsIgnoreCase("html")) {
+			addHtml(code);
 		}
 		if (info.isBlank()) {
 			// sometimes the response doesn't contain
@@ -54,6 +55,14 @@ public class MarkdownResponseVisitor extends AbstractVisitor {
 			}
 		}
 
+	}
+
+	private void addHtml(String code) {
+		addIfNotPresent(new ProjectArtifact(ProjectArtifactType.HTML, code));
+	}
+
+	private void addApplicationProperties(String code) {
+		addIfNotPresent(new ProjectArtifact(ProjectArtifactType.APPLICATION_PROPERTIES, code));
 	}
 
 	private void addMavenDependencies(String code) {
@@ -74,6 +83,8 @@ public class MarkdownResponseVisitor extends AbstractVisitor {
 		// TODO - investigate why Node has duplicate entries
 		if (!this.projectArtifacts.contains(projectArtifact)) {
 			this.projectArtifacts.add(projectArtifact);
+		} else {
+			//System.out.println("duplicate project artifact :(");
 		}
 	}
 
