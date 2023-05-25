@@ -362,7 +362,7 @@ public class ProjectMerger {
 		logger.debug("Looking for @SpringBootApplication in directory " + this.currentProjectPath.toFile());
 		Optional<String> currentRootPackageName = RootPackageFinder.findRootPackage(this.currentProjectPath.toFile());
 		if (currentRootPackageName.isEmpty()) {
-			terminalMessage.print("Could find root package containing class with @SpringBootApplication in " + this.currentProjectPath.toFile());
+			terminalMessage.print("Could not find root package containing class with @SpringBootApplication in " + this.currentProjectPath.toFile());
 			terminalMessage.print("Stopping");
 			return;
 		}
@@ -370,7 +370,7 @@ public class ProjectMerger {
 		logger.debug("Looking for @SpringBootApplication in directory " + this.toMergeProjectPath.toFile());
 		Optional<String> toMergeRootPackageName = RootPackageFinder.findRootPackage(this.toMergeProjectPath.toFile());
 		if (toMergeRootPackageName.isEmpty()) {
-			terminalMessage.print("Could find root package containing class with @SpringBootApplication in " + this.toMergeProjectPath.toFile());
+			terminalMessage.print("Could find not root package containing class with @SpringBootApplication in " + this.toMergeProjectPath.toFile());
 			terminalMessage.print("Stopping");
 			return;
 		}

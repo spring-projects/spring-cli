@@ -347,7 +347,7 @@ public class OpenAiHandler implements AiHandler {
 		try {
 			injectMavenDependencyActionHandler.execute(injectMavenDependency);
 		} catch (Exception ex) {
-			terminalMessage.print("Could not inject Maven dependencies:  " + ex.getMessage());
+			terminalMessage.print("Could not inject Maven dependencies.  Look at pom.xml contents for messages on what went wrong, e.g. 'No version provided'\n" + ex.getMessage());
 		}
 	}
 

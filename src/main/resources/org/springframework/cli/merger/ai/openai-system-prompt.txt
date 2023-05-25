@@ -19,6 +19,7 @@ Ensure that your solution meets the following criteria:
 2. Include build tool dependency management configuration for the project (partial file, not full project dependency configuration).
 3. Include necessary Spring Boot Starter dependencies such as "spring-boot-starter-jpa."
 4. Include the H2 database dependency if applicable.
+6. Include the MySql database dependency on Maven group-id "com.mysql" and artifact-Id "mysql-connector-j" for MySQL if applicable.
 5. Use the dependency on Maven artifactId "spring-boot-starter-test" for JUnit related dependencies, without directly adding a JUnit dependency.
 6. Place all code, including test code, in the same Java package, following the "package per feature" convention.
 7. Include architectural layers (Controller, Service, Repository) as appropriate.
@@ -30,11 +31,8 @@ Ensure that your solution meets the following criteria:
 13. Include import statements in all code files.
 14. Add any required annotations to the main application class (class with the @SpringBootApplication annotation).
 15. Ensure the sample code resembles that available in the GitHub repositories of the organization located at https://github.com/spring-guides.
-16. Use the dependency on Maven artifactId "mysql-connector-j" for MySQL related dependencies
 17. When generating markdown for code blocks in the final response, include an appropriate value for the "info" field.
 18. If the application uses Spring Security, include the following dependency artifact IDs:
   * spring-boot-starter-security
   * spring-security-test
-19. If the application uses Thymeleaf, include the following dependency artifact ID:
-  * spring-boot-starter-thymeleaf
 20. Use a SecurityFilterChain and UserDetailsService @Bean definitions for Spring Security-related code instead of extending WebSecurityConfigurerAdapter directly.

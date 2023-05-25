@@ -7,6 +7,7 @@ Package Name:  {{package-name}}
 
 Ensure the solution meets the following additional criteria
 
-1. When generating markdown for the Spring Boot 'application.properties' file, include the value 'properties' for the markdown 'info' field.
-2. For any HTML file generated, include a comment at the beginning of the file that contains the full path to the filename, with the placeholder prefix 'filename:'.
-3. Include import statements in all code files.
+1. Include import statements in all code files.
+2. When generating markdown for the Spring Boot 'application.properties' file, include the value 'properties' for the markdown 'info' field.  Avoid creating a generic example of `application.properties` markdown.
+3. Include a comment at the beginning of each generated HTML file that contains the full path to the filename, with the placeholder prefix 'filename:'.  If no HTML files are generated, do not add any comments to HTML files.
+4. Include the MySql database dependency on Maven group-id "com.mysql" and artifact-Id "mysql-connector-j" for MySQL if applicable.
