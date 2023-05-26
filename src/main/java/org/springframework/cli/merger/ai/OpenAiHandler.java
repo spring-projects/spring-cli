@@ -29,15 +29,16 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -80,16 +81,33 @@ public class OpenAiHandler implements AiHandler {
 
 		Map<String, String> context = getContext(description, projectName, projectPath);
 		PromptRequest promptRequest = createPrompt(context);
-		terminalMessage.print("Generating code.  This will take a few minutes ...");
+		String completionEstimate = getCompletionEstimate();
+		terminalMessage.print("Generating code.  This will take a few minutes ..." +
+				" Check back around " + completionEstimate);
 		String response = generate(promptRequest);
 		terminalMessage.print("Done.");
 
-		String modifiedResponse = modifyResponse(response, description);
+		ResponseModifier responseModifier = new ResponseModifier();
+		String modifiedResponse = responseModifier.modify(response, description);
 		writeReadMe(projectName, modifiedResponse, projectPath, terminalMessage);
 		if (!preview) {
 			List<ProjectArtifact> projectArtifacts = createProjectArtifacts(modifiedResponse);
 			processArtifacts(projectArtifacts, projectPath, terminalMessage);
 		}
+	}
+
+	private String getCompletionEstimate() {
+		TimeZone userTimeZone = TimeZone.getDefault();
+		LocalTime estimatedTime = LocalTime.now().plusMinutes(3);
+		DateTimeFormatter formatter;
+		if (userTimeZone.inDaylightTime(new java.util.Date())) {
+			// If the user's time zone is in daylight saving time, use 12-hour format with AM/PM
+			formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.US);
+		} else {
+			// Otherwise, use 24-hour format
+			formatter = DateTimeFormatter.ofPattern("HH:mm");
+		}
+		return estimatedTime.format(formatter);
 	}
 
 	public void apply(String file, String path, TerminalMessage terminalMessage) {
@@ -103,8 +121,7 @@ public class OpenAiHandler implements AiHandler {
 		}
 		try (InputStream stream = Files.newInputStream(readmePath)) {
 			String response = StreamUtils.copyToString(stream, UTF_8);
-			String modifiedResponse = modifyResponse(response, response);
-			List<ProjectArtifact> projectArtifacts = createProjectArtifacts(modifiedResponse);
+			List<ProjectArtifact> projectArtifacts = createProjectArtifacts(response);
 			processArtifacts(projectArtifacts, projectPath, terminalMessage);
 		} catch (IOException ex) {
 			throw new SpringCliException("Could not read file " + readmePath.toAbsolutePath(), ex);
@@ -130,32 +147,7 @@ public class OpenAiHandler implements AiHandler {
 			throw new SpringCliException("Could not write readme file: " + output.toAbsolutePath(), ex);
 		}
 		terminalMessage.print("Read the file " + "README-ai-" +
-				projectName.getShortPackageName() + ".md for a description of the code that was added.");
-	}
-
-	private String modifyResponse(String response, String description) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("*Note: The code provided is just an example and may not be suitable for production use.*");
-		sb.append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
-		sb.append("Generated on " + LocalDateTime.now().format(formatter));
-		sb.append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-		sb.append("Generated using the description: " + description);
-		sb.append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-		sb.append(response);
-		String code = sb.toString();
-
-		// TODO - determine if Java 17
-		if (!code.contains("import javax")) {
-			return code;
-		}
-		String regex = "^(import\\s+.*?)javax(\\.[a-zA-Z0-9_]+\\.[a-zA-Z0-9_]+)";
-		Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
-		Matcher matcher = pattern.matcher(code);
-		return matcher.replaceAll("$1jakarta$2");
+				projectName.getShortPackageName() + ".md for a description of the code.");
 	}
 
 	private static Path getProjectPath(String path) {

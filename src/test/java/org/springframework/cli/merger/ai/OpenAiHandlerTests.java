@@ -38,6 +38,9 @@ public class OpenAiHandlerTests {
 		assertThat(response).isNotNull();
 
 		List<ProjectArtifact> projectArtifacts = openAiHandler.createProjectArtifacts(response);
+//		ResponseModifier responseModifier = new ResponseModifier();
+//		String modifiedResponse = responseModifier.modify(response, "fake");
+//		assertThat(modifiedResponse).isNotNull();
 		assertThat(projectArtifacts).hasSize(5);
 	}
 }
