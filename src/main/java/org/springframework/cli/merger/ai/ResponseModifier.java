@@ -48,11 +48,32 @@ public class ResponseModifier {
 		if (!code.contains("import javax")) {
 			return code;
 		}
-		String regex = "^(import\\s+.*?)javax(\\.[a-zA-Z0-9_]+\\.[a-zA-Z0-9_]+)";
-		Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
-		Matcher matcher = pattern.matcher(code);
-		return matcher.replaceAll("$1jakarta$2");
+		return replaceImportStatements(code);
 	}
+
+	private static String replaceImportStatements(String content) {
+		String[] lines = content.split(System.lineSeparator());
+		StringBuilder updatedContent = new StringBuilder();
+
+		for (String line : lines) {
+			if (line.trim().startsWith("import ")) {
+				String packageName = extractPackageName(line);
+				if (!packageName.contains("javax.sql.")) {
+					packageName = packageName.replace("javax", "jakarta");
+				}
+				line = "import " + packageName + ";";
+			}
+			updatedContent.append(line).append(System.lineSeparator());
+		}
+		return updatedContent.toString();
+	}
+	private static String extractPackageName(String importStatement) {
+		return importStatement
+				.replace("import", "")
+				.replace(";", "")
+				.trim();
+	}
+
 
 	private String modifyMsyqlDependency(String response) {
 		if (!response.contains("<artifactId>mysql-connector-java</artifactId>")) {

@@ -17,15 +17,11 @@
 
 package org.springframework.cli.merger.ai;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -39,22 +35,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
-import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
-import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
-import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenDependencyActionHandler;
 import org.springframework.cli.runtime.engine.templating.HandlebarsTemplateEngine;
-import org.springframework.cli.util.ClassNameExtractor;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.cli.util.PropertyFileUtils;
 import org.springframework.cli.util.RootPackageFinder;
@@ -63,7 +53,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.springframework.cli.util.PropertyFileUtils.mergeProperties;
 
 public class OpenAiHandler implements AiHandler {
 
@@ -92,7 +81,8 @@ public class OpenAiHandler implements AiHandler {
 		writeReadMe(projectName, modifiedResponse, projectPath, terminalMessage);
 		if (!preview) {
 			List<ProjectArtifact> projectArtifacts = createProjectArtifacts(modifiedResponse);
-			processArtifacts(projectArtifacts, projectPath, terminalMessage);
+			ProjectArtifactProcessor projectArtifactProcessor = new ProjectArtifactProcessor(projectArtifacts,  projectPath, terminalMessage);
+			ProcessArtifactResult processArtifactResult = projectArtifactProcessor.process();
 		}
 	}
 
@@ -122,13 +112,13 @@ public class OpenAiHandler implements AiHandler {
 		try (InputStream stream = Files.newInputStream(readmePath)) {
 			String response = StreamUtils.copyToString(stream, UTF_8);
 			List<ProjectArtifact> projectArtifacts = createProjectArtifacts(response);
-			processArtifacts(projectArtifacts, projectPath, terminalMessage);
+			ProjectArtifactProcessor projectArtifactProcessor = new ProjectArtifactProcessor(projectArtifacts, projectPath, terminalMessage);
+			projectArtifactProcessor.process();
 		} catch (IOException ex) {
 			throw new SpringCliException("Could not read file " + readmePath.toAbsolutePath(), ex);
 		}
 
 	}
-
 
 	private void writeReadMe(ProjectName projectName, String text, Path projectPath, TerminalMessage terminalMessage) {
 		Path output = projectPath.resolve("README-ai-" + projectName.getShortPackageName() + ".md");
@@ -197,26 +187,7 @@ public class OpenAiHandler implements AiHandler {
 		return context;
 	}
 
-	private String calculatePackageForArtifact(ProjectArtifact projectArtifact) {
-		String packageToUse = "com.example.ai";
-		try (BufferedReader reader = new BufferedReader(new StringReader(projectArtifact.getText()))) {
-			String firstLine = reader.readLine();
-			if (firstLine.contains("package")) {
-				String regex = "^package\\s+([a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*);";
-				Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
-				Matcher matcher = pattern.matcher(firstLine);
-				// Find the package statement and extract the package name
-				String packageName = "";
-				if (matcher.find()) {
-					packageToUse = matcher.group(1);
-				}
-			}
-		} catch (IOException e) {
-			throw new SpringCliException("Could not parse package name from Project Artifact: " +
-					projectArtifact.getText());
-		}
-		return packageToUse;
-	}
+
 	private String calculatePackage(String shortPackageName, Path path) {
 		Optional<String> rootPackage = RootPackageFinder.findRootPackage(path.toFile());
 		if (rootPackage.isEmpty()) {
@@ -236,8 +207,8 @@ public class OpenAiHandler implements AiHandler {
 	}
 
 	List<ProjectArtifact> createProjectArtifacts(String response) {
-		ProjectArtifactProcessor projectArtifactProcessor = new ProjectArtifactProcessor();
-		List<ProjectArtifact> projectArtifacts = projectArtifactProcessor.process(response);
+		ProjectArtifactCreator projectArtifactCreator = new ProjectArtifactCreator();
+		List<ProjectArtifact> projectArtifacts = projectArtifactCreator.create(response);
 		return projectArtifacts;
 	}
 
@@ -256,152 +227,6 @@ public class OpenAiHandler implements AiHandler {
 		}
 		catch (IOException e) {
 			throw new SpringCliException("Could not read resource " + promptResource);
-		}
-	}
-
-	private void processArtifacts(List<ProjectArtifact> projectArtifacts, Path projectPath, TerminalMessage terminalMessage) {
-		for (ProjectArtifact projectArtifact : projectArtifacts) {
-			try {
-				ProjectArtifactType artifactType = projectArtifact.getArtifactType();
-				switch (artifactType) {
-					case SOURCE_CODE:
-						writeSourceCode(projectArtifact, projectPath);
-						break;
-					case TEST_CODE:
-						writeTestCode(projectArtifact, projectPath);
-						break;
-					case MAVEN_DEPENDENCIES:
-						writeMavenDependencies(projectArtifact, projectPath, terminalMessage);
-						break;
-					case APPLICATION_PROPERTIES:
-						writeApplicationProperties(projectArtifact, projectPath);
-						break;
-					case MAIN_CLASS:
-						updateMainApplicationClassAnnotations(projectArtifact, projectPath, terminalMessage);
-						break;
-					case HTML:
-						writeHtml(projectArtifact, projectPath);
-						break;
-					default:
-						break;
-				}
-			}
-			catch (IOException ex) {
-				ex.printStackTrace();
-				throw new SpringCliException("Could not write project artifact.", ex);
-			}
-		}
-	}
-
-	private void updateMainApplicationClassAnnotations(ProjectArtifact projectArtifact, Path projectPath, TerminalMessage terminalMessage) {
-		// TODO mer
-	}
-
-	private void writeHtml(ProjectArtifact projectArtifact, Path projectPath) throws IOException {
-		String html = projectArtifact.getText();
-		String fileName = extractFilenameFromComment(html, "<!--\\s*filename:\\s*(\\S+\\.html)\\s*-->");
-		if (fileName != null) {
-			Path htmlFile = projectPath.resolve(fileName);
-			createFile(htmlFile);
-			try (Writer writer = new BufferedWriter(new FileWriter(htmlFile.toFile()))) {
-				writer.write(projectArtifact.getText());
-			}
-		}
-	}
-
-	private static String extractFilenameFromComment(String content, String commentPattern) {
-		Pattern pattern = Pattern.compile(commentPattern);
-		Matcher matcher = pattern.matcher(content);
-		if (matcher.find()) {
-			return matcher.group(1);
-		}
-		return null;
-	}
-
-	private void writeApplicationProperties(ProjectArtifact projectArtifact, Path projectPath) throws IOException {
-		Path applicationPropertiesPath =  projectPath.resolve("src").resolve("main").resolve("resources").resolve("application.properties");
-
-		if (Files.notExists(applicationPropertiesPath)) {
-			createFile(applicationPropertiesPath);
-		}
-		Properties srcProperties = new Properties();
-		Properties destProperties = new Properties();
-		srcProperties.load(IOUtils.toInputStream(projectArtifact.getText(), StandardCharsets.UTF_8));
-		destProperties.load(new FileInputStream(applicationPropertiesPath.toFile()));
-		Properties mergedProperties = mergeProperties(srcProperties, destProperties);
-		mergedProperties.store(new FileWriter(applicationPropertiesPath.toFile()), "updated by spring ai add");
-	}
-
-	private void writeMavenDependencies(ProjectArtifact projectArtifact, Path projectPath, TerminalMessage terminalMessage) {
-		InjectMavenDependencyActionHandler injectMavenDependencyActionHandler =
-				new InjectMavenDependencyActionHandler(projectPath, terminalMessage);
-		InjectMavenDependency injectMavenDependency = new InjectMavenDependency(projectArtifact.getText());
-		try {
-			injectMavenDependencyActionHandler.execute(injectMavenDependency);
-		} catch (Exception ex) {
-			terminalMessage.print("Could not inject Maven dependencies.  Look at pom.xml contents for messages on what went wrong, e.g. 'No version provided'\n" + ex.getMessage());
-		}
-	}
-
-	private void writeTestCode(ProjectArtifact projectArtifact, Path projectPath) throws IOException {
-		// TODO parameterize better to reduce code duplication
-		String packageName = this.calculatePackageForArtifact(projectArtifact);
-		ClassNameExtractor classNameExtractor = new ClassNameExtractor();
-		Optional<String> className = classNameExtractor.extractClassName(projectArtifact.getText());
-		if (className.isPresent()) {
-			Path output = createTestFile(projectPath, packageName, className.get() + ".java");
-			try (Writer writer = new BufferedWriter(new FileWriter(output.toFile()))) {
-				writer.write(projectArtifact.getText());
-			}
-		}
-	}
-
-	private void writeSourceCode(ProjectArtifact projectArtifact, Path projectPath) throws IOException {
-		String packageName = this.calculatePackageForArtifact(projectArtifact);
-		ClassNameExtractor classNameExtractor = new ClassNameExtractor();
-		Optional<String> className = classNameExtractor.extractClassName(projectArtifact.getText());
-		if (className.isPresent()) {
-			Path output = createSourceFile(projectPath, packageName, className.get() + ".java");
-			try (Writer writer = new BufferedWriter(new FileWriter(output.toFile()))) {
-				writer.write(projectArtifact.getText());
-			}
-		}
-	}
-
-	private Path createSourceFile(Path projectPath, String packageName, String fileName) throws IOException {
-		Path sourceFile = resolveSourceFile(projectPath, packageName, fileName);
-		createFile(sourceFile);
-		return sourceFile;
-	}
-
-	private Path createTestFile(Path projectPath, String packageName, String fileName) throws IOException {
-		Path sourceFile = resolveTestFile(projectPath, packageName, fileName);
-		createFile(sourceFile);
-		return sourceFile;
-	}
-
-	public Path resolveSourceFile(Path projectPath, String packageName, String fileName) {
-		Path sourceDirectory = projectPath.resolve("src").resolve("main").resolve("java");
-		return resolvePackage(sourceDirectory, packageName).resolve(fileName);
-	}
-
-	public Path resolveTestFile(Path projectPath, String packageName, String fileName) {
-		Path sourceDirectory = projectPath.resolve("src").resolve("test").resolve("java");
-		return resolvePackage(sourceDirectory, packageName).resolve(fileName);
-	}
-
-	private static Path resolvePackage(Path directory, String packageName) {
-		return directory.resolve(packageName.replace('.', '/'));
-	}
-
-	private void createFile(Path file) throws IOException {
-		if (Files.exists(file)) {
-			//System.out.println("deleting file " + file.toAbsolutePath());
-			Files.delete(file);
-		}
-		Files.createDirectories(file.getParent());
-		if (Files.notExists(file)) {
-			Files.createFile(file);
 		}
 	}
 

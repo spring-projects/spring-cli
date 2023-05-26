@@ -22,9 +22,6 @@ import java.util.List;
 
 import org.commonmark.node.AbstractVisitor;
 import org.commonmark.node.FencedCodeBlock;
-import org.commonmark.node.Paragraph;
-
-import org.springframework.cli.SpringCliException;
 
 public class MarkdownResponseVisitor extends AbstractVisitor {
 
