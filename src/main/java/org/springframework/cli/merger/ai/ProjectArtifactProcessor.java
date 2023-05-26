@@ -147,10 +147,7 @@ public class ProjectArtifactProcessor {
 		String[] mavenDependencies = mavenDependencyReader.parseMavenDependencies(projectArtifact.getText());
 
 		for (String candidateDependencyText : mavenDependencies) {
-			if (candidateDependencyAlreadyPresent(getProjectDependency(candidateDependencyText), currentDependencies)) {
-				System.out.println("Dependency duplicate ignored:  " + candidateDependencyText);
-			}
-			else {
+			if (!candidateDependencyAlreadyPresent(getProjectDependency(candidateDependencyText), currentDependencies)) {
 				InjectMavenDependencyActionHandler injectMavenDependencyActionHandler =
 						new InjectMavenDependencyActionHandler(projectPath, terminalMessage);
 				InjectMavenDependency injectMavenDependency = new InjectMavenDependency(candidateDependencyText);

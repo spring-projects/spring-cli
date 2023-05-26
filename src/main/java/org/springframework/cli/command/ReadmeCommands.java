@@ -17,8 +17,6 @@
 
 package org.springframework.cli.command;
 
-import java.nio.file.Path;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.merger.ai.OpenAiHandler;
 import org.springframework.cli.util.TerminalMessage;
@@ -27,29 +25,27 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 @ShellComponent
-public class AiCommands {
+public class ReadmeCommands {
 
 	private final TerminalMessage terminalMessage;
 
 	private OpenAiHandler openAiHandler = new OpenAiHandler();
 
 	@Autowired
-	public AiCommands(TerminalMessage terminalMessage) {
+	public ReadmeCommands(TerminalMessage terminalMessage) {
 		this.terminalMessage = terminalMessage;
 	}
 
-	public AiCommands(OpenAiHandler openAiHandler, TerminalMessage terminalMessage) {
+	public ReadmeCommands(OpenAiHandler openAiHandler, TerminalMessage terminalMessage) {
 		this.terminalMessage = terminalMessage;
 		this.openAiHandler = openAiHandler;
 	}
 
-	@ShellMethod(key = "ai add", value = "Add code to the project from AI for a Spring Project project.")
-	public void aiAdd(
-			@ShellOption(help = "The description of the code to create, this can be as short as a well known Spring project name, e.g JPA.", defaultValue = ShellOption.NULL, arity = 1) String description,
-			@ShellOption(help = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.", defaultValue = ShellOption.NULL, arity = 1) String path,
-			@ShellOption(help = "Create the README.md file, but do not apply the changes to the code base.", defaultValue = "false", arity = 1) boolean preview) {
+	@ShellMethod(key = "readme apply", value = "Apply the instructions in the readme to the code base.")
+	public void readmeApply(
+			@ShellOption(help = "The readme file that contains the instructions of how to modify the code base, e.g. README-ai-jpa.md", defaultValue = ShellOption.NULL, arity = 1) String file,
+			@ShellOption(help = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.", defaultValue = ShellOption.NULL, arity = 1) String path) {
 
-		this.openAiHandler.add(description, path, preview, terminalMessage);
+		this.openAiHandler.apply(file, path, terminalMessage);
 	}
-
 }
