@@ -143,6 +143,9 @@
     <a class="nav-link" href="user-command-guide.html">Guide to user defined commands</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="readme-command-guide.html">Guide to README commands</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="key-concepts.html">Key Concepts</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -310,10 +313,10 @@ You will need to <a href="https://platform.openai.com/signup">create an account<
 </div>
 </div>
 <div class="sect1">
-<h2 id="_guide_for_ai_add"><a class="anchor" href="#_guide_for_ai_add"></a>Guide for <code>ai add</code></h2>
+<h2 id="_using_ai_add"><a class="anchor" href="#_using_ai_add"></a>Using <code>ai add</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The command <code>ai add</code> will take a brief description of the code you want to add to the project, send the request off to OpenAI&#8217;s API, and then apply the code changes to your local project.</p>
+<p>The command <code>ai add</code> will take a brief description of the code you want to add to the project, send the request off to OpenAI&#8217;s API.  If you pass the <code>--preview true</code> option, it wil create a <code>README</code> file and not change anything in our code base.</p>
 </div>
 <div class="paragraph">
 <p>Here is a short example,</p>
@@ -324,7 +327,10 @@ You will need to <a href="https://platform.openai.com/signup">create an account<
 </div>
 </div>
 <div class="paragraph">
-<p>or</p>
+<p>Will create the file <code>README-ai-jpa.md</code> and add apply the changes described in the file to the project.</p>
+</div>
+<div class="paragraph">
+<p>Executing the command with the <code>--preview true</code> options:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -332,13 +338,13 @@ You will need to <a href="https://platform.openai.com/signup">create an account<
 </div>
 </div>
 <div class="paragraph">
-<p>This command will create the file <code>READAME-ai-jpa.md</code> that contains the response from OpenAI.</p>
+<p>Will create the file <code>README-ai-jpa.md</code> and not make any changes to the project.</p>
 </div>
 <div class="paragraph">
-<p><strong>NOTE:</strong> The code generation on OpenAI takes 2-3 minutes, depending on the weather ;)  Be patient.</p>
+<p><strong>NOTE:</strong> The code generation on OpenAI takes 3-4 minutes, depending on the weather ;)  Be patient.  You will get an time estimate of when the command will complete.</p>
 </div>
 <div class="paragraph">
-<p>If <code>--preview false</code> (the default) then the command will update your project with source and test code along with adding necessary build dependencies.</p>
+<p>There is a base set of criteria that is provided to OpenAI that defines common requirements for the code to be generated.  Information such as the package name and build tool to use are determined from your project&#8217;s structure.  The description you pass in the <code>ai add</code> adds to that set of criteria.</p>
 </div>
 </div>
 </div>
@@ -346,65 +352,33 @@ You will need to <a href="https://platform.openai.com/signup">create an account<
 <h2 id="_iterating_to_get_what_you_want"><a class="anchor" href="#_iterating_to_get_what_you_want"></a>Iterating to get what you want</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Often you don&#8217;t get exactly the solution you want in a first try, so you should specify additional information in the description.
-To avoid modifying files in your project, you can use the <code>--preview true</code> option so that only the <code>README</code> file is created.</p>
+<p>Often you don&#8217;t get exactly the solution you want in a first try, so you should specify additional information in the description.</p>
 </div>
 <div class="paragraph">
-<p>There is a base set of criteria that is provided to OpenAI that defines common requirements for the code to be generated.
-You can see that file here.  Information such as the package name and build tool to use are determined from your project&#8217;s structure.</p>
+<p>To avoid modifying files in your project while iterating to get what you want, use the <code>--preview true</code> option so that only the <code>README</code> file is created.</p>
 </div>
 <div class="paragraph">
-<p>The description you pass in the <code>ai command</code> adds to that set of common criteria.</p>
-</div>
-<div class="paragraph">
-<p>For example, in the previous case, the code that was created had two things that I wanted to be different.
-The first was that I wanted all the generated code to be in a single package, following a "package by feature" best practice.
-The second was that I wanted a unit test for the Repository layer, but a unit test only for the Controller layer was generated.</p>
-</div>
-<div class="paragraph">
-<p>Running the command with the following description, gave me the results I wanted.</p>
+<p>For example, in the previous case, the code that was created was missing an integration test.  Running the command with the following description, gave me the results I wanted.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add "A Spring Data JPA project with all Java code in the same package and an integration test for the Repository layer" --preview true</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add "Create a Spring Java application using Spring Data JPA. The project should include an integration test specifically designed for the Repository layer" --preview true</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Here is a sample <a href="#ai-readme-sample.md" class="xref unresolved">README-ai-jpa.md</a> file that was created using the previous command.</p>
+<p>Here is a sample <a href="#ai/README-ai-jpa.md" class="xref unresolved">README-ai-jpa.md</a> file that was created using the previous command.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_guide_for_ai_apply"><a class="anchor" href="#_guide_for_ai_apply"></a>Guide for <code>ai apply</code></h2>
+<h2 id="_applying_the_readme"><a class="anchor" href="#_applying_the_readme"></a>Applying the <code>README</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The command <code>ai apply</code> takes as an argument the name of the <code>README</code> file generated via the command <code>ai add</code> with the <code>--preview true</code> option.</p>
-</div>
-<div class="paragraph">
-<p>This lets you iterate to get the results you want and only when you are satified with the results, you can apply the code changes.</p>
-</div>
-<div class="paragraph">
-<p>For example:</p>
+<p>When you are satisfied with the result, apply the changes to the code.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add jpa --preview true</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now change the description</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add "A Spring Data JPA project with all Java code in the same package and a unit test for the Repository layer" --preview true</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now that you are satisfied with the result, apply the changes to the code.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai apply README-ai-jpa.md</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring readme apply README-ai-jpa.md</code></pre>
 </div>
 </div>
 </div>
