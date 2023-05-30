@@ -18,7 +18,7 @@ Ensure that your solution meets the following criteria:
 1. Provide steps for adding code to an existing project, rather than creating a new project.
 2. Include build tool dependency management configuration for the project (partial file, not full project dependency configuration).
 3. Include necessary Spring Boot Starter dependencies such as "spring-boot-starter-jpa."
-4. Use the dependency on Maven artifactId "spring-boot-starter-test" for JUnit related dependencies, without directly adding a JUnit dependency.
+4. Utilize the Maven artifactId "spring-boot-starter-test" as a dependency for JUnit-related functionality, avoiding the direct addition of a JUnit dependency.
 5. Place all code, including test code, in the same Java package, following the "package per feature" convention.
 6. Include architectural layers (Controller, Service, Repository) as appropriate.
 7. If no entity or domain object is specified in the description, use a Person entity with the properties name and phone number.
@@ -30,7 +30,4 @@ Ensure that your solution meets the following criteria:
 14. Add any required annotations to the main application class (class with the @SpringBootApplication annotation).
 15. Ensure the sample code resembles that available in the GitHub repositories of the organization located at https://github.com/spring-guides.
 16. When generating markdown for code blocks in the final response, include an appropriate value for the "info" field.
-17. If the application uses Spring Security, include the following dependency artifact IDs:
-  * spring-boot-starter-security
-  * spring-security-test
-18. Use a SecurityFilterChain and UserDetailsService @Bean definitions for Spring Security-related code instead of extending WebSecurityConfigurerAdapter directly.
+17. If the application uses Spring Security, include the following dependency artifact IDs, spring-boot-starter-security and spring-security-test

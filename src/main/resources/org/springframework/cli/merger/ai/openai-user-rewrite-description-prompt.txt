@@ -1,0 +1,6 @@
+Here is the description of the Java application that uses Spring projects.  Please rewrite it so that it clearly describes the instructions of the application to create.
+
+{{description}}
+
+Provide a response that starts with the words: "Please provide instructions for creating"
+

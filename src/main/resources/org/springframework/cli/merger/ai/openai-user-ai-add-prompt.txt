@@ -10,3 +10,5 @@ Ensure the solution meets the following additional criteria
 1. Include import statements in all code files.
 2. When generating markdown for the 'application.properties' file in Spring Boot, please ensure that the markdown 'info' field is set to 'properties' for that specific section.
 3. For each markdown section in the generated application where the 'info' field is set to 'html', please include a comment at the beginning of each HTML file. This comment should contain the full path to the file name, prefixed with 'filename:'
+4. For each markdown section in the generated application where the 'info' field is set to 'sql', please include a comment at the beginning of each sql file. This comment should contain the full path to the file name, prefixed with 'filename:'
+5. For each markdown section in the generated application where the 'info' field is set to 'csv', please include a comment at the beginning of each CSV file. This comment should contain the full path to the file name, prefixed with 'filename:'

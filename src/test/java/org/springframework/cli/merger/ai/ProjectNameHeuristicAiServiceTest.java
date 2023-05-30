@@ -2,7 +2,8 @@ package org.springframework.cli.merger.ai;
 
 import org.junit.jupiter.api.Test;
 
-import org.springframework.cli.SpringCliException;
+import org.springframework.cli.merger.ai.service.ProjectNameHeuristicAiService;
+import org.springframework.cli.util.TerminalMessage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -22,11 +23,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * limitations under the License.
  */
 
-class ProjectNameHeuristicTest {
+class ProjectNameHeuristicAiServiceTest {
 
 	@Test
 	void deriveProjectName() {
-		ProjectNameHeuristic projectNameHeuristic = new ProjectNameHeuristic();
+		ProjectNameHeuristicAiService projectNameHeuristic = new ProjectNameHeuristicAiService(TerminalMessage.noop());
 
 		ProjectName projectName = projectNameHeuristic.deriveProjectName("jpa");
 

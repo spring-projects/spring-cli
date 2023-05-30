@@ -19,6 +19,7 @@ package org.springframework.cli.command;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.merger.ai.OpenAiHandler;
+import org.springframework.cli.merger.ai.service.GenerateCodeAiService;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -29,11 +30,12 @@ public class ReadmeCommands {
 
 	private final TerminalMessage terminalMessage;
 
-	private OpenAiHandler openAiHandler = new OpenAiHandler();
+	private final OpenAiHandler openAiHandler;
 
 	@Autowired
 	public ReadmeCommands(TerminalMessage terminalMessage) {
 		this.terminalMessage = terminalMessage;
+		this.openAiHandler = new OpenAiHandler(new GenerateCodeAiService(this.terminalMessage));
 	}
 
 	public ReadmeCommands(OpenAiHandler openAiHandler, TerminalMessage terminalMessage) {

@@ -18,20 +18,26 @@
 package org.springframework.cli.command;
 
 import java.io.IOException;
+import java.util.Map;
 
-import org.springframework.cli.merger.ai.OpenAiHandler;
 import org.springframework.cli.merger.ai.OpenAiHandlerTests;
-import org.springframework.cli.merger.ai.PromptRequest;
+import org.springframework.cli.merger.ai.service.GenerateCodeAiService;
+import org.springframework.cli.merger.ai.service.OpenAiService;
 import org.springframework.cli.testutil.TestResourceUtils;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class StubOpenAiHandler extends OpenAiHandler {
+public class StubGenerateCodeAiService extends GenerateCodeAiService {
+
+	public StubGenerateCodeAiService(TerminalMessage terminalMessage) {
+		super(terminalMessage);
+	}
 
 	@Override
-	public String generate(PromptRequest prompt)  {
+	public String generate(Map<String, String> context) {
 		try {
 			ClassPathResource classPathResource = TestResourceUtils.qualifiedResource(OpenAiHandlerTests.class, "response.md");
 			String response = StreamUtils.copyToString(classPathResource.getInputStream(), UTF_8);

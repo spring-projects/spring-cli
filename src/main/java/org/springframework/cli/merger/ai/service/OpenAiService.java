@@ -1,4 +1,4 @@
-package org.springframework.cli.merger.ai;/*
+package org.springframework.cli.merger.ai.service;/*
  * Copyright 2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,10 @@ package org.springframework.cli.merger.ai;/*
  * limitations under the License.
  */
 
-public interface AiHandler {
+import java.util.Map;
 
-	String generate(PromptRequest prompt);
+public interface OpenAiService {
+
+
+	String generate(Map<String, String> context);
 }

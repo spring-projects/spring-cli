@@ -15,7 +15,7 @@
  */
 
 
-package org.springframework.cli.merger.ai;
+package org.springframework.cli.merger.ai.service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,93 +26,74 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
+import org.jetbrains.annotations.NotNull;
 
 import org.springframework.cli.SpringCliException;
+import org.springframework.cli.merger.ai.PromptRequest;
 import org.springframework.cli.runtime.engine.templating.HandlebarsTemplateEngine;
 import org.springframework.cli.util.PropertyFileUtils;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
-import org.springframework.util.StringUtils;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class ProjectNameHeuristic {
+public abstract class AbstractOpenAiService implements org.springframework.cli.merger.ai.service.OpenAiService {
 
 	private final HandlebarsTemplateEngine handlebarsTemplateEngine = new HandlebarsTemplateEngine();
 
-	public ProjectName deriveProjectName(String description) {
+	private com.theokanning.openai.service.OpenAiService openAiService;
+
+	private final TerminalMessage terminalMessage;
+
+	public AbstractOpenAiService(TerminalMessage terminalMessage) {
 		// get api token in file ~/.openai
 		Properties properties = PropertyFileUtils.getPropertyFile();
 		String apiKey = properties.getProperty("OPEN_AI_API_KEY");
-		OpenAiService openAiService = new OpenAiService(apiKey, Duration.of(5, ChronoUnit.MINUTES));
+		this.openAiService = new OpenAiService(apiKey, Duration.of(5, ChronoUnit.MINUTES));
+		this.terminalMessage = terminalMessage;
+	}
 
-		Map<String, String> context = getContext(description);
-
-		PromptRequest promptRequest = createPromptRequest(context);
+	protected static ChatCompletionRequest getChatCompletionRequest(PromptRequest promptRequest) {
 		ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
 				.builder()
 				.model("gpt-3.5-turbo")
-				.temperature(0.8)
+				.temperature(0.3)
 				.messages(
 						List.of(
 								new ChatMessage("system", promptRequest.getSystemPrompt()),
 								new ChatMessage("user", promptRequest.getUserPrompt())))
 				.build();
-
-		StringBuilder builder = new StringBuilder();
-		openAiService.createChatCompletion(chatCompletionRequest)
-				.getChoices().forEach(choice -> {
-					builder.append(choice.getMessage().getContent());
-				});
-
-		String response = builder.toString();
-		return createProjectName(response);
+		return chatCompletionRequest;
 	}
 
-	private ProjectName createProjectName(String response) {
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String, Object> map = null;
-		try {
-			map = mapper.readValue(response, new TypeReference<Map<String, Object>>() {});
-		}
-		catch (JsonProcessingException ex) {
-			throw new SpringCliException("Can read JSON response: " + response, ex);
-		}
-		String springProjectName = (String) map.get("springProjectName");
-		String shortName = (String) map.get("shortName");
-		if (!StringUtils.hasText(springProjectName)) {
-			springProjectName = "Spring Project";
-		}
-		if (!StringUtils.hasText(shortName)) {
-			shortName = "ai";
-		}
-		return new ProjectName(shortName.toLowerCase(), springProjectName);
-
+	public OpenAiService getOpenAiService() {
+		return openAiService;
 	}
 
-	private Map<String, String> getContext(String description) {
+	public HandlebarsTemplateEngine getHandlebarsTemplateEngine() {
+		return handlebarsTemplateEngine;
+	}
+
+	public TerminalMessage getTerminalMessage() {
+		return terminalMessage;
+	}
+
+	protected Map<String, String> getContext(String description) {
 		Map<String, String> context = new HashMap<>();
 		context.put("description", description);
 		return context;
 	}
 
-	private PromptRequest createPromptRequest(Map<String, String> context) {
-		String systemPrompt = getPrompt(context, "system-name-heuristic");
-		String userPrompt = getPrompt(context, "user-name-heuristic");
-		return new PromptRequest(systemPrompt, userPrompt);
-	}
-	private String getPrompt(Map<String, String> context, String promptType) {
+	protected String getPrompt(Map<String, String> context, String promptType) {
 		String resourceFileName = "/org/springframework/cli/merger/ai/openai-" + promptType + "-prompt.txt";
 		try {
 			ClassPathResource promptResource = new ClassPathResource(resourceFileName);
 			String promptRaw = StreamUtils.copyToString(promptResource.getInputStream(), UTF_8);
-			return this.handlebarsTemplateEngine.process(promptRaw, context);
+			return getHandlebarsTemplateEngine().process(promptRaw, context);
 		}
 		catch (FileNotFoundException ex) {
 			throw new SpringCliException("Resource file note found:" + resourceFileName);
@@ -123,4 +104,21 @@ public class ProjectNameHeuristic {
 
 	}
 
+	protected PromptRequest createPromptRequest(Map<String, String> context, String promptFamilyName) {
+		String systemPrompt = getPrompt(context, "system-" + promptFamilyName);
+		String userPrompt = getPrompt(context, "user-" + promptFamilyName);
+		return new PromptRequest(systemPrompt, userPrompt);
+	}
+
+	@NotNull
+	protected String getResponse(ChatCompletionRequest chatCompletionRequest) {
+		StringBuilder builder = new StringBuilder();
+		getOpenAiService().createChatCompletion(chatCompletionRequest)
+				.getChoices().forEach(choice -> {
+					builder.append(choice.getMessage().getContent());
+				});
+
+		String response = builder.toString();
+		return response;
+	}
 }

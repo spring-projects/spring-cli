@@ -24,81 +24,63 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
-import java.util.TimeZone;
 
-import com.theokanning.openai.completion.chat.ChatCompletionRequest;
-import com.theokanning.openai.completion.chat.ChatMessage;
-import com.theokanning.openai.service.OpenAiService;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
-import org.springframework.cli.runtime.engine.templating.HandlebarsTemplateEngine;
+import org.springframework.cli.merger.ai.service.DescriptionRewriteAiService;
+import org.springframework.cli.merger.ai.service.GenerateCodeAiService;
+import org.springframework.cli.merger.ai.service.ProjectNameHeuristicAiService;
 import org.springframework.cli.util.IoUtils;
-import org.springframework.cli.util.PropertyFileUtils;
 import org.springframework.cli.util.RootPackageFinder;
 import org.springframework.cli.util.TerminalMessage;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class OpenAiHandler implements AiHandler {
+public class OpenAiHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(OpenAiHandler.class);
 
-	private final HandlebarsTemplateEngine handlebarsTemplateEngine = new HandlebarsTemplateEngine();
+	private final GenerateCodeAiService generateCodeAiService;
 
-	public void add(String description, String path, boolean preview, TerminalMessage terminalMessage) {
+	public OpenAiHandler(GenerateCodeAiService generateCodeAiService) {
+		this.generateCodeAiService = generateCodeAiService;
+	}
+
+	public void add(String description, String path, boolean preview, boolean rewrite, TerminalMessage terminalMessage) {
 		Path projectPath = getProjectPath(path);
 
-		ProjectNameHeuristic projectNameHeuristic = new ProjectNameHeuristic();
+		ProjectNameHeuristicAiService projectNameHeuristic = new ProjectNameHeuristicAiService(terminalMessage);
 		logger.debug("Deriving main Spring project required...");
 		ProjectName projectName = projectNameHeuristic.deriveProjectName(description);
 		logger.debug("Done.  The code will primarily use " + projectName.getSpringProjectName());
 
-		Map<String, String> context = getContext(description, projectName, projectPath);
-		PromptRequest promptRequest = createPrompt(context);
-		String completionEstimate = getCompletionEstimate();
-		terminalMessage.print("Generating code.  This will take a few minutes ..." +
-				" Check back around " + completionEstimate);
-		String response = generate(promptRequest);
-		terminalMessage.print("Done.");
+		if (rewrite) {
+			DescriptionRewriteAiService descriptionRewriteAiService = new DescriptionRewriteAiService(terminalMessage);
+			description = descriptionRewriteAiService.rewrite(description);
+		}
+		terminalMessage.print("The description has been rewritten to be: " + description);
+		terminalMessage.print("");
+		Map<String, String> context = createContext(description, projectName, projectPath);
 
-		ResponseModifier responseModifier = new ResponseModifier();
-		String modifiedResponse = responseModifier.modify(response, description);
-		writeReadMe(projectName, modifiedResponse, projectPath, terminalMessage);
+		String readmeResponse = this.generateCodeAiService.generate(context);
+
+		writeReadMe(projectName, readmeResponse, projectPath, terminalMessage);
 		if (!preview) {
-			List<ProjectArtifact> projectArtifacts = createProjectArtifacts(modifiedResponse);
+			List<ProjectArtifact> projectArtifacts = createProjectArtifacts(readmeResponse);
 			ProjectArtifactProcessor projectArtifactProcessor = new ProjectArtifactProcessor(projectArtifacts,  projectPath, terminalMessage);
 			ProcessArtifactResult processArtifactResult = projectArtifactProcessor.process();
+			//TODO mention artifacts not processed
 		}
 	}
 
-	private String getCompletionEstimate() {
-		TimeZone userTimeZone = TimeZone.getDefault();
-		LocalTime estimatedTime = LocalTime.now().plusMinutes(3);
-		DateTimeFormatter formatter;
-		if (userTimeZone.inDaylightTime(new java.util.Date())) {
-			// If the user's time zone is in daylight saving time, use 12-hour format with AM/PM
-			formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.US);
-		} else {
-			// Otherwise, use 24-hour format
-			formatter = DateTimeFormatter.ofPattern("HH:mm");
-		}
-		return estimatedTime.format(formatter);
-	}
+
 
 	public void apply(String file, String path, TerminalMessage terminalMessage) {
 		Path projectPath = getProjectPath(path);
@@ -151,34 +133,7 @@ public class OpenAiHandler implements AiHandler {
 		return projectPath;
 	}
 
-	@Override
-	public String generate(PromptRequest promptRequest) {
-		// get api token in file ~/.openai
-		Properties properties = PropertyFileUtils.getPropertyFile();
-		String apiKey = properties.getProperty("OPEN_AI_API_KEY");
-		OpenAiService openAiService = new OpenAiService(apiKey, Duration.of(5, ChronoUnit.MINUTES));
-
-		ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
-				.builder()
-				.model("gpt-3.5-turbo")
-				.temperature(0.3)
-				.messages(
-						List.of(
-								new ChatMessage("system", promptRequest.getSystemPrompt()),
-								new ChatMessage("user", promptRequest.getUserPrompt())))
-				.build();
-
-		StringBuilder builder = new StringBuilder();
-		openAiService.createChatCompletion(chatCompletionRequest)
-				.getChoices().forEach(choice -> {
-					builder.append(choice.getMessage().getContent());
-				});
-
-		return builder.toString();
-	}
-
-
-	private Map<String, String> getContext(String description, ProjectName projectName,  Path path) {
+	private Map<String, String> createContext(String description, ProjectName projectName,  Path path) {
 		Map<String, String> context = new HashMap<>();
 		context.put("build-tool", "maven");
 		context.put("package-name", calculatePackage(projectName.getShortPackageName(), path));
@@ -197,38 +152,10 @@ public class OpenAiHandler implements AiHandler {
 	}
 
 
-	@NotNull
-	private static String getDefaultPackage(String shortPackageName, Path path) {
-		Optional<String> rootPackage = RootPackageFinder.findRootPackage(path.toFile());
-		if (rootPackage.isEmpty()) {
-			throw new SpringCliException("Could not find root package from path " + path.toAbsolutePath());
-		}
-		return rootPackage.get() + ".ai." + shortPackageName;
-	}
-
 	List<ProjectArtifact> createProjectArtifacts(String response) {
 		ProjectArtifactCreator projectArtifactCreator = new ProjectArtifactCreator();
 		List<ProjectArtifact> projectArtifacts = projectArtifactCreator.create(response);
 		return projectArtifacts;
 	}
-
-	private PromptRequest createPrompt(Map<String, String> context) {
-		String systemPrompt = getPrompt(context, "system");
-		String userPrompt = getPrompt(context, "user");
-		return new PromptRequest(systemPrompt, userPrompt);
-	}
-
-	private String getPrompt(Map<String, String> context, String promptType) {
-		ClassPathResource promptResource =
-				new ClassPathResource("/org/springframework/cli/merger/ai/openai-" + promptType + "-prompt.txt");
-		try {
-			String promptRaw = StreamUtils.copyToString(promptResource.getInputStream(), UTF_8);
-			return this.handlebarsTemplateEngine.process(promptRaw, context);
-		}
-		catch (IOException e) {
-			throw new SpringCliException("Could not read resource " + promptResource);
-		}
-	}
-
 
 }

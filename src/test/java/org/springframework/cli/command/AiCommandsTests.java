@@ -19,6 +19,7 @@ package org.springframework.cli.command;
 
 import java.nio.file.Path;
 
+import org.glassfish.hk2.utilities.Stub;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.cli.merger.ai.OpenAiHandler;
 import org.springframework.cli.support.CommandRunner;
 import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
 import org.springframework.cli.support.MockConfigurations.MockUserConfig;
@@ -41,8 +43,8 @@ public class AiCommandsTests {
 	void addJpa(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-			StubOpenAiHandler stubOpenAiHandler = new StubOpenAiHandler();
-			AiCommands aiCommands = new AiCommands(stubOpenAiHandler, TerminalMessage.noop());
+			StubGenerateCodeAiService stubGenerateCodeAiService = new StubGenerateCodeAiService(TerminalMessage.noop());
+			AiCommands aiCommands = new AiCommands(new OpenAiHandler(stubGenerateCodeAiService), TerminalMessage.noop());
 
 			CommandRunner commandRunner = new CommandRunner.Builder(context)
 					.prepareProject("rest-service", workingDir)

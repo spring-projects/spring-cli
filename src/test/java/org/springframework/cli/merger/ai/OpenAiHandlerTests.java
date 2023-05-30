@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import org.springframework.cli.merger.ai.service.GenerateCodeAiService;
 import org.springframework.cli.testutil.TestResourceUtils;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 
@@ -32,7 +34,7 @@ public class OpenAiHandlerTests {
 
 	@Test
 	void add() throws IOException {
-		OpenAiHandler openAiHandler = new OpenAiHandler();
+		OpenAiHandler openAiHandler = new OpenAiHandler(new GenerateCodeAiService(TerminalMessage.noop()));
 		ClassPathResource classPathResource = TestResourceUtils.qualifiedResource(getClass(), "response.md");
 		String response = StreamUtils.copyToString(classPathResource.getInputStream(), UTF_8);
 		assertThat(response).isNotNull();

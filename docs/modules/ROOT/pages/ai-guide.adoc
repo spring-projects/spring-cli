@@ -11,7 +11,7 @@ OPEN_AI_API_KEY=<paste your key here>
 ----
 
 == Using `ai add`
-The command `ai add` will take a brief description of the code you want to add to the project, send the request off to OpenAI's API.  If you pass the `--preview true` option, it wil create a `README` file and not change anything in our code base.
+The command `ai add` will take a brief description of the code you want to add to the project, send the request off to OpenAI's API.  If you pass the `--preview` option, it wil create a `README` file and not change anything in our code base.
 
 Here is a short example,
 
@@ -23,11 +23,11 @@ spring ai add jpa
 Will create the file `README-ai-jpa.md` and add apply the changes described in the file to the project.
 
 
-Executing the command with the `--preview true` options:
+Executing the command with the `--preview` options:
 
 [source, bash]
 ----
-spring ai add jpa --preview true
+spring ai add jpa --preview
 ----
 
 Will create the file `README-ai-jpa.md` and not make any changes to the project.
@@ -37,17 +37,21 @@ Will create the file `README-ai-jpa.md` and not make any changes to the project.
 There is a base set of criteria that is provided to OpenAI that defines common requirements for the code to be generated.  Information such as the package name and build tool to use are determined from your project's structure.  The description you pass in the `ai add` adds to that set of criteria.
 
 
+== Rewriting the project description automatically
+
+The `--rewrite` option will take the description you used and ask ChatGPT to rewrite it so that it is better suited to the task of code generation.  This helps since often I've found myself writing the description in a terse manner that wasn't as effective as a longer description.
+
 == Iterating to get what you want
 
 Often you don't get exactly the solution you want in a first try, so you should specify additional information in the description.
 
-To avoid modifying files in your project while iterating to get what you want, use the `--preview true` option so that only the `README` file is created.
+To avoid modifying files in your project while iterating to get what you want, use the `--preview` option so that only the `README` file is created.
 
 For example, in the previous case, the code that was created was missing an integration test.  Running the command with the following description, gave me the results I wanted.
 
 [source,bash]
 ----
-spring ai add "Create a Spring Java application using Spring Data JPA. The project should include an integration test specifically designed for the Repository layer" --preview true
+spring ai add "Create a Spring Java application using Spring Data JPA. The project should include an integration test specifically designed for the Repository layer" --preview
 ----
 
 Here is a sample xref:ai/README-ai-jpa.md[README-ai-jpa.md] file that was created using the previous command.
