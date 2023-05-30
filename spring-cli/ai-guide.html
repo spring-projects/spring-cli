@@ -316,7 +316,7 @@ You will need to <a href="https://platform.openai.com/signup">create an account<
 <h2 id="_using_ai_add"><a class="anchor" href="#_using_ai_add"></a>Using <code>ai add</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The command <code>ai add</code> will take a brief description of the code you want to add to the project, send the request off to OpenAI&#8217;s API.  If you pass the <code>--preview true</code> option, it wil create a <code>README</code> file and not change anything in our code base.</p>
+<p>The command <code>ai add</code> will take a brief description of the code you want to add to the project, send the request off to OpenAI&#8217;s API.  If you pass the <code>--preview</code> option, it wil create a <code>README</code> file and not change anything in our code base.</p>
 </div>
 <div class="paragraph">
 <p>Here is a short example,</p>
@@ -330,11 +330,11 @@ You will need to <a href="https://platform.openai.com/signup">create an account<
 <p>Will create the file <code>README-ai-jpa.md</code> and add apply the changes described in the file to the project.</p>
 </div>
 <div class="paragraph">
-<p>Executing the command with the <code>--preview true</code> options:</p>
+<p>Executing the command with the <code>--preview</code> options:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add jpa --preview true</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add jpa --preview</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -349,20 +349,28 @@ You will need to <a href="https://platform.openai.com/signup">create an account<
 </div>
 </div>
 <div class="sect1">
+<h2 id="_rewriting_the_project_description_automatically"><a class="anchor" href="#_rewriting_the_project_description_automatically"></a>Rewriting the project description automatically</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>--rewrite</code> option will take the description you used and ask ChatGPT to rewrite it so that it is better suited to the task of code generation.  This helps since often I&#8217;ve found myself writing the description in a terse manner that wasn&#8217;t as effective as a longer description.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_iterating_to_get_what_you_want"><a class="anchor" href="#_iterating_to_get_what_you_want"></a>Iterating to get what you want</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Often you don&#8217;t get exactly the solution you want in a first try, so you should specify additional information in the description.</p>
 </div>
 <div class="paragraph">
-<p>To avoid modifying files in your project while iterating to get what you want, use the <code>--preview true</code> option so that only the <code>README</code> file is created.</p>
+<p>To avoid modifying files in your project while iterating to get what you want, use the <code>--preview</code> option so that only the <code>README</code> file is created.</p>
 </div>
 <div class="paragraph">
 <p>For example, in the previous case, the code that was created was missing an integration test.  Running the command with the following description, gave me the results I wanted.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add "Create a Spring Java application using Spring Data JPA. The project should include an integration test specifically designed for the Repository layer" --preview true</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add "Create a Spring Java application using Spring Data JPA. The project should include an integration test specifically designed for the Repository layer" --preview</code></pre>
 </div>
 </div>
 <div class="paragraph">
