@@ -30,6 +30,8 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.config.SpringCliProjectCatalogProperties;
 import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.git.GitSourceRepositoryService;
+import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.table.Table;
@@ -61,8 +63,8 @@ public class ProjectCatalogCommandsTests {
 			table = projectCatalogCommands.catalogList();
 			System.out.println(table.render(100));
 			verifyTableValue(table, 1, 0, "getting-started");
-			verifyTableValue(table, 1, 1, "https://github.com/rd-1-2022/spring-gs-catalog/");
-			verifyTableValue(table, 1, 2, "Spring Getting Started Projects");
+			verifyTableValue(table, 1, 1, "Spring Getting Started Projects");
+			verifyTableValue(table, 1, 2, "https://github.com/rd-1-2022/spring-gs-catalog/");
 			verifyTableValue(table, 1, 3, "[spring, guide]");
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 
@@ -83,8 +85,8 @@ public class ProjectCatalogCommandsTests {
 		assertThat(table.getModel().getColumnCount()).isEqualTo(4);
 		assertThat(table.getModel().getRowCount()).isEqualTo(1);
 		verifyTableValue(table, 0, 0, "Name");
-		verifyTableValue(table, 0, 1, "URL");
-		verifyTableValue(table, 0, 2, "Description");
+		verifyTableValue(table, 0, 1, "Description");
+		verifyTableValue(table, 0, 2, "URL");
 		verifyTableValue(table, 0, 3, "Tags");
 	}
 
@@ -104,8 +106,14 @@ public class ProjectCatalogCommandsTests {
 		}
 
 		@Bean
-		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig, SpringCliProjectCatalogProperties springCliProjectCatalogProperties) {
-			ProjectCatalogCommands projectCatalogCommands = new ProjectCatalogCommands(springCliUserConfig);
+		GitSourceRepositoryService gitSourceRepositoryService(SpringCliUserConfig springCliUserConfig) {
+			return new GitSourceRepositoryService(springCliUserConfig);
+		}
+
+		@Bean
+		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
+				SourceRepositoryService sourceRepositoryService) {
+			ProjectCatalogCommands projectCatalogCommands = new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService);
 			return projectCatalogCommands;
 		}
 	}

@@ -52,8 +52,6 @@ public class ProjectCatalogInitializer implements InitializingBean {
 			ProjectCatalogs projectCatalogs = new ProjectCatalogs();
 			projectCatalogs.setProjectCatalogs(projectCatalogList);
 			springCliUserConfig.setProjectCatalogs(projectCatalogs);
-
 		}
-
 	}
 }

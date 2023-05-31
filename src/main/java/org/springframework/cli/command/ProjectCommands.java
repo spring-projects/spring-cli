@@ -28,11 +28,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
+import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.support.configfile.YamlConfigFile;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -76,9 +76,9 @@ public class ProjectCommands {
 
 	@ShellMethod(key = "project list", value = "List projects available for use with 'boot new' and 'boot add' commands")
 	public Table projectList() {
-		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "URL", "Description", "Catalog", "Tags" });
+
+		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description",  "URL", "Catalog", "Tags" });
 		Collection<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
-		//List<String[]> allRows;
 		Stream<String[]> rows;
 		if (projectRepositories != null) {
 			rows = projectRepositories.stream()
@@ -100,12 +100,13 @@ public class ProjectCommands {
 			YamlConfigFile yamlConfigFile = new YamlConfigFile();
 			projectRepositories = yamlConfigFile.read(Paths.get(path.toString(),"project-repositories.yml"),
 					ProjectRepositories.class).getProjectRepositories();
-			Stream<String[]> fromCatalogRows = null;
+			Stream<String[]> fromCatalogRows;
 			if (projectRepositories != null) {
 				fromCatalogRows = projectRepositories.stream()
-						.map(tr -> new String[] { tr.getName(),
-								tr.getUrl(),
+						.map(tr -> new String[] {
+								tr.getName(),
 								Objects.requireNonNullElse(tr.getDescription(), ""),
+								tr.getUrl(),
 								projectCatalog.getName(),
 								(Objects.requireNonNullElse(tr.getTags(), "")).toString() }
 						);

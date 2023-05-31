@@ -34,6 +34,8 @@ import org.springframework.cli.config.SpringCliProjectCatalogProperties;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
+import org.springframework.cli.git.GitSourceRepositoryService;
+import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.table.Table;
@@ -54,9 +56,9 @@ public class ProjectCatalogInitializerTests {
 			Table table = projectCatalogCommands.catalogList();
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 			verifyTableValue(table, 1, 0, "gs");
-			verifyTableValue(table, 1, 1, "https://github.com/rd-1-2022/spring-gs-catalog");
-			verifyTableValue(table, 1, 2, "Getting Started Catalog");
-			verifyTableValue(table, 1, 3, "[java-11, boot-2.7]");
+			verifyTableValue(table, 1, 1, "Getting Started Catalog");
+			verifyTableValue(table, 1, 2, "https://github.com/rd-1-2022/spring-gs-catalog");
+			verifyTableValue(table, 1, 3, "[java-17, boot-3.1]");
 		});
 	}
 
@@ -76,8 +78,8 @@ public class ProjectCatalogInitializerTests {
 			Table table = projectCatalogCommands.catalogList();
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 			verifyTableValue(table, 1, 0, "myname");
-			verifyTableValue(table, 1, 1, "myurl");
-			verifyTableValue(table, 1, 2, "mydescription");
+			verifyTableValue(table, 1, 1, "mydescription");
+			verifyTableValue(table, 1, 2, "myurl");
 			verifyTableValue(table, 1, 3, "[tag1, tag2]");
 		});
 	}
@@ -94,8 +96,14 @@ public class ProjectCatalogInitializerTests {
 		}
 
 		@Bean
-		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig) {
-			return new ProjectCatalogCommands(springCliUserConfig);
+		GitSourceRepositoryService gitSourceRepositoryService(SpringCliUserConfig springCliUserConfig) {
+			return new GitSourceRepositoryService(springCliUserConfig);
+		}
+
+		@Bean
+		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
+				SourceRepositoryService sourceRepositoryService) {
+			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService);
 		}
 
 		@Bean
@@ -114,8 +122,8 @@ public class ProjectCatalogInitializerTests {
 			Table table = projectCatalogCommands.catalogList();
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 			verifyTableValue(table, 1, 0, "fooname");
-			verifyTableValue(table, 1, 1, "foourl");
-			verifyTableValue(table, 1, 2, "foodescription");
+			verifyTableValue(table, 1, 1, "foodescription");
+			verifyTableValue(table, 1, 2, "foourl");
 			verifyTableValue(table, 1, 3, "[footag1, footag2]");
 		});
 	}
@@ -134,7 +142,13 @@ public class ProjectCatalogInitializerTests {
 		}
 
 		@Bean
-		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig) {
+		SourceRepositoryService gitSourceRepositoryService(SpringCliUserConfig springCliUserConfig) {
+			return new GitSourceRepositoryService(springCliUserConfig);
+		}
+
+		@Bean
+		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
+				SourceRepositoryService sourceRepositoryService) {
 			List<ProjectCatalog> projectCatalogList = new ArrayList<ProjectCatalog>();
 			projectCatalogList.add(ProjectCatalog.of("fooname", "foodescription", "foourl", Arrays.asList("footag1, footag2")));
 
@@ -143,7 +157,7 @@ public class ProjectCatalogInitializerTests {
 			projectCatalogs.setProjectCatalogs(projectCatalogList);
 			springCliUserConfig.setProjectCatalogs(projectCatalogs);
 
-			return new ProjectCatalogCommands(springCliUserConfig);
+			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService);
 		}
 
 		@Bean

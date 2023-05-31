@@ -31,7 +31,7 @@ public class SpringCliProjectCatalogProperties {
 
 	private String description = "Getting Started Catalog";
 
-	private List<String> tags = Arrays.asList("java-11, boot-2.7");
+	private List<String> tags = Arrays.asList("java-17, boot-3.1");
 
 	public String getName() {
 		return name;

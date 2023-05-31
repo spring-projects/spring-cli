@@ -86,7 +86,7 @@ public class SpringCliUserConfig {
 	private final UserConfig<Hosts> hostsUserConfig;
 
 	/**
-	 * Keeps project catalogs as list.
+	 * A list of installed project catalogs.
 	 */
 	private final UserConfig<ProjectCatalogs> projectCatalogsUserConfig;
 
@@ -221,8 +221,6 @@ public class SpringCliUserConfig {
 	public void setCommandDefaults(CommandDefaults commandDefaults) {
 		this.commandDefaultsUserConfig.setConfig(commandDefaults);
 	}
-
-
 	public static class Hosts {
 
 		private Map<String, Host> hosts = new HashMap<>();
@@ -462,6 +460,62 @@ public class SpringCliUserConfig {
 					", name='" + getName() + '\'' +
 					", description='" + getDescription() + '\'' +
 					", url='" + getUrl() + '\'' +
+					'}';
+		}
+	}
+
+	public static class CatalogRepository extends BaseProjectCommon {
+
+		private List<String> tags = new ArrayList<>();
+
+		public CatalogRepository() {
+		}
+
+		public CatalogRepository(String name, String description, String url) {
+			super(name, description, url);
+		}
+
+		public List<String> getTags() {
+			return tags;
+		}
+
+		public void setTags(List<String> tags) {
+			this.tags = tags;
+		}
+
+		@Override
+		public String toString() {
+			return "CatalogRepository{" +
+					"tags=" + tags +
+					", name='" + getName() + '\'' +
+					", description='" + getDescription() + '\'' +
+					", url='" + getUrl() + '\'' +
+					'}';
+		}
+	}
+
+	public static class CatalogRepositories {
+
+		private List<CatalogRepository> catalogRepositories = new ArrayList<>();
+
+		public Optional<CatalogRepository> findByName(String name) {
+			return this.catalogRepositories.stream()
+					.filter(t -> ObjectUtils.nullSafeEquals(t.getName(), name))
+					.findFirst();
+		}
+
+		public List<CatalogRepository> getCatalogRepositories() {
+			return catalogRepositories;
+		}
+
+		public void setCatalogRepositories(List<CatalogRepository> catalogRepositories) {
+			this.catalogRepositories = catalogRepositories;
+		}
+
+		@Override
+		public String toString() {
+			return "CatalogRepositories{" +
+					"catalogRepositories=" + catalogRepositories +
 					'}';
 		}
 	}

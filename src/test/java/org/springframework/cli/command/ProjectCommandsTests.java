@@ -79,8 +79,8 @@ public class ProjectCommandsTests {
 		assertThat(table.getModel().getColumnCount()).isEqualTo(5);
 		assertThat(table.getModel().getRowCount()).isEqualTo(1);
 		verifyTableValue(table, 0, 0, "Name");
-		verifyTableValue(table, 0, 1, "URL");
-		verifyTableValue(table, 0, 2, "Description");
+		verifyTableValue(table, 0, 1, "Description");
+		verifyTableValue(table, 0, 2, "URL");
 		verifyTableValue(table, 0, 3, "Catalog");
 		verifyTableValue(table, 0, 4, "Tags");
 	}
