@@ -3,29 +3,29 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>help :: Spring CLI</title>
-    <link rel="prev" href="boot-new.html">
-    <link rel="next" href="stacktrace.html">
+    <title>Action Files :: Spring CLI</title>
+    <link rel="prev" href="user-command-guide.html">
+    <link rel="next" href="readme-command-guide.html">
     <meta name="generator" content="Antora 3.0.0">
     <script>
 !function (theme) {
   if (theme === 'dark') document.documentElement.classList.add('dark-theme')
 }(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'))
     </script>
-    <link rel="stylesheet" href="../../_/css/site.css">
-    <link rel="stylesheet" href="../../_/css/vendor/docsearch.css">
-    <link rel="stylesheet" href="../../_/css/vendor/spring-tabs.css">
+    <link rel="stylesheet" href="../_/css/site.css">
+    <link rel="stylesheet" href="../_/css/vendor/docsearch.css">
+    <link rel="stylesheet" href="../_/css/vendor/spring-tabs.css">
 
     <meta name="version" content="1.0.0">
     <meta name="component" content="spring-cli">
-    <link rel="icon" href="../../_/img/favicon.ico" type="image/vnd.microsoft.icon">
+    <link rel="icon" href="../_/img/favicon.ico" type="image/vnd.microsoft.icon">
   </head>
   <body class="article">
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
       <a class="navbar-item" href="https://spring.io">
-        <img id="springlogo" class="block" src="../../_/img/spring-logo.svg" alt="Spring">
+        <img id="springlogo" class="block" src="../_/img/spring-logo.svg" alt="Spring">
       </a>
       <button class="navbar-burger" data-target="topbar-nav">
         <span></span>
@@ -111,54 +111,54 @@
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
   <nav class="nav-menu">
-    <h3 class="title"><a href="../index.html">spring-cli</a></h3>
+    <h3 class="title"><a href="index.html">spring-cli</a></h3>
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../index.html">Overview</a>
+    <a class="nav-link" href="index.html">Overview</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../installation.html">Installation</a>
+    <a class="nav-link" href="installation.html">Installation</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../getting-started.html">Getting Started</a>
+    <a class="nav-link" href="getting-started.html">Getting Started</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../creating-new-projects.html">Creating New Projects</a>
+    <a class="nav-link" href="creating-new-projects.html">Creating New Projects</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../registering-new-projects.html">Registering Projects</a>
+    <a class="nav-link" href="registering-new-projects.html">Registering Projects</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../adding-to-existing-projects.html">Adding to Existing Projects</a>
+    <a class="nav-link" href="adding-to-existing-projects.html">Adding to Existing Projects</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../boot-add-guide.html">Using "boot add"</a>
+    <a class="nav-link" href="boot-add-guide.html">Using "boot add"</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../ai-guide.html">Using to "ai commands"</a>
+    <a class="nav-link" href="ai-guide.html">Using to "ai commands"</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../user-command-guide.html">User defined commands</a>
+    <a class="nav-link" href="user-command-guide.html">User defined commands</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="action-file-guide.html">Guide to Action Files</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../action-file-guide.html">Guide to Action Files</a>
+    <a class="nav-link" href="readme-command-guide.html">Guide to README commands</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../readme-command-guide.html">Guide to README commands</a>
+    <a class="nav-link" href="key-concepts.html">Key Concepts</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../key-concepts.html">Key Concepts</a>
+    <a class="nav-link" href="comments-on-the-approach.html">Comments on the approach</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../comments-on-the-approach.html">Comments on the approach</a>
+    <a class="nav-link" href="initializr.html">Initializr</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../initializr.html">Initializr</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../glossary.html">Glossary</a>
+    <a class="nav-link" href="glossary.html">Glossary</a>
   </li>
 </ul>
   </li>
@@ -167,94 +167,94 @@
     <span class="nav-text">Commands</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="boot-add.html">boot add</a>
+    <a class="nav-link" href="commands/boot-add.html">boot add</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="boot-new.html">boot new</a>
-  </li>
-  <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="help.html">help</a>
+    <a class="nav-link" href="commands/boot-new.html">boot new</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="stacktrace.html">stacktrace</a>
+    <a class="nav-link" href="commands/help.html">help</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="clear.html">clear</a>
+    <a class="nav-link" href="commands/stacktrace.html">stacktrace</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="quit.html">quit</a>
+    <a class="nav-link" href="commands/clear.html">clear</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="completion-bash.html">completion bash</a>
+    <a class="nav-link" href="commands/quit.html">quit</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="history.html">history</a>
+    <a class="nav-link" href="commands/completion-bash.html">completion bash</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="version.html">version</a>
+    <a class="nav-link" href="commands/history.html">history</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="script.html">script</a>
+    <a class="nav-link" href="commands/version.html">version</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="command-remove.html">command remove</a>
+    <a class="nav-link" href="commands/script.html">script</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="command-add.html">command add</a>
+    <a class="nav-link" href="commands/command-remove.html">command remove</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="command-new.html">command new</a>
+    <a class="nav-link" href="commands/command-add.html">command add</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="config-list.html">config list</a>
+    <a class="nav-link" href="commands/command-new.html">command new</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="config-unset.html">config unset</a>
+    <a class="nav-link" href="commands/config-list.html">config list</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="config-set.html">config set</a>
+    <a class="nav-link" href="commands/config-unset.html">config unset</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="github-auth-status.html">github auth status</a>
+    <a class="nav-link" href="commands/config-set.html">config set</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="github-auth-login.html">github auth login</a>
+    <a class="nav-link" href="commands/github-auth-status.html">github auth status</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="github-auth-logout.html">github auth logout</a>
+    <a class="nav-link" href="commands/github-auth-login.html">github auth login</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="initializr-remove.html">initializr remove</a>
+    <a class="nav-link" href="commands/github-auth-logout.html">github auth logout</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="initializr-list.html">initializr list</a>
+    <a class="nav-link" href="commands/initializr-remove.html">initializr remove</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="initializr-set.html">initializr set</a>
+    <a class="nav-link" href="commands/initializr-list.html">initializr list</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="initializr-dependencies.html">initializr dependencies</a>
+    <a class="nav-link" href="commands/initializr-set.html">initializr set</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="initializr-new.html">initializr new</a>
+    <a class="nav-link" href="commands/initializr-dependencies.html">initializr dependencies</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="catalog-add.html">catalog add</a>
+    <a class="nav-link" href="commands/initializr-new.html">initializr new</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="catalog-list.html">catalog list</a>
+    <a class="nav-link" href="commands/catalog-add.html">catalog add</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="catalog-remove.html">catalog remove</a>
+    <a class="nav-link" href="commands/catalog-list.html">catalog list</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="project-list.html">project list</a>
+    <a class="nav-link" href="commands/catalog-remove.html">catalog remove</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="project-add.html">project add</a>
+    <a class="nav-link" href="commands/project-list.html">project list</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="project-remove.html">project remove</a>
+    <a class="nav-link" href="commands/project-add.html">project add</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="commands/project-remove.html">project remove</a>
   </li>
 </ul>
   </li>
@@ -268,10 +268,10 @@
   </div>
   <ul class="components">
     <li class="component is-current">
-      <a class="title" href="../index.html">spring-cli</a>
+      <a class="title" href="index.html">spring-cli</a>
       <ul class="versions">
         <li class="version is-current is-latest">
-          <a href="../index.html">1.0.0-SNAPSHOT</a>
+          <a href="index.html">1.0.0-SNAPSHOT</a>
         </li>
       </ul>
     </li>
@@ -283,55 +283,61 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="../index.html" class="home-link"></a>
+  <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="../index.html">spring-cli</a></li>
-    <li>Commands</li>
-    <li><a href="help.html">help</a></li>
+    <li><a href="index.html">spring-cli</a></li>
+    <li><a href="action-file-guide.html">Guide to Action Files</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/commands/help.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/action-file-guide.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
-<aside class="toc sidebar" data-title="help" data-levels="2">
+<aside class="toc sidebar" data-title="Action Files" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 id="page-title" class="page">help</h1>
-<div class="sect1">
-<h2 id="_name"><a class="anchor" href="#_name"></a>NAME</h2>
-<div class="sectionbody">
+<h1 id="page-title" class="page">Action Files</h1>
 <div class="paragraph">
-<p>help</p>
+<p>Action files are what powers <a href="user-command-guide.html" class="xref page">user defined commands</a>.
+These files are written in YAML format and are stored in the directory that defines the command.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_synopsis"><a class="anchor" href="#_synopsis"></a>SYNOPSIS</h2>
-<div class="sectionbody">
-<div class="exampleblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">help --command String</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_options"><a class="anchor" href="#_options"></a>OPTIONS</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p><code>--command or -C</code> String The command to obtain help for. <strong>Optional</strong></p>
+<p>See the documentation on <a href="user-command-guide.html#_structure" class="xref page">Action file Structure</a> for more information on the directory struture for user defined commands.</p>
 </div>
+<div class="paragraph">
+<p>Each file contains a series of actions that are executed in the order they are defined in the file.
+An action performs a task that is commonly needed for help developers add code and configuration to their current project.
+An action can run another executable application, which helps automate development tasks such as deployment using a vendor&#8217;s CLI application.</p>
 </div>
+<div class="paragraph">
+<p>There can be mulitple action files in a directory and they are evaluated in alphabetical order.  <strong>NOTE:</strong> This may change.</p>
+</div>
+<div class="paragraph">
+<p>There are only a few actions currently, but many more have been prototypes and will be available soon.</p>
+</div>
+<div class="paragraph">
+<p>The list of actions are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>generate</strong> - Create a new file</p>
+</li>
+<li>
+<p><strong>inject</strong> - Inject text in a specific location in an existing file</p>
+</li>
+<li>
+<p><strong>inject-maven-dependency</strong> - Add a maven dependency to the current pom.xml file.</p>
+</li>
+<li>
+<p><strong>exec</strong> - Execute another program.</p>
+</li>
+</ul>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="boot-new.html">boot new</a></span>
-  <span class="next"><a href="stacktrace.html">stacktrace</a></span>
+  <span class="prev"><a href="user-command-guide.html">User defined commands</a></span>
+  <span class="next"><a href="readme-command-guide.html">Guide to README commands</a></span>
 </nav>
 </article>
   </div>
@@ -339,7 +345,7 @@
 </div>
 <footer class="footer flex">
     <div id="spring-links flex">
-        <img id="springlogo" src="../../_/img/spring-logo.svg" alt="Spring">
+        <img id="springlogo" src="../_/img/spring-logo.svg" alt="Spring">
         <p class="smallest antialiased">© <script>var d = new Date();
         document.write(d.getFullYear());</script> <a href="https://www.vmware.com/">VMware</a>, Inc. or its affiliates. <a href="https://www.vmware.com/help/legal.html">Terms of Use</a> • <a href="https://www.vmware.com/help/privacy.html" rel="noopener noreferrer">Privacy</a> • <a href="https://spring.io/trademarks">Trademark Guidelines</a> <span id="thank-you-mobile">• <a href="https://spring.io/thank-you">Thank you</a></span> • <a href="https://www.vmware.com/help/privacy/california-privacy-rights.html">Your California Privacy Rights</a> • <a class="ot-sdk-show-settings">Cookie Settings</a> <span id="teconsent"></span></p>
         <p class="smallest antialiased">Apache®, Apache Tomcat®, Apache Kafka®, Apache Cassandra&trade;, and Apache Geode&trade; are trademarks or registered trademarks of the Apache Software Foundation in the United States and/or other countries. Java&trade;, Java&trade; SE, Java&trade; EE, and OpenJDK&trade; are trademarks of Oracle and/or its affiliates. Kubernetes® is a registered trademark of the Linux Foundation in the United States and other countries. Linux® is the registered trademark of Linus Torvalds in the United States and other countries. Windows® and Microsoft® Azure are registered trademarks of Microsoft Corporation. “AWS” and “Amazon Web Services” are trademarks or registered trademarks of Amazon.com Inc. or its affiliates. All other trademarks and copyrights are property of their respective owners and are only mentioned for informative purposes. Other names may be trademarks of their respective owners.</p>
@@ -350,8 +356,8 @@
         <a href="https://twitter.com/springcentral" title="Twitter"><svg id="twitter-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><circle class="cls-1" cx="37.97" cy="37.97" r="37.97"/><path id="Twitter-2" data-name="Twitter" class="cls-2" d="M55.2,22.73a15.43,15.43,0,0,1-4.88,1.91,7.56,7.56,0,0,0-5.61-2.49A7.78,7.78,0,0,0,37,30a7.56,7.56,0,0,0,.2,1.79,21.63,21.63,0,0,1-15.84-8.23,8,8,0,0,0,2.37,10.52,7.66,7.66,0,0,1-3.48-1v.09A7.84,7.84,0,0,0,26.45,41a7.54,7.54,0,0,1-2,.28A7.64,7.64,0,0,1,23,41.09a7.71,7.71,0,0,0,7.18,5.47,15.21,15.21,0,0,1-9.55,3.37,15.78,15.78,0,0,1-1.83-.11,21.41,21.41,0,0,0,11.78,3.54c14.13,0,21.86-12,21.86-22.42,0-.34,0-.68,0-1a15.67,15.67,0,0,0,3.83-4.08,14.9,14.9,0,0,1-4.41,1.24A7.8,7.8,0,0,0,55.2,22.73Z"/></svg></a>
     </div>
 </footer>
-<script src="../../_/js/site.js"></script>
-<script async src="../../_/js/vendor/highlight.js"></script>
-<script async src="../../_/js/vendor/spring-tabs.js" data-sync-storage-key="docs:preferred-tab"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+<script async src="../_/js/vendor/spring-tabs.js" data-sync-storage-key="docs:preferred-tab"></script>
   </body>
 </html>
