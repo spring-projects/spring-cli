@@ -1,0 +1,5 @@
+Rewrite the provided markdown file based on the following criteria
+
+1. For each markdown section in the generated application where the 'info' field is set to 'html', please include a comment at the beginning of each HTML file. This comment should contain the full path to the file name, prefixed with 'filename:'
+2. For each markdown section in the generated application where the 'info' field is set to 'sql', please include a comment at the beginning of each sql file. This comment should contain the full path to the file name, prefixed with 'filename:'
+3. For each markdown section in the generated application where the 'info' field is set to 'csv', please include a comment at the beginning of each CSV file. This comment should contain the full path to the file name, prefixed with 'filename:'

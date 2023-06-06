@@ -65,6 +65,7 @@ public class OpenAiHandler {
 			DescriptionRewriteAiService descriptionRewriteAiService = new DescriptionRewriteAiService(terminalMessage);
 			description = descriptionRewriteAiService.rewrite(description);
 		}
+		terminalMessage.print("");
 		terminalMessage.print("The description has been rewritten to be: " + description);
 		terminalMessage.print("");
 		Map<String, String> context = createContext(description, projectName, projectPath);
