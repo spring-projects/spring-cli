@@ -3,9 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Guide to AI Commands :: Spring CLI</title>
-    <link rel="prev" href="boot-add-guide.html">
-    <link rel="next" href="user-command-guide.html">
+    <title>Contributing Project Catalogs :: Spring CLI</title>
     <meta name="generator" content="Antora 3.0.0">
     <script>
 !function (theme) {
@@ -136,7 +134,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="boot-add-guide.html">Guide to "boot add"</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="ai-guide.html">Guide to "ai commands"</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -284,163 +282,20 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">spring-cli</a></li>
-    <li><a href="ai-guide.html">Guide to "ai commands"</a></li>
+    <li><a href="contributing-project-catalogs.html">Contributing Project Catalogs</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/ai-guide.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/contributing-project-catalogs.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
-<aside class="toc sidebar" data-title="Guide to AI Commands" data-levels="2">
+<aside class="toc sidebar" data-title="Contributing Project Catalogs" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 id="page-title" class="page">Guide to AI Commands</h1>
-<div class="sect1">
-<h2 id="_prerequisite"><a class="anchor" href="#_prerequisite"></a>Prerequisite</h2>
-<div class="sectionbody">
+<h1 id="page-title" class="page">Contributing Project Catalogs</h1>
 <div class="paragraph">
-<p>Before using the AI commands, make sure you have a developer token from OpenAI.</p>
+<p>Project catalogs can be registered using the command <code>spring catalog add</code> but in</p>
 </div>
-<div class="paragraph">
-<p>Create an account at <a href="https://platform.openai.com/signup">OpenAI Signup</a> and generate the token at <a href="https://platform.openai.com/account/api-keys">API Keys</a>. Save the secret key in a file named <code>.openai</code> under your home directory (~/.openai).</p>
-</div>
-<div class="paragraph">
-<p>The file should contain the following:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>OPEN_AI_API_KEY=&lt;paste your key here&gt;</pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_using_ai_add"><a class="anchor" href="#_using_ai_add"></a>Using <code>ai add</code></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The ai add command allows you to add code to your project generated using OpenAI&#8217;s ChatGPT.</p>
-</div>
-<div class="paragraph">
-<p>Provide a brief description of the code you want to add, using the <code>--description</code> option and the command will send the request to OpenAI&#8217;s API.</p>
-</div>
-<div class="paragraph">
-<p>By default, this command modifies your code base.</p>
-</div>
-<div class="paragraph">
-<p>Example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add "JPA functionality"</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This command creates the file <a href="https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/sample-output/README-ai-jpa-simple-description.md">README-ai-jpa.md</a> and applies the changes described in that file to the project.</p>
-</div>
-<div class="paragraph">
-<p><strong>NOTE:</strong> Code generation may take 3-4 minutes.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_previewing_the_response"><a class="anchor" href="#_previewing_the_response"></a>Previewing the response</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>With <code>--preview</code> option, a <code>README-ai-jpa.md</code> file is created, but no changes are made to the project.
-Review the generated file to determine if it is an acceptable solution.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add "JPA functionality" --preview</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This command creates the file <a href="https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/sample-output/README-ai-jpa-simple-description.md">README-ai-jpa.md</a> without modifying the project.  It allows you to review the generated content and assess its suitability for your needs.</p>
-</div>
-<div class="paragraph">
-<p>Use the command <code>spring readme apply README-ai-jpa.md</code> to apply the changes described in it to your code base.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_how_does_ai_functionality_work"><a class="anchor" href="#_how_does_ai_functionality_work"></a>How does AI functionality work?</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The AI functionality is based on a set of criteria provide to OpenAI.
-These criteria define common requirements for generating Spring code.
-Additonal context is added to the criteria through the description provided in the <code>ai add</code> command.</p>
-</div>
-<div class="paragraph">
-<p>The Large Language Model (LLM) used by OpenAI already contains knowledge about the Spring Ecosystem, enabling good results.
-Further improvements can be achieved by providing more context to the LLM and is an area of active investigation.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_iterating_to_get_what_you_want"><a class="anchor" href="#_iterating_to_get_what_you_want"></a>Iterating to get what you want</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>If you examine the file <a href="https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/sample-output/README-ai-jpa-simple-description.md">README-ai-jpa.md</a> from the previous step, you will notice that it did not include any tests.
-It is always recommended to include tests as a best practice, so the provided description should be updated.</p>
-</div>
-<div class="paragraph">
-<p>This is the general back and forth you will have when working with the <code>ai add</code> command.</p>
-</div>
-<div class="paragraph">
-<p>For example, in the previous case, the code that was created was missing an integration test.  Running the command with the following description, gave me the desired results.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring ai add "JPA functionality with an integration test.  Include all Java code in the same package." --preview</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Here the <a href="https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/sample-output/README-ai-jpa-with-test.md">README-ai-jpa.md</a> file that was created using the previous command.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_rewriting_the_project_description_automatically"><a class="anchor" href="#_rewriting_the_project_description_automatically"></a>Rewriting the project description automatically</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>To obtain better results rom the AI model, you can experiment with letting the AI model rewrite the description.
-Developers often write descriptions in a shorthand or terse style, which may not produce optimal results.
-The <code>--rewrite</code> option allows you to ask the AI model to rewrite the description, providing clearer intent and improving code generation.</p>
-</div>
-<div class="paragraph">
-<p>Example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>spring ai add "JPA functionality" --preview --rewrite
-
-The description has been rewritten to be: Please provide instructions for creating a Spring Java application that utilizes JPA functionality.
-
-Generating code.  This will take a few minutes ...</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Here the <a href="https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/sample-output/README-ai-jpa-rewrite.md">README-ai-jpa.md</a> file that was created using the previous command.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_applying_the_readme"><a class="anchor" href="#_applying_the_readme"></a>Applying the <code>README</code></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Once you are satisfied with the generated <code>README</code> file, apply the changes described in it to your code base using the following command.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring readme apply README-ai-jpa.md</code></pre>
-</div>
-</div>
-</div>
-</div>
-<nav class="pagination">
-  <span class="prev"><a href="boot-add-guide.html">Guide to "boot add"</a></span>
-  <span class="next"><a href="user-command-guide.html">Guide to user defined commands</a></span>
-</nav>
 </article>
   </div>
 </main>
