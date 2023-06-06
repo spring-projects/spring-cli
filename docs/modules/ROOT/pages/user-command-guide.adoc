@@ -116,7 +116,7 @@ actions:
       text: Hello at {{now}} on {{os-name}}.
 ```
 
-This will generate the file `hello.txt`, if it does not already exists, in the current working directory.
+This will generate the file `hello.txt`, if it does not already exist, in the current working directory.
 The template contents contains kebab-case variable names.
 
 The variables `user-name` and `os-name` come from Java system properties and are automatically registered with the template engine.
@@ -305,13 +305,6 @@ Executing the command `spring hello create` generates the file hello.txt with th
 Hello World at Mar 9, 2023 on Linux.
 ```
 
-
-
-
-
-
-
-
 == Learning more
 
-The section xref:action-syntax.adoc[Action Syntax] describes all the options available for you to use in Action Files to add or modify code and configuration to a project.
+The section xref:action-file-guide.adoc[Action Guide] describes all the options available for you to use in Action Files to add or modify code and configuration to a project.
