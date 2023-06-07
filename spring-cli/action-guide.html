@@ -3,7 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Action syntax :: Spring CLI</title>
+    <title>Action Guide :: Spring CLI</title>
+    <link rel="prev" href="action-file-overview.html">
+    <link rel="next" href="readme-command-guide.html">
     <meta name="generator" content="Antora 3.0.0">
     <script>
 !function (theme) {
@@ -141,7 +143,10 @@
     <a class="nav-link" href="user-command-guide.html">User defined commands</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="action-file-guide.html">Guide to Action Files</a>
+    <a class="nav-link" href="action-file-overview.html">Overview of Action Files</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="action-guide.html">Guide to Actions</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="readme-command-guide.html">Guide to README commands</a>
@@ -285,84 +290,272 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">spring-cli</a></li>
-    <li><a href="action-syntax.html">Action syntax</a></li>
+    <li><a href="action-guide.html">Guide to Actions</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/action-syntax.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/action-guide.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
-<aside class="toc sidebar" data-title="Action syntax" data-levels="2">
+<aside class="toc sidebar" data-title="Action Guide" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 id="page-title" class="page">Action syntax</h1>
+<h1 id="page-title" class="page">Action Guide</h1>
+<div class="sect1">
+<h2 id="_generate"><a class="anchor" href="#_generate"></a>Generate</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>The content of action files are similar in struture to GitHub Action files. Here is a simple example</p>
+<p>The <code>generate</code> action is used to generate files.  It requires a <code>to</code> key to specify the destination path.
+The path is relative where the user-defined command was executed.  If the file already exists, it will not be overwritten.</p>
+</div>
+<div class="paragraph">
+<p>The content of the file is defined using the <code>text</code> key.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a simple example of the <code>generate</code> action is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">actions:
+  - generate:
+      to:  hello.txt
+      text: Hello {{user-name}} on {{os-name}}.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The variables <code>{{user-name}}</code> and `{{os-name}} will be replaced with actual values using the Handlebars template engine.
+Command line options passed to user-defined command are exposed as variables to be used by the template engine.</p>
+</div>
+<div class="paragraph">
+<p>For more information on predefined template engine variables, refer to the <a href="user-command-guide.html#_template_engine" class="xref page">Template Engine</a> section.</p>
+</div>
+<div class="sect2">
+<h3 id="_literal_syntax"><a class="anchor" href="#_literal_syntax"></a>Literal syntax</h3>
+<div class="paragraph">
+<p>YAML&#8217;s literal syntax allows representing multi-line strings or preserving formatting and whitespace within a string.</p>
+</div>
+<div class="paragraph">
+<p>The literal syntax is useful when you want to maintain line breaks, indentation, but some special characters must be escaped with a slash character.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example of using the literal syntax in YAML:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">actions:
+  - generate:
+      to:  hello.txt
+      text: |
+        This is a multi-line
+        string using the literal syntax.
+        It preserves the line breaks
+        and indentation exactly as written.
+        \t This is a tab character.
+        \n This is a newline character.
+        \\ This is a backslash.
+        \u2713 This is a Unicode character (checkmark symbol).</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By using the | character followed by an indented block, the string is treated as a literal, and line breaks and indentation are preserved.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_external_file"><a class="anchor" href="#_external_file"></a>External file</h3>
+<div class="paragraph">
+<p>In some cases, it is diffiuclt to embed text using the literal syntax due to required escaping.
+JSON files, regular expresssions, and file paths are common examples where such difficulties arise.
+Additionally, you may want to edit the text content separately from the action file to leverage syntax highlighting and validation features of text editors.</p>
+</div>
+<div class="paragraph">
+<p>To address these cases, you can use the from key to specify the source file for generating the text.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example using the <code>from</code> key</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">actions:
   - generate:
-      to:  hello.txt
-      text: Hello {{user-name}} at {{now}} on {{os-name}}.
-
-
-The file starts with the `actions:` field.  The available options for nested fields are:
-
-* `generate` - Creates a new file
-* `exec` - Execute a shell command
-* `inject` - Adds content into an existing file
-
-== Exec
-
-The basic form to execute a shell command is</code></pre>
+      to:  hello.json
+      from: json-template.json</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>actions:
-  - exec:
-      command: mkdir {{tmp-dir}}/scratch</p>
+<p>The <code>to</code> key is relative to the director where the command is executed.</p>
+</div>
+<div class="paragraph">
+<p>The file <code>json-template.json</code> is located in the same directory as the command, <code>.spring/commands/hello/create</code> and its contents are:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">The template engine variable `tmp-dir` is defined by default and is the value of the Java System Property `java.io.tmpdir`.
-
-=== Redirecting output
-
-TBD
-
-=== Adding to the template engine model
-Sometime you would like to execute a program use its output to define a template engine variable.
-
-The `define` section under `exec` lets you perform this task.
-It allows you to define a `jsonPath` expression to select from the output if it is JSON.
-This is common output format in many commnand line utilities.
-
-Here is an example.  In the Action File named `00-define-var.yml` the contents are:</code></pre>
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "operatingSystem": "{{os-name}}",
+  "phoneNumbers": [
+    {
+      "type": "iPhone",
+      "number": "0123-4567-8888"
+    },
+    {
+      "type": "home",
+      "number": "0123-4567-8910"
+    }
+  ]
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>actions:
+<p>Executing <code>spring hello create</code> from the <a href="action-file-overview.html#_an_introductory_example" class="xref page">introductory example</a> produces the file <code>hello.json</code> as shown below</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ spring hello create
+Generated /home/testing/rest-service/hello.json
+
+$ cat hello.json</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "operatingSystem": "Linux",
+  "phoneNumbers": [
+    {
+      "type": "iPhone",
+      "number": "0123-4567-8888"
+    },
+    {
+      "type": "home",
+      "number": "0123-4567-8910"
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_variable_replacement_in_keys"><a class="anchor" href="#_variable_replacement_in_keys"></a>Variable replacement in keys</h3>
+<div class="paragraph">
+<p>You can also use Handlebars template variables in the <code>to</code>, <code>from</code> and <code>text</code> keys.</p>
+</div>
+<div class="paragraph">
+<p>Here is an example that uses Handlebars template variables in the <code>to</code> key.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">actions:
+  - generate:
+      to: src/main/java/{{root-package-dir}}/{{feature}}/{{capitalizeFirst feature}}Controller.java
+      from: RestController.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information on predefined template engine variables, refer to the <a href="user-command-guide.html#_template_engine" class="xref page">Template Engine</a> section.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exec"><a class="anchor" href="#_exec"></a>Exec</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>exec</code> action is used to execute a shell command.</p>
+</div>
+<div class="paragraph">
+<p>The basic form to execute a shell command is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">actions:
+  - exec:
+      command: mkdir {{tmp-dir}}/scratch</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The template engine variable <code>tmp-dir</code> is defined by default and is the value of the Java System Property <code>java.io.tmpdir</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_redirecting_output"><a class="anchor" href="#_redirecting_output"></a>Redirecting output</h3>
+<div class="paragraph">
+<p>TBD</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_adding_to_the_template_engine_model"><a class="anchor" href="#_adding_to_the_template_engine_model"></a>Adding to the template engine model</h3>
+<div class="paragraph">
+<p>Sometimes, you may want to execute a program and use its output to define a template engine variable.</p>
+</div>
+<div class="paragraph">
+<p>The <code>define</code> section under <code>exec</code> allow syou to accomplish this.
+It lets you define a <code>jsonPath</code> expression to select from the output if it is JSON format.
+JSON is a common output format in many commnand line utilities.</p>
+</div>
+<div class="paragraph">
+<p>Here is an example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">actions:
   - exec:
       command-file: echo-command.txt
       define:
         name: phone-type
-        jsonPath: $.phoneNumbers[:1].type</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">and the file `echo-command.txt` contains</code></pre>
+        jsonPath: $.phoneNumbers[:1].type</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>echo '{ "firstName": "John", "lastName": "doe", "age": 26, "address": { "streetAddress": "naist street", "city": "Nara", "postalCode": "630-0192" }, "phoneNumbers": [ { "type": "iPhone", "number": "0123-4567-8888" }, { "type": "home", "number": "0123-4567-8910" } ] }'</p>
+<p>The contents of the <code>echo-command.txt</code> file are:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">The variable named `phone-type` will be defined as the output from applying the https://github.com/json-path/JsonPath[JSON Path expression] to the output of the command.
-In this case, a simple `echo` of JSON is done but in a more realistic case, it would be the output of a command line utility.</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">echo '{ "firstName": "John", "lastName": "doe", "age": 26, "address": { "streetAddress": "naist street", "city": "Nara", "postalCode": "630-0192" }, "phoneNumbers": [ { "type": "iPhone", "number": "0123-4567-8888" }, { "type": "home", "number": "0123-4567-8910" } ] }'</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The variable named <code>phone-type</code> will be defined as the output from applying the <a href="https://github.com/json-path/JsonPath">JSON Path expression</a> to the output of the command.
+In this case, a simple <code>echo</code> of JSON is used, but in a more realistic scenario, it would be the output of a command line utility.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inject_maven_dependency"><a class="anchor" href="#_inject_maven_dependency"></a>Inject Maven Dependency</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>inject-maven-dependency</code> action is used to inject Maven dependency declarations into your Maven pom.xml file.</p>
+</div>
+<div class="paragraph">
+<p>The basic form to inject a Maven dependency is</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">actions:
+  - inject-maven-dependency:
+      text: |
+        &lt;dependency&gt;
+          &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+          &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+          &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+          &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+          &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+          &lt;groupId&gt;com.h2database&lt;/groupId&gt;
+          &lt;artifactId&gt;h2&lt;/artifactId&gt;
+          &lt;scope&gt;runtime&lt;/scope&gt;
+        &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="action-file-overview.html">Overview of Action Files</a></span>
+  <span class="next"><a href="readme-command-guide.html">Guide to README commands</a></span>
+</nav>
 </article>
   </div>
 </main>

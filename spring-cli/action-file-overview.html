@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Action Files :: Spring CLI</title>
     <link rel="prev" href="user-command-guide.html">
-    <link rel="next" href="readme-command-guide.html">
+    <link rel="next" href="action-guide.html">
     <meta name="generator" content="Antora 3.0.0">
     <script>
 !function (theme) {
@@ -143,7 +143,10 @@
     <a class="nav-link" href="user-command-guide.html">User defined commands</a>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="action-file-guide.html">Guide to Action Files</a>
+    <a class="nav-link" href="action-file-overview.html">Overview of Action Files</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="action-guide.html">Guide to Actions</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="readme-command-guide.html">Guide to README commands</a>
@@ -287,10 +290,10 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">spring-cli</a></li>
-    <li><a href="action-file-guide.html">Guide to Action Files</a></li>
+    <li><a href="action-file-overview.html">Overview of Action Files</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/action-file-guide.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/action-file-overview.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Action Files" data-levels="2">
@@ -298,20 +301,22 @@
 </aside>
 <article class="doc">
 <h1 id="page-title" class="page">Action Files</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
 <p>Action files are what powers <a href="user-command-guide.html" class="xref page">user defined commands</a>.
 These files are written in YAML format and are stored in the directory that defines the command.</p>
 </div>
 <div class="paragraph">
-<p>See the documentation on <a href="user-command-guide.html#_structure" class="xref page">Action file Structure</a> for more information on the directory struture for user defined commands.</p>
+<p>See the documentation on <a href="user-command-guide.html#_structure" class="xref page">Action file Structure</a> for more information on the directory structure for user defined commands.</p>
 </div>
 <div class="paragraph">
 <p>Each file contains a series of actions that are executed in the order they are defined in the file.
-An action performs a task that is commonly needed for help developers add code and configuration to their current project.
+An action performs a task that is commonly needed to help developers add or modify code and configuration to their current project.
 An action can run another executable application, which helps automate development tasks such as deployment using a vendor&#8217;s CLI application.</p>
 </div>
 <div class="paragraph">
-<p>There can be mulitple action files in a directory and they are evaluated in alphabetical order.  <strong>NOTE:</strong> This may change.</p>
+<p>There can be multiple action files in a directory, and they are evaluated in alphabetical order.  <strong>NOTE:</strong> This may change.</p>
 </div>
 <div class="paragraph">
 <p>There are only a few actions currently, but many more have been prototypes and will be available soon.</p>
@@ -341,9 +346,125 @@ An action can run another executable application, which helps automate developme
 </li>
 </ul>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_an_introductory_example"><a class="anchor" href="#_an_introductory_example"></a>An introductory example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The CLI command <code>command new</code> creates a simple user defined command that we can use to demonstrate the components of an actions file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">spring command new --commandName hello --subCommandName create
+Created user defined command /home/testing/rest-service/.spring/commands/hello/create</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The directory structure is</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ tree .spring
+.spring
+└── commands
+    └── hello
+        └── create
+            ├── command.yaml
+            └── hello.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The content of <code>command.yaml</code>, shown below, defines a command line argument named <code>greeting</code>.
+This argument will be used in the action file <code>hello.yaml</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">command:
+  description: Generate a new file with a hello message
+  options:
+    #
+    - name: greeting
+      description: who or what to say hello to
+      dataType: string
+      defaultValue: World
+      inputType: text     # TEXT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The content of <code>hello.yaml</code> is</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">actions:
+  - generate:
+      to: hello.txt
+      text: Hello {{greeting}} on {{os-name}}.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_understanding_the_actions_file"><a class="anchor" href="#_understanding_the_actions_file"></a>Understanding the actions file</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To help you understand how YAML syntax is used to create actions file, this section explains each line of the introduction&#8217;s example:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Code</th>
+<th class="tableblock halign-left valign-top">Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">actions:</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groups together all the actions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">generate:</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The type of action to take, this action type generates files</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">to:</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where in the file system to generate the file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">text:</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The content of the file to generate.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running_the_user_defined_command"><a class="anchor" href="#_running_the_user_defined_command"></a>Running the user defined command</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ spring hello create --greeting World!
+Generated /home/testing/rest-service/hello.txt
+
+$ cat hello.txt
+Hello World! on Linux.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_next_steps"><a class="anchor" href="#_next_steps"></a>Next Steps</h2>
+<div class="sectionbody">
+
+</div>
+</div>
 <nav class="pagination">
   <span class="prev"><a href="user-command-guide.html">User defined commands</a></span>
-  <span class="next"><a href="readme-command-guide.html">Guide to README commands</a></span>
+  <span class="next"><a href="action-guide.html">Guide to Actions</a></span>
 </nav>
 </article>
   </div>
