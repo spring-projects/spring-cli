@@ -18,5 +18,7 @@ The list of actions are:
 * *generate* - Create a new file
 * *inject* - Inject text in a specific location in an existing file
 * *inject-maven-dependency* - Add a maven dependency to the current pom.xml file.
+* *inject-maven-plugin* - Add a maven plugin to the current pom.xml file
+* *inject-properties* - Add properties to a Java properties file.
 * *exec* - Execute another program.
 

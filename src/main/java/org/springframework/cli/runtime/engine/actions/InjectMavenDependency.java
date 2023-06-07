@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * @author Mark Pollack
  */
-//@JsonRootName("inject-maven-dependency")
 public class InjectMavenDependency {
 
 	private String text;

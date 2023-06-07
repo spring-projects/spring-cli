@@ -60,9 +60,9 @@ public class Action {
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 	Action(@JsonProperty("generate") @Nullable Generate generate,
 			@JsonProperty("exec") @Nullable Exec exec,
-			@JsonProperty("injectMavenPlugin") @Nullable InjectMavenPlugin injectMavenPlugin,
-			@JsonProperty("injectMavenDependency") @Nullable InjectMavenDependency injectMavenDependency,
-			@JsonProperty("injectProperties") @Nullable InjectProperties injectProperties,
+			@JsonProperty("inject-maven-plugin") @Nullable InjectMavenPlugin injectMavenPlugin,
+			@JsonProperty("inject-maven-dependency") @Nullable InjectMavenDependency injectMavenDependency,
+			@JsonProperty("inject-properties") @Nullable InjectProperties injectProperties,
 			@JsonProperty("inject") @Nullable Inject inject) {
 		this.generate = generate;
 		this.exec = exec;
