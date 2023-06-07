@@ -1,0 +1,93 @@
+= Action Files
+
+Action files are what powers xref:user-command-guide.adoc[user defined commands].
+These files are written in YAML format and are stored in the directory that defines the command.
+
+See the documentation on xref:user-command-guide.adoc#_structure[Action file Structure] for more information on the directory structure for user defined commands.
+
+Each file contains a series of actions that are executed in the order they are defined in the file.
+An action performs a task that is commonly needed to help developers add or modify code and configuration to their current project.
+An action can run another executable application, which helps automate development tasks such as deployment using a vendor's CLI application.
+
+There can be multiple action files in a directory, and they are evaluated in alphabetical order.  **NOTE:** This may change.
+
+There are only a few actions currently, but many more have been prototypes and will be available soon.
+
+The list of actions are:
+
+* *generate* - Create a new file
+* *inject* - Inject text in a specific location in an existing file
+* *inject-maven-dependency* - Add a maven dependency to the current pom.xml file.
+* *inject-maven-plugin* - Add a maven plugin to the current pom.xml file
+* *inject-properties* - Add properties to a Java properties file.
+* *exec* - Execute another program.
+
+== An introductory example
+
+The CLI command `command new` creates a simple user defined command that we can use to demonstrate the components of an actions file.
+
+```
+spring command new --commandName hello --subCommandName create
+Created user defined command /home/testing/rest-service/.spring/commands/hello/create
+```
+
+The directory structure is
+
+```bash
+$ tree .spring
+.spring
+└── commands
+    └── hello
+        └── create
+            ├── command.yaml
+            └── hello.yaml
+```
+
+The content of `command.yaml`, shown below, defines a command line argument named `greeting`.
+This argument will be used in the action file `hello.yaml`.
+
+```
+command:
+  description: Generate a new file with a hello message
+  options:
+    #
+    - name: greeting
+      description: who or what to say hello to
+      dataType: string
+      defaultValue: World
+      inputType: text     # TEXT
+```
+
+The content of `hello.yaml` is
+
+```yml
+actions:
+  - generate:
+      to: hello.txt
+      text: Hello {{greeting}} on {{os-name}}.
+```
+
+
+== Understanding the actions file
+To help you understand how YAML syntax is used to create actions file, this section explains each line of the introduction's example:
+[options="header"]
+|============================================================================
+| Code      | Explanation
+| actions:  | Groups together all the actions
+| generate: | The type of action to take, this action type generates files
+| to:       | Where in the file system to generate the file
+| text:     | The content of the file to generate.
+|============================================================================
+
+== Running the user defined command
+
+```bash
+$ spring hello create --greeting World!
+Generated /home/testing/rest-service/hello.txt
+
+$ cat hello.txt
+Hello World! on Linux.
+```
+
+== Next Steps
+

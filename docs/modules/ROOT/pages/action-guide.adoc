@@ -1,0 +1,201 @@
+= Action Guide
+
+== Generate
+
+The `generate` action is used to generate files.  It requires a `to` key to specify the destination path.
+The path is relative where the user-defined command was executed.  If the file already exists, it will not be overwritten.
+
+The content of the file is defined using the `text` key.
+
+Here's a simple example of the `generate` action is:
+
+
+```yml
+actions:
+  - generate:
+      to:  hello.txt
+      text: Hello {{user-name}} on {{os-name}}.
+```
+
+The variables `{{user-name}}` and `{{os-name}} will be replaced with actual values using the Handlebars template engine.
+Command line options passed to user-defined command are exposed as variables to be used by the template engine.
+
+For more information on predefined template engine variables, refer to the xref:user-command-guide.adoc#_template_engine[Template Engine] section.
+
+=== Literal syntax
+
+YAML's literal syntax allows representing multi-line strings or preserving formatting and whitespace within a string.
+
+The literal syntax is useful when you want to maintain line breaks, indentation, but some special characters must be escaped with a slash character.
+
+Here's an example of using the literal syntax in YAML:
+
+```yml
+actions:
+  - generate:
+      to:  hello.txt
+      text: |
+        This is a multi-line
+        string using the literal syntax.
+        It preserves the line breaks
+        and indentation exactly as written.
+        \t This is a tab character.
+        \n This is a newline character.
+        \\ This is a backslash.
+        \u2713 This is a Unicode character (checkmark symbol).
+```
+
+By using the | character followed by an indented block, the string is treated as a literal, and line breaks and indentation are preserved.
+
+=== External file
+
+In some cases, it is diffiuclt to embed text using the literal syntax due to required escaping.
+JSON files, regular expresssions, and file paths are common examples where such difficulties arise.
+Additionally, you may want to edit the text content separately from the action file to leverage syntax highlighting and validation features of text editors.
+
+To address these cases, you can use the from key to specify the source file for generating the text.
+
+Here's an example using the `from` key
+```
+actions:
+  - generate:
+      to:  hello.json
+      from: json-template.json
+```
+
+The `to` key is relative to the director where the command is executed.
+
+The file `json-template.json` is located in the same directory as the command, `.spring/commands/hello/create` and its contents are:
+
+```json
+{
+  "operatingSystem": "{{os-name}}",
+  "phoneNumbers": [
+    {
+      "type": "iPhone",
+      "number": "0123-4567-8888"
+    },
+    {
+      "type": "home",
+      "number": "0123-4567-8910"
+    }
+  ]
+}
+```
+
+Executing `spring hello create` from the xref:action-file-overview.adoc#_an_introductory_example[introductory example] produces the file `hello.json` as shown below
+
+```
+$ spring hello create
+Generated /home/testing/rest-service/hello.json
+
+$ cat hello.json
+```
+```json
+{
+  "operatingSystem": "Linux",
+  "phoneNumbers": [
+    {
+      "type": "iPhone",
+      "number": "0123-4567-8888"
+    },
+    {
+      "type": "home",
+      "number": "0123-4567-8910"
+    }
+  ]
+}
+```
+
+
+=== Variable replacement in keys
+
+You can also use Handlebars template variables in the `to`, `from` and `text` keys.
+
+Here is an example that uses Handlebars template variables in the `to` key.
+
+```yml
+actions:
+  - generate:
+      to: src/main/java/{{root-package-dir}}/{{feature}}/{{capitalizeFirst feature}}Controller.java
+      from: RestController.java
+```
+
+For more information on predefined template engine variables, refer to the xref:user-command-guide.adoc#_template_engine[Template Engine] section.
+
+== Exec
+
+The `exec` action is used to execute a shell command.
+
+The basic form to execute a shell command is:
+
+```
+actions:
+  - exec:
+      command: mkdir {{tmp-dir}}/scratch
+```
+
+
+The template engine variable `tmp-dir` is defined by default and is the value of the Java System Property `java.io.tmpdir`.
+
+=== Redirecting output
+
+TBD
+
+=== Adding to the template engine model
+Sometimes, you may want to execute a program and use its output to define a template engine variable.
+
+
+The `define` section under `exec` allow syou to accomplish this.
+It lets you define a `jsonPath` expression to select from the output if it is JSON format.
+JSON is a common output format in many commnand line utilities.
+
+Here is an example.
+
+```yml
+actions:
+  - exec:
+      command-file: echo-command.txt
+      define:
+        name: phone-type
+        jsonPath: $.phoneNumbers[:1].type
+```
+
+The contents of the `echo-command.txt` file are:
+
+```
+echo '{ "firstName": "John", "lastName": "doe", "age": 26, "address": { "streetAddress": "naist street", "city": "Nara", "postalCode": "630-0192" }, "phoneNumbers": [ { "type": "iPhone", "number": "0123-4567-8888" }, { "type": "home", "number": "0123-4567-8910" } ] }'
+```
+
+The variable named `phone-type` will be defined as the output from applying the https://github.com/json-path/JsonPath[JSON Path expression] to the output of the command.
+In this case, a simple `echo` of JSON is used, but in a more realistic scenario, it would be the output of a command line utility.
+
+== Inject Maven Dependency
+
+The `inject-maven-dependency` action is used to inject Maven dependency declarations into your Maven pom.xml file.
+
+The basic form to inject a Maven dependency is
+
+```yml
+
+actions:
+  - inject-maven-dependency:
+      text: |
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-test</artifactId>
+          <scope>test</scope>
+        </dependency>
+
+        <dependency>
+          <groupId>com.h2database</groupId>
+          <artifactId>h2</artifactId>
+          <scope>runtime</scope>
+        </dependency>
+```
+

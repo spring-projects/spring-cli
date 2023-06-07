@@ -87,12 +87,10 @@ public class GenerateActionHandler {
 			if (StringUtils.hasText(generate.getFrom())) {
 				Path templateFilePath = Paths.get(String.valueOf(dynamicSubCommandPath), generate.getFrom());
 				if (Files.exists(templateFilePath) && Files.isRegularFile(templateFilePath)) {
+
 					try {
-						try (Scanner scanner = new Scanner(templateFilePath.toFile())) {
-							scanner.useDelimiter("\\Z");
-							String contents = scanner.next();
-							result = templateEngine.process(contents, model);
-						}
+						String contents = Files.readString(templateFilePath);
+						result = templateEngine.process(contents, model);
 					}
 					catch (IOException e) {
 						throw new SpringCliException("Can not read from file " + templateFilePath.toAbsolutePath(), e);

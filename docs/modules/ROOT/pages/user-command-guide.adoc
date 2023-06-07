@@ -307,4 +307,4 @@ Hello World at Mar 9, 2023 on Linux.
 
 == Learning more
 
-The section xref:action-file-guide.adoc[Action Guide] describes all the options available for you to use in Action Files to add or modify code and configuration to a project.
+The section xref:action-file-overview.adoc[Action Guide] describes all the options available for you to use in Action Files to add or modify code and configuration to a project.
