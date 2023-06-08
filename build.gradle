@@ -133,6 +133,10 @@ configurations {
 	integrationTestImplementation.extendsFrom testImplementation
 }
 
+rootProject.tasks.named("processIntegrationTestResources") {
+	duplicatesStrategy = 'include'
+}
+
 
 springBoot {
 	buildInfo()
