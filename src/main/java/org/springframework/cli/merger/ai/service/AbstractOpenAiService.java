@@ -50,14 +50,11 @@ public abstract class AbstractOpenAiService implements org.springframework.cli.m
 	private final TerminalMessage terminalMessage;
 
 	public AbstractOpenAiService(TerminalMessage terminalMessage) {
-		// get api token in file ~/.openai
-		Properties properties = PropertyFileUtils.getPropertyFile();
-		String apiKey = properties.getProperty("OPEN_AI_API_KEY");
-		this.openAiService = new OpenAiService(apiKey, Duration.of(5, ChronoUnit.MINUTES));
 		this.terminalMessage = terminalMessage;
 	}
 
-	protected static ChatCompletionRequest getChatCompletionRequest(PromptRequest promptRequest) {
+	protected ChatCompletionRequest getChatCompletionRequest(PromptRequest promptRequest) {
+		createOpenAiService();
 		ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
 				.builder()
 				.model("gpt-3.5-turbo")
@@ -68,6 +65,15 @@ public abstract class AbstractOpenAiService implements org.springframework.cli.m
 								new ChatMessage("user", promptRequest.getUserPrompt())))
 				.build();
 		return chatCompletionRequest;
+	}
+
+	private void createOpenAiService() {
+		if (this.openAiService == null) {
+			// get api token in file ~/.openai
+			Properties properties = PropertyFileUtils.getPropertyFile();
+			String apiKey = properties.getProperty("OPEN_AI_API_KEY");
+			this.openAiService = new OpenAiService(apiKey, Duration.of(5, ChronoUnit.MINUTES));
+		}
 	}
 
 	public OpenAiService getOpenAiService() {
