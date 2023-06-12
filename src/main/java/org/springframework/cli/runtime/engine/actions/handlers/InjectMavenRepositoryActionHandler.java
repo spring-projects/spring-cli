@@ -36,45 +36,46 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.recipe.InjectTextMavenDependencyRecipe;
-import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
-import org.springframework.cli.util.MavenDependencyReader;
+import org.springframework.cli.recipe.InjectTextMavenRepositoryRecipe;
+import org.springframework.cli.runtime.engine.actions.InjectMavenRepository;
+import org.springframework.cli.util.MavenRepositoryReader;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.util.StringUtils;
 
-public class InjectMavenDependencyActionHandler {
+public class InjectMavenRepositoryActionHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(InjectMavenDependencyActionHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(InjectMavenRepositoryActionHandler.class);
 
 	private final TerminalMessage terminalMessage;
 
 	private final Path cwd;
 
-	public InjectMavenDependencyActionHandler(Path cwd, TerminalMessage terminalMessage) {
+	public InjectMavenRepositoryActionHandler(Path cwd, TerminalMessage terminalMessage) {
 		this.cwd = cwd;
 		this.terminalMessage = terminalMessage;
 	}
 
-	public void execute(InjectMavenDependency injectMavenDependency) {
+	public void execute(InjectMavenRepository injectMavenRepository) {
 
 		Path pomPath = cwd.resolve("pom.xml");
 		if (Files.notExists(pomPath)) {
 			throw new SpringCliException("Could not find pom.xml in " + this.cwd + ".  Make sure you are running the command in the directory that contains a pom.xml file");
 		}
-		String text = injectMavenDependency.getText();
+		String text = injectMavenRepository.getText();
 		if (!StringUtils.hasText(text)) {
-			throw new SpringCliException("Inject Maven Dependency action does not have a value in the 'text:' field.");
+			throw new SpringCliException("Inject Maven Repository action does not have a value in the 'text:' field.");
 		}
-		MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
-		String[] mavenDependencies = mavenDependencyReader.parseMavenDependencies(text);
-		for (String mavenDependency : mavenDependencies) {
+		MavenRepositoryReader mavenRepositoryReader = new MavenRepositoryReader();
+		String[] mavenRepositories = mavenRepositoryReader.parseMavenRepositories(text);
+		for (String mavenRepository : mavenRepositories) {
 
 
-			InjectTextMavenDependencyRecipe injectTextMavenDependencyRecipe = new InjectTextMavenDependencyRecipe(mavenDependency);
+			InjectTextMavenRepositoryRecipe injectTextMavenRepositoryRecipe = new InjectTextMavenRepositoryRecipe(mavenRepository);
 			List<Path> paths = new ArrayList<>();
 			paths.add(pomPath);
 			MavenParser mavenParser = MavenParser.builder().build();
 			List<Document> parsedPomFiles = mavenParser.parse(paths, cwd, getExecutionContext());
-			List<Result> resultList = injectTextMavenDependencyRecipe.run(parsedPomFiles).getResults();
+			List<Result> resultList = injectTextMavenRepositoryRecipe.run(parsedPomFiles).getResults();
 			try {
 				for (Result result : resultList) {
 					// write updated file.

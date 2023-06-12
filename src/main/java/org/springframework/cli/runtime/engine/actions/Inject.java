@@ -68,7 +68,7 @@ public class Inject {
 			@JsonProperty("after") String after) {
 		this.text = text;
 		this.to = Objects.requireNonNull(to);
-		this.skip = Objects.requireNonNull(skip);
+		this.skip = skip;
 		this.before = before;
 		this.after = after;
 	}

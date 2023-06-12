@@ -1,0 +1,6 @@
+actions:
+  - inject:
+      to: sample.txt
+      text: "INJECTED BEFORE"
+      before: marker1
+      skip: marker2

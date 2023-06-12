@@ -79,7 +79,7 @@ public class InjectActionHandler {
 			throw new SpringCliException("Inject action can not be performed because the value of the 'to:' field resolved to an empty string.");
 		}
 		Path pathToFile = cwd.resolve(fileNameToInject).toAbsolutePath();
-		if ((!pathToFile.toFile().exists())) {
+		if ((!Files.exists(pathToFile))) {
 			throw new SpringCliException("Inject action can not be performed because the file " + pathToFile + " does not exist.");
 		}
 		if ((pathToFile.toFile().isDirectory())) {
@@ -138,7 +138,7 @@ public class InjectActionHandler {
 		boolean shouldInject = true;
 		try {
 			String fileContents = Files.readAllLines(file.toPath()).stream().collect(Collectors.joining("\n"));
-			if (fileContents.contains(skip)) {
+			if (skip != null && fileContents.contains(skip)) {
 				terminalMessage.print("Skipping injection of " + file);
 				shouldInject = false;
 			}

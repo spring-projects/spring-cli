@@ -55,6 +55,12 @@ public class Action {
 	private InjectMavenDependency injectMavenDependency;
 
 	@Nullable
+	private InjectMavenDependencyManagement injectMavenDependencyManagement;
+
+	@Nullable
+	private InjectMavenRepository injectMavenRepository;
+
+	@Nullable
 	private final InjectProperties injectProperties;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
@@ -62,12 +68,16 @@ public class Action {
 			@JsonProperty("exec") @Nullable Exec exec,
 			@JsonProperty("inject-maven-plugin") @Nullable InjectMavenPlugin injectMavenPlugin,
 			@JsonProperty("inject-maven-dependency") @Nullable InjectMavenDependency injectMavenDependency,
+			@JsonProperty("inject-maven-dependency-management") @Nullable InjectMavenDependencyManagement injectMavenDependencyManagement,
+			@JsonProperty("inject-maven-repository") @Nullable InjectMavenRepository injectMavenRepository,
 			@JsonProperty("inject-properties") @Nullable InjectProperties injectProperties,
 			@JsonProperty("inject") @Nullable Inject inject) {
 		this.generate = generate;
 		this.exec = exec;
 		this.injectMavenPlugin = injectMavenPlugin;
 		this.injectMavenDependency = injectMavenDependency;
+		this.injectMavenDependencyManagement = injectMavenDependencyManagement;
+		this.injectMavenRepository = injectMavenRepository;
 		this.injectProperties = injectProperties;
 		this.inject = inject;
 	}
@@ -93,6 +103,17 @@ public class Action {
 	}
 
 	@Nullable
+	public InjectMavenDependencyManagement getInjectMavenDependencyManagement() {
+		return injectMavenDependencyManagement;
+	}
+
+	@Nullable
+	public InjectMavenRepository getInjectMavenRepository() {
+		return injectMavenRepository;
+	}
+
+
+	@Nullable
 	public InjectProperties getInjectProperties() {
 		return injectProperties;
 	}
@@ -110,6 +131,8 @@ public class Action {
 				", exec=" + exec +
 				", injectMavenPlugin=" + injectMavenPlugin +
 				", injectMavenDependency=" + injectMavenDependency +
+				", injectMavenDependencyManagement=" + injectMavenDependencyManagement +
+				", injectMavenRepository=" + injectMavenRepository +
 				", injectProperties=" + injectProperties +
 				'}';
 	}

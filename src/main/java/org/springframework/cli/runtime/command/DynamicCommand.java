@@ -47,10 +47,14 @@ import org.springframework.cli.runtime.engine.actions.Exec;
 import org.springframework.cli.runtime.engine.actions.Generate;
 import org.springframework.cli.runtime.engine.actions.Inject;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
+import org.springframework.cli.runtime.engine.actions.InjectMavenDependencyManagement;
+import org.springframework.cli.runtime.engine.actions.InjectMavenRepository;
 import org.springframework.cli.runtime.engine.actions.handlers.ExecActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.GenerateActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.InjectActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenDependencyActionHandler;
+import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenDependencyManagementActionHandler;
+import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenRepositoryActionHandler;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.templating.HandlebarsTemplateEngine;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
@@ -183,6 +187,20 @@ public class DynamicCommand {
 					injectMavenDependencyActionHandler.execute(injectMavenDependency);
 				}
 
+				InjectMavenDependencyManagement injectMavenDependencyManagement = action.getInjectMavenDependencyManagement();
+				if (injectMavenDependencyManagement != null) {
+					InjectMavenDependencyManagementActionHandler injectMavenDependencyDependnecyActionHandler
+							= new InjectMavenDependencyManagementActionHandler(cwd, terminalMessage);
+					injectMavenDependencyDependnecyActionHandler.execute(injectMavenDependencyManagement);
+				}
+
+				InjectMavenRepository injectMavenRepository = action.getInjectMavenRepository();
+				if (injectMavenRepository != null) {
+					InjectMavenRepositoryActionHandler injectMavenRepositoryActionHandler =
+							new InjectMavenRepositoryActionHandler(cwd, terminalMessage);
+					injectMavenRepositoryActionHandler.execute(injectMavenRepository);
+				}
+
 				Exec exec = action.getExec();
 				if (exec != null) {
 					ExecActionHandler execActionHandler = new ExecActionHandler(templateEngine, model, dynamicSubCommandPath, terminalMessage);
@@ -214,7 +232,7 @@ public class DynamicCommand {
 			Files.walkFileTree(dynamicSubCommandPath, visitor);
 		}
 		catch (IOException e) {
-			throw new SpringCliException("Error trying to detect action files", e);
+			throw new SpringCliException("Error trying to detect action files. " + e.getMessage(), e);
 		}
 
 		// Then actually parse, retaining only those paths that yielded a result

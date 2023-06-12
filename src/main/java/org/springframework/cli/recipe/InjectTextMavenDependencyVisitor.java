@@ -29,13 +29,13 @@ import org.openrewrite.xml.tree.Xml;
 
 import static java.util.Collections.emptyList;
 
-public class InjectMavenDependencyVisitor extends MavenIsoVisitor<ExecutionContext> {
+public class InjectTextMavenDependencyVisitor extends MavenIsoVisitor<ExecutionContext> {
 
 	private static final XPathMatcher DEPENDENCIES_MATCHER = new XPathMatcher("/project/dependencies");
 
 	private final String text;
 
-	public InjectMavenDependencyVisitor(String text) {
+	public InjectTextMavenDependencyVisitor(String text) {
 		this.text = text;
 	}
 

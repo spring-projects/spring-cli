@@ -123,13 +123,70 @@ actions:
 
 For more information on predefined template engine variables, refer to the xref:user-command-guide.adoc#_template_engine[Template Engine] section.
 
+== Inject
+
+The `inject` action is used to inject text into a file.
+
+You need to define either the `after:` key or the `before:` to indicate the location where to inject the text.
+
+Here is a sample file.
+
+```text
+hello there
+this is a test file
+we are going to insert before the line that has the word marker1
+marker2
+```
+
+An `inject` action that will inject the text `INJECTED AFTER` after the line that contains the word `marker2` is:
+
+```yaml
+actions:
+  - inject:
+      to: sample.txt
+      text: "INJECTED AFTER"
+      after: marker2
+```
+
+The text file after running this action is:
+
+```text
+hello there
+this is a test file
+we are going to insert before the line that has the word marker1
+marker2
+INJECTED AFTER
+```
+
+An `inject` action that will inject the text `INJECTED BEFORE` before the line that contains the word `marker1` is:
+
+```yaml
+actions:
+  - inject:
+      to: sample.txt
+      text: "INJECTED BEFORE"
+      before: marker1
+```
+
+The text file after running this action is:
+
+```text
+hello there
+this is a test file
+INJECTED BEFORE
+we are going to insert before the line that has the word marker1
+marker2
+```
+
+
+
 == Exec
 
 The `exec` action is used to execute a shell command.
 
 The basic form to execute a shell command is:
 
-```
+```yam.
 actions:
   - exec:
       command: mkdir {{tmp-dir}}/scratch
@@ -172,12 +229,11 @@ In this case, a simple `echo` of JSON is used, but in a more realistic scenario,
 
 == Inject Maven Dependency
 
-The `inject-maven-dependency` action is used to inject Maven dependency declarations into your Maven pom.xml file.
+The `inject-maven-dependency` action is used to inject Maven dependency entries into your Maven pom.xml file.
 
 The basic form to inject a Maven dependency is
 
 ```yml
-
 actions:
   - inject-maven-dependency:
       text: |
@@ -199,3 +255,38 @@ actions:
         </dependency>
 ```
 
+== Inject Maven Dependency Management
+
+The `inject-maven-dependency-management` action is used to inject Maven dependency management entries into your Maven pom.xml file.
+
+The basic form to inject a Maven dependency is:
+
+```yaml
+actions:
+  - inject-maven-dependency-management:
+      text: |
+        <dependency>
+          <groupId>org.springframework.modulith</groupId>
+          <artifactId>spring-modulith-bom</artifactId>
+          <version>0.6.0.RELEASE</version>
+          <scope>import</scope>
+          <type>pom</type>
+        </dependency>
+```
+
+== Inject Maven Repository
+
+The `inject-maven-repository` action is used to inject Maven repository entries into your Maven pom.xml file.
+
+The basic form to inject a Maven repository is:
+
+
+```yaml
+actions:
+  - inject-maven-repository:
+      text: |
+        <repository>
+          <id>spring-snapshots</id>
+          <url>https://repo.spring.io/snapshot</url>
+        </repository>
+```

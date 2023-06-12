@@ -56,7 +56,7 @@ public class GenerateHandlerTests {
 					.resolve("PersonController.java");
 			assertThat(controllerPath).exists();
 
-			String expectedContexts = "package com.example.restservice.person;\n"
+			String expectedContents = "package com.example.restservice.person;\n"
 					+ "\n"
 					+ "import org.springframework.web.bind.annotation.GetMapping;\n"
 					+ "import org.springframework.web.bind.annotation.RestController;\n"
@@ -69,7 +69,7 @@ public class GenerateHandlerTests {
 					+ "\t\treturn \"Hello person\";\n"
 					+ "\t}\n"
 					+ "}\n";
-			assertThat(controllerPath.toFile()).hasContent(expectedContexts);
+			assertThat(controllerPath.toFile()).hasContent(expectedContents);
 
 
 		});

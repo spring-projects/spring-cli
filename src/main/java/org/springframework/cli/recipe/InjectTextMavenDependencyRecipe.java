@@ -18,7 +18,6 @@
 package org.springframework.cli.recipe;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.SourceFile;
@@ -30,13 +29,11 @@ import org.openrewrite.maven.MavenVisitor;
 import org.openrewrite.maven.tree.MavenResolutionResult;
 import org.openrewrite.xml.tree.Xml;
 
-import org.springframework.cli.merger.AddSimpleDependencyVisitor;
-
-public class InjectMavenDependencyRecipe extends AddDependency {
+public class InjectTextMavenDependencyRecipe extends AddDependency {
 
 	private final String text;
 
-	public InjectMavenDependencyRecipe(String text) {
+	public InjectTextMavenDependencyRecipe(String text) {
 		super(null, null, null, null, null, null, null, null, null, null, null);
 		this.text = text;
 	}
@@ -54,7 +51,7 @@ public class InjectMavenDependencyRecipe extends AddDependency {
 					@Override
 					public Xml visitDocument(Xml.Document document, ExecutionContext executionContext) {
 						super.visitDocument(document, executionContext);
-						return new InjectMavenDependencyVisitor(text).visitNonNull(s, ctx);
+						return new InjectTextMavenDependencyVisitor(text).visitNonNull(s, ctx);
 					}
 				}.visit(s, ctx))
 				.map(SourceFile.class::cast)
