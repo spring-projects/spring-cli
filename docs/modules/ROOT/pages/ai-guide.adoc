@@ -1,5 +1,49 @@
 = Guide to AI Commands
 
+== Introduction
+
+Large Language Models such at OpenAI's ChatGPT offer a powerful solution for generating code using AI.
+ChatGPT is trained not only on Java code, but also on various projects within in the Spring open-source ecosystem.
+This enables the Spring CLI to enhance applications with functionality tailored to specific use cases beyond what traditional tutorials can offer.
+
+Using a simple command, you can describe the desired functionality, and ChatGPT will generate a comprehensive `README.md` file that provides step-by-step instructions to achieve your goal.
+It's like creating a customized tutorial for your project's needs.
+
+The CLI is also able to automatically apply the generated instructions to your code base,
+
+To get started, use the following command:
+
+```bash
+spring ai add <Describe what functionality you want to add here> --preview
+```
+
+Refining the generated solution often requires iterations of modifying the description.
+The `--preview` option of the `spring ai add` command generates the `README.md` file without modifying your project, allowing you to review the proposed changes.
+
+Once you are satisfied with the generated README.md file, you can apply it to your code base using the following command:
+
+```bash
+spring readme apply <Name of the readme file>
+```
+
+For further improvements and accuracy, you can ChatGPT to rewrite the description using the --rewrite option:
+
+```bash
+spring ai add <Description of functionality> --preview --rewrite
+```
+
+The detailed documentation below provides comprehensive information on each command.
+
+As we continue to explore the potential of AI technology, we anticipate refining the results even further to cater to specific versions of Spring projects. Stay tuned for updates!
+
+== Example
+
+----
+spring ai add "JPA functionality with an integration test.  Include all Java code in the same package." --preview
+----
+
+Here the https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-with-test.md[README-ai-jpa.md] file that was created using the previous command.
+
 == Prerequisite
 Before using the AI commands, make sure you have a developer token from OpenAI.
 
@@ -25,34 +69,25 @@ Example:
 spring ai add "JPA functionality"
 ----
 
-This command creates the file https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-simple-description.md[README-ai-jpa.md] and applies the changes described in that file to the project.
+This command creates the file https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-simple-description.md[README-ai-jpa.md] and applies the changes outlined in that file to your project.
 
 **NOTE:** Code generation may take 3-4 minutes.
 
 
 == Previewing the response
 
-With `--preview` option, a `README-ai-jpa.md` file is created, but no changes are made to the project.
-Review the generated file to determine if it is an acceptable solution.
+When using the `--preview` option, a `README-ai-jpa.md` file is generated without making any changes to the project.
+This allows you to review the file and evaluate whether it provides an acceptable solution.
 
 [source, bash]
 ----
 spring ai add "JPA functionality" --preview
 ----
 
-This command creates the file https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-simple-description.md[README-ai-jpa.md] without modifying the project.  It allows you to review the generated content and assess its suitability for your needs.
+This command creates the file https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-simple-description.md[README-ai-jpa.md].
+Remember, it doesn't modify your project, but it provides the opportunity to review the content and determine its suitability for your specific requirements.
 
-Use the command `spring readme apply README-ai-jpa.md` to apply the changes described in it to your code base.
-
-== How does AI functionality work?
-
-The AI functionality is based on a set of criteria provide to OpenAI.
-These criteria define common requirements for generating Spring code.
-Additional context is added to the criteria through the description provided in the `ai add` command.
-
-The Large Language Model (LLM) used by OpenAI already contains knowledge about the Spring Ecosystem, enabling good results.
-Further improvements can be achieved by providing more context to the LLM and is an area of active investigation.
-
+If the generated instructions meet your needs, you can apply the changes to your code base by using the command `spring readme apply README-ai-jpa.md`.
 
 == Iterating to get what you want
 
@@ -72,9 +107,8 @@ Here the https://github.com/spring-projects-experimental/spring-cli/blob/main/sr
 
 == Rewriting the project description automatically
 
-To obtain better results rom the AI model, you can experiment with letting the AI model rewrite the description.
-Developers often write descriptions in a shorthand or terse style, which may not produce optimal results.
-The `--rewrite` option allows you to ask the AI model to rewrite the description, providing clearer intent and improving code generation.
+To obtain better results rom the AI model, you have the option to let the AI model rewrite the project description.  Sometimes, developers write descriptions in a shorthand or terse style that may not produce optimal results.
+Using the `--rewrite` option allows you to ask the AI model to rewrite the description, providing clearer intent and improving generated code.
 
 Example:
 
