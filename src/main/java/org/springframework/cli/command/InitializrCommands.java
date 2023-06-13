@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,13 +28,15 @@ import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
 
 import org.springframework.cli.config.SpringCliProperties;
+import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.config.SpringCliUserConfig.Initializr;
+import org.springframework.cli.config.SpringCliUserConfig.Initializrs;
 import org.springframework.cli.initializr.InitializrClient;
 import org.springframework.cli.initializr.InitializrClientCache;
 import org.springframework.cli.initializr.InitializrUtils;
 import org.springframework.cli.initializr.model.Metadata;
-import org.springframework.cli.config.SpringCliUserConfig;
-import org.springframework.cli.config.SpringCliUserConfig.Initializr;
-import org.springframework.cli.config.SpringCliUserConfig.Initializrs;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.component.context.ComponentContext;
 import org.springframework.shell.component.flow.ComponentFlow;
 import org.springframework.shell.component.flow.ComponentFlow.ComponentFlowResult;
@@ -42,9 +44,6 @@ import org.springframework.shell.component.flow.ResultMode;
 import org.springframework.shell.component.flow.SelectItem;
 import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.standard.AbstractShellComponent;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.shell.table.ArrayTableModel;
 import org.springframework.shell.table.BorderStyle;
 import org.springframework.shell.table.Table;
@@ -58,7 +57,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Janne Valkealahti
  */
-@ShellComponent
+@Command(command = "initializr", group = "Initializr")
 public class InitializrCommands extends AbstractShellComponent {
 
 	private final static String PATH_NAME = "Path";
@@ -115,22 +114,22 @@ public class InitializrCommands extends AbstractShellComponent {
 		this.springCliProperties = springCliProperties;
 	}
 
-	@ShellMethod(key = "initializr new", value = "Create a new project from start.spring.io")
+	@Command(command = "new", description = "Create a new project from start.spring.io")
 	public String init(
-		@ShellOption(value = "--server-id", help = "Server to use", defaultValue = ShellOption.NULL) String serverId,
-		@ShellOption(help = "Path to extract", defaultValue = ShellOption.NULL) String path,
-		@ShellOption(help = "Project", defaultValue = ShellOption.NULL) String project,
-		@ShellOption(help = "Language", defaultValue = ShellOption.NULL) String language,
-		@ShellOption(value = "--boot-version", help = "Language", defaultValue = ShellOption.NULL) String bootVersion,
-		@ShellOption(help = "Version", defaultValue = ShellOption.NULL) String version,
-		@ShellOption(help = "Group", defaultValue = ShellOption.NULL) String group,
-		@ShellOption(help = "Artifact", defaultValue = ShellOption.NULL) String artifact,
-		@ShellOption(help = "Name", defaultValue = ShellOption.NULL) String name,
-		@ShellOption(help = "Description", defaultValue = ShellOption.NULL) String description,
-		@ShellOption(value = "--package-name", help = "Package Name", defaultValue = ShellOption.NULL) String packageName,
-		@ShellOption(help = "Dependencies", defaultValue = ShellOption.NULL) List<String> dependencies,
-		@ShellOption(help = "Packaging", defaultValue = ShellOption.NULL) String packaging,
-		@ShellOption(value = "--java-version", help = "Java", defaultValue = ShellOption.NULL) String javaVersion
+		@Option(longNames = "server-id", description = "Server to use") String serverId,
+		@Option(description = "Path to extract") String path,
+		@Option(description = "Project") String project,
+		@Option(description = "Language") String language,
+		@Option(longNames = "boot-version", description = "Language") String bootVersion,
+		@Option(description = "Version") String version,
+		@Option(description = "Group") String group,
+		@Option(description = "Artifact") String artifact,
+		@Option(description = "Name") String name,
+		@Option(description = "Description") String description,
+		@Option(longNames = "package-name", description = "Package Name") String packageName,
+		@Option(description = "Dependencies") List<String> dependencies,
+		@Option(description = "Packaging") String packaging,
+		@Option(longNames = "java-version", description = "Java") String javaVersion
 	) {
 		InitializrClient client = buildClient(serverId);
 		Metadata metadata = client.getMetadata();
@@ -324,7 +323,7 @@ public class InitializrCommands extends AbstractShellComponent {
 		return String.format("Extracted to %s", outFile.getAbsolutePath());
 	}
 
-	@ShellMethod(key = "initializr list", value = "Show the Initializr server environments")
+	@Command(command = "list", description = "Show the Initializr server environments")
 	public Table list() {
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "ServerId", "Url" });
 		Stream<String[]> rows = this.springCliUserConfig.getInitializrs().entrySet().stream()
@@ -336,30 +335,30 @@ public class InitializrCommands extends AbstractShellComponent {
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
 	}
 
-	@ShellMethod(key = "initializr set", value = "Set the Initializr server environment")
+	@Command(command = "set", description = "Set the Initializr server environment")
 	public void set(
-		@ShellOption(value = "--server-id", help = "Server to use") String serverId,
-		@ShellOption(value = "--url", help = "Server base url") String url)
+		@Option(longNames = "server-id", description = "Server to use") String serverId,
+		@Option(description = "Server base url") String url)
 	{
 		Map<String, Initializr> initializrs = this.springCliUserConfig.getInitializrs();
 		initializrs.put(serverId, Initializr.of(url));
 		this.springCliUserConfig.setInitializrs(Initializrs.of(initializrs));
 	}
 
-	@ShellMethod(key = "initializr remove", value = "Remove the Initializr server environment")
+	@Command(command = "remove", description = "Remove the Initializr server environment")
 	public void remove(
-		@ShellOption(value = "--server-id", help = "Server to use") String serverId)
+		@Option(longNames = "server-id", description = "Server to use") String serverId)
 	{
 		Map<String, Initializr> initializrs = this.springCliUserConfig.getInitializrs();
 		initializrs.remove(serverId);
 		this.springCliUserConfig.setInitializrs(Initializrs.of(initializrs));
 	}
 
-	@ShellMethod(key = "initializr dependencies", value = "List supported dependencies")
+	@Command(command = "dependencies", description = "List supported dependencies")
 	public Table dependencies(
-		@ShellOption(value = "--server-id", help = "Server to use", defaultValue = ShellOption.NULL) String serverId,
-		@ShellOption(help = "Search string to limit results", defaultValue = ShellOption.NULL) String search,
-		@ShellOption(help = "Limit to compatibility version", defaultValue = ShellOption.NULL) String version
+		@Option(longNames = "server-id", description = "Server to use") String serverId,
+		@Option(description = "Search string to limit results") String search,
+		@Option(description = "Limit to compatibility version") String version
 	) {
 		InitializrClient client = buildClient(serverId);
 		Metadata metadata = client.getMetadata();
