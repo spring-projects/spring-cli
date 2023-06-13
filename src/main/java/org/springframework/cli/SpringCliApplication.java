@@ -19,6 +19,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cli.config.SpringCliRuntimeHints;
 import org.springframework.context.annotation.ImportRuntimeHints;
+import org.springframework.shell.command.annotation.CommandScan;
 
 /**
  * Main boot app.
@@ -27,6 +28,7 @@ import org.springframework.context.annotation.ImportRuntimeHints;
  */
 @SpringBootApplication
 @ImportRuntimeHints(SpringCliRuntimeHints.class)
+@CommandScan
 public class SpringCliApplication {
 
 	public static void main(String[] args) {
