@@ -10,11 +10,13 @@ group = 'org.springframework.experimental'
 sourceCompatibility = '17'
 
 repositories {
-	maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-	maven { url 'https://repo.spring.io/snapshot' }
-	maven { url 'https://repo.spring.io/milestone' }
-	maven { url 'https://repo.spring.io/release' }
 	mavenCentral()
+	if (version.contains('-')) {
+		maven { url "https://repo.spring.io/milestone" }
+	}
+	if (version.endsWith('-SNAPSHOT')) {
+		maven { url "https://repo.spring.io/snapshot" }
+	}
 }
 
 ext {
