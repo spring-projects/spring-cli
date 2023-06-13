@@ -456,6 +456,76 @@ $ cat hello.json</code></pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_inject"><a class="anchor" href="#_inject"></a>Inject</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>inject</code> action is used to inject text into a file.</p>
+</div>
+<div class="paragraph">
+<p>You need to define either the <code>after:</code> key or the <code>before:</code> to indicate the location where to inject the text.</p>
+</div>
+<div class="paragraph">
+<p>Here is a sample file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">hello there
+this is a test file
+we are going to insert before the line that has the word marker1
+marker2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An <code>inject</code> action that will inject the text <code>INJECTED AFTER</code> after the line that contains the word <code>marker2</code> is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">actions:
+  - inject:
+      to: sample.txt
+      text: "INJECTED AFTER"
+      after: marker2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The text file after running this action is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">hello there
+this is a test file
+we are going to insert before the line that has the word marker1
+marker2
+INJECTED AFTER</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An <code>inject</code> action that will inject the text <code>INJECTED BEFORE</code> before the line that contains the word <code>marker1</code> is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">actions:
+  - inject:
+      to: sample.txt
+      text: "INJECTED BEFORE"
+      before: marker1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The text file after running this action is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">hello there
+this is a test file
+INJECTED BEFORE
+we are going to insert before the line that has the word marker1
+marker2</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_exec"><a class="anchor" href="#_exec"></a>Exec</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -466,7 +536,7 @@ $ cat hello.json</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">actions:
+<pre class="highlightjs highlight"><code class="language-yam. hljs" data-lang="yam.">actions:
   - exec:
       command: mkdir {{tmp-dir}}/scratch</code></pre>
 </div>
@@ -522,7 +592,7 @@ In this case, a simple <code>echo</code> of JSON is used, but in a more realisti
 <h2 id="_inject_maven_dependency"><a class="anchor" href="#_inject_maven_dependency"></a>Inject Maven Dependency</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>inject-maven-dependency</code> action is used to inject Maven dependency declarations into your Maven pom.xml file.</p>
+<p>The <code>inject-maven-dependency</code> action is used to inject Maven dependency entries into your Maven pom.xml file.</p>
 </div>
 <div class="paragraph">
 <p>The basic form to inject a Maven dependency is</p>
@@ -548,6 +618,53 @@ In this case, a simple <code>echo</code> of JSON is used, but in a more realisti
           &lt;artifactId&gt;h2&lt;/artifactId&gt;
           &lt;scope&gt;runtime&lt;/scope&gt;
         &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inject_maven_dependency_management"><a class="anchor" href="#_inject_maven_dependency_management"></a>Inject Maven Dependency Management</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>inject-maven-dependency-management</code> action is used to inject Maven dependency management entries into your Maven pom.xml file.</p>
+</div>
+<div class="paragraph">
+<p>The basic form to inject a Maven dependency is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">actions:
+  - inject-maven-dependency-management:
+      text: |
+        &lt;dependency&gt;
+          &lt;groupId&gt;org.springframework.modulith&lt;/groupId&gt;
+          &lt;artifactId&gt;spring-modulith-bom&lt;/artifactId&gt;
+          &lt;version&gt;0.6.0.RELEASE&lt;/version&gt;
+          &lt;scope&gt;import&lt;/scope&gt;
+          &lt;type&gt;pom&lt;/type&gt;
+        &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inject_maven_repository"><a class="anchor" href="#_inject_maven_repository"></a>Inject Maven Repository</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>inject-maven-repository</code> action is used to inject Maven repository entries into your Maven pom.xml file.</p>
+</div>
+<div class="paragraph">
+<p>The basic form to inject a Maven repository is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">actions:
+  - inject-maven-repository:
+      text: |
+        &lt;repository&gt;
+          &lt;id&gt;spring-snapshots&lt;/id&gt;
+          &lt;url&gt;https://repo.spring.io/snapshot&lt;/url&gt;
+        &lt;/repository&gt;</code></pre>
 </div>
 </div>
 </div>
