@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,17 +26,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.CommandDefault;
 import org.springframework.cli.config.SpringCliUserConfig.CommandDefaults;
-import org.springframework.cli.config.SpringCliUserConfig.Option;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.table.ArrayTableModel;
 import org.springframework.shell.table.BorderStyle;
 import org.springframework.shell.table.Table;
 import org.springframework.shell.table.TableBuilder;
 import org.springframework.shell.table.TableModel;
 
-@ShellComponent
+@Command(command = "config", group = "Config")
 public class ConfigCommands extends AbstractSpringCliCommands {
 
 	private SpringCliUserConfig springCliUserConfig;
@@ -47,12 +45,12 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 	}
 
 	// TODO - consider renaming to 'default set'
-	@ShellMethod(key = "config set", value = "For a given command name, set a default value for an option")
+	@Command(command = "set", description = "For a given command name, set a default value for an option")
 	public void configSet(
-			@ShellOption(help = "Name of command", arity = 1) String commandName,
-			@ShellOption(help = "Name of subcommand", arity = 1) String subCommandName,
-			@ShellOption(help = "Name of option", arity = 1) String optionName,
-			@ShellOption(help = "Default value of option", arity = 1) String optionValue) {
+			@Option(description = "Name of command") String commandName,
+			@Option(description = "Name of subcommand") String subCommandName,
+			@Option(description = "Name of option") String optionName,
+			@Option(description = "Default value of option") String optionValue) {
 		// get current defaults
 		SpringCliUserConfig.CommandDefaults commandDefaults = new SpringCliUserConfig.CommandDefaults();
 		List<CommandDefault> commandDefaultList = new ArrayList<>();
@@ -65,11 +63,11 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 		this.springCliUserConfig.setCommandDefaults(commandDefaults);
 	}
 
-	@ShellMethod(key = "config unset", value = "For a given command name, set a default value for an option")
+	@Command(command = "unset", description = "For a given command name, unset a default value for an option")
 	public boolean configUnSet(
-			@ShellOption(help = "Name of command", arity = 1) String commandName,
-			@ShellOption(help = "Name of subcommand", arity = 1) String subCommandName,
-			@ShellOption(help = "Name of option", arity = 1) String optionName) {
+			@Option(description = "Name of command") String commandName,
+			@Option(description = "Name of subcommand") String subCommandName,
+			@Option(description = "Name of option") String optionName) {
 		CommandDefaults commandDefaults = this.springCliUserConfig.getCommandDefaults();
 		List<CommandDefault> commandDefaultList = commandDefaults.getCommandDefaults();
 		Iterator<CommandDefault> it = commandDefaultList.iterator();
@@ -78,9 +76,9 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 			CommandDefault commandDefault = it.next();
 			if (commandDefault.getCommandName().equals(commandName) &&
 					commandDefault.getSubCommandName().equals(subCommandName)) {
-				Iterator<Option> commandDefaultIterator = commandDefault.getOptions().iterator();
+				Iterator<org.springframework.cli.config.SpringCliUserConfig.Option> commandDefaultIterator = commandDefault.getOptions().iterator();
 				while (commandDefaultIterator.hasNext()) {
-					Option option = commandDefaultIterator.next();
+					org.springframework.cli.config.SpringCliUserConfig.Option option = commandDefaultIterator.next();
 					if (option.getName().equals(optionName)) {
 						commandDefaultIterator.remove();
 						removed = true;
@@ -102,7 +100,7 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 
 	}
 
-	@ShellMethod(key = "config list", value = "List configuration values")
+	@Command(command = "list", description = "List configuration values")
 	public Table configList() {
 
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Command", "Sub Command", "Option Name/Values"});
