@@ -21,11 +21,10 @@ import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.merger.ProjectHandler;
 import org.springframework.cli.util.ProjectInfo;
 import org.springframework.cli.util.TerminalMessage;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 
-@ShellComponent
+@Command(command = "boot")
 public class BootCommands extends AbstractSpringCliCommands {
 
 	private final SpringCliUserConfig springCliUserConfig;
@@ -42,26 +41,26 @@ public class BootCommands extends AbstractSpringCliCommands {
 		this.terminalMessage = terminalMessage;
 	}
 
-	@ShellMethod(key = "boot new", value = "Create a new Spring Boot project from an existing project")
+	@Command(command = "new", description = "Create a new Spring Boot project from an existing project")
 	public void bootNew(
-			@ShellOption(help = "Create project from existing project name or URL", defaultValue = ShellOption.NULL, arity = 1) String from,
-			@ShellOption(help = "Name of the new project", defaultValue = ShellOption.NULL, arity = 1) String name,
-			@ShellOption(help = "Group ID of the new project", defaultValue = ShellOption.NULL, arity = 1, value="--group-id") String groupId,
-			@ShellOption(help = "Artifact ID of the new project", defaultValue = ShellOption.NULL, arity = 1, value="--artifact-id") String artifactId,
-			@ShellOption(help = "Version of the new project", defaultValue = ShellOption.NULL, arity = 1) String version,
-			@ShellOption(help = "Description of the new project", defaultValue = ShellOption.NULL, arity = 1) String description,
-			@ShellOption(help = "Package name for the new project", defaultValue = ShellOption.NULL, arity = 1, value="--package-name") String packageName,
-			@ShellOption(help = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.", defaultValue = ShellOption.NULL, arity = 1) String path) {
+			@Option(description = "Create project from existing project name or URL") String from,
+			@Option(description = "Name of the new project") String name,
+			@Option(longNames = "group-id", description = "Group ID of the new project") String groupId,
+			@Option(longNames = "artifact-id", description = "Artifact ID of the new project") String artifactId,
+			@Option(description = "Version of the new project") String version,
+			@Option(description = "Description of the new project") String description,
+			@Option(longNames = "package-name", description = "Package name for the new project") String packageName,
+			@Option(description = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.") String path) {
 		ProjectInfo projectInfo = new ProjectInfo(groupId, artifactId, version, name, description, packageName);
 		ProjectHandler handler = new ProjectHandler(springCliUserConfig, sourceRepositoryService, terminalMessage);
 		handler.create(from, path, projectInfo.getDefaults());
 	}
 
 
-	@ShellMethod(key = "boot add", value = "Merge an existing project into the current Spring Boot project")
+	@Command(command = "add", description = "Merge an existing project into the current Spring Boot project")
 	public void bootAdd(
-			@ShellOption(help = "Add to project from an existing project name or URL", arity = 1) String from,
-			@ShellOption(help = "Path", defaultValue = ShellOption.NULL, arity = 1) String path) {
+			@Option(description = "Add to project from an existing project name or URL") String from,
+			@Option(description = "Path") String path) {
 		ProjectHandler handler = new ProjectHandler(springCliUserConfig, sourceRepositoryService, terminalMessage);
 		handler.add(from, path);
 	}
