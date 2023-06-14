@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,12 +33,11 @@ import org.springframework.cli.config.SpringCliUserConfig.Host;
 import org.springframework.cli.config.SpringCliUserConfig.Hosts;
 import org.springframework.cli.support.github.GithubDeviceFlow;
 import org.springframework.cli.util.SpringCliTerminal;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.component.flow.ComponentFlow;
 import org.springframework.shell.component.flow.ComponentFlow.ComponentFlowResult;
 import org.springframework.shell.component.flow.ResultMode;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.shell.style.StyleSettings;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -49,7 +48,7 @@ import org.springframework.web.reactive.function.client.WebClient.Builder;
  *
  * @author Janne Valkealahti
  */
-@ShellComponent
+@Command(command = { "github", "auth" }, group = "Github")
 public class GithubCommands extends AbstractSpringCliCommands {
 
 	private final static Logger log = LoggerFactory.getLogger(GithubCommands.class);
@@ -76,7 +75,7 @@ public class GithubCommands extends AbstractSpringCliCommands {
 	 * Login command for github. Makes user to choose either starting a device flow
 	 * via browser or pasting a token created manually.
 	 */
-	@ShellMethod(key = "github auth login", value = "Authenticate with a GitHub")
+	@Command(command = "login", description = "Authenticate with a GitHub")
 	public void login() {
 		String authType = askAuthType();
 		String clientId = getCliProperties().getGithub().getClientId();
@@ -116,7 +115,7 @@ public class GithubCommands extends AbstractSpringCliCommands {
 	/**
 	 * Logout command which essentially removes local token if exists.
 	 */
-	@ShellMethod(key = "github auth logout", value = "Log out of a GitHub")
+	@Command(command = "logout", description = "Log out of a GitHub")
 	public void logout() {
 		Host host = null;
 		Map<String, Host> hostsMap = userConfig.getHosts();
@@ -144,9 +143,9 @@ public class GithubCommands extends AbstractSpringCliCommands {
 	 * @param showToken flag if actual token should be shown.
 	 * @return the content
 	 */
-	@ShellMethod(key = "github auth status", value = "View authentication status")
+	@Command(command = "status", description = "View authentication status")
 	public AttributedString status(
-			@ShellOption(help = "Display the auth token", defaultValue = "false") boolean showToken
+			@Option(longNames = "show-token", description = "Display the auth token") boolean showToken
 		) {
 		Host host = null;
 		Map<String, Host> hosts = userConfig.getHosts();
