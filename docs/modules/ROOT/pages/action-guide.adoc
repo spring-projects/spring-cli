@@ -199,15 +199,33 @@ The template engine variable `tmp-dir` is defined by default and is the value of
 
 TBD
 
-=== Adding to the template engine model
-Sometimes, you may want to execute a program and use its output to define a template engine variable.
+=== Executing Programs and Defining Variables
+To define a new variable in the Handlebars template engine model, you can execute a program and utilize its output.
+The `define:` section within the `exec` action enables you to achieve this functionality.
 
+=== Using Raw Output
+Consider the following example:
 
-The `define` section under `exec` allow syou to accomplish this.
-It lets you define a `jsonPath` expression to select from the output if it is JSON format.
-JSON is a common output format in many commnand line utilities.
+```yaml
+actions:
+  - exec:
+      command: echo 'from echo'
+      define:
+        name: message
+  - generate:
+      to:  hello.txt
+      text: Hello {{message}}
+```
 
-Here is an example.
+In this example, the output from the `echo` command, which is `from echo`, is assigned to the Handlebars template variable `message`.
+In the next action, the template variable `message` is utilized to generate the file `hello.txt` with the contents `Hello from echo`.
+
+=== Processing using JSON Path
+
+By including the `jsonPath:` key, you can define a JSON Path expression to select specific content from the JSON-formatted output.
+JSON is a common output format in many command line utilities.
+
+Here's is an example.
 
 ```yml
 actions:
@@ -224,8 +242,8 @@ The contents of the `echo-command.txt` file are:
 echo '{ "firstName": "John", "lastName": "doe", "age": 26, "address": { "streetAddress": "naist street", "city": "Nara", "postalCode": "630-0192" }, "phoneNumbers": [ { "type": "iPhone", "number": "0123-4567-8888" }, { "type": "home", "number": "0123-4567-8910" } ] }'
 ```
 
-The variable named `phone-type` will be defined as the output from applying the https://github.com/json-path/JsonPath[JSON Path expression] to the output of the command.
-In this case, a simple `echo` of JSON is used, but in a more realistic scenario, it would be the output of a command line utility.
+In this case, the variable named `phone-type` will be defined as the output from applying the https://github.com/json-path/JsonPath[JSON Path expression] to the command's output.
+Although a simple `echo` of JSON is used in this example, in a more practical scenario, it could be the output of a command line utility.
 
 == Inject Maven Dependency
 

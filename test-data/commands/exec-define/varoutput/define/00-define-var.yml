@@ -1,0 +1,9 @@
+actions:
+  - exec:
+      command: echo 'from echo'
+      define:
+        name: message
+  - generate:
+      to:  "{{output-temp-file}}"
+      text: Hello {{message}}
+

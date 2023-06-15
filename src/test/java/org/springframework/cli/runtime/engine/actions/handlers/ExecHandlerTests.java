@@ -66,7 +66,7 @@ public class ExecHandlerTests {
 
 	@Test
 	@DisabledOnOs(OS.WINDOWS)
-	void testDefineVar(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir,
+	void testDefineVarUsingExecOutput(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir,
 			@TempDir(cleanup = CleanupMode.ALWAYS) Path tempPath) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
@@ -75,7 +75,27 @@ public class ExecHandlerTests {
 			CommandRunner commandRunner = new CommandRunner.Builder(context)
 					.prepareProject("rest-service", workingDir)
 					.installCommandGroup("exec-define")
-					.executeCommand("define/var")
+					.executeCommand("varoutput/define")
+					.withArguments("output-temp-file", tempFile.getAbsolutePath())
+					.build();
+			commandRunner.run();
+
+			assertThat(tempFile).hasContent("Hello from echo");
+		});
+	}
+
+	@Test
+	@DisabledOnOs(OS.WINDOWS)
+	void testDefineVarUsingJsonPath(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir,
+			@TempDir(cleanup = CleanupMode.ALWAYS) Path tempPath) {
+		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
+
+			File tempFile = new File(tempPath.toFile(), "temp.txt");
+
+			CommandRunner commandRunner = new CommandRunner.Builder(context)
+					.prepareProject("rest-service", workingDir)
+					.installCommandGroup("exec-define")
+					.executeCommand("varjsonpath/define")
 					.withArguments("output-temp-file", tempFile.getAbsolutePath())
 					.build();
 			commandRunner.run();

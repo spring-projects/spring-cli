@@ -143,23 +143,15 @@ public class ExecActionHandler {
 				if (process.exitValue() == 0) {
 					terminalMessage.print("Command '" + StringUtils.arrayToDelimitedString(commands, " ") + "' executed successfully");
 					if (exec.getDefine() != null) {
-						if (exec.getDefine().getName() != null && exec.getDefine().getJsonPath() != null) {
-							if (stdout.isPresent()) {
-								ObjectMapper mapper = new ObjectMapper();
-								mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-								mapper.registerModule(new JavaTimeModule());
-								Object data = JsonPath.using(
-										Configuration.builder()
-												.jsonProvider(new JacksonJsonProvider(mapper))
-												.mappingProvider(new JacksonMappingProvider(mapper))
-												.build()
-								).parse(stdout.get()).read(exec.getDefine().getJsonPath());
-								if (data != null) {
-									model.putIfAbsent(exec.getDefine().getName(), data);
-								}
+						if (exec.getDefine().getName() != null) {
+							if (exec.getDefine().getJsonPath() != null) {
+								handleJsonPath(exec, stdout);
+							} else {
+								model.putIfAbsent(exec.getDefine().getName(), stdout.get());
+								terminalMessage.print("exec: define: has a null value.  Define = " + exec.getDefine());
 							}
 						} else {
-							terminalMessage.print("exec: define: has a null value.  Define = " + exec.getDefine());
+							terminalMessage.print("exec: define: name: has a null value.  Define = " + exec.getDefine());
 						}
 					}
 				}
@@ -178,6 +170,23 @@ public class ExecActionHandler {
 		catch (IOException e) {
 			throw new SpringCliException("Execution of command '"
 					+ StringUtils.arrayToDelimitedString(commands, " ") + "' failed", e);
+		}
+	}
+
+	private void handleJsonPath(Exec exec, Optional<String> stdout) {
+		if (stdout.isPresent()) {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+			mapper.registerModule(new JavaTimeModule());
+			Object data = JsonPath.using(
+					Configuration.builder()
+							.jsonProvider(new JacksonJsonProvider(mapper))
+							.mappingProvider(new JacksonMappingProvider(mapper))
+							.build()
+			).parse(stdout.get()).read(exec.getDefine().getJsonPath());
+			if (data != null) {
+				model.putIfAbsent(exec.getDefine().getName(), data);
+			}
 		}
 	}
 
