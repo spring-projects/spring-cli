@@ -46,12 +46,14 @@ import org.springframework.cli.runtime.engine.actions.Conditional;
 import org.springframework.cli.runtime.engine.actions.Exec;
 import org.springframework.cli.runtime.engine.actions.Generate;
 import org.springframework.cli.runtime.engine.actions.Inject;
+import org.springframework.cli.runtime.engine.actions.InjectMavenBuildPlugin;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependencyManagement;
 import org.springframework.cli.runtime.engine.actions.InjectMavenRepository;
 import org.springframework.cli.runtime.engine.actions.handlers.ExecActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.GenerateActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.InjectActionHandler;
+import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenBuildPluginActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenDependencyActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenDependencyManagementActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenRepositoryActionHandler;
@@ -185,6 +187,12 @@ public class DynamicCommand {
 				if (injectMavenDependency != null) {
 					InjectMavenDependencyActionHandler injectMavenDependencyActionHandler = new InjectMavenDependencyActionHandler(templateEngine, model, cwd, terminalMessage);
 					injectMavenDependencyActionHandler.execute(injectMavenDependency);
+				}
+
+				InjectMavenBuildPlugin injectMavenBuildPlugin = action.getInjectMavenBuildPlugin();
+				if (injectMavenBuildPlugin != null) {
+					InjectMavenBuildPluginActionHandler injectMavenBuildPluginActionHandler = new InjectMavenBuildPluginActionHandler(templateEngine, model, cwd, terminalMessage);
+					injectMavenBuildPluginActionHandler.execute(injectMavenBuildPlugin);
 				}
 
 				InjectMavenDependencyManagement injectMavenDependencyManagement = action.getInjectMavenDependencyManagement();

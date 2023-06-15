@@ -148,7 +148,6 @@ public class ExecActionHandler {
 								handleJsonPath(exec, stdout);
 							} else {
 								model.putIfAbsent(exec.getDefine().getName(), stdout.get());
-								terminalMessage.print("exec: define: has a null value.  Define = " + exec.getDefine());
 							}
 						} else {
 							terminalMessage.print("exec: define: name: has a null value.  Define = " + exec.getDefine());

@@ -17,14 +17,23 @@
 
 package org.springframework.cli.runtime.engine.actions.handlers;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.InMemoryExecutionContext;
+import org.openrewrite.Recipe;
+import org.openrewrite.Result;
+import org.openrewrite.maven.MavenParser;
+import org.openrewrite.xml.tree.Xml.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +42,7 @@ import org.springframework.cli.runtime.engine.templating.TemplateEngine;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.util.StringUtils;
 
-public class AbstractInjectMavenActionHandler {
+public abstract class AbstractInjectMavenActionHandler {
 	private static final Logger logger = LoggerFactory.getLogger(InjectMavenDependencyActionHandler.class);
 
 	protected final TemplateEngine templateEngine;
@@ -75,5 +84,24 @@ public class AbstractInjectMavenActionHandler {
 			throw new SpringCliException("Could not find pom.xml in " + this.cwd + ".  Make sure you are running the command in the directory that contains a pom.xml file");
 		}
 		return pomPath;
+	}
+
+	protected void runRecipe(Path pomPath, Recipe recipe) {
+		List<Path> paths = new ArrayList<>();
+		paths.add(pomPath);
+		MavenParser mavenParser = MavenParser.builder().build();
+		List<Document> parsedPomFiles = mavenParser.parse(paths, cwd, getExecutionContext());
+		List<Result> resultList = recipe.run(parsedPomFiles).getResults();
+		try {
+			for (Result result : resultList) {
+				// write updated file.
+				try (BufferedWriter sourceFileWriter = Files.newBufferedWriter(pomPath, StandardCharsets.UTF_8)) {
+					sourceFileWriter.write(result.getAfter().printAllTrimmed());
+				}
+			}
+		}
+		catch (IOException ex) {
+			throw new SpringCliException("Error writing to " + pomPath.toAbsolutePath(), ex);
+		}
 	}
 }

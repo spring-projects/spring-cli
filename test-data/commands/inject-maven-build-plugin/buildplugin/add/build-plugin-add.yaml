@@ -1,0 +1,18 @@
+actions:
+  - inject-maven-build-plugin:
+      text: |
+        <plugin>
+           <groupId>net.bytebuddy</groupId>
+           <artifactId>byte-buddy-maven-plugin</artifactId>
+           <version>1.14.4</version>
+           <configuration>
+             <classPathDiscovery>true</classPathDiscovery>
+           </configuration>
+           <executions>
+             <execution>
+               <goals>
+                 <goal>transform-extended</goal>
+               </goals>
+             </execution>
+           </executions>
+         </plugin>

@@ -55,9 +55,8 @@ public class InjectTextMavenRepositoryRecipe extends Recipe {
 			public Xml.Tag visitTag(Xml.Tag tag, ExecutionContext ctx) {
 				Xml.Tag repositories = super.visitTag(tag, ctx);
 				if (REPOS_MATCHER.matches(this.getCursor())) {
-					Xml.Tag snapshots;
-					snapshots = Tag.build(text);
-					repositories = (Xml.Tag) (new AddToTagVisitor(repositories, snapshots)).visitNonNull(repositories, ctx, this.getCursor().getParentOrThrow());
+					Xml.Tag repositoryTag = Tag.build(text);
+					repositories = (Xml.Tag) (new AddToTagVisitor(repositories, repositoryTag)).visitNonNull(repositories, ctx, this.getCursor().getParentOrThrow());
 					this.maybeUpdateModel();
 				}
 				return repositories;

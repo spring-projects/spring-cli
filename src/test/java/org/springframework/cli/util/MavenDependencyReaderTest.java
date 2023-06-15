@@ -40,7 +40,7 @@ class MavenDependencyReaderTest {
 	@Test
 	void read() {
 		MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
-		String[] mavenDependencies = mavenDependencyReader.parseMavenDependencies(dependencyText);
+		String[] mavenDependencies = mavenDependencyReader.parseMavenSection(dependencyText);
 		assertThat(mavenDependencies).hasSize(3);
 		assertThat(mavenDependencies[0]).isEqualTo("<dependency>\n"
 				+ "  <groupId>org.springframework.boot</groupId>\n"

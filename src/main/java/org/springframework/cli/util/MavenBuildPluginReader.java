@@ -17,17 +17,17 @@
 
 package org.springframework.cli.util;
 
-public class MavenRepositoryReader extends AbstractMavenReader {
+public class MavenBuildPluginReader extends AbstractMavenReader {
 
-	public MavenRepositoryReader() {
-		this.sectionName = "repository";
+	public MavenBuildPluginReader() {
+		this.sectionName = "plugin";
 	}
 
 	protected String massageText(String text) {
-		if (text.contains("<repositories>")) {
+		if (text.contains("<plugins>")) {
 			return text;
 		} else {
-			return "<repositories>" + text + "</repositories>";
+			return "<plugins>" + text + "</plugins>";
 		}
 	}
 }

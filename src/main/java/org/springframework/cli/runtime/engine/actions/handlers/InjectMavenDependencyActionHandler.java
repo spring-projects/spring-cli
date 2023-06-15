@@ -17,20 +17,9 @@
 
 package org.springframework.cli.runtime.engine.actions.handlers;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import org.openrewrite.Result;
-import org.openrewrite.maven.MavenParser;
-import org.openrewrite.xml.tree.Xml.Document;
-
-import org.springframework.cli.SpringCliException;
 import org.springframework.cli.recipe.InjectTextMavenDependencyRecipe;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
@@ -47,27 +36,10 @@ public class InjectMavenDependencyActionHandler extends AbstractInjectMavenActio
 		Path pomPath = getPomPath();
 		String text = getTextToUse(injectMavenDependency.getText(), "Inject Maven Dependency");
 		MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
-		String[] mavenDependencies = mavenDependencyReader.parseMavenDependencies(text);
+		String[] mavenDependencies = mavenDependencyReader.parseMavenSection(text);
 		for (String mavenDependency : mavenDependencies) {
-
-
 			InjectTextMavenDependencyRecipe injectTextMavenDependencyRecipe = new InjectTextMavenDependencyRecipe(mavenDependency);
-			List<Path> paths = new ArrayList<>();
-			paths.add(pomPath);
-			MavenParser mavenParser = MavenParser.builder().build();
-			List<Document> parsedPomFiles = mavenParser.parse(paths, cwd, getExecutionContext());
-			List<Result> resultList = injectTextMavenDependencyRecipe.run(parsedPomFiles).getResults();
-			try {
-				for (Result result : resultList) {
-					// write updated file.
-					try (BufferedWriter sourceFileWriter = Files.newBufferedWriter(pomPath, StandardCharsets.UTF_8)) {
-						sourceFileWriter.write(result.getAfter().printAllTrimmed());
-					}
-				}
-			}
-			catch (IOException ex) {
-				throw new SpringCliException("Error writing to " + pomPath.toAbsolutePath(), ex);
-			}
+			runRecipe(pomPath, injectTextMavenDependencyRecipe);
 		}
 	}
 

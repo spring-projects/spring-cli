@@ -249,7 +249,7 @@ Although a simple `echo` of JSON is used in this example, in a more practical sc
 
 The `inject-maven-dependency` action is used to inject Maven dependency entries into your Maven pom.xml file.
 
-You can use Handlebars template variables inside the `text:` field, and they will be replaced.
+You can use Handlebars template variables and expressions inside the `text:` field, and they will be processed.
 
 The basic form to inject a Maven dependency is
 
@@ -279,7 +279,7 @@ actions:
 
 The `inject-maven-dependency-management` action is used to inject Maven dependency management entries into your Maven pom.xml file.
 
-You can use Handlebars template variables inside the `text:` field, and they will be replaced.
+You can use Handlebars template variables and expressions inside the `text:` field, and they will be processed.
 
 The basic form to inject a Maven dependency is:
 
@@ -296,11 +296,39 @@ actions:
         </dependency>
 ```
 
+== Inject Maven Build Plugin
+
+The `inject-maven-build-plugin` action is used to inject Maven Build Plugin entrires into your Maven pom.xml file.
+
+You can use Handlebars template variables and expressions inside the `text:` field, and they will be processed.
+
+The basic form to inject a Maven dependency is:
+```yaml
+actions:
+  - inject-maven-build-plugin:
+      text: |
+        <plugin>
+           <groupId>net.bytebuddy</groupId>
+           <artifactId>byte-buddy-maven-plugin</artifactId>
+           <version>1.14.4</version>
+           <configuration>
+             <classPathDiscovery>true</classPathDiscovery>
+           </configuration>
+           <executions>
+             <execution>
+               <goals>
+                 <goal>transform-extended</goal>
+               </goals>
+             </execution>
+           </executions>
+         </plugin>
+```
+
 == Inject Maven Repository
 
 The `inject-maven-repository` action is used to inject Maven repository entries into your Maven pom.xml file.
 
-You can use Handlebars template variables inside the `text:` field, and they will be replaced.
+You can use Handlebars template variables and expressions inside the `text:` field, and they will be processed.
 
 The basic form to inject a Maven repository is:
 

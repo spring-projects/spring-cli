@@ -24,41 +24,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * @author Mark Pollack
  */
-public class InjectMavenPlugin {
+public class InjectMavenBuildPlugin {
 
-	private String to;
-
-	private String skip;
+	private String text;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	InjectMavenPlugin(@JsonProperty("to") String to, @JsonProperty("skip") String skip) {
-		this.to = Objects.requireNonNull(to);
-		this.skip = Objects.requireNonNull(skip);
+	public InjectMavenBuildPlugin(@JsonProperty("text") String text) {
+		this.text = Objects.requireNonNull(text);
 	}
 
-	public String getTo() {
-		return to;
-	}
-
-	public void setTo(String to) {
-		this.to = to;
-	}
-
-	public String getSkip() {
-		return skip;
-	}
-
-	public void setSkip(String skip) {
-		this.skip = skip;
+	public String getText() {
+		return text;
 	}
 
 	@Override
 	public String toString() {
-		final StringBuffer sb = new StringBuffer("InjectMavenPlugin{");
-		sb.append("to='").append(to).append('\'');
-		sb.append(", skip='").append(skip).append('\'');
-		sb.append('}');
-		return sb.toString();
+		return "InjectMavenBuildPlugin{" +
+				"text='" + text + '\'' +
+				'}';
 	}
-
 }

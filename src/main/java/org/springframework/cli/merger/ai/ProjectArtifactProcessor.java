@@ -145,7 +145,7 @@ public class ProjectArtifactProcessor {
 
 		MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
 		//projectArtifact.getText() contains a list of <dependency> elements
-		String[] mavenDependencies = mavenDependencyReader.parseMavenDependencies(projectArtifact.getText());
+		String[] mavenDependencies = mavenDependencyReader.parseMavenSection(projectArtifact.getText());
 
 		for (String candidateDependencyText : mavenDependencies) {
 			if (!candidateDependencyAlreadyPresent(getProjectDependency(candidateDependencyText), currentDependencies)) {

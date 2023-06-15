@@ -49,9 +49,6 @@ public class Action {
 	//		expected that we will migrate this functionality to be based on open-rewrite
 
 	@Nullable
-	private final InjectMavenPlugin injectMavenPlugin;
-
-	@Nullable
 	private InjectMavenDependency injectMavenDependency;
 
 	@Nullable
@@ -61,23 +58,26 @@ public class Action {
 	private InjectMavenRepository injectMavenRepository;
 
 	@Nullable
+	private InjectMavenBuildPlugin injectMavenBuildPlugin;
+
+	@Nullable
 	private final InjectProperties injectProperties;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 	Action(@JsonProperty("generate") @Nullable Generate generate,
 			@JsonProperty("exec") @Nullable Exec exec,
-			@JsonProperty("inject-maven-plugin") @Nullable InjectMavenPlugin injectMavenPlugin,
 			@JsonProperty("inject-maven-dependency") @Nullable InjectMavenDependency injectMavenDependency,
 			@JsonProperty("inject-maven-dependency-management") @Nullable InjectMavenDependencyManagement injectMavenDependencyManagement,
 			@JsonProperty("inject-maven-repository") @Nullable InjectMavenRepository injectMavenRepository,
+			@JsonProperty("inject-maven-build-plugin") @Nullable InjectMavenBuildPlugin injectMavenBuildPlugin,
 			@JsonProperty("inject-properties") @Nullable InjectProperties injectProperties,
 			@JsonProperty("inject") @Nullable Inject inject) {
 		this.generate = generate;
 		this.exec = exec;
-		this.injectMavenPlugin = injectMavenPlugin;
 		this.injectMavenDependency = injectMavenDependency;
 		this.injectMavenDependencyManagement = injectMavenDependencyManagement;
 		this.injectMavenRepository = injectMavenRepository;
+		this.injectMavenBuildPlugin = injectMavenBuildPlugin;
 		this.injectProperties = injectProperties;
 		this.inject = inject;
 	}
@@ -93,13 +93,18 @@ public class Action {
 	}
 
 	@Nullable
-	public InjectMavenPlugin getInjectMavenPlugin() {
-		return injectMavenPlugin;
+	public InjectMavenBuildPlugin getInjectMavenPlugin() {
+		return injectMavenBuildPlugin;
 	}
 
 	@Nullable
 	public InjectMavenDependency getInjectMavenDependency() {
 		return injectMavenDependency;
+	}
+
+	@Nullable
+	public InjectMavenBuildPlugin getInjectMavenBuildPlugin() {
+		return injectMavenBuildPlugin;
 	}
 
 	@Nullable
@@ -129,10 +134,10 @@ public class Action {
 				"generate=" + generate +
 				", inject=" + inject +
 				", exec=" + exec +
-				", injectMavenPlugin=" + injectMavenPlugin +
 				", injectMavenDependency=" + injectMavenDependency +
 				", injectMavenDependencyManagement=" + injectMavenDependencyManagement +
 				", injectMavenRepository=" + injectMavenRepository +
+				", injectMavenBuildPlugin=" + injectMavenBuildPlugin +
 				", injectProperties=" + injectProperties +
 				'}';
 	}
