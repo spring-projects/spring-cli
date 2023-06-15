@@ -23,9 +23,6 @@ import org.springframework.cli.merger.ai.service.GenerateCodeAiService;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 
 @Command(command = "readme")
 public class ReadmeCommands {
