@@ -8,9 +8,11 @@
     <link rel="next" href="initializr-set.html">
     <meta name="generator" content="Antora 3.0.0">
     <script>
-!function (theme) {
+!function (theme, navWidth) {
   if (theme === 'dark') document.documentElement.classList.add('dark-theme')
-}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'))
+  if (navWidth) document.documentElement.style.setProperty('--nav-width', `${navWidth}px`)
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'),
+  localStorage && localStorage.getItem('nav-width'))
     </script>
     <link rel="stylesheet" href="../../_/css/site.css">
     <link rel="stylesheet" href="../../_/css/vendor/docsearch.css">
@@ -25,7 +27,12 @@
   <nav class="navbar">
     <div class="navbar-brand">
       <a class="navbar-item" href="https://spring.io">
-        <img id="springlogo" class="block" src="../../_/img/spring-logo.svg" alt="Spring">
+        <img
+          id="springlogo"
+          class="block"
+          src="../../_/img/spring-logo.svg"
+          alt="Spring"
+        />
       </a>
       <button class="navbar-burger" data-target="topbar-nav">
         <span></span>
@@ -38,13 +45,27 @@
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link" href="#">Why Spring</a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" href="https://spring.io/why-spring">Overview</a>
-            <a class="navbar-item" href="https://spring.io/microservices">Microservices</a>
-            <a class="navbar-item" href="https://spring.io/reactive">Reactive</a>
-            <a class="navbar-item" href="https://spring.io/event-driven">Event Driven</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/why-spring"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/microservices"
+            >Microservices</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/reactive"
+            >Reactive</a>
+            <a class="navbar-item" href="https://spring.io/event-driven">Event
+              Driven</a>
             <a class="navbar-item" href="https://spring.io/cloud">Cloud</a>
-            <a class="navbar-item" href="https://spring.io/web-applications">Web Applications</a>
-            <a class="navbar-item" href="https://spring.io/serverless">Serverless</a>
+            <a class="navbar-item" href="https://spring.io/web-applications">Web
+              Applications</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/serverless"
+            >Serverless</a>
             <a class="navbar-item" href="https://spring.io/batch">Batch</a>
           </div>
         </div>
@@ -52,67 +73,182 @@
           <a class="navbar-link" href="#">Learn</a>
           <div class="navbar-dropdown">
             <a class="navbar-item" href="https://spring.io/learn">Overview</a>
-            <a class="navbar-item" href="https://spring.io/quickstart">Quickstart</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/quickstart"
+            >Quickstart</a>
             <a class="navbar-item" href="https://spring.io/guides">Guides</a>
             <a class="navbar-item" href="https://spring.io/blog">Blog</a>
           </div>
         </div>
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link" href="#">Projects</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="https://spring.io/projects">Overview</a>
-            <a class="navbar-item" href="https://spring.io/projects/spring-boot">Spring Boot</a>
-            <a class="navbar-item" href="https://spring.io/projects/spring-framework">Spring Framework</a>
-            <a class="navbar-item" href="https://spring.io/projects/spring-cloud">Spring Cloud</a>
-            <a class="navbar-item" href="https://spring.io/projects/spring-cloud-dataflow">Spring Cloud Data Flow</a>
-            <a class="navbar-item" href="https://spring.io/projects/spring-data">Spring Data</a>
-            <a class="navbar-item" href="https://spring.io/projects/spring-integration">Spring Integration</a>
-            <a class="navbar-item" href="https://spring.io/projects/spring-batch">Spring Batch</a>
-            <a class="navbar-item" href="https://spring.io/projects/spring-security">Spring Security</a>
-            <a class="navbar-item navbar-item-special" href="https://spring.io/projects">View all projects</a>
+          <div class="navbar-dropdown" style="min-width: 280px">
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-boot"
+            >Spring Boot</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-framework"
+            >Spring Framework</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud"
+            >Spring Cloud</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud-dataflow"
+            >Spring Cloud Data Flow</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-data"
+            >Spring Data</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-integration"
+            >Spring Integration</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-batch"
+            >Spring Batch</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-security"
+            >Spring Security</a>
+            <a
+              class="navbar-item navbar-item-special"
+              href="https://spring.io/projects"
+            >View all projects</a>
             <a class="navbar-item" href="https://spring.io/tools">Spring Tools 4</a>
-            <a class="navbar-item navbar-item-special-2" href="https://start.spring.io">Spring Initializr <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><polyline points="15 10.94 15 15 1 15 1 1 5.06 1" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></polyline><polyline points="8.93 1 15 1 15 7.07" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></polyline><line x1="15" y1="1" x2="8" y2="8" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></line></svg></a>
+            <a
+              class="navbar-item navbar-item-special-2"
+              href="https://start.spring.io"
+            >Spring Initializr
+              <svg
+                class="external-link-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+              ><polyline
+                  points="15 10.94 15 15 1 15 1 1 5.06 1"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><polyline
+                  points="8.93 1 15 1 15 7.07"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><line
+                  x1="15"
+                  y1="1"
+                  x2="8"
+                  y2="8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></line></svg></a>
           </div>
         </div>
+
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link" href="#">Academy</a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" href="https://spring.academy/courses">Courses</a>
-            <a class="navbar-item" href="https://spring.academy/learning-path">Get Certified</a>
+            <a
+              class="navbar-item"
+              href="https://spring.academy/courses"
+            >Courses</a>
+            <a
+              class="navbar-item"
+              href="https://spring.academy/learning-path"
+            >Get Certified</a>
           </div>
         </div>
-        <div class="navbar-item has-dropdown is-hoverable is-community">
+
+        <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link" href="#">Support</a>
           <div class="navbar-dropdown">
             <a class="navbar-item" href="https://spring.io/support">Overview</a>
-            <a class="navbar-item" href="https://spring.io/security">Security Advisories</a>
+            <a class="navbar-item" href="https://spring.io/security">Security
+              Advisories</a>
           </div>
         </div>
-        <a class="navbar-item" href="https://spring.io/support">Support</a>
+
         <div class="navbar-item has-dropdown is-hoverable is-community">
           <a class="navbar-link" href="#">Community</a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" href="https://spring.io/community">Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/community"
+            >Overview</a>
             <a class="navbar-item" href="https://spring.io/events">Events</a>
             <a class="navbar-item" href="https://spring.io/team">Team</a>
           </div>
         </div>
       </div>
     </div>
-    <div id="switch-theme">
-      <input type="checkbox" id="switch-theme-checkbox" />
-      <label for="switch-theme-checkbox">Dark Theme</label>
-    </div>
+    <label class="theme-toggler">
+      <input
+        type="checkbox"
+        type="checkbox"
+        id="switch-theme-checkbox"
+        name="switch-theme-checkbox"
+      />
+      <span class="icon"><svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="moon"
+          class="svg-inline--fa fa-moon moon"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 384 512"
+        ><path
+            fill="currentColor"
+            d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
+          ></path>
+        </svg>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="sun"
+          class="svg-inline--fa fa-sun sun"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        ><path
+            fill="currentColor"
+            d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"
+          ></path>
+        </svg></span>
+      <span class="text">light</span>
+    </label>
   </nav>
 </header>
-<div class="body">
+<script>
+!function (theme) {
+  if (theme === 'dark') {
+    document.getElementById('switch-theme-checkbox').parentElement.classList.add('active')
+  }
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'))
+</script><div class="body">
 <div class="nav-container" data-component="spring-cli" data-version="1.0.0">
   <aside class="nav">
     <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../index.html">spring-cli</a></h3>
-<ul class="nav-list">
+      <div class="nav-panel-menu is-active" data-panel="menu">
+        <nav class="nav-menu">
+<div class="context">
+  <span class="title">spring-cli</span>
+  <span class="version">1.0.0-SNAPSHOT</span>
+</div><ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
@@ -262,31 +398,40 @@
 </ul>
   </li>
 </ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">spring-cli</span>
-    <span class="version">1.0.0-SNAPSHOT</span>
-  </div>
-  <ul class="components">
-    <li class="component is-current">
-      <a class="title" href="../index.html">spring-cli</a>
-      <ul class="versions">
-        <li class="version is-current is-latest">
-          <a href="../index.html">1.0.0-SNAPSHOT</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
+        </nav>
+      </div>
     </div>
+<ul id="nav-versions" class="nav-versions">
+  <li class="component is-current">
+    <a class="title" href="../index.html">spring-cli</a>
+    <ul class="versions">
+      <li class="version is-current is-latest">
+        <a href="../index.html">
+          1.0.0-SNAPSHOT<span class="current">current</span>
+        </a>
+      </li>
+    </ul>
+  </li>
+</ul>
+    <div class="resize-handle--x"><span></span></div>
   </aside>
-</div>
-<main class="article">
+</div><main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="../index.html" class="home-link"></a>
+</div>
+  <div class="content">
+<aside class="sidebar">
+  <div class="content">
+    <div
+      class="toc"
+      data-title="initializr list"
+      data-levels="2"
+    >
+      <div class="toc-menu"></div>
+    </div>
+      <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/commands/initializr-list.adoc">Edit this Page</a></div>
+      </div>
+</aside><div class="doc">
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">spring-cli</a></li>
@@ -294,13 +439,7 @@
     <li><a href="initializr-list.html">initializr list</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/commands/initializr-list.adoc">Edit this Page</a></div>
-  </div>
-  <div class="content">
-<aside class="toc sidebar" data-title="initializr list" data-levels="2">
-  <div class="toc-menu"></div>
-</aside>
-<article class="doc">
+<article>
 <h1 id="page-title" class="page">initializr list</h1>
 <div class="sect1">
 <h2 id="_name"><a class="anchor" href="#_name"></a>NAME</h2>
@@ -335,7 +474,7 @@
   <span class="next"><a href="initializr-set.html">initializr set</a></span>
 </nav>
 </article>
-  </div>
+</div>  </div>
 </main>
 </div>
 <footer class="footer flex">
@@ -343,7 +482,7 @@
         <img id="springlogo" src="../../_/img/spring-logo.svg" alt="Spring">
         <p class="smallest antialiased">© <script>var d = new Date();
         document.write(d.getFullYear());</script> <a href="https://www.vmware.com/">VMware</a>, Inc. or its affiliates. <a href="https://www.vmware.com/help/legal.html">Terms of Use</a> • <a href="https://www.vmware.com/help/privacy.html" rel="noopener noreferrer">Privacy</a> • <a href="https://spring.io/trademarks">Trademark Guidelines</a> <span id="thank-you-mobile">• <a href="https://spring.io/thank-you">Thank you</a></span> • <a href="https://www.vmware.com/help/privacy/california-privacy-rights.html">Your California Privacy Rights</a> • <a class="ot-sdk-show-settings">Cookie Settings</a> <span id="teconsent"></span></p>
-        <p class="smallest antialiased">Apache®, Apache Tomcat®, Apache Kafka®, Apache Cassandra&trade;, and Apache Geode&trade; are trademarks or registered trademarks of the Apache Software Foundation in the United States and/or other countries. Java&trade;, Java&trade; SE, Java&trade; EE, and OpenJDK&trade; are trademarks of Oracle and/or its affiliates. Kubernetes® is a registered trademark of the Linux Foundation in the United States and other countries. Linux® is the registered trademark of Linus Torvalds in the United States and other countries. Windows® and Microsoft® Azure are registered trademarks of Microsoft Corporation. “AWS” and “Amazon Web Services” are trademarks or registered trademarks of Amazon.com Inc. or its affiliates. All other trademarks and copyrights are property of their respective owners and are only mentioned for informative purposes. Other names may be trademarks of their respective owners.</p>
+        <p class="smallest antialiased has-gray-text">Apache®, Apache Tomcat®, Apache Kafka®, Apache Cassandra&trade;, and Apache Geode&trade; are trademarks or registered trademarks of the Apache Software Foundation in the United States and/or other countries. Java&trade;, Java&trade; SE, Java&trade; EE, and OpenJDK&trade; are trademarks of Oracle and/or its affiliates. Kubernetes® is a registered trademark of the Linux Foundation in the United States and other countries. Linux® is the registered trademark of Linus Torvalds in the United States and other countries. Windows® and Microsoft® Azure are registered trademarks of Microsoft Corporation. “AWS” and “Amazon Web Services” are trademarks or registered trademarks of Amazon.com Inc. or its affiliates. All other trademarks and copyrights are property of their respective owners and are only mentioned for informative purposes. Other names may be trademarks of their respective owners.</p>
     </div>
     <div id="social-icons" class="flex jc-between">
         <a href="https://www.youtube.com/user/SpringSourceDev" title="Youtube"><svg id="youtube-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle class="cls-1" cx="20" cy="20" r="20"/><path class="cls-2" d="M30.91,14.53a2.89,2.89,0,0,0-2-2C27.12,12,20,12,20,12s-7.12,0-8.9.47a2.9,2.9,0,0,0-2,2A30.56,30.56,0,0,0,8.63,20a30.44,30.44,0,0,0,.46,5.47,2.89,2.89,0,0,0,2,2C12.9,28,20,28,20,28s7.12,0,8.9-.47a2.87,2.87,0,0,0,2-2A30.56,30.56,0,0,0,31.37,20,28.88,28.88,0,0,0,30.91,14.53ZM17.73,23.41V16.59L23.65,20Z"/></svg></a>
