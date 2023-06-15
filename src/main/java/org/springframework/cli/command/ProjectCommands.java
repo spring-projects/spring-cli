@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,8 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.support.configfile.YamlConfigFile;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.table.ArrayTableModel;
 import org.springframework.shell.table.BorderStyle;
 import org.springframework.shell.table.Table;
@@ -45,7 +44,7 @@ import org.springframework.shell.table.TableModel;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.ObjectUtils;
 
-@ShellComponent
+@Command(command = "project")
 public class ProjectCommands {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectCommands.class);
@@ -60,12 +59,12 @@ public class ProjectCommands {
 		this.sourceRepositoryService = sourceRepositoryService;
 	}
 
-	@ShellMethod(key = "project add", value = "Add a project to use with 'boot new' and 'boot add' commands")
+	@Command(command = "add", description = "Add a project to use with 'boot new' and 'boot add' commands")
 	public void projectAdd(
-		@ShellOption(help = "Project name", arity = 1) String name,
-		@ShellOption(help = "Project url", arity = 1) String url,
-		@ShellOption(help = "Project description", defaultValue = ShellOption.NULL, arity = 1) String description,
-		@ShellOption(help = "Project tags", defaultValue = ShellOption.NULL, arity = 1) List<String> tags
+		@Option(description = "Project name") String name,
+		@Option(description = "Project url") String url,
+		@Option(description = "Project description") String description,
+		@Option(description = "Project tags") List<String> tags
 	) {
 		List<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
 		projectRepositories.add(ProjectRepository.of(name, description, url, tags));
@@ -74,7 +73,7 @@ public class ProjectCommands {
 		upCliUserConfig.setProjectRepositories(projectRepositoriesConfig);
 	}
 
-	@ShellMethod(key = "project list", value = "List projects available for use with 'boot new' and 'boot add' commands")
+	@Command(command = "list", description = "List projects available for use with 'boot new' and 'boot add' commands")
 	public Table projectList() {
 
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description",  "URL", "Catalog", "Tags" });
@@ -131,9 +130,9 @@ public class ProjectCommands {
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
 	}
 
-	@ShellMethod(key = "project remove", value = "Remove project")
+	@Command(command = "remove", description = "Remove project")
 	public void projectRemove(
-		@ShellOption(help = "Project name", arity = 1) String name
+		@Option(defaultValue = "Project name") String name
 	) {
 		List<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
 		projectRepositories = projectRepositories.stream()
