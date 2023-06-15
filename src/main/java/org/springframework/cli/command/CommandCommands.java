@@ -61,11 +61,11 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 		this.terminalMessage = terminalMessage;
 	}
 
+	@Command(command = "new", description="Create a new user-defined command")
 	public void commandNew(
 			@Option(description = "The name of the user-defined command to create", defaultValue = "hello") String commandName,
 			@Option(description = "The name of the user-defined sub-command to create", defaultValue = "new") String subCommandName,
 			@Option(description = "Path to execute command in") String path) {
-
 		Path projectPath = path != null ? IoUtils.getProjectPath(path) : IoUtils.getWorkingDirectory();
 		//TODO check validity of passed in names as directory names.
 		Path commandPath = projectPath.resolve(".spring").resolve("commands").resolve(commandName).resolve(subCommandName);
