@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.merger.ai.OpenAiHandler;
 import org.springframework.cli.merger.ai.service.GenerateCodeAiService;
 import org.springframework.cli.util.TerminalMessage;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-@ShellComponent
+@Command(command = "readme")
 public class ReadmeCommands {
 
 	private final TerminalMessage terminalMessage;
@@ -43,10 +45,10 @@ public class ReadmeCommands {
 		this.openAiHandler = openAiHandler;
 	}
 
-	@ShellMethod(key = "readme apply", value = "Apply the instructions in the readme to the code base.")
+	@Command(command = "readme", description = "Apply the instructions in the readme to the code base.")
 	public void readmeApply(
-			@ShellOption(help = "The readme file that contains the instructions of how to modify the code base, e.g. README-ai-jpa.md", defaultValue = ShellOption.NULL, arity = 1) String file,
-			@ShellOption(help = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.", defaultValue = ShellOption.NULL, arity = 1) String path) {
+			@Option(description = "The readme file that contains the instructions of how to modify the code base, e.g. README-ai-jpa.md") String file,
+			@Option(description = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.") String path) {
 
 		this.openAiHandler.apply(file, path, terminalMessage);
 	}
