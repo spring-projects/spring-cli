@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,11 @@ import org.springframework.cli.merger.ai.service.GenerateCodeAiService;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.commands.Help;
 
-@ShellComponent
+@Command(command = "ai")
 public class AiCommands implements ApplicationContextAware {
 
 	private final TerminalMessage terminalMessage;
@@ -53,12 +52,12 @@ public class AiCommands implements ApplicationContextAware {
 		this.openAiHandler = openAiHandler;
 	}
 
-	@ShellMethod(key = "ai add", value = "Add code to the project from AI for a Spring Project project.")
+	@Command(command = "add", description = "Add code to the project from AI for a Spring Project project.")
 	public void aiAdd(
-			@ShellOption(help = "The description of the code to create, this can be as short as a well known Spring project name, e.g JPA.", defaultValue = ShellOption.NULL, arity = 1) String description,
-			@ShellOption(help = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.", defaultValue = ShellOption.NULL, arity = 1) String path,
-			@ShellOption(help = "Create the README.md file, but do not apply the changes to the code base.", defaultValue = "false", arity = 1) boolean preview,
-			@ShellOption(help = "Rewrite the 'description' option the README.md file, but do not apply the changes to the code base.", defaultValue = "false", arity = 1) boolean rewrite) {
+			@Option(description = "The description of the code to create, this can be as short as a well known Spring project name, e.g JPA.") String description,
+			@Option(description = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.") String path,
+			@Option(description = "Create the README.md file, but do not apply the changes to the code base.") boolean preview,
+			@Option(description = "Rewrite the 'description' option the README.md file, but do not apply the changes to the code base.") boolean rewrite) {
 		handleNullDescription(description); 	// TODO Push this functinality into spring shell
 
 		this.openAiHandler.add(description, path, preview, rewrite, terminalMessage);
