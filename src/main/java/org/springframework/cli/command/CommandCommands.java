@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,8 @@ import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.util.FileSystemUtils;
 
 /**
@@ -47,7 +46,7 @@ import org.springframework.util.FileSystemUtils;
  * A simple command that creates a directory structure, aciton file, and command
  * metadata file is available using `command new`
  */
-@ShellComponent
+@Command(command = "command")
 public class CommandCommands extends AbstractSpringCliCommands  {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommandCommands.class);
@@ -62,11 +61,10 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 		this.terminalMessage = terminalMessage;
 	}
 
-	@ShellMethod(key = "command new", value = "Create a new user-defined command")
 	public void commandNew(
-			@ShellOption(help = "The name of the user-defined command to create", arity = 1, defaultValue = "hello") String commandName,
-			@ShellOption(help = "The name of the user-defined sub-command to create", arity = 1, defaultValue = "new") String subCommandName,
-			@ShellOption(help = "Path to execute command in", defaultValue = ShellOption.NULL, arity = 1) String path) {
+			@Option(description = "The name of the user-defined command to create", defaultValue = "hello") String commandName,
+			@Option(description = "The name of the user-defined sub-command to create", defaultValue = "new") String subCommandName,
+			@Option(description = "Path to execute command in") String path) {
 
 		Path projectPath = path != null ? IoUtils.getProjectPath(path) : IoUtils.getWorkingDirectory();
 		//TODO check validity of passed in names as directory names.
@@ -80,9 +78,9 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 
 	}
 
-	@ShellMethod(key = "command add", value = "Add a user-defined command")
+	@Command(command = "add", description = "Add a user-defined command")
 	public void commandAdd(
-			@ShellOption(help = "Add user-defined command from a URL", arity = 1) String from) {
+			@Option(description = "Add user-defined command from a URL") String from) {
 		Path downloadedCommandPath = sourceRepositoryService.retrieveRepositoryContents(from);
 		logger.debug("downloaded command path ", downloadedCommandPath);
 		Path cwd = IoUtils.getWorkingDirectory().toAbsolutePath();
@@ -128,10 +126,10 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 		}
 	}
 
-	@ShellMethod(key = "command remove", value = "Delete a user-defined command")
+	@Command(command = "remove", description = "Delete a user-defined command")
 	public void commandDelete(
-			@ShellOption(help = "Command name", arity = 1) String commandName,
-			@ShellOption(help = "SubCommand name", arity = 1) String subCommandName) {
+			@Option(description = "Command name") String commandName,
+			@Option(description = "SubCommand name") String subCommandName) {
 		Path cwd = IoUtils.getWorkingDirectory();
 		Path dynamicSubCommandPath = Paths.get(cwd.toString(), ".spring", "commands")
 				.resolve(commandName).resolve(subCommandName).toAbsolutePath();
