@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,9 +38,8 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.support.configfile.YamlConfigFile;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.table.ArrayTableModel;
 import org.springframework.shell.table.BorderStyle;
 import org.springframework.shell.table.Table;
@@ -50,7 +49,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-@ShellComponent
+@Command(command = "catalog")
 public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectCatalogCommands.class);
@@ -67,7 +66,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		this.sourceRepositoryService = sourceRepositoryService;
 	}
 
-	@ShellMethod(key = "catalog list-available", value = "List available catalogs")
+	@Command(command = "list-available", description = "List available catalogs")
 	public Table catalogListAvailable() {
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description", "URL", "Tags"});
 		List<String[]> allRows = new ArrayList<>();
@@ -112,7 +111,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 	}
 
 
-	@ShellMethod(key = "catalog list", value = "List installed catalogs")
+	@Command(command = "list", description = "List installed catalogs")
 	public Table catalogList() {
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description" , "URL", "Tags" });
 		Collection<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
@@ -135,12 +134,12 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
 	}
 
-	@ShellMethod(key = "catalog add", value = "Add a project to a project catalog")
+	@Command(command = "add", description = "Add a project to a project catalog")
 	public void catalogAdd(
-			@ShellOption(help = "Catalog name", arity = 1) String name,
-			@ShellOption(help = "Catalog url",  defaultValue = ShellOption.NULL, arity = 1) String url,
-			@ShellOption(help = "Catalog description", defaultValue = ShellOption.NULL, arity = 1) String description,
-			@ShellOption(help = "Project tags", defaultValue = ShellOption.NULL, arity = 1) List<String> tags
+			@Option(description = "Catalog name") String name,
+			@Option(description = "Catalog url") String url,
+			@Option(description = "Catalog description") String description,
+			@Option(description = "Project tags") List<String> tags
 	) {
 		if (url == null) {
 			// look for name in available catalogs
@@ -173,9 +172,9 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		}
 	}
 
-	@ShellMethod(key = "catalog remove", value = "Remove a project from a catalog")
+	@Command(command = "remove", description = "Remove a project from a catalog")
 	public void catalogRemove(
-		@ShellOption(help = "Catalog name", arity = 1) String name
+		@Option(description = "Catalog name") String name
 	) {
 		List<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 		projectCatalogs = projectCatalogs.stream()
