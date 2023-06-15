@@ -44,7 +44,7 @@ import org.springframework.shell.table.TableModel;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.ObjectUtils;
 
-@Command(command = "project")
+@Command(command = "project", group = "Project")
 public class ProjectCommands {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectCommands.class);

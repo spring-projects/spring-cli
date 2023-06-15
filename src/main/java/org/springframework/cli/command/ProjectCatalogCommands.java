@@ -49,7 +49,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-@Command(command = "catalog")
+@Command(command = "catalog", group = "Catalog")
 public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectCatalogCommands.class);

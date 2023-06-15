@@ -24,7 +24,7 @@ import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 
-@Command(command = "readme")
+@Command(command = "readme", group = "Readme")
 public class ReadmeCommands {
 
 	private final TerminalMessage terminalMessage;

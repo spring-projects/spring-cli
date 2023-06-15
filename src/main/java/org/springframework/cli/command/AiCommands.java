@@ -32,7 +32,7 @@ import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.commands.Help;
 
-@Command(command = "ai")
+@Command(command = "ai", group = "Ai")
 public class AiCommands implements ApplicationContextAware {
 
 	private final TerminalMessage terminalMessage;

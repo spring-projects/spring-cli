@@ -24,7 +24,7 @@ import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 
-@Command(command = "boot")
+@Command(command = "boot", group = "Boot")
 public class BootCommands extends AbstractSpringCliCommands {
 
 	private final SpringCliUserConfig springCliUserConfig;

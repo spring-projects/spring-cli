@@ -46,7 +46,7 @@ import org.springframework.util.FileSystemUtils;
  * A simple command that creates a directory structure, aciton file, and command
  * metadata file is available using `command new`
  */
-@Command(command = "command")
+@Command(command = "command", group = "Command")
 public class CommandCommands extends AbstractSpringCliCommands  {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommandCommands.class);
