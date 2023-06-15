@@ -36,7 +36,6 @@ class InjectMavenDependencyActionHandlerTest {
 			.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
-	@DisabledOnOs(OS.WINDOWS)
 	void injectMavenDependency(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
@@ -48,13 +47,33 @@ class InjectMavenDependencyActionHandlerTest {
 			commandRunner.run();
 
 			Path pomPath = workingDir.resolve("pom.xml");
-
-			assertThat(pomPath).content().contains("spring-boot-starter-data-jpa");
-			assertThat(pomPath).content().contains("spring-boot-starter-test");
-			assertThat(pomPath).content().contains("com.h2database");
+			verifyMavenArtifactId(pomPath);
 
 		});
+	}
 
+	@Test
+	void injectMavenDependencyUsingVariables(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
+		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
+
+			CommandRunner commandRunner = new CommandRunner.Builder(context)
+					.prepareProject("rest-service", workingDir)
+					.installCommandGroup("inject-maven")
+					.executeCommand("dependency/add-using-var")
+					.withArguments("runtime-scope", "runtime")
+					.build();
+			commandRunner.run();
+
+			Path pomPath = workingDir.resolve("pom.xml");
+			verifyMavenArtifactId(pomPath);
+			assertThat(pomPath).content().contains("<scope>runtime</scope>");
+		});
+	}
+
+	private static void verifyMavenArtifactId(Path pomPath) {
+		assertThat(pomPath).content().contains("spring-boot-starter-data-jpa");
+		assertThat(pomPath).content().contains("spring-boot-starter-test");
+		assertThat(pomPath).content().contains("com.h2database");
 	}
 
 }

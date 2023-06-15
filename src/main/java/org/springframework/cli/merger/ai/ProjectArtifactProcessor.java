@@ -27,6 +27,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -149,7 +150,7 @@ public class ProjectArtifactProcessor {
 		for (String candidateDependencyText : mavenDependencies) {
 			if (!candidateDependencyAlreadyPresent(getProjectDependency(candidateDependencyText), currentDependencies)) {
 				InjectMavenDependencyActionHandler injectMavenDependencyActionHandler =
-						new InjectMavenDependencyActionHandler(projectPath, terminalMessage);
+						new InjectMavenDependencyActionHandler(null, new HashMap<>(), projectPath, terminalMessage);
 				InjectMavenDependency injectMavenDependency = new InjectMavenDependency(candidateDependencyText);
 				try {
 					injectMavenDependencyActionHandler.execute(injectMavenDependency);

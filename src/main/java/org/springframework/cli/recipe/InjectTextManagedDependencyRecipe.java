@@ -71,36 +71,7 @@ public class InjectTextManagedDependencyRecipe extends AddManagedDependency {
 							doAfterVisit(new InjectTextManagedDependencyVisitor(text));
 							maybeUpdateModel();
 						}
-
-//						if (!Boolean.TRUE.equals(getAddToRootPom()) || rootPoms.contains(document)) {
-//							Validated versionValidation = Semver.validate(getVersion(), getVersionPattern());
-//							if (versionValidation.isValid()) {
-//								String versionToUse = requireNonNull(getVersion());
-//								if (!Objects.equals(versionToUse, existingManagedDependencyVersion())) {
-//									doAfterVisit(new InjectTextManagedDependencyVisitor(text));
-//									maybeUpdateModel();
-//								}
-//							}
-//						}
-
 						return maven;
-					}
-
-					@Nullable
-					private String existingManagedDependencyVersion() {
-						return getResolutionResult().getPom().getDependencyManagement().stream()
-								.map(resolvedManagedDep -> {
-									if (resolvedManagedDep.matches(getGroupId(), getArtifactId(), getType(), getClassifier())) {
-										return resolvedManagedDep.getGav().getVersion();
-									} else if (resolvedManagedDep.getRequestedBom() != null
-											&& resolvedManagedDep.getRequestedBom().getGroupId().equals(getGroupId())
-											&& resolvedManagedDep.getRequestedBom().getArtifactId().equals(getArtifactId())) {
-										return resolvedManagedDep.getRequestedBom().getVersion();
-									}
-									return null;
-								})
-								.filter(Objects::nonNull)
-								.findFirst().orElse(null);
 					}
 
 				}.visit(s, ctx))

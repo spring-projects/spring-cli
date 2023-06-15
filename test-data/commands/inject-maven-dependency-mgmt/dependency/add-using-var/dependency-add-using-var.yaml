@@ -1,0 +1,10 @@
+actions:
+  - inject-maven-dependency-management:
+      text: |
+        <dependency>
+          <groupId>org.springframework.modulith</groupId>
+          <artifactId>spring-modulith-bom</artifactId>
+          <version>{{release}}</version>
+          <scope>import</scope>
+          <type>pom</type>
+        </dependency>

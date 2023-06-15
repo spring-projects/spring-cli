@@ -24,46 +24,28 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.Map;
 
-import org.openrewrite.ExecutionContext;
-import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.Result;
 import org.openrewrite.maven.MavenParser;
 import org.openrewrite.xml.tree.Xml.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.recipe.InjectTextMavenDependencyRecipe;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
+import org.springframework.cli.runtime.engine.templating.TemplateEngine;
 import org.springframework.cli.util.MavenDependencyReader;
 import org.springframework.cli.util.TerminalMessage;
-import org.springframework.util.StringUtils;
 
-public class InjectMavenDependencyActionHandler {
+public class InjectMavenDependencyActionHandler extends AbstractInjectMavenActionHandler{
 
-	private static final Logger logger = LoggerFactory.getLogger(InjectMavenDependencyActionHandler.class);
-
-	private final TerminalMessage terminalMessage;
-
-	private final Path cwd;
-
-	public InjectMavenDependencyActionHandler(Path cwd, TerminalMessage terminalMessage) {
-		this.cwd = cwd;
-		this.terminalMessage = terminalMessage;
+	public InjectMavenDependencyActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, TerminalMessage terminalMessage) {
+		super(templateEngine, model, cwd, terminalMessage);
 	}
 
 	public void execute(InjectMavenDependency injectMavenDependency) {
-
-		Path pomPath = cwd.resolve("pom.xml");
-		if (Files.notExists(pomPath)) {
-			throw new SpringCliException("Could not find pom.xml in " + this.cwd + ".  Make sure you are running the command in the directory that contains a pom.xml file");
-		}
-		String text = injectMavenDependency.getText();
-		if (!StringUtils.hasText(text)) {
-			throw new SpringCliException("Inject Maven Dependency action does not have a value in the 'text:' field.");
-		}
+		Path pomPath = getPomPath();
+		String text = getTextToUse(injectMavenDependency.getText(), "Inject Maven Dependency");
 		MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
 		String[] mavenDependencies = mavenDependencyReader.parseMavenDependencies(text);
 		for (String mavenDependency : mavenDependencies) {
@@ -87,13 +69,6 @@ public class InjectMavenDependencyActionHandler {
 				throw new SpringCliException("Error writing to " + pomPath.toAbsolutePath(), ex);
 			}
 		}
-	}
-
-	private ExecutionContext getExecutionContext() {
-		Consumer<Throwable> onError = e -> {
-			logger.error("error in javaParser execution", e);
-		};
-		return new InMemoryExecutionContext(onError);
 	}
 
 }

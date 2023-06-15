@@ -36,7 +36,6 @@ class InjectMavenRepositoryActionHandlerTest {
 			.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
-	@DisabledOnOs(OS.WINDOWS)
 	void injectMavenDependency(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
@@ -48,11 +47,25 @@ class InjectMavenRepositoryActionHandlerTest {
 			commandRunner.run();
 
 			Path pomPath = workingDir.resolve("pom.xml");
-
 			assertThat(pomPath).content().contains("https://repo.spring.io/snapshot");
-
 		});
+	}
 
+	@Test
+	void injectMavenDependencyUsingVar(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
+		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
+
+			CommandRunner commandRunner = new CommandRunner.Builder(context)
+					.prepareProject("rest-service", workingDir)
+					.installCommandGroup("inject-maven-repository")
+					.executeCommand("repository/add-using-var")
+					.withArguments("repository-id", "the snapshot repo")
+					.build();
+			commandRunner.run();
+
+			Path pomPath = workingDir.resolve("pom.xml");
+			assertThat(pomPath).content().contains("<id>the snapshot repo</id>");
+		});
 	}
 
 }

@@ -183,21 +183,21 @@ public class DynamicCommand {
 
 				InjectMavenDependency injectMavenDependency = action.getInjectMavenDependency();
 				if (injectMavenDependency != null) {
-					InjectMavenDependencyActionHandler injectMavenDependencyActionHandler = new InjectMavenDependencyActionHandler(cwd, terminalMessage);
+					InjectMavenDependencyActionHandler injectMavenDependencyActionHandler = new InjectMavenDependencyActionHandler(templateEngine, model, cwd, terminalMessage);
 					injectMavenDependencyActionHandler.execute(injectMavenDependency);
 				}
 
 				InjectMavenDependencyManagement injectMavenDependencyManagement = action.getInjectMavenDependencyManagement();
 				if (injectMavenDependencyManagement != null) {
 					InjectMavenDependencyManagementActionHandler injectMavenDependencyDependnecyActionHandler
-							= new InjectMavenDependencyManagementActionHandler(cwd, terminalMessage);
+							= new InjectMavenDependencyManagementActionHandler(templateEngine, model, cwd, terminalMessage);
 					injectMavenDependencyDependnecyActionHandler.execute(injectMavenDependencyManagement);
 				}
 
 				InjectMavenRepository injectMavenRepository = action.getInjectMavenRepository();
 				if (injectMavenRepository != null) {
 					InjectMavenRepositoryActionHandler injectMavenRepositoryActionHandler =
-							new InjectMavenRepositoryActionHandler(cwd, terminalMessage);
+							new InjectMavenRepositoryActionHandler(templateEngine, model, cwd, terminalMessage);
 					injectMavenRepositoryActionHandler.execute(injectMavenRepository);
 				}
 

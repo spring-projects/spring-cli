@@ -1,0 +1,7 @@
+actions:
+  - inject-maven-repository:
+      text: |
+        <repository>
+          <id>{{repository-id}}</id>
+          <url>https://repo.spring.io/snapshot</url>
+        </repository>

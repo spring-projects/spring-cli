@@ -36,7 +36,6 @@ class InjectMavenDependencyManagementActionHandlerTest {
 			.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
-	@DisabledOnOs(OS.WINDOWS)
 	void injectMavenDependency(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
@@ -52,7 +51,25 @@ class InjectMavenDependencyManagementActionHandlerTest {
 			assertThat(pomPath).content().contains("spring-modulith-bom");
 
 		});
+	}
 
+	@Test
+	void injectMavenDependencyUsingVar(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
+		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
+
+			CommandRunner commandRunner = new CommandRunner.Builder(context)
+					.prepareProject("rest-service", workingDir)
+					.installCommandGroup("inject-maven-dependency-mgmt")
+					.executeCommand("dependency/add-using-var")
+					.withArguments("release", "1.0.0.RELEASE")
+					.build();
+			commandRunner.run();
+
+			Path pomPath = workingDir.resolve("pom.xml");
+
+			assertThat(pomPath).content().contains("<version>1.0.0.RELEASE</version>");
+
+		});
 	}
 
 }

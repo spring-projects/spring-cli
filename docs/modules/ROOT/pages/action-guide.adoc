@@ -249,6 +249,8 @@ Although a simple `echo` of JSON is used in this example, in a more practical sc
 
 The `inject-maven-dependency` action is used to inject Maven dependency entries into your Maven pom.xml file.
 
+You can use Handlebars template variables inside the `text:` field, and they will be replaced.
+
 The basic form to inject a Maven dependency is
 
 ```yml
@@ -277,6 +279,8 @@ actions:
 
 The `inject-maven-dependency-management` action is used to inject Maven dependency management entries into your Maven pom.xml file.
 
+You can use Handlebars template variables inside the `text:` field, and they will be replaced.
+
 The basic form to inject a Maven dependency is:
 
 ```yaml
@@ -296,8 +300,9 @@ actions:
 
 The `inject-maven-repository` action is used to inject Maven repository entries into your Maven pom.xml file.
 
-The basic form to inject a Maven repository is:
+You can use Handlebars template variables inside the `text:` field, and they will be replaced.
 
+The basic form to inject a Maven repository is:
 
 ```yaml
 actions:
