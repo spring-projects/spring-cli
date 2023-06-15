@@ -759,7 +759,7 @@ Although a simple <code>echo</code> of JSON is used in this example, in a more p
 <p>The <code>inject-maven-dependency</code> action is used to inject Maven dependency entries into your Maven pom.xml file.</p>
 </div>
 <div class="paragraph">
-<p>You can use Handlebars template variables inside the <code>text:</code> field, and they will be replaced.</p>
+<p>You can use Handlebars template variables and expressions inside the <code>text:</code> field, and they will be processed.</p>
 </div>
 <div class="paragraph">
 <p>The basic form to inject a Maven dependency is</p>
@@ -796,7 +796,7 @@ Although a simple <code>echo</code> of JSON is used in this example, in a more p
 <p>The <code>inject-maven-dependency-management</code> action is used to inject Maven dependency management entries into your Maven pom.xml file.</p>
 </div>
 <div class="paragraph">
-<p>You can use Handlebars template variables inside the <code>text:</code> field, and they will be replaced.</p>
+<p>You can use Handlebars template variables and expressions inside the <code>text:</code> field, and they will be processed.</p>
 </div>
 <div class="paragraph">
 <p>The basic form to inject a Maven dependency is:</p>
@@ -818,13 +818,49 @@ Although a simple <code>echo</code> of JSON is used in this example, in a more p
 </div>
 </div>
 <div class="sect1">
+<h2 id="_inject_maven_build_plugin"><a class="anchor" href="#_inject_maven_build_plugin"></a>Inject Maven Build Plugin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>inject-maven-build-plugin</code> action is used to inject Maven Build Plugin entrires into your Maven pom.xml file.</p>
+</div>
+<div class="paragraph">
+<p>You can use Handlebars template variables and expressions inside the <code>text:</code> field, and they will be processed.</p>
+</div>
+<div class="paragraph">
+<p>The basic form to inject a Maven dependency is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">actions:
+  - inject-maven-build-plugin:
+      text: |
+        &lt;plugin&gt;
+           &lt;groupId&gt;net.bytebuddy&lt;/groupId&gt;
+           &lt;artifactId&gt;byte-buddy-maven-plugin&lt;/artifactId&gt;
+           &lt;version&gt;1.14.4&lt;/version&gt;
+           &lt;configuration&gt;
+             &lt;classPathDiscovery&gt;true&lt;/classPathDiscovery&gt;
+           &lt;/configuration&gt;
+           &lt;executions&gt;
+             &lt;execution&gt;
+               &lt;goals&gt;
+                 &lt;goal&gt;transform-extended&lt;/goal&gt;
+               &lt;/goals&gt;
+             &lt;/execution&gt;
+           &lt;/executions&gt;
+         &lt;/plugin&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_inject_maven_repository"><a class="anchor" href="#_inject_maven_repository"></a>Inject Maven Repository</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The <code>inject-maven-repository</code> action is used to inject Maven repository entries into your Maven pom.xml file.</p>
 </div>
 <div class="paragraph">
-<p>You can use Handlebars template variables inside the <code>text:</code> field, and they will be replaced.</p>
+<p>You can use Handlebars template variables and expressions inside the <code>text:</code> field, and they will be processed.</p>
 </div>
 <div class="paragraph">
 <p>The basic form to inject a Maven repository is:</p>
