@@ -28,6 +28,7 @@ import org.jline.terminal.Terminal;
 import org.springframework.cli.command.AiCommands;
 import org.springframework.cli.command.BootCommands;
 import org.springframework.cli.command.CommandCommands;
+import org.springframework.cli.command.SpecialCommands;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
@@ -68,6 +69,10 @@ public class MockConfigurations {
 			return new GitSourceRepositoryService(springCliUserConfig);
 		}
 
+		@Bean
+		SpecialCommands specialCommands() {
+			return new SpecialCommands(TerminalMessage.noop());
+		}
 		@Bean
 		BootCommands bootCommands(SpringCliUserConfig springCliUserConfig,
 				SourceRepositoryService sourceRepositoryService) {;

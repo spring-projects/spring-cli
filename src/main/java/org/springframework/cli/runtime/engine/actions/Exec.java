@@ -63,7 +63,7 @@ public class Exec {
 	private final Define define;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	Exec(@JsonProperty("to") String to, @JsonProperty("command") String command,
+	public Exec(@JsonProperty("to") String to, @JsonProperty("command") String command,
 			@JsonProperty("command-file") String commandFile,
 			@JsonProperty("errto") String errto,
 			@JsonProperty("dir") String dir, @JsonProperty("define") Define define) {

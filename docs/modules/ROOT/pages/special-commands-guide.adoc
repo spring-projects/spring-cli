@@ -1,0 +1,60 @@
+= Special Commands
+
+Special commands are part of a command group named `.`
+
+== Execute OS Shell command
+
+The command `. !` executes an OS command in the directory where you started the shell.
+This command only works in interactive mode.
+
+If you are having difficulty executing the command, you may want to try surrounding it with double quotes, though then you would likely need to replace any double quotes within your command with single quotes.
+It can get funky, so don't push this functionality too far, in practice it works well with common day-to-day tasks.
+
+For Unix/Mac it executed using `bash -c` and for Windows using `cmd /c`.
+
+== Examples
+
+Listing contents of current directory:
+[source, bash]
+----
+spring:>. ! ls
+LICENSE  mvnw  mvnw.cmd  pom.xml  README.adoc  src  target
+----
+
+Showing the contents of a file:
+[source, bash]
+----
+spring:>. ! more LICENSE
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+< omittied ... >
+----
+
+Searching for files:
+
+[source, bash]
+----
+spring:>. ! find . -name "*.java" -print
+./src/main/java/com/example/restservice/Application.java
+./src/main/java/com/example/restservice/greeting/GreetingController.java
+./src/main/java/com/example/restservice/greeting/Greeting.java
+./src/test/java/com/example/restservice/greeting/GreetingControllerTests.java
+./.spring/commands/controller/new/RestController.java
+----
+
+[source,bash]
+----
+spring:>. ! ./mvnw clean package
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ----------------------< com.example:rest-service >----------------------
+[INFO] Building rest-service 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+
+< omitted ... >
+----
+
