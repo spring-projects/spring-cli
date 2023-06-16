@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Key Concepts :: Spring CLI</title>
-    <link rel="prev" href="readme-command-guide.html">
-    <link rel="next" href="comments-on-the-approach.html">
+    <title>Special Commands :: Spring CLI</title>
+    <link rel="prev" href="action-guide.html">
+    <link rel="next" href="initializr.html">
     <meta name="generator" content="Antora 3.0.0">
     <script>
 !function (theme, navWidth) {
@@ -284,7 +284,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="action-guide.html">Guide to Action Files</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="special-commands-guide.html">Guide to Special commands</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -293,7 +293,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="readme-command-guide.html">Guide to README commands</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="key-concepts.html">Key Concepts</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -427,105 +427,102 @@
   <div class="content">
     <div
       class="toc"
-      data-title="Key Concepts"
+      data-title="Special Commands"
       data-levels="2"
     >
       <div class="toc-menu"></div>
     </div>
-      <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/key-concepts.adoc">Edit this Page</a></div>
+      <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/special-commands-guide.adoc">Edit this Page</a></div>
       </div>
 </aside><div class="doc">
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">spring-cli</a></li>
-    <li><a href="key-concepts.html">Key Concepts</a></li>
+    <li><a href="special-commands-guide.html">Guide to Special commands</a></li>
   </ul>
 </nav>
 <article>
-<h1 id="page-title" class="page">Key Concepts</h1>
-<div class="sect1">
-<h2 id="_project"><a class="anchor" href="#_project"></a>Project</h2>
+<h1 id="page-title" class="page">Special Commands</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Project</strong>: A "Plain Old Java Project" hosted in GitHub or GitLab.
-Projects are registered with the CLI so that a simple name can refer to them.</p>
-</div>
-<div class="paragraph">
-<p>For example, if you register the GitHub URL of a project that uses Spring Data JPA under the name ‘jpa’, you can create a new project from that one by invoking the command <code>boot new jpa</code>.
-Similarly, you can add JPA functionality to an existing project by invoking the command <code>boot add jpa</code>.</p>
-</div>
-<div class="paragraph">
-<p>The commands related to projects are <code>project list</code>, <code>project add</code> and <code>project remove</code></p>
+<p>Special commands are part of a command group named <code>.</code></p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_project_catalog"><a class="anchor" href="#_project_catalog"></a>Project Catalog</h2>
+<h2 id="_execute_os_shell_command"><a class="anchor" href="#_execute_os_shell_command"></a>Execute OS Shell command</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Project Catalog</strong>: The Project Catalog is a collection of projects that share a common theme.</p>
+<p>The command <code>. !</code> executes an OS command in the directory where you started the shell.
+This command only works in interactive mode.</p>
 </div>
 <div class="paragraph">
-<p>After registering a catalog with the CLI, the projects are readily available for the user when using the <code>boot new</code> and <code>boot add</code> commands.
-The catalog is a YAML file with the name <code>project-repositories.yaml</code>.
-It contains a list of project repository URLs, and an associated name.
-The catalog is hosted on GitHub or GitLab</p>
+<p>If you are having difficulty executing the command, you may want to try surrounding it with double quotes, though then you would likely need to replace any double quotes within your command with single quotes.
+It can get funky, so don&#8217;t push this functionality too far, in practice it works well with common day-to-day tasks.</p>
 </div>
 <div class="paragraph">
-<p>The commands related to projects catalogs are <code>catalog list</code>, <code>catalog add</code> and <code>catalog remove</code></p>
+<p>For Unix/Mac it executed using <code>bash -c</code> and for Windows using <code>cmd /c</code>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<h2 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Configuration</strong>: The CLI provides a configuration system to provide default values to commonly used command options.</p>
-</div>
-<div class="paragraph">
-<p>If you most often create a project with a package name reflecting the name of your company, e.g. <code>com.xkcd</code>, then the command <code>config set boot new `package-name`</code> com.xkcd` will set the default value for the <code>package-name</code> options for the <code>boot new</code> command.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_commands"><a class="anchor" href="#_commands"></a>Commands</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Commands</strong>: These are declaratively defined commands that let you add or modify code and configuration files.</p>
-</div>
-<div class="paragraph">
-<p>You can also run arbitrary executables to help solve any arbitrary task commonly occurring in your development workflow.
-User-defined commands are integrated into the CLI and appear the same as the built-in commands.</p>
-</div>
-<div class="paragraph">
-<p>The user-defined command has three parts, the <code>command name</code>, the <code>sub-command name</code>, and the `options.
-The command name and sub-command name are defined using a directory structure convention.</p>
-</div>
-<div class="paragraph">
-<p>As an example, to create a new user-defined command, with a command name of <code>controller</code> and a sub-command name of <code>new</code>, make the following directory structure</p>
+<p>Listing contents of current directory:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">.spring/commands/controller/new</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring:&gt;. ! ls
+LICENSE  mvnw  mvnw.cmd  pom.xml  README.adoc  src  target</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In this directory, you can have one file named <code>command.yaml</code> that defines the command&#8217;s description, options, and default values.
-Also in this directory or subdirectories are action files that define the actions to take on the project.</p>
+<p>Showing the contents of a file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring:&gt;. ! more LICENSE
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+&lt; omittied ... &gt;</code></pre>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_action_files"><a class="anchor" href="#_action_files"></a>Action Files</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p><strong>Action Files</strong></p>
+<p>Searching for files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring:&gt;. ! find . -name "*.java" -print
+./src/main/java/com/example/restservice/Application.java
+./src/main/java/com/example/restservice/greeting/GreetingController.java
+./src/main/java/com/example/restservice/greeting/Greeting.java
+./src/test/java/com/example/restservice/greeting/GreetingControllerTests.java
+./.spring/commands/controller/new/RestController.java</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring:&gt;. ! ./mvnw clean package
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ----------------------&lt; com.example:rest-service &gt;----------------------
+[INFO] Building rest-service 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+
+&lt; omitted ... &gt;</code></pre>
+</div>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="readme-command-guide.html">Guide to README commands</a></span>
-  <span class="next"><a href="comments-on-the-approach.html">Comments on the approach</a></span>
+  <span class="prev"><a href="action-guide.html">Guide to Action Files</a></span>
+  <span class="next"><a href="initializr.html">Guide to Initializr commands</a></span>
 </nav>
 </article>
 </div>  </div>
