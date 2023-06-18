@@ -43,7 +43,7 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 
 			String path = workingDir.toAbsolutePath().toString();
-			bootCommands.bootNew(null, null, null, null, null, null, null, path);
+			bootCommands.bootNew("rest-service", null, null, null, null, null, null, path);
 			assertThat(workingDir).exists().isDirectory();
 			assertThat(workingDir.resolve("rest-service")).exists();
 			assertThat(workingDir.resolve("rest-service/src/main/java/com/example/restservice/greeting")).exists();
@@ -58,7 +58,7 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew(null, "demo2", "com.xkcd", null, null, null, null, path);
+			bootCommands.bootNew("demo2", null, "com.xkcd", null, null, null, null, path);
 			assertThat(workingDir.resolve("demo2")).exists();
 			assertThat(workingDir.resolve("demo2/src/main/java/com/xkcd/demo2/greeting")).exists();
 			assertThat(workingDir.resolve("demo2/src/test/java/com/xkcd/demo2/greeting")).exists();
@@ -72,7 +72,7 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew(null, "demo2", null, null, null, null, "com.xkcd", path);
+			bootCommands.bootNew("demo2", null, null, null, null, null, "com.xkcd", path);
 			assertThat(workingDir.resolve("demo2")).exists();
 			assertThat(workingDir.resolve("demo2/src/main/java/com/xkcd/greeting")).exists();
 			assertThat(workingDir.resolve("demo2/src/test/java/com/xkcd/greeting")).exists();
@@ -86,7 +86,7 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew("https://github.com/rd-1-2022/rpt-spring-data-jpa", "jpa", null, null, null, null, "com.xkcd", path);
+			bootCommands.bootNew("jpa", "https://github.com/rd-1-2022/rpt-spring-data-jpa", null, null, null, null, "com.xkcd", path);
 			assertThat(workingDir.resolve("jpa")).exists();
 			assertThat(workingDir.resolve("jpa/src/main/java/com/xkcd/customer")).exists();
 			assertThat(workingDir.resolve("jpa/src/test/java/com/xkcd/customer")).exists();
@@ -100,7 +100,7 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew("jpa", "jpa2", null, null, null, null, "com.xkcd", path);
+			bootCommands.bootNew("jpa2", "jpa", null, null, null, null, "com.xkcd", path);
 			assertThat(workingDir.resolve("jpa2")).exists();
 			assertThat(workingDir.resolve("jpa2/src/main/java/com/xkcd/customer")).exists();
 			assertThat(workingDir.resolve("jpa2/src/test/java/com/xkcd/customer")).exists();
@@ -128,7 +128,7 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew(null, "test-add", null, null, null, null, "com.xkcd", path);
+			bootCommands.bootNew("test-add", null,null, null, null, null, "com.xkcd", path);
 			assertThat(workingDir).exists().isDirectory();
 			assertThat(workingDir.resolve("test-add")).exists();
 			assertThat(workingDir.resolve("test-add/src/main/java/com/xkcd/greeting")).exists();
@@ -153,7 +153,7 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew(null, "test-add", null, null, null, null, "com.xkcd", path);
+			bootCommands.bootNew("test-add", null,  null, null, null, null, "com.xkcd", path);
 			assertThat(workingDir).exists().isDirectory();
 			assertThat(workingDir.resolve("test-add")).exists();
 			assertThat(workingDir.resolve("test-add/src/main/java/com/xkcd/greeting")).exists();

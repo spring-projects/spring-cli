@@ -61,14 +61,14 @@ To create a new Spring Data JPA project, also setting the package name
 
 [source, bash]
 ----
-spring boot new jpa –name myjpaproject –package-name com.xkcd
+spring boot new myjpaproject jpa --package-name com.xkcd
 ----
 
 To create a new Spring Data JPA project, also setting the package name
 
 [source, bash]
 ----
-spring boot new jpa –name myjpaproject –package-name com.xkcd
+spring boot new myjpaproject jpa --package-name com.xkcd
 ----
 
 == Adding an individual project
@@ -104,5 +104,5 @@ You can now create a new project that showcases how to use scheduling features v
 
 [source, bash]
 ----
-spring boot new scheduling
+spring boot new my-app scheduling
 ----

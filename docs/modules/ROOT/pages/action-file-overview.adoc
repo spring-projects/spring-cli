@@ -35,7 +35,8 @@ Created user defined command /home/testing/rest-service/.spring/commands/hello/c
 
 The directory structure is
 
-```bash
+[source, shell]
+----
 $ tree .spring
 .spring
 └── commands
@@ -43,12 +44,12 @@ $ tree .spring
         └── create
             ├── command.yaml
             └── hello.yaml
-```
+----
 
 The content of `command.yaml`, shown below, defines a command line argument named `greeting`.
 This argument will be used in the action file `hello.yaml`.
 
-```
+[source, shell]
 command:
   description: Generate a new file with a hello message
   options:

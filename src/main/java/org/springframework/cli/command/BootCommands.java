@@ -43,8 +43,8 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	@Command(command = "new", description = "Create a new Spring Boot project from an existing project")
 	public void bootNew(
+			@Option(description = "Name of the new project", required = true) String name,
 			@Option(description = "Create project from existing project name or URL") String from,
-			@Option(description = "Name of the new project") String name,
 			@Option(longNames = "group-id", description = "Group ID of the new project") String groupId,
 			@Option(longNames = "artifact-id", description = "Artifact ID of the new project") String artifactId,
 			@Option(description = "Version of the new project") String version,
@@ -53,7 +53,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 			@Option(description = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.") String path) {
 		ProjectInfo projectInfo = new ProjectInfo(groupId, artifactId, version, name, description, packageName);
 		ProjectHandler handler = new ProjectHandler(springCliUserConfig, sourceRepositoryService, terminalMessage);
-		handler.create(from, path, projectInfo.getDefaults());
+		handler.create(from, path, projectInfo);
 	}
 
 

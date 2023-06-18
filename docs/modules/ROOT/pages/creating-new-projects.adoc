@@ -1,28 +1,82 @@
 = Creating New Projects
 
-When running the command `spring boot new` a simple RESTful web application is created.
+The `spring boot new` command makes it easy to create Spring Boot applications.
 
-To create other types of applications you need to pass an additional argument to the `spring boot new` command that specifies the location of the source code for the project you want to create.
+This command copies the content from the source code repository of an existing fully functional Spring Boot application to create a new project.
 
-You can specify the type of application to create using the name of a registered project or a URL.
+To get started, specify the `--name` option, which creates a basic RESTful web application with a test.
+You can also use the `--from` option to create projects with different functionalities, such as Spring Data JPA or Spring Cloud Stream.
 
-There are a few command line options to the `spring boot new` command that let you specify the project name, package name and the location in the filesystem to create the new project.
+For further customization, you have the flexibility to specify various options such as `--group`, `--artifact-id`, and `--version`, as well as the `--package-name` and `--description`.
+If you provide the `--package-name` the code will be refactored after cloning the source code repository.
 
-The following sections go over these topics one by one.
+The following sections provide detailed explanations of each of these topics.
+
+For more information on adding additional code to an already existing application, look at the sections xref:boot-add-guide.adoc[spring boot add] and xref:user-command-guide.adoc[User Defined Commands].
+
+== Quick Start
+
+To quickly create a simple web application in a new directory, execute the following commands:
+
+[source, bash]
+----
+spring boot new my-app
+cd my-app
+./mnvw spring-boot:run
+----
+
+This creates a basic web application in the directory "my-app".
+The `--name` option is passsed positionally in this example, equivalent to `spring boot new --name my-app`.
+
+If you prefer to create a project in your current working directory, specify `.` as the name.
+
+[source, bash]
+----
+mkdir my-new-app
+cd my-new-app
+spring boot new .
+./mvnw spring-boot:run
+----
+
+To create applications with different functionality, use the option `--from` in the `spring boot new my-app` command.  Since  `--from` comes after `--name` you can use positional parameters.
+
+For example:
+
+[source, bash]
+----
+spring boot new my-app jpa
+cd my-app
+./mnvw spring-boot:run
+----
+
+This command will create a new application that includes Spring Data JPA functionality.
+
+In the above example both the name of the new app, `my-app` and the `--from` option `jpa` is provied as a positional parameter.
+It is equivalent to using `spring boot new --name my-app --from jpa`.
+
+The name `jpa` is registered with the default getting started project catalog and serves as an alias to a specific URL with some additional metadata.
+This is described more in the following section.
 
 == Creating by name
 
-By default, a project catalog based off the official Spring Getting Started Guides is registered with the shell.  A project catalog contains a list of name and URL pairs.
+The project catalog contains a list of code repositories that demonstrate specific Spring technologies.
+The repositories in the default project catalog, resembling the content in the Spring Getting Started Guides, provide a range of functionalities.
 
-Executing the command
+You can have the option to register your own catalogs, offering code repositories of varying complexity and functionality.
 
-```
+The project catalog helps you find for the desired functionality you your new projects.
+Additionally, you can refer to the project names from the project catalog when adding code to an exisiting project using the `spring boot add` command.
+
+To view the registered projects in the default "getting started" catalog, execute the command:
+
+[source, shell]
+----
 spring catalog list
-```
+----
 
-shows the list of project catalogs registered with the shell.  The project catalog contains a list of projects that can be used with the `boot new` or `boot add` commands.
+This command displays the available project catalogs that can be used with the `spring boot new` command.
 
-```
+[source, shell]
 ┌────┬──────────────────────────────────────────────┬───────────────────────┬───────────────────┐
 │Name│URL                                           │Description            │Tags               │
 ├────┼──────────────────────────────────────────────┼───────────────────────┼───────────────────┤
@@ -30,13 +84,14 @@ shows the list of project catalogs registered with the shell.  The project catal
 └────┴──────────────────────────────────────────────┴───────────────────────┴───────────────────┘
 ```
 
-Executing the command
+To view the available projects, use the command:
 
-```
+[source, shell]
+----
 spring project list
-```
+----
 
-shows the list of projects that are available to use.  Each project has a name that can be passed to `spring boot new`
+This command provides a list of projects that you can use.  Each project has a name that can be passsed to `spring boot new`.
 
 ```
 ┌─────────────┬────────────────────────────────────────────────────────┬─────────────────────┬───────┬───────────────┐
@@ -65,13 +120,13 @@ shows the list of projects that are available to use.  Each project has a name t
 
 ```
 
-To create a new project that using Spring Data JPA, execute the command
+To create a new project using Spring Data JPA, execute the following command:
 
 ```
-spring boot new jpa
+spring boot new my-jpa jpa
 ```
 
-And the application that is in the source code repository URL `https://github.com/rd-1-2022/rpt-spring-data-jpa` will be used.
+This command uses the application from the source code repository URL `https://github.com/rd-1-2022/rpt-spring-data-jpa`.
 
 NOTE: You can also use the name of the project as the argument to the command  `spring boot add`
 
@@ -81,22 +136,23 @@ Instead of adding a project to the Spring CLI so as to reference it with a short
 
 For example, to create the Spring JPA project, use the command
 
-[source, bash]
+[source, shell]
 ----
-spring boot new https://github.com/rd-1-2022/rpt-spring-data-jpa 
+spring boot new my-jpa https://github.com/rd-1-2022/rpt-spring-data-jpa
 ----
 
 == Options
+
 The `spring boot new` command takes the following options, which can be seen by executing the command
 
-[source, bash]
+[source, shell]
 ----
 spring boot new --help
 ----
 
 Which displays
 
-[source, bash]
+[source, shell]
 ----
 NAME
        boot new - Create a new Spring Boot project from an existing project
@@ -105,12 +161,12 @@ SYNOPSIS
        boot new --from String --name String --group-id String --artifact-id String --version String --description String --package-name String --path String --help
 
 OPTIONS
-       --from String
-       Create project from existing project name or URL
-       [Optional]
-
        --name String
        Name of the new project
+       [Mandatory]
+
+       --from String
+       Create project from existing project name or URL
        [Optional]
 
        --group-id String
@@ -142,15 +198,15 @@ OPTIONS
        [Optional]
 
 
+
 ----
 
 == Options and Default Values
 
-The most common options to specify are `--name` and `--group-id`.
 By specifying just the `--name` option, the `artifactId` will default to the value of the `--name` option.
 For example
 
-[source, bash]
+[source, shell]
 ----
 spring boot new --name myapp
 Cloning project from https://github.com/rd-1-2022/rest-service
@@ -172,7 +228,7 @@ Adding the option `--groupid` will not only change the value of the `groupId` ta
 A refactoring of the project to the new package name will be performed.
 For example:
 
-[source, bash]
+[source, shell]
 ----
 $ spring boot new --name myapp --group-id com.xkcd
 Cloning project from https://github.com/rd-1-2022/rest-service

@@ -34,6 +34,7 @@ import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.recipe.RecipeUtils;
 import org.springframework.cli.support.configfile.YamlConfigFile;
 import org.springframework.cli.util.IoUtils;
+import org.springframework.cli.util.JavaUtils;
 import org.springframework.cli.util.PackageNameUtils;
 import org.springframework.cli.util.ProjectInfo;
 import org.springframework.cli.util.RefactorUtils;
@@ -100,11 +101,24 @@ public class ProjectHandler {
 			urlToUse = getProjectRepositoryUrl(from);
 		}
 
-		String directoryNameToUse;
-		if (StringUtils.hasText(projectInfo.getName())) {
-			directoryNameToUse = projectInfo.getName();
+		// Determine the project name to use and if a subdirectory for the project should
+		// be created.
+
+		String projectNameToUse;
+		boolean createSubDirectoryForProject = true;
+		if (! projectInfo.getName().equalsIgnoreCase(".")) {
+			projectNameToUse = projectInfo.getName();
+			if (! JavaUtils.isValidDirectoryName(projectNameToUse)) {
+				throw new SpringCliException("Invalid project name used, can't create a directory with that name");
+			}
 		} else {
-			directoryNameToUse = getProjectNameUsingFrom(urlToUse);
+			// Passed in "." as project name signifying to use the current directory as project name
+			projectNameToUse = IoUtils.getWorkingDirectory().getFileName().toString();
+			if (! JavaUtils.isValidDirectoryName(projectNameToUse)) {
+				throw new SpringCliException("Invalid project name used, can't create a directory with that name");
+			}
+			projectInfo.setName(projectNameToUse);
+			createSubDirectoryForProject = false;
 		}
 
 		AttributedStringBuilder sb = new AttributedStringBuilder();
@@ -114,7 +128,10 @@ public class ProjectHandler {
 		sb.append("project from " + urlToUse);
 		terminalMessage.print(sb.toAttributedString());
 
-		createFromUrl(IoUtils.getProjectPath(path), directoryNameToUse, urlToUse, projectInfo);
+		// Create the application
+
+		createFromUrl(IoUtils.getProjectPath(path), projectNameToUse, urlToUse,
+				projectInfo.getDefaults(), createSubDirectoryForProject);
 	}
 
 	/**
@@ -220,9 +237,15 @@ public class ProjectHandler {
 		return projectDirectory;
 	}
 
-	private void createFromUrl(Path projectDir, String directoryName, String url, ProjectInfo projectInfo) {
+	private void createFromUrl(Path projectDir, String directoryName, String url,
+			ProjectInfo projectInfo, boolean createSubDirectoryForProject) {
 		logger.debug("Generating project from url {} with ProjectInfo {} ", url, projectInfo);
-		File toDir = createProjectDirectory(projectDir, directoryName).toFile();
+		File toDir;
+		if (createSubDirectoryForProject) {
+			toDir = createProjectDirectory(projectDir, directoryName).toFile();
+		} else {
+			toDir = IoUtils.getWorkingDirectory().toFile();
+		}
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(url);
 
 		// Get existing package name

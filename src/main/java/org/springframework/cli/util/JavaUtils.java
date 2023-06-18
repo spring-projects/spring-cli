@@ -17,12 +17,24 @@
 
 package org.springframework.cli.util;
 
-public class JavaVersionUtils {
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
+
+public class JavaUtils {
 	public static int getJavaVersion(String javaVersionString) {
 		if ("1.8".equals(javaVersionString)) {
 			return 8;
 		} else {
 			return Integer.valueOf(javaVersionString);
+		}
+	}
+
+	public static boolean isValidDirectoryName(String directoryName) {
+		try {
+			Paths.get(directoryName);
+			return true;
+		} catch (InvalidPathException e) {
+			return false;
 		}
 	}
 }

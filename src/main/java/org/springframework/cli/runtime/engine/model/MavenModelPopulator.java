@@ -26,7 +26,7 @@ import java.util.Properties;
 
 import org.apache.maven.model.Model;
 
-import org.springframework.cli.util.JavaVersionUtils;
+import org.springframework.cli.util.JavaUtils;
 import org.springframework.cli.util.PomReader;
 
 public class MavenModelPopulator implements ModelPopulator {
@@ -69,7 +69,7 @@ public class MavenModelPopulator implements ModelPopulator {
 			model.putIfAbsent(PROJECT_NAME, mavenModel.getName());
 			model.putIfAbsent(PROJECT_DESCRIPTION, mavenModel.getDescription());
 			if (mavenProperties.containsKey("java.version")) {
-				model.putIfAbsent(JAVA_VERSION, JavaVersionUtils.getJavaVersion(mavenProperties.getProperty("java.version")));
+				model.putIfAbsent(JAVA_VERSION, JavaUtils.getJavaVersion(mavenProperties.getProperty("java.version")));
 			}
 		}
 	}

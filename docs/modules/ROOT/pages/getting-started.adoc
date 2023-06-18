@@ -1,26 +1,26 @@
 = Getting Started
 
-Creating a new project is as simple as typing `spring boot new`
+Creating a new project is as simple as typing `spring boot new my-app`
 
 [source, bash]
 ----
-spring boot new
+spring boot new my-app
 ----
 
 The output will be
 [source, bash]
 ----
 Cloning project from https://github.com/rd-1-2022/rest-service
-Created project in directory 'rest-service'
+Created project in directory 'my-app'
 ----
 
 `**Note**` If the CLI seems to be stuck at the cloning step, you might be hitting GitHub rate limiting.  Use the command `spring github auth login` to authenticate.
  
-You can now `cd` into the `rest-service` directory and build and run the application, which is a simple web application with a single endpoint by default.
+You can now `cd` into the `my-app` directory and build and run the application, which is a simple web application with a single endpoint by default.
 
 [source, bash]
 ----
-cd rest-service
+cd my-app
 ./mnvw spring-boot:run
 ----
 

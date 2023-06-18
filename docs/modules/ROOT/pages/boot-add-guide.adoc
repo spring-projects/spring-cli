@@ -40,7 +40,7 @@ We can create a new web project and then add JPA functionality to that project b
 
 [source, bash]
 ----
-spring boot new web --package-name com.xkcd
+spring boot new demo web --package-name com.xkcd
 cd demo
 spring boot add jpa
 ----
