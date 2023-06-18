@@ -513,7 +513,7 @@ Created user defined command /home/testing/rest-service/.spring/commands/hello/c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ tree .spring
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ tree .spring
 .spring
 └── commands
     └── hello
@@ -528,7 +528,7 @@ This argument will be used in the action file <code>hello.yaml</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">command:
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">command:
   description: Generate a new file with a hello message
   options:
     #
@@ -536,7 +536,8 @@ This argument will be used in the action file <code>hello.yaml</code>.</p>
       description: who or what to say hello to
       dataType: string
       defaultValue: World
-      inputType: text     # TEXT</code></pre>
+      inputType: text     # TEXT
+```</code></pre>
 </div>
 </div>
 <div class="paragraph">

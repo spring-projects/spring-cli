@@ -446,19 +446,78 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>When running the command <code>spring boot new</code> a simple RESTful web application is created.</p>
+<p>The <code>spring boot new</code> command makes it easy to create Spring Boot applications.</p>
 </div>
 <div class="paragraph">
-<p>To create other types of applications you need to pass an additional argument to the <code>spring boot new</code> command that specifies the location of the source code for the project you want to create.</p>
+<p>This command copies the content from the source code repository of an existing fully functional Spring Boot application to create a new project.</p>
 </div>
 <div class="paragraph">
-<p>You can specify the type of application to create using the name of a registered project or a URL.</p>
+<p>To get started, specify the <code>--name</code> option, which creates a basic RESTful web application with a test.
+You can also use the <code>--from</code> option to create projects with different functionalities, such as Spring Data JPA or Spring Cloud Stream.</p>
 </div>
 <div class="paragraph">
-<p>There are a few command line options to the <code>spring boot new</code> command that let you specify the project name, package name and the location in the filesystem to create the new project.</p>
+<p>For further customization, you have the flexibility to specify various options such as <code>--group</code>, <code>--artifact-id</code>, and <code>--version</code>, as well as the <code>--package-name</code> and <code>--description</code>.
+If you provide the <code>--package-name</code> the code will be refactored after cloning the source code repository.</p>
 </div>
 <div class="paragraph">
-<p>The following sections go over these topics one by one.</p>
+<p>The following sections provide detailed explanations of each of these topics.</p>
+</div>
+<div class="paragraph">
+<p>For more information on adding additional code to an already existing application, look at the sections <a href="boot-add-guide.html" class="xref page">spring boot add</a> and <a href="user-command-guide.html" class="xref page">User Defined Commands</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_quick_start"><a class="anchor" href="#_quick_start"></a>Quick Start</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To quickly create a simple web application in a new directory, execute the following commands:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new my-app
+cd my-app
+./mnvw spring-boot:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This creates a basic web application in the directory "my-app".
+The <code>--name</code> option is passsed positionally in this example, equivalent to <code>spring boot new --name my-app</code>.</p>
+</div>
+<div class="paragraph">
+<p>If you prefer to create a project in your current working directory, specify <code>.</code> as the name.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir my-new-app
+cd my-new-app
+spring boot new .
+./mvnw spring-boot:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To create applications with different functionality, use the option <code>--from</code> in the <code>spring boot new my-app</code> command.  Since  <code>--from</code> comes after <code>--name</code> you can use positional parameters.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new my-app jpa
+cd my-app
+./mnvw spring-boot:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command will create a new application that includes Spring Data JPA functionality.</p>
+</div>
+<div class="paragraph">
+<p>In the above example both the name of the new app, <code>my-app</code> and the <code>--from</code> option <code>jpa</code> is provied as a positional parameter.
+It is equivalent to using <code>spring boot new --name my-app --from jpa</code>.</p>
+</div>
+<div class="paragraph">
+<p>The name <code>jpa</code> is registered with the default getting started project catalog and serves as an alias to a specific URL with some additional metadata.
+This is described more in the following section.</p>
 </div>
 </div>
 </div>
@@ -466,38 +525,47 @@
 <h2 id="_creating_by_name"><a class="anchor" href="#_creating_by_name"></a>Creating by name</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>By default, a project catalog based off the official Spring Getting Started Guides is registered with the shell.  A project catalog contains a list of name and URL pairs.</p>
+<p>The project catalog contains a list of code repositories that demonstrate specific Spring technologies.
+The repositories in the default project catalog, resembling the content in the Spring Getting Started Guides, provide a range of functionalities.</p>
 </div>
 <div class="paragraph">
-<p>Executing the command</p>
+<p>You can have the option to register your own catalogs, offering code repositories of varying complexity and functionality.</p>
+</div>
+<div class="paragraph">
+<p>The project catalog helps you find for the desired functionality you your new projects.
+Additionally, you can refer to the project names from the project catalog when adding code to an exisiting project using the <code>spring boot add</code> command.</p>
+</div>
+<div class="paragraph">
+<p>To view the registered projects in the default "getting started" catalog, execute the command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">spring catalog list</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">spring catalog list</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>shows the list of project catalogs registered with the shell.  The project catalog contains a list of projects that can be used with the <code>boot new</code> or <code>boot add</code> commands.</p>
+<p>This command displays the available project catalogs that can be used with the <code>spring boot new</code> command.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">┌────┬──────────────────────────────────────────────┬───────────────────────┬───────────────────┐
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">┌────┬──────────────────────────────────────────────┬───────────────────────┬───────────────────┐
 │Name│URL                                           │Description            │Tags               │
 ├────┼──────────────────────────────────────────────┼───────────────────────┼───────────────────┤
 │gs  │https://github.com/rd-1-2022/spring-gs-catalog│Getting Started Catalog│[java-11, boot-2.7]│
-└────┴──────────────────────────────────────────────┴───────────────────────┴───────────────────┘</code></pre>
+└────┴──────────────────────────────────────────────┴───────────────────────┴───────────────────┘
+```</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Executing the command</p>
+<p>To view the available projects, use the command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">spring project list</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">spring project list</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>shows the list of projects that are available to use.  Each project has a name that can be passed to <code>spring boot new</code></p>
+<p>This command provides a list of projects that you can use.  Each project has a name that can be passsed to <code>spring boot new</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -525,15 +593,15 @@
 </div>
 </div>
 <div class="paragraph">
-<p>To create a new project that using Spring Data JPA, execute the command</p>
+<p>To create a new project using Spring Data JPA, execute the following command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">spring boot new jpa</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">spring boot new my-jpa jpa</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>And the application that is in the source code repository URL <code><a href="https://github.com/rd-1-2022/rpt-spring-data-jpa" class="bare">https://github.com/rd-1-2022/rpt-spring-data-jpa</a></code> will be used.</p>
+<p>This command uses the application from the source code repository URL <code><a href="https://github.com/rd-1-2022/rpt-spring-data-jpa" class="bare">https://github.com/rd-1-2022/rpt-spring-data-jpa</a></code>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -560,7 +628,7 @@ You can also use the name of the project as the argument to the command  <code>s
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new https://github.com/rd-1-2022/rpt-spring-data-jpa</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">spring boot new my-jpa https://github.com/rd-1-2022/rpt-spring-data-jpa</code></pre>
 </div>
 </div>
 </div>
@@ -573,7 +641,7 @@ You can also use the name of the project as the argument to the command  <code>s
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new --help</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">spring boot new --help</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -581,19 +649,19 @@ You can also use the name of the project as the argument to the command  <code>s
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">NAME
        boot new - Create a new Spring Boot project from an existing project
 
 SYNOPSIS
        boot new --from String --name String --group-id String --artifact-id String --version String --description String --package-name String --path String --help
 
 OPTIONS
-       --from String
-       Create project from existing project name or URL
-       [Optional]
-
        --name String
        Name of the new project
+       [Mandatory]
+
+       --from String
+       Create project from existing project name or URL
        [Optional]
 
        --group-id String
@@ -631,13 +699,12 @@ OPTIONS
 <h2 id="_options_and_default_values"><a class="anchor" href="#_options_and_default_values"></a>Options and Default Values</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The most common options to specify are <code>--name</code> and <code>--group-id</code>.
-By specifying just the <code>--name</code> option, the <code>artifactId</code> will default to the value of the <code>--name</code> option.
+<p>By specifying just the <code>--name</code> option, the <code>artifactId</code> will default to the value of the <code>--name</code> option.
 For example</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring boot new --name myapp
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">spring boot new --name myapp
 Cloning project from https://github.com/rd-1-2022/rest-service
 Created project in directory 'myapp'</code></pre>
 </div>
@@ -661,7 +728,7 @@ For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ spring boot new --name myapp --group-id com.xkcd
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ spring boot new --name myapp --group-id com.xkcd
 Cloning project from https://github.com/rd-1-2022/rest-service
 Refactoring package to com.xkcd.myapp
 Created project in directory 'myapp'</code></pre>
