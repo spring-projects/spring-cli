@@ -1,38 +1,40 @@
 = Registering Projects
 
-You can register your own project catalog and individual projects to reflect the types of applications that are most frequenly used by you and your team.
+You can register new projects in two ways: using a Project Catalog or by providing a name and URL.
 
+The Project Catalog consists of a collection of projects that can be referenced by name when using the spring boot new and spring boot add commands.
 
-== Adding a Project Catalog
-To add a project catalog that contains applications which are similar to the Spring Getting Started guides found on https://spring.io/guides, run the following command to add the catalog
+== Adding using a Project Catalog
+To add a project catalog use the `spring project-catalog add` command.
+
+In this example, we will register a sample catalog available at the URL https://github.com/rd-1-2022/sample-project-catalog
+
+Within that repository, there is a file named project-repositories.yml.
+This is the filename that the command searches for.
+If you wish to use your own URL location, make sure to adjust the contents accordingly.
 
 [source, bash]
 ----
-spring catalog add gs https://github.com/rd-1-2022/spring-gs-catalog
+spring project-catalog add dapr https://github.com/rd-1-2022/sample-project-catalog
 ----
 
-or if you prefer you can specify the command option names
+The command above registers a Project Catalog named `darp` from the URL `https://github.com/rd-1-2022/sample-project-catalog` using positional parameters.
 
-catalog add --name gs --url https://github.com/rd-1-2022/spring-gs-catalog
+You can achieve the same result using named options as follows:
 
-Now you can see what projects you can create using the command
+[source, bash]
+----
+spring project-catalog add --name dapr --url https://github.com/rd-1-2022/sample-project-catalog
+----
+
+Now, you can view the available projects in the catalog by running the command:
 
 [source, bash]
 ----
 spring project list
 ----
 
-To create other projects, you can register a project with the Spring CLI or import a project catalog.
-
-To import a project catalog with applications that are similar to the Spring Getting Started guides found on spring.io/guides, run the following command to import the catalog
-
-catalog add gs https://github.com/rd-1-2022/spring-gs-catalog
-
-or if you prefer you can specify the command option names
-
-catalog add --name gs --url https://github.com/rd-1-2022/spring-gs-catalog
-
-Now you can see what projects you can create using the command
+This will display a table of projects, and you should see a project named read in the list.
 
 [source, bash]
 ----
@@ -43,66 +45,57 @@ That returns the following table
 
 [source, bash]
 ----
-┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
-│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
-│          │                                                        │JPA.                                                            │       │              │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
-│          │                                                        │                                                                │       │eureka]       │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘
+┌─────────────┬──────────────────────────────────────────────────────────────────┬──────────────────────────────────────────────────────────────────┬───────┬───────────────────────────────────────┐
+│Name         │Description                                                       │URL                                                               │Catalog│Tags                                   │
+├─────────────┼──────────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────┼───────┼───────────────────────────────────────┤
+│web          │Hello, World RESTful web service.                                 │https://github.com/rd-1-2022/rest-service                         │gs     │[java-17, boot-3.1.x, rest, web]       │
+├─────────────┼──────────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────┼───────┼───────────────────────────────────────┤
+│jpa          │Learn how to work with JPA data persistence using Spring Data JPA.│https://github.com/rd-1-2022/rpt-spring-data-jpa                  │gs     │[java-17, boot-3.1.x, jpa, h2]         │
+├─────────────┼──────────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────┼───────┼───────────────────────────────────────┤
+
+...
+
+│read         │Dapr app for reading from a statestore.                           │https://github.com/ciberkleid/dapr-testcontainers?subPath=read-app│dapr   │[java-17, boot-3.1.x, dapr, statestore]│
+└─────────────┴──────────────────────────────────────────────────────────────────┴──────────────────────────────────────────────────────────────────┴───────┴───────────────────────────────────────┘
+
+
 ----
 
-To create a new Spring Data JPA project, also setting the package name
+To create a new project from the "read" project, use the command:
 
 [source, bash]
 ----
-spring boot new myjpaproject jpa --package-name com.xkcd
+spring boot new read-app read
 ----
 
-To create a new Spring Data JPA project, also setting the package name
+If you want to specify a package name for the project, you can use the --package-name option:
 
 [source, bash]
 ----
-spring boot new myjpaproject jpa --package-name com.xkcd
+spring boot new read-app read --package-name com.xkcd.read
 ----
 
-== Adding an individual project
+== Adding using a name and URL
 
-Instead of using a catalog, you can add an individual project using the command `project add`.  For example
+If you prefer not to use a project catalog, you can add an individual project using the spring project add command. For example:
 
 [source, bash]
 ----
-spring project add scheduling https://github.com/rd-1-2022/rpt-spring-scheduling-tasks
+spring project add read-app --url https://github.com/ciberkleid/dapr-testcontainers?subPath=read-app
 ----
 
-Now if you run `spring project list` you will see this project in addition to those from the catalog
+After running the above command, if you execute spring project list, you will see the newly added project in addition to the ones from the catalog.
 
-[source, bash]
-----
-┌──────────┬────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬───────┬──────────────┐
-│Name      │URL                                                     │Description                                                     │Catalog│Tags          │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│scheduling│https://github.com/rd-1-2022/rpt-spring-scheduling-tasks│                                                                │       │[]            │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│web       │https://github.com/rd-1-2022/rpt-rest-service           │Hello, World RESTful web service.                               │gs     │[rest, web]   │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│jpa       │https://github.com/rd-1-2022/rpt-spring-data-jpa        │Learn how to work with JPA data persistence using Spring Data   │gs     │[jpa, h2]     │
-│          │                                                        │JPA.                                                            │       │              │
-├──────────┼────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼───────┼──────────────┤
-│eureka    │https://github.com/rd-1-2022/eureka                     │Spring Cloud Eureka Server                                      │gs     │[cloud,       │
-│          │                                                        │                                                                │       │eureka]       │
-└──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘
-----
-
-You can now create a new project that showcases how to use scheduling features via the command
-
+Now, you can create a new project based on that repository by running the command:
 
 [source, bash]
 ----
-spring boot new my-app scheduling
+$ spring boot new my-read-app read-app
+Getting project from https://github.com/ciberkleid/dapr-testcontainers?subPath=read-app
+Created project in directory 'my-read-app'
 ----
+
+== Removing project and catalogs
+
+The commands `spring project-catalog remove` and `spring project remove` let you remove Project Catalogs and Projects.
+

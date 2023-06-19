@@ -29,6 +29,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cli.git.GitSourceRepositoryService;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.table.Table;
@@ -49,7 +50,8 @@ public class ProjectCommandsTests {
 
 			// Get empty table, assert header values
 			Table table = projectCommands.projectList();
-			//System.out.println(table.render(100));
+			System.out.println("should be empty table");
+			System.out.println(table.render(100));
 			assertEmptyProjectListTable(table);
 
 			// Add a project and assert values
@@ -58,6 +60,7 @@ public class ProjectCommandsTests {
 			tags.add("jpa");
 			projectCommands.projectAdd("jpa", "https://github.com/rd-1-2022/rpt-spring-data-jpa", "Learn JPA", tags);
 			table = projectCommands.projectList();
+			System.out.println("SHould have 1 entry");
 			System.out.println(table.render(100));
 			verifyTableValue(table, 1, 0, "jpa");
 			verifyTableValue(table, 1, 1, "https://github.com/rd-1-2022/rpt-spring-data-jpa");
@@ -69,7 +72,8 @@ public class ProjectCommandsTests {
 			// Remove project
 			projectCommands.projectRemove("jpa");
 			table = projectCommands.projectList();
-			//System.out.println(table.render(100));
+			System.out.println("Should be empty table");
+			System.out.println(table.render(100));
 			assertThat(table.getModel().getColumnCount()).isEqualTo(5);
 			assertThat(table.getModel().getRowCount()).isEqualTo(1);
 		});
@@ -103,7 +107,7 @@ public class ProjectCommandsTests {
 		@Bean
 		ProjectCommands projectCommands(SpringCliUserConfig springCliUserConfig,
 				SourceRepositoryService sourceRepositoryService) {
-			ProjectCommands projectCommands = new ProjectCommands(springCliUserConfig, sourceRepositoryService);
+			ProjectCommands projectCommands = new ProjectCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
 			return projectCommands;
 		}
 	}

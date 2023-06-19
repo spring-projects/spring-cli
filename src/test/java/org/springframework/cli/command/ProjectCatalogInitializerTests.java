@@ -36,6 +36,7 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
 import org.springframework.cli.git.GitSourceRepositoryService;
 import org.springframework.cli.git.SourceRepositoryService;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.table.Table;
@@ -103,7 +104,7 @@ public class ProjectCatalogInitializerTests {
 		@Bean
 		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
 				SourceRepositoryService sourceRepositoryService) {
-			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService);
+			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
 		}
 
 		@Bean
@@ -157,7 +158,7 @@ public class ProjectCatalogInitializerTests {
 			projectCatalogs.setProjectCatalogs(projectCatalogList);
 			springCliUserConfig.setProjectCatalogs(projectCatalogs);
 
-			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService);
+			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
 		}
 
 		@Bean

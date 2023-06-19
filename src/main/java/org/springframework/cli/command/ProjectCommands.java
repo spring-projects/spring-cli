@@ -34,6 +34,7 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.support.configfile.YamlConfigFile;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.table.ArrayTableModel;
@@ -53,16 +54,21 @@ public class ProjectCommands {
 
 	private final SourceRepositoryService sourceRepositoryService;
 
+	private final TerminalMessage terminalMessage;
+
 	@Autowired
-	public ProjectCommands(SpringCliUserConfig upCliUserConfig, SourceRepositoryService sourceRepositoryService) {
+	public ProjectCommands(SpringCliUserConfig upCliUserConfig,
+			SourceRepositoryService sourceRepositoryService,
+			TerminalMessage terminalMessage) {
 		this.upCliUserConfig = upCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
+		this.terminalMessage = terminalMessage;
 	}
 
 	@Command(command = "add", description = "Add a project to use with 'boot new' and 'boot add' commands")
 	public void projectAdd(
-		@Option(description = "Project name") String name,
-		@Option(description = "Project url") String url,
+		@Option(description = "Project name", required = true) String name,
+		@Option(description = "Project url", required = true) String url,
 		@Option(description = "Project description") String description,
 		@Option(description = "Project tags") List<String> tags
 	) {
@@ -71,6 +77,7 @@ public class ProjectCommands {
 		ProjectRepositories projectRepositoriesConfig = new ProjectRepositories();
 		projectRepositoriesConfig.setProjectRepositories(projectRepositories);
 		upCliUserConfig.setProjectRepositories(projectRepositoriesConfig);
+		this.terminalMessage.print("Project '" + name + "' added from URL = " + url);
 	}
 
 	@Command(command = "list", description = "List projects available for use with 'boot new' and 'boot add' commands")
@@ -132,14 +139,19 @@ public class ProjectCommands {
 
 	@Command(command = "remove", description = "Remove project")
 	public void projectRemove(
-		@Option(defaultValue = "Project name") String name
+		@Option(description = "Project name", required = true) String name
 	) {
-		List<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
-		projectRepositories = projectRepositories.stream()
+		List<ProjectRepository> origininalProjectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
+		List<ProjectRepository> updatedProjectRepositories = origininalProjectRepositories.stream()
 			.filter(tc -> !ObjectUtils.nullSafeEquals(tc.getName(), name))
 			.collect(Collectors.toList());
-		ProjectRepositories projectRepositoriesConfig = new ProjectRepositories();
-		projectRepositoriesConfig.setProjectRepositories(projectRepositories);
-		upCliUserConfig.setProjectRepositories(projectRepositoriesConfig);
+		if (updatedProjectRepositories.size() < origininalProjectRepositories.size()) {
+			ProjectRepositories projectRepositoriesConfig = new ProjectRepositories();
+			projectRepositoriesConfig.setProjectRepositories(updatedProjectRepositories);
+			upCliUserConfig.setProjectRepositories(projectRepositoriesConfig);
+			this.terminalMessage.print("Project '" + name + "' removed");
+		} else {
+			this.terminalMessage.print("Project '" + name + "' removed");
+		}
 	}
 }

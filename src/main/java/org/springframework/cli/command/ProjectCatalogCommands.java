@@ -38,6 +38,7 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.support.configfile.YamlConfigFile;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.table.ArrayTableModel;
@@ -49,7 +50,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-@Command(command = "catalog", group = "Catalog")
+@Command(command = "project-catalog", group = "Catalog")
 public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectCatalogCommands.class);
@@ -58,12 +59,15 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 	private final SourceRepositoryService sourceRepositoryService;
 
+	private final TerminalMessage terminalMessage;
+
 
 	@Autowired
 	public ProjectCatalogCommands(SpringCliUserConfig springCliUserConfig,
-			SourceRepositoryService sourceRepositoryService) {
+			SourceRepositoryService sourceRepositoryService, TerminalMessage terminalMessage) {
 		this.springCliUserConfig = springCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
+		this.terminalMessage = terminalMessage;
 	}
 
 	@Command(command = "list-available", description = "List available catalogs")
@@ -136,7 +140,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 	@Command(command = "add", description = "Add a project to a project catalog")
 	public void catalogAdd(
-			@Option(description = "Catalog name") String name,
+			@Option(description = "Catalog name", required = true) String name,
 			@Option(description = "Catalog url") String url,
 			@Option(description = "Catalog description") String description,
 			@Option(description = "Project tags") List<String> tags
@@ -161,28 +165,39 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 				ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
 				projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
 				springCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
+				this.terminalMessage.print("Project Catalog '" + name + "' added.");
+			} else {
+				this.terminalMessage.print("Project Catalog '" + name + "' not found.");
 			}
 		} else {
+			// Add using URL
 			List<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 			checkIfCatalogNameExists(name, projectCatalogs);
 			projectCatalogs.add(ProjectCatalog.of(name, description, url, tags));
 			ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
 			projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
 			springCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
+			this.terminalMessage.print("Project Catalog '" + name + "' added from URL = " + url);
 		}
 	}
 
 	@Command(command = "remove", description = "Remove a project from a catalog")
 	public void catalogRemove(
-		@Option(description = "Catalog name") String name
+		@Option(description = "Catalog name", required = true) String name
 	) {
-		List<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
-		projectCatalogs = projectCatalogs.stream()
+		List<ProjectCatalog> originalProjectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		List<ProjectCatalog> updatedProjectCatalogs = originalProjectCatalogs.stream()
 			.filter(tc -> !ObjectUtils.nullSafeEquals(tc.getName(), name))
 			.collect(Collectors.toList());
-		ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
-		projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
-		springCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
+		if (updatedProjectCatalogs.size() < originalProjectCatalogs.size()) {
+			ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
+			projectCatalogsConfig.setProjectCatalogs(updatedProjectCatalogs);
+			springCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
+			this.terminalMessage.print("Catalog '" + name + "' removed");
+		} else {
+			this.terminalMessage.print("Catalog '" + name + "' not found");
+		}
+
 	}
 
 	private void checkIfCatalogNameExists(String catalogName, List<ProjectCatalog> projectCatalogs) {

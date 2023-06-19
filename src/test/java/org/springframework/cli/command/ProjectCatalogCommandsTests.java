@@ -32,6 +32,7 @@ import org.springframework.cli.config.SpringCliProjectCatalogProperties;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.git.GitSourceRepositoryService;
 import org.springframework.cli.git.SourceRepositoryService;
+import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.table.Table;
@@ -113,7 +114,7 @@ public class ProjectCatalogCommandsTests {
 		@Bean
 		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
 				SourceRepositoryService sourceRepositoryService) {
-			ProjectCatalogCommands projectCatalogCommands = new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService);
+			ProjectCatalogCommands projectCatalogCommands = new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
 			return projectCatalogCommands;
 		}
 	}
