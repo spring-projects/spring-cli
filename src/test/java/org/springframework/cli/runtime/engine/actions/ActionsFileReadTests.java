@@ -40,6 +40,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ActionsFileReadTests {
 
+//	@Test
+//	void readWithName() {
+//		ClassPathResource classPathResource = TestResourceUtils.qualifiedResource(getClass(), "actions-with-name.yaml");
+//		ActionFileReader actionFileReader = new ActionFileReader();
+//		ActionsFile actionsFile = actionFileReader.read(classPathResource);
+//		System.out.println(actionsFile.getActions());
+//	}
+
 	@Test
 	void readConditional() throws JsonProcessingException {
 		ClassPathResource classPathResource = TestResourceUtils.qualifiedResource(getClass(), "actions.yaml");

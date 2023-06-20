@@ -9,6 +9,7 @@
 * xref:user-command-guide.adoc[User defined commands]
 * xref:action-file-overview.adoc[Overview of Action Files]
 * xref:action-guide.adoc[Guide to Action Files]
+* xref:roles-guide.adoc[Guide to Roles]
 * xref:special-commands-guide.adoc[Guide to Special commands]
 * xref:initializr.adoc[Guide to Initializr commands]
 * xref:readme-command-guide.adoc[Guide to README commands]

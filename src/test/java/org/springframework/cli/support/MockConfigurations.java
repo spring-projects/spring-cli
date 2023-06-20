@@ -28,6 +28,7 @@ import org.jline.terminal.Terminal;
 import org.springframework.cli.command.AiCommands;
 import org.springframework.cli.command.BootCommands;
 import org.springframework.cli.command.CommandCommands;
+import org.springframework.cli.command.RoleCommands;
 import org.springframework.cli.command.SpecialCommands;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
@@ -83,6 +84,11 @@ public class MockConfigurations {
 		@Bean
 		CommandCommands commandCommands(SourceRepositoryService sourceRepositoryService) {
 			return new CommandCommands(sourceRepositoryService, TerminalMessage.noop());
+		}
+
+		@Bean
+		RoleCommands roleCommands() {
+			return new RoleCommands(TerminalMessage.noop());
 		}
 
 		@Bean

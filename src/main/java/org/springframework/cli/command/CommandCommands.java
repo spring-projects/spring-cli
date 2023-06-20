@@ -63,8 +63,8 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 
 	@Command(command = "new", description="Create a new user-defined command")
 	public void commandNew(
-			@Option(description = "The name of the user-defined command to create", defaultValue = "hello") String commandName,
-			@Option(description = "The name of the user-defined sub-command to create", defaultValue = "new") String subCommandName,
+			@Option(description = "The name of the user-defined command to create", defaultValue = "hello", longNames = "command-name") String commandName,
+			@Option(description = "The name of the user-defined sub-command to create", defaultValue = "new", longNames = "sub-command-name") String subCommandName,
 			@Option(description = "Path to execute command in") String path) {
 		Path projectPath = path != null ? IoUtils.getProjectPath(path) : IoUtils.getWorkingDirectory();
 		//TODO check validity of passed in names as directory names.
@@ -75,7 +75,6 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 		classPathResource = new ClassPathResource("org/springframework/cli/commands/command.yaml");
 		IoUtils.writeToDir(commandPath.toFile(), "command.yaml", classPathResource);
 		terminalMessage.print("Created user defined command " + commandPath);
-
 	}
 
 	@Command(command = "add", description = "Add a user-defined command")

@@ -17,6 +17,7 @@
 
 package org.springframework.cli.runtime.command;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Properties;
 import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collector;
@@ -38,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
+import org.springframework.cli.roles.RoleService;
 import org.springframework.cli.runtime.engine.actions.Action;
 import org.springframework.cli.runtime.engine.actions.ActionFileReader;
 import org.springframework.cli.runtime.engine.actions.ActionFileVisitor;
@@ -97,27 +101,76 @@ public class DynamicCommand {
 	}
 
 	/**
-	 * The main method called by spring-shell.  It is *not* and unused method, see
+	 * The main method called by spring-shell.  It is *not* an unused method, see
 	 * DynamicMethodCommandResolver for usage.
 	 * @param commandContext the command context for the dynamic command.
 	 */
 	public void execute(CommandContext commandContext) {
 		Map<String, Object> model = new HashMap<>();
 		addMatchedOptions(model, commandContext);
+		addRoleVariables(model, commandContext);
 		runCommand(IoUtils.getWorkingDirectory(), ".spring", "commands", model);
 	}
-
-
 	private void addMatchedOptions(Map<String, Object> model, CommandContext commandContext) {
 		List<CommandParserResult> commandParserResults = commandContext.getParserResults().results();
 		for (CommandParserResult commandParserResult : commandParserResults) {
-			// TODO will value() be populated with defaultValue() if not passed in?
 			String kebabOption = NamingUtils.toKebab(commandParserResult.option().getLongNames()[0]);
-			// TODO will value() be populated with defaultValue() if not passed in?
+			// TODO remove toString to use type info
+			// This puts in default values as well.
 			model.put(kebabOption, commandParserResult.value().toString());
 		}
 	}
+	private void addRoleVariables(Map<String, Object> model, CommandContext commandContext) {
+		RoleService roleService = new RoleService();
+		String role = "";
+		if (model.containsKey("role")) {
+			role = (String) model.get("role");
+		}
+		File roleFile = roleService.getFile(role);
+		if (roleFile.exists()) {
+			Map<String, Object> roleVariableMap = roleService.loadAsMap(role);
+			for (Entry<String, Object> roleMapEntry : roleVariableMap.entrySet()) {
+				String roleKey = roleMapEntry.getKey();
+				Object roleValue = roleMapEntry.getValue();
+				boolean usedDefaultValue = usedDefaultValue(roleKey, commandContext);
+				// Do not add if the option name is already there due to passing from the command line options
+				if (usedDefaultValue) {
+					// Override the default roleValue with the roleValue from the Role Variable.
+					model.put(roleKey, roleValue);
+					String message = StringUtils.hasText(role) ? " role " + role : "the default role ";
+					this.terminalMessage.print("Using Role variable instead of default command line option for roleKey = " + roleKey + " , roleValue = " + roleValue + " from " + message);
+				}
+			}
+			// Insert map variables that are independent of the command line option names
+			for (Entry<String, Object> roleMapEntry : roleVariableMap.entrySet()) {
+				String roleKey = roleMapEntry.getKey();
+				Object roleValue = roleMapEntry.getValue();
+				model.putIfAbsent(roleKey, roleValue);
+			}
+		} else {
+			this.terminalMessage.print("Properties file for role '" + role + "' does not exist.");
+		}
 
+	}
+
+	private boolean usedDefaultValue(String variableName, CommandContext commandContext) {
+		boolean usedDefaultValue = false;
+		// Look for matching option of the provided variable name and determine if a default value was used.
+		List<CommandParserResult> commandParserResults = commandContext.getParserResults().results();
+		for (CommandParserResult commandParserResult : commandParserResults) {
+			String optionName = NamingUtils.toKebab(commandParserResult.option().getLongNames()[0]);
+			if (variableName.equals(optionName)) {
+				Object defaultOptionValue = commandParserResult.option().getDefaultValue();
+				Object optionValue = commandParserResult.value();
+				if (defaultOptionValue != null && optionValue != null) {
+					if (defaultOptionValue.equals(optionValue)) {
+						usedDefaultValue = true;
+					}
+				}
+			}
+		}
+		return usedDefaultValue;
+	}
 
 	public void runCommand(Path workingDirectory, String springDir, String commandsDir,
 			Map<String, Object> model)  {

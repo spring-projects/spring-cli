@@ -49,6 +49,7 @@ public class SpecialCommands {
 			throw new SpringCliException("Exception running OS command: " + command +
 					" Error message: " + ex.getMessage(), ex);
 		}
+		this.terminalMessage.print("");
 	}
 
 	private String[] getCommands(String command) {

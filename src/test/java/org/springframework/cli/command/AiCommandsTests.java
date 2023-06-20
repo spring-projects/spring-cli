@@ -19,7 +19,6 @@ package org.springframework.cli.command;
 
 import java.nio.file.Path;
 
-import org.glassfish.hk2.utilities.Stub;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;

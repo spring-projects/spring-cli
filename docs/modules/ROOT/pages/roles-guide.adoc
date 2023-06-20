@@ -1,0 +1,221 @@
+= Roles
+
+Roles provide a way to organize and reuse variables across user-defined commands.
+
+By default, the Spring CLI includes an unnamed role that is always available. If no specific role is specified, commands will use the default role.
+
+To further customize and differentiate roles, you can associate them with specific names. These named roles are stored as YAML files within the `.spring/roles` directory, located alongside the `.spring/commands` directory.
+
+Roles enable you to define variables that can be accessed in an Action File using Handlebars, allowing you to share data between commands.
+
+Furthermore, roles can be utilized to supply values for command line options. If a command line option doesn't have a specified value, and there exists a role variable with the same name as the command option, the command will automatically use the value of the role variable for that specific option.
+
+== File Structure
+
+For each role, a corresponding file in created in the `.spring/roles` directory.
+For example, if there is a `qa` and `prod` role, the directory would look like the following:
+
+[source,bash]
+----
+$ tree .spring/roles/ -lr
+.spring/roles/
+├── vars.yml
+├── vars-qa.yml
+└── vars-prod.yml
+----
+
+The `vars.yml` file is used for the default role.
+
+This structure follows a similar pattern to useing profile-specific Spring application configuration files.
+However, role variables do not exhibit the same behavior as Spring profiles, such as retrieving values from other locations in addition to the file (e.g. environment variables).
+
+
+== Quick Start
+
+In this quick start, we'll demonstrate how to add variables to the default role and use their values when generating a file.
+
+Let's being by setting the value of the role variable 'greeting' to 'Mondo':
+
+[source,bash]
+----
+$ spring role set --key greeting --value Mondo
+Key-value pair added to the default role
+----
+
+The key-value pair is stored in the `./spring/roles/vars.yml` file under the root project directory
+
+To retrieve the value of the variable, use the following command:
+
+[source,bash]
+----
+$ spring role get --key greeting
+Mondo
+----
+
+Let's create another Role Variable:
+
+[source,bash]
+----
+$ spring role set --key language --value Italian
+Key-value pair added to the default role
+----
+
+Now, let's incorporate these variables into a User Defined Command.
+Create a user-defined command named  `hello say`
+
+[source,bash]
+----
+$ spring command new --command-name hello --sub-command-name say
+Created user defined command /home/mark/testing-spring-cli/roles/myapp/.spring/commands/hello/say
+----
+
+Inside the `.spring/commands/hello/say` direcotry, you'll find the `command.yaml` with the following contents:
+
+[source,yaml]
+----
+command:
+  description: Generate a new file with a hello message
+  options:
+    #
+    - name: greeting
+      description: who or what to say hello to
+      dataType: string
+      defaultValue: World
+      inputType: text
+----
+
+Note that the Command Line Option name is `greeting`, which matches the name of the Role Variable we created.
+
+Within the `.spring/commands/hello/say` directory, there is the Action File `hello.yaml` with the following contents:
+
+[source,yaml]
+----
+actions:
+  - generate:
+      to: hello.txt
+      text: Hello {{greeting}} on {{os-name}}.
+----
+
+Update the file to include:
+
+[source,yaml]
+----
+actions:
+  - generate:
+      to: hello.txt
+      text: Hello {{greeting}} on {{os-name}}. {{#if language}} {{language}} {{/if}}
+
+----
+
+When executing the command without passing the `greeting` Command Line Option, the value of `greeting` will be obtained from the Role Variable with the same name instead of using the default value of `World`.
+
+Additionally, since we have defined the Role Variable language, we can test its existence and include its value in the output. Note that language is not a command line option.
+
+[source,bash]
+----
+$ spring hello say
+Using Role variable instead of default command line option for key = greeting , value = Mondo from the default role
+Generated /home/mark/testing-spring-cli/roles/myapp/hello.txt
+----
+
+The generated file contains:
+
+[source]
+----
+Hello Mondo on Linux.  Italian
+----
+
+The value of `{{greeting}}` comes from the Role Variable because it was not provided as a command line option.
+
+The `{{language}}` variable was not a command line option, but it is is available to use with Handlebars expressions.
+
+Let's remove the generated file, in the interactive shell run `. ! rm hello.txt`, and pass in the `greeting` command line option.
+
+[source,bash]
+----
+$ spring hello say --greeting amico
+----
+
+The generated file contains:
+
+[source]
+----
+Hello amico on Linux.  Italian
+----
+
+== Setting variables
+
+To set a value for a Role Variable, use the `spring role set` command:
+
+[source]
+----
+spring role set --key greeting --value Mondo
+----
+
+You can optionally specify the role using the `--role` option.
+
+== Getting variables
+
+To retrieve the value of a Role Variable, use the following command:
+
+[source]
+----
+spring role get --key greeting
+----
+
+You can optionally specify the role using the --role option.
+
+The Role Variable greeting can then be accessed inside Action files that utilize Handlebars templating. Refer to the quick start section for an example.
+
+The Role Variable is also used to match against User Defined Command option names. If a value is not explicitly provided as a command line option, the value of the Role Variable will be used.
+
+You can also use the special command `. !` to view the full contents of the file that contains Role Variables when you are in the interactive shell:
+
+[source]
+----
+spring:>. ! cat .spring/roles/vars.yml
+greeting: mondo
+----
+
+== Adding a Role
+
+To add a role, use the following command:
+
+[source]
+----
+spring role add qa
+----
+
+This crates a role named `qa`.
+
+A file named  `./spring/roles/vars-qa.yml` is created under the root project directory.
+
+== Listing Roles
+
+To list the available roles, use the following command:
+
+[source]
+----
+spring role list
+----
+
+This will display th elist of roles:
+
+[source]
+----
+┌────┐
+│Name│
+├────┤
+│qa  │
+└────┘
+----
+
+== Removing a Role
+
+To remove a role, use the following command:
+
+[source]
+----
+spring role remove qa
+----
+

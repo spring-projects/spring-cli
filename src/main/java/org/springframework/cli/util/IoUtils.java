@@ -54,6 +54,11 @@ public abstract class IoUtils {
 		return Path.of("").toAbsolutePath();
 	}
 
+	public static boolean inProjectRootDirectory(Path path) {
+		Path pomFile = path.resolve("pom.xml");
+		return Files.exists(pomFile) ? true : false;
+	}
+
 	public static Path getProjectPath(String path) {
 		Path resolved = null;
 		if (StringUtils.hasText(path)) {

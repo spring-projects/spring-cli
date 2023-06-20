@@ -34,7 +34,7 @@ import org.springframework.shell.table.Table;
 import org.springframework.shell.table.TableBuilder;
 import org.springframework.shell.table.TableModel;
 
-@Command(command = "config", group = "Config")
+//@Command(command = "config", group = "Config")
 public class ConfigCommands extends AbstractSpringCliCommands {
 
 	private SpringCliUserConfig springCliUserConfig;
