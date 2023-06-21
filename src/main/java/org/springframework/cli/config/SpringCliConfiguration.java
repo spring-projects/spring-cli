@@ -36,6 +36,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorResourceFactory;
 import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.result.CommandNotFoundMessageProvider;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -48,6 +49,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 @EnableConfigurationProperties({SpringCliProperties.class, SpringCliProjectCatalogProperties.class})
 public class SpringCliConfiguration {
 
+	@Bean
+	public CommandNotFoundMessageProvider commandNotFoundMessageProvider() {
+		return new SpringCliCommandNotFoundMessageProvider();
+	}
 	@Bean
 	public CommandExceptionResolver commandExceptionResolver() {
 		return new SpringCliExceptionResolver();
