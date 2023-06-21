@@ -285,6 +285,9 @@
     <a class="nav-link" href="action-guide.html">Guide to Action Files</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="roles-guide.html">Guide to Roles</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="special-commands-guide.html">Guide to Special commands</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -451,7 +454,7 @@
 Projects are registered with the CLI so that a simple name can refer to them.</p>
 </div>
 <div class="paragraph">
-<p>For example, if you register the GitHub URL of a project that uses Spring Data JPA under the name ‘jpa’, you can create a new project from that one by invoking the command <code>boot new jpa</code>.
+<p>For example, if you register the GitHub URL of a project that uses Spring Data JPA under the name ‘jpa’, you can create a new project from that one by invoking the command <code>boot new my-jpa-app jpa</code>.
 Similarly, you can add JPA functionality to an existing project by invoking the command <code>boot add jpa</code>.</p>
 </div>
 <div class="paragraph">
@@ -472,23 +475,12 @@ It contains a list of project repository URLs, and an associated name.
 The catalog is hosted on GitHub or GitLab</p>
 </div>
 <div class="paragraph">
-<p>The commands related to projects catalogs are <code>catalog list</code>, <code>catalog add</code> and <code>catalog remove</code></p>
+<p>The commands related to project catalogs are <code>catalog list</code>, <code>catalog add</code> and <code>catalog remove</code></p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Configuration</strong>: The CLI provides a configuration system to provide default values to commonly used command options.</p>
-</div>
-<div class="paragraph">
-<p>If you most often create a project with a package name reflecting the name of your company, e.g. <code>com.xkcd</code>, then the command <code>config set boot new `package-name`</code> com.xkcd` will set the default value for the <code>package-name</code> options for the <code>boot new</code> command.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_commands"><a class="anchor" href="#_commands"></a>Commands</h2>
+<h2 id="_user_defined_commands"><a class="anchor" href="#_user_defined_commands"></a>User Defined Commands</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>Commands</strong>: These are declaratively defined commands that let you add or modify code and configuration files.</p>
@@ -520,6 +512,27 @@ Also in this directory or subdirectories are action files that define the action
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>Action Files</strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_roles"><a class="anchor" href="#_roles"></a>Roles</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Roles in your CLI provide a way to organize and reuse variables across user-defined commands.</p>
+</div>
+<div class="paragraph">
+<p>The Spring CLI includes a default, unnamed role that is always present.
+Additionally, roles can be associated with specific names to further differentiate their purpose and usage. These roles are stored as YAML files within the .spring/roles directory, which is located alongside the .spring/commands directory.</p>
+</div>
+<div class="paragraph">
+<p>These roles allow you to define variables that are accessible in an Action File, providing a way to share data between commands.</p>
+</div>
+<div class="paragraph">
+<p>Additionally, roles can be used to supply values for command line options. If a command line option does not have a value specified, and there is a role variable with the same name as the command option, the command will utilize the value of the role variable for that specific command option.</p>
+</div>
+<div class="paragraph">
+<p>Some of the commands related to projects are <code>role add</code>, <code>role remove</code> and <code>role set</code></p>
 </div>
 </div>
 </div>

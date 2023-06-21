@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Guide to user defined commands :: Spring CLI</title>
-    <link rel="prev" href="ai-guide.html">
-    <link rel="next" href="action-file-overview.html">
+    <title>Roles :: Spring CLI</title>
+    <link rel="prev" href="action-guide.html">
+    <link rel="next" href="special-commands-guide.html">
     <meta name="generator" content="Antora 3.0.0">
     <script>
 !function (theme, navWidth) {
@@ -275,7 +275,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="ai-guide.html">Using to "ai commands"</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="user-command-guide.html">User defined commands</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -284,7 +284,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="action-guide.html">Guide to Action Files</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="roles-guide.html">Guide to Roles</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -430,426 +430,118 @@
   <div class="content">
     <div
       class="toc"
-      data-title="Guide to user defined commands"
+      data-title="Roles"
       data-levels="2"
     >
       <div class="toc-menu"></div>
     </div>
-      <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/user-command-guide.adoc">Edit this Page</a></div>
+      <div class="edit-this-page"><a href="https://github.com/spring-projects-experimental/spring-cli/edit/main/docs/modules/ROOT/pages/roles-guide.adoc">Edit this Page</a></div>
       </div>
 </aside><div class="doc">
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">spring-cli</a></li>
-    <li><a href="user-command-guide.html">User defined commands</a></li>
+    <li><a href="roles-guide.html">Guide to Roles</a></li>
   </ul>
 </nav>
 <article>
-<h1 id="page-title" class="page">Guide to user defined commands</h1>
+<h1 id="page-title" class="page">Roles</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>User defined commands let you add custom commands to the Spring CLI.
-The directory structure commands represents the command and sub-command that are introduced into the shell.</p>
+<p>Roles provide a way to organize and reuse variables across user-defined commands.</p>
 </div>
 <div class="paragraph">
-<p>For example, the directory structure of <code>controller\new</code> translates to the command <code>controller new</code> in the CLI.</p>
+<p>By default, the Spring CLI includes an unnamed role that is always available. If no specific role is specified, commands will use the default role.</p>
 </div>
 <div class="paragraph">
-<p>The files located in the sub-command directory are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>A file named <code>command.yaml</code> that describes the command and its arguments.</p>
-</li>
-<li>
-<p>One or more Action Files that describe the actions to take to add code or configuration to the project.</p>
-</li>
-</ul>
+<p>To further customize and differentiate roles, you can associate them with specific names. These named roles are stored as YAML files within the <code>.spring/roles</code> directory, located alongside the <code>.spring/commands</code> directory.</p>
 </div>
 <div class="paragraph">
-<p>User defined commands are registered with the CLI using the command</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">command add --from &lt;repository-url&gt;</code></pre>
-</div>
+<p>Roles enable you to define variables that can be accessed in an Action File using Handlebars, allowing you to share data between commands.</p>
 </div>
 <div class="paragraph">
-<p>The contents of that repository are copied into your existing project.</p>
-</div>
-<div class="paragraph">
-<p>As an example, look at the contents of the repository <a href="https://github.com/rd-1-2022/udc-spring-controller" class="bare">https://github.com/rd-1-2022/udc-spring-controller</a></p>
+<p>Furthermore, roles can be utilized to supply values for command line options. If a command line option doesn&#8217;t have a specified value, and there exists a role variable with the same name as the command option, the command will automatically use the value of the role variable for that specific option.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_structure"><a class="anchor" href="#_structure"></a>Structure</h2>
+<h2 id="_file_structure"><a class="anchor" href="#_file_structure"></a>File Structure</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The directory structure for all user defined commands are under the path</p>
+<p>For each role, a corresponding file in created in the <code>.spring/roles</code> directory.
+For example, if there is a <code>qa</code> and <code>prod</code> role, the directory would look like the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">.spring/commands</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ tree .spring/roles/ -lr
+.spring/roles/
+├── vars.yml
+├── vars-qa.yml
+└── vars-prod.yml</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>So for the user defined command <code>controller new</code> mentioned previously, the full directory structure where the command description file and action files are located would be</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">.spring/commands/controller/new</code></pre>
-</div>
+<p>The <code>vars.yml</code> file is used for the default role.</p>
 </div>
 <div class="paragraph">
-<p>Inside this directory you can define
-  * The file <code>command.yaml</code> that describes what the command does and the arguments of the command
-  * One or more Action Files that define the actions to execute for this command.</p>
-</div>
-<div class="paragraph">
-<p>For example, the directory contents of the repository <a href="https://github.com/rd-1-2022/udc-spring-controller" class="bare">https://github.com/rd-1-2022/udc-spring-controller</a> are</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">.
-├── README.adoc
-└── .spring
-    └── commands
-        └── controller
-            └── new
-                ├── command.yaml
-                ├── create-controller.yaml
-                └── RestController.java</code></pre>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_describing_the_command"><a class="anchor" href="#_describing_the_command"></a>Describing the command</h3>
-<div class="paragraph">
-<p>The contents of the <code>command.yaml</code> file for the <code>controller new</code> command mentioned previously is:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">command:
-  description: Generate a new Spring Controller
-  options:
-    #
-    - name: feature
-      description: name of the feature package
-      dataType: string
-      defaultValue: person
-      inputType: text
-      required: true</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The file contains a brief description of the command and an array of command line options.</p>
-</div>
-<div class="paragraph">
-<p>The <code>name</code> of the options is required.  The default <code>dataType</code> is <code>string</code></p>
-</div>
-<div class="paragraph">
-<p>The <code>dataType</code> can be <code>int</code>, <code>integer</code>, <code>bool</code>, <code>boolean</code>, <code>double</code>, <code>float</code>, <code>long</code>, <code>short</code>, and <code>string</code>.</p>
-</div>
-<div class="paragraph">
-<p>The CLI incorporates these commands at runtime and appear when asking for general help and the command help.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$spring help
-
-&lt;output truncated&gt;
-
-User-defined Commands
-       controller new: Generate a new Spring Controller</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ spring help controller new
-NAME
-       controller new - Generate a new Spring Controller
-
-SYNOPSIS
-       controller new --feature String
-
-OPTIONS
-       --feature String
-       name of the feature package
-       [Optional, default = person]</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_action_files"><a class="anchor" href="#_action_files"></a>Action Files</h3>
-<div class="paragraph">
-<p>Action files are structred similar to GitHub Action files.</p>
-</div>
-<div class="paragraph">
-<p>Acitons files can be named anything you like, the CLI will look for files with a <code>.yaml</code> or <code>.yml</code> file extension</p>
-</div>
-<div class="paragraph">
-<p>There can be as many action files as you need to accomplish a specific task.  The order of Action Files execution is depth first and alphabetical.</p>
-</div>
-<div class="paragraph">
-<p>Here is a very simple example</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">actions:
-  - generate:
-      to: hello.txt
-      text: Hello at {{now}} on {{os-name}}.</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This will generate the file <code>hello.txt</code>, if it does not already exist, in the current working directory.
-The template contents contains kebab-case variable names.</p>
-</div>
-<div class="paragraph">
-<p>The variables <code>user-name</code> and <code>os-name</code> come from Java system properties and are automatically registered with the template engine.
-The variable <code>now</code> is the value of <code>new java.util.Date()</code> when the command was executed.</p>
-</div>
-<div class="paragraph">
-<p>As a more realistic example to create Java code, the Action File named <code>Controller.java</code> in the repository <a href="https://github.com/rd-1-2022/udc-spring-controller" class="bare">https://github.com/rd-1-2022/udc-spring-controller</a> is shown below.  The <code>feature</code> variable is a command option</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Command File</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">command:
-  description: Generate a new Spring Controller
-  options:
-    #
-    - name: feature
-      description: name of the feature package
-      dataType: string
-      defaultValue: person
-      inputType: text</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Action File</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">actions:
-  - generate:
-      to: src/main/java/{{root-package-dir}}/{{feature}}/{{capitalizeFirst feature}}Controller.java
-      from: RestController.java</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Templated Java File</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The file <code>RestController.java</code> is a templated text file shown below:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package {{root-package}}.{{feature}};
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-public class {{capitalizeFirst feature}}Controller {
-
-	@GetMapping("/{{feature}}")
-	public String greeting() {
-		return "Hello {{feature}}";
-	}
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>to:</code> field defines the location of the file to be generated.</p>
-</div>
-<div class="paragraph">
-<p>If the file to generate already exists, it will not be overwritten unless the additional field <code>overwrite:</code> at the same level of <code>generate</code> is added at the same level of the <code>to:</code> field.</p>
-</div>
-<div class="paragraph">
-<p>All command line arguments are passed to the template engine as variables, in this case the <code>feature</code> option.</p>
-</div>
-<div class="paragraph">
-<p>One of the useful built-in variables is <code>root-package-dir</code> which is the directory where the class containing the <code>@SpringApplication</code> annotation is located.</p>
-</div>
+<p>This structure follows a similar pattern to useing profile-specific Spring application configuration files.
+However, role variables do not exhibit the same behavior as Spring profiles, such as retrieving values from other locations in addition to the file (e.g. environment variables).</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_template_engine"><a class="anchor" href="#_template_engine"></a>Template Engine</h2>
+<h2 id="_quick_start"><a class="anchor" href="#_quick_start"></a>Quick Start</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The template engine is <a href="https://github.com/jknack/handlebars.java">Handlebars</a>.
-Several Handlebar helpers are registered by default</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://github.com/jknack/handlebars.java#string-helpers">StringHelpers</a></p>
-</li>
-<li>
-<p><a href="https://github.com/jknack/handlebars.java#humanize">HumanizeHelper</a></p>
-</li>
-<li>
-<p><a href="https://github.com/jknack/handlebars.java#conditional-helpers">Conditional Helpers</a></p>
-</li>
-</ul>
+<p>In this quick start, we&#8217;ll demonstrate how to add variables to the default role and use their values when generating a file.</p>
 </div>
 <div class="paragraph">
-<p>In the previous example, the template variable <code>{{capitalizeFirst feature}}</code> is an example of using a Handlebar helper</p>
-</div>
-<div class="paragraph">
-<p>Several system variables are exposed to the template engine by default.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>System.getProperties()</code> is available under <code>{{system-properties}}</code></p>
-</li>
-<li>
-<p><code>System.getenv()</code> is available under <code>{{system-environment}}</code></p>
-</li>
-<li>
-<p>The current time defined by <code>new Date().toString()</code> is available under <code>{{now}}</code></p>
-</li>
-<li>
-<p>The System Property <code>java.io.tmpdir</code> is available under <code>{{tmp-dir}}</code></p>
-</li>
-<li>
-<p>The System Property <code>file.separator</code> is available under <code>{{file-separator}}</code></p>
-</li>
-<li>
-<p>The System Property <code>os.name</code> is available under <code>{{os-name}}</code></p>
-</li>
-<li>
-<p>The System Property <code>user.name</code> is available under <code>{{user.name}}</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The Java package name where the Spring Boot main application class resides is available under <code>{{root-package}}</code></p>
-</div>
-<div class="paragraph">
-<p>The directory where the Spring Boot main applicaiton class resides is available under <code>{{root-package-dir}}</code></p>
-</div>
-<div class="paragraph">
-<p>The Maven model exposes several variables:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>{{artifact-id}}</code></p>
-</li>
-<li>
-<p><code>{{artifact-version}}</code></p>
-</li>
-<li>
-<p><code>{{artifact-path}}</code></p>
-</li>
-<li>
-<p><code>{{project-name}}</code></p>
-</li>
-<li>
-<p><code>{{project-descriptoin}}</code></p>
-</li>
-<li>
-<p><code>{{maven-model}</code> - This the class <a href="https://maven.apache.org/ref/3.9.0/maven-model/apidocs/org/apache/maven/model/Model.html">org.apache.maven.model.Model</a></p>
-</li>
-<li>
-<p><code>{{maven-properties}}</code> - This is a Java Properties object that has as keys, the values of what each entry in the POM&#8217;s <code>&lt;properties&gt;</code> section.</p>
-</li>
-<li>
-<p><code>{{java-version}}</code> - This looks for a Maven Property in the POM of the name <code>java.version</code>.  If it the value is <code>1.8</code>, it is converted to the value <code>8</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_creating_a_new_user_defined_command"><a class="anchor" href="#_creating_a_new_user_defined_command"></a>Creating a new user defined command</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A simple way to get started is to run the command</p>
+<p>Let&#8217;s being by setting the value of the role variable 'greeting' to 'Mondo':</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">spring command new hello create</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ spring role set --key greeting --value Mondo
+Key-value pair added to the default role</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This creates an user defined command named <code>hello</code> with the sub-command named <code>create</code>.</p>
+<p>The key-value pair is stored in the <code>./spring/roles/vars.yml</code> file under the root project directory</p>
 </div>
 <div class="paragraph">
-<p>You can view the full set of options for <code>spring command new</code> by executing <code>spring command new --help</code>.
-The output is shown below.</p>
+<p>To retrieve the value of the variable, use the following command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ spring command new --help
-NAME
-       command new - Create a new user-defined command
-
-SYNOPSIS
-       command new --commandName String --subCommandName String --path String --help
-
-OPTIONS
-       --commandName String
-       The name of the user-defined command to create
-       [Optional, default = hello]
-
-       --subCommandName String
-       The name of the user-defined sub-command to create
-       [Optional, default = new]
-
-       --path String
-       Path to execute command in
-       [Optional]
-
-       --help or -h
-       help for command new
-       [Optional]</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ spring role get --key greeting
+Mondo</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Executing <code>spring command new hello create</code> generates following directory structure and files as discussed previously.</p>
+<p>Let&#8217;s create another Role Variable:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">.
-├── README.adoc
-└── .spring
-    └── commands
-        └── hello
-            └── create
-                ├── command.yaml
-                └── hello.yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ spring role set --key language --value Italian
+Key-value pair added to the default role</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The contents of the <code>command.yaml</code> file is shown below.  It contains one command line argument, named <code>greeting</code></p>
+<p>Now, let&#8217;s incorporate these variables into a User Defined Command.
+Create a user-defined command named  <code>hello say</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">command:
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ spring command new --command-name hello --sub-command-name say
+Created user defined command /home/mark/testing-spring-cli/roles/myapp/.spring/commands/hello/say</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Inside the <code>.spring/commands/hello/say</code> direcotry, you&#8217;ll find the <code>command.yaml</code> with the following contents:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">command:
   description: Generate a new file with a hello message
   options:
     #
@@ -857,51 +549,186 @@ OPTIONS
       description: who or what to say hello to
       dataType: string
       defaultValue: World
-      inputType: text     # TEXT</code></pre>
+      inputType: text</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>And the action file <code>hello.yaml</code> is shown below.  It generates the file named <code>hello.txt</code></p>
+<p>Note that the Command Line Option name is <code>greeting</code>, which matches the name of the Role Variable we created.</p>
+</div>
+<div class="paragraph">
+<p>Within the <code>.spring/commands/hello/say</code> directory, there is the Action File <code>hello.yaml</code> with the following contents:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">actions:
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">actions:
   - generate:
       to: hello.txt
-      text: Hello {{greeting}} at {{now}} on {{os-name}}.</code></pre>
+      text: Hello {{greeting}} on {{os-name}}.</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The command is listed under the heading <code>User-defined Commands</code> when executing the command <code>spring help</code>.</p>
+<p>Update the file to include:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">...
-User-defined Commands
-       hello create: Generate a new file with a hello message</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">actions:
+  - generate:
+      to: hello.txt
+      text: Hello {{greeting}} on {{os-name}}. {{#if language}} {{language}} {{/if}}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Executing the command <code>spring hello create</code> generates the file hello.txt with the following contents:</p>
+<p>When executing the command without passing the <code>greeting</code> Command Line Option, the value of <code>greeting</code> will be obtained from the Role Variable with the same name instead of using the default value of <code>World</code>.</p>
+</div>
+<div class="paragraph">
+<p>Additionally, since we have defined the Role Variable language, we can test its existence and include its value in the output. Note that language is not a command line option.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">Hello World at Mar 9, 2023 on Linux.</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ spring hello say
+Using Role variable instead of default command line option for key = greeting , value = Mondo from the default role
+Generated /home/mark/testing-spring-cli/roles/myapp/hello.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The generated file contains:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Hello Mondo on Linux.  Italian</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The value of <code>{{greeting}}</code> comes from the Role Variable because it was not provided as a command line option.</p>
+</div>
+<div class="paragraph">
+<p>The <code>{{language}}</code> variable was not a command line option, but it is is available to use with Handlebars expressions.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s remove the generated file, in the interactive shell run <code>. ! rm hello.txt</code>, and pass in the <code>greeting</code> command line option.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ spring hello say --greeting amico</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The generated file contains:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Hello amico on Linux.  Italian</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_learning_more"><a class="anchor" href="#_learning_more"></a>Learning more</h2>
+<h2 id="_setting_variables"><a class="anchor" href="#_setting_variables"></a>Setting variables</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The section <a href="action-file-overview.html" class="xref page">Action Guide</a> describes all the options available for you to use in Action Files to add or modify code and configuration to a project.</p>
+<p>To set a value for a Role Variable, use the <code>spring role set</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">spring role set --key greeting --value Mondo</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can optionally specify the role using the <code>--role</code> option.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_getting_variables"><a class="anchor" href="#_getting_variables"></a>Getting variables</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To retrieve the value of a Role Variable, use the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">spring role get --key greeting</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can optionally specify the role using the --role option.</p>
+</div>
+<div class="paragraph">
+<p>The Role Variable greeting can then be accessed inside Action files that utilize Handlebars templating. Refer to the quick start section for an example.</p>
+</div>
+<div class="paragraph">
+<p>The Role Variable is also used to match against User Defined Command option names. If a value is not explicitly provided as a command line option, the value of the Role Variable will be used.</p>
+</div>
+<div class="paragraph">
+<p>You can also use the special command <code>. !</code> to view the full contents of the file that contains Role Variables when you are in the interactive shell:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">spring:&gt;. ! cat .spring/roles/vars.yml
+greeting: mondo</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_adding_a_role"><a class="anchor" href="#_adding_a_role"></a>Adding a Role</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To add a role, use the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">spring role add qa</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This crates a role named <code>qa</code>.</p>
+</div>
+<div class="paragraph">
+<p>A file named  <code>./spring/roles/vars-qa.yml</code> is created under the root project directory.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_listing_roles"><a class="anchor" href="#_listing_roles"></a>Listing Roles</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To list the available roles, use the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">spring role list</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will display th elist of roles:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">┌────┐
+│Name│
+├────┤
+│qa  │
+└────┘</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_removing_a_role"><a class="anchor" href="#_removing_a_role"></a>Removing a Role</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To remove a role, use the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">spring role remove qa</code></pre>
+</div>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="ai-guide.html">Using to "ai commands"</a></span>
-  <span class="next"><a href="action-file-overview.html">Overview of Action Files</a></span>
+  <span class="prev"><a href="action-guide.html">Guide to Action Files</a></span>
+  <span class="next"><a href="special-commands-guide.html">Guide to Special commands</a></span>
 </nav>
 </article>
 </div>  </div>
