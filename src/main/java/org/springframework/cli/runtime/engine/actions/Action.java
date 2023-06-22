@@ -28,7 +28,9 @@ import org.springframework.lang.Nullable;
  */
 public class Action {
 
-	// These are the three general purpose actions
+
+	@Nullable
+	private String ifExpression;
 
 	/**
 	 * Where to generate the template, relative to the {@code destinationDirectory}. May
@@ -43,10 +45,8 @@ public class Action {
 	@Nullable
 	private Exec exec;
 
-
-	// TODO These actions are 'recipes' and should be extracted into a more formal recipe section
-	//      They were implemented before the likes of open-rewrite had this functionality, it is
-	//		expected that we will migrate this functionality to be based on open-rewrite
+	@Nullable
+	private Vars vars;
 
 	@Nullable
 	private InjectMavenDependency injectMavenDependency;
@@ -64,22 +64,31 @@ public class Action {
 	private final InjectProperties injectProperties;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	Action(@JsonProperty("generate") @Nullable Generate generate,
+	Action(@JsonProperty("if") @Nullable String ifExpression,
+			@JsonProperty("generate") @Nullable Generate generate,
 			@JsonProperty("exec") @Nullable Exec exec,
+			@JsonProperty("vars") @Nullable Vars vars,
 			@JsonProperty("inject-maven-dependency") @Nullable InjectMavenDependency injectMavenDependency,
 			@JsonProperty("inject-maven-dependency-management") @Nullable InjectMavenDependencyManagement injectMavenDependencyManagement,
 			@JsonProperty("inject-maven-repository") @Nullable InjectMavenRepository injectMavenRepository,
 			@JsonProperty("inject-maven-build-plugin") @Nullable InjectMavenBuildPlugin injectMavenBuildPlugin,
 			@JsonProperty("inject-properties") @Nullable InjectProperties injectProperties,
 			@JsonProperty("inject") @Nullable Inject inject) {
+		this.ifExpression = ifExpression;
 		this.generate = generate;
 		this.exec = exec;
+		this.vars = vars;
 		this.injectMavenDependency = injectMavenDependency;
 		this.injectMavenDependencyManagement = injectMavenDependencyManagement;
 		this.injectMavenRepository = injectMavenRepository;
 		this.injectMavenBuildPlugin = injectMavenBuildPlugin;
 		this.injectProperties = injectProperties;
 		this.inject = inject;
+	}
+
+	@Nullable
+	public String getIfExpression() {
+		return ifExpression;
 	}
 
 	@Nullable
@@ -90,6 +99,11 @@ public class Action {
 	@Nullable
 	public Exec getExec() {
 		return exec;
+	}
+
+	@Nullable
+	public Vars getVars() {
+		return vars;
 	}
 
 	@Nullable
@@ -131,9 +145,11 @@ public class Action {
 	@Override
 	public String toString() {
 		return "Action{" +
-				"generate=" + generate +
+				"if='" + ifExpression + '\'' +
+				", generate=" + generate +
 				", inject=" + inject +
 				", exec=" + exec +
+				", vars=" + vars +
 				", injectMavenDependency=" + injectMavenDependency +
 				", injectMavenDependencyManagement=" + injectMavenDependencyManagement +
 				", injectMavenRepository=" + injectMavenRepository +

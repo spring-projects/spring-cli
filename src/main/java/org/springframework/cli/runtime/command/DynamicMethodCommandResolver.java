@@ -24,13 +24,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Map.Entry;
 
+import org.jline.terminal.Terminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.command.CommandRegistration.BuilderSupplier;
 import org.springframework.shell.command.CommandResolver;
 import org.springframework.shell.command.CommandRegistration.OptionSpec;
 import org.springframework.util.StringUtils;
@@ -54,12 +57,15 @@ public class DynamicMethodCommandResolver implements CommandResolver {
 
 	private final TerminalMessage terminalMessage;
 
+	private final ObjectProvider<Terminal> terminalProvider;
+
 	public DynamicMethodCommandResolver(Collection<ModelPopulator> modelPopulators,
-			CommandRegistration.BuilderSupplier builder,
-			TerminalMessage terminalMessage) {
+			BuilderSupplier builder,
+			TerminalMessage terminalMessage, ObjectProvider<Terminal> terminalProvider) {
 		this.modelPopulators = modelPopulators;
 		this.builder = builder;
 		this.terminalMessage = terminalMessage;
+		this.terminalProvider = terminalProvider;
 	}
 
 	@Override
@@ -91,7 +97,13 @@ public class DynamicMethodCommandResolver implements CommandResolver {
 			for (Command subCommand : subCommandList) {
 				String subCommandName = subCommand.getName();
 
-				DynamicCommand dynamicCommand = new DynamicCommand(commandName, subCommandName, modelPopulators, terminalMessage);
+				Optional<Terminal> terminalOptional;
+				if (terminalProvider != null) {
+					terminalOptional = Optional.of(terminalProvider.getObject());
+				} else {
+					terminalOptional = Optional.empty();
+				}
+				DynamicCommand dynamicCommand = new DynamicCommand(commandName, subCommandName, modelPopulators, terminalMessage, terminalOptional);
 
 				CommandRegistration.Builder builder = builderSupplier.get()
 					.command(commandName + " " + subCommandName)

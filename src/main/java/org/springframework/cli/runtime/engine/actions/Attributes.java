@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 package org.springframework.cli.runtime.engine.actions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -21,47 +22,54 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.lang.Nullable;
 
-/**
- * Subsection of the `Exec` action that specifies a model variable to define as the
- * result of executing the command.
- * The expectation is that the result of executing the command is a JSON object, so
- * a JSON-Path is specified to parse our the variable value.
- */
-public class Define {
+public class Attributes {
 
-	/**
-	 * The name of the model variable to define
-	 */
 	@Nullable
-	private final String name;
+	private String defaultValue;
 
-	/**
-	 * The Json-path expression to use to specify the value of the model variable
-	 */
 	@Nullable
-	private final String jsonPath;
+	private String maskCharacter;
+
+	private boolean multiple;
+
+	private boolean confirmation;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	Define(@JsonProperty("name") String name, @JsonProperty("jsonPath") String jsonPath) {
-		this.name = name;
-		this.jsonPath = jsonPath;
+	public Attributes(@JsonProperty("default-value") String defaultValue,
+			@JsonProperty("mask-character") String maskCharacter,
+			@JsonProperty("multiple") boolean multiple,
+			@JsonProperty("confirmation") boolean confirmation) {
+		this.defaultValue = defaultValue;
+		this.maskCharacter = maskCharacter;
+		this.multiple = multiple;
+		this.confirmation = confirmation;
 	}
 
 	@Nullable
-	public String getName() {
-		return name;
+	public String getDefaultValue() {
+		return defaultValue;
 	}
 
 	@Nullable
-	public String getJsonPath() {
-		return jsonPath;
+	public String getMaskCharacter() {
+		return maskCharacter;
+	}
+
+	public boolean isMultiple() {
+		return multiple;
+	}
+
+	public boolean isConfirmation() {
+		return confirmation;
 	}
 
 	@Override
 	public String toString() {
-		return "Define{" +
-				"name='" + name + '\'' +
-				", jsonPath='" + jsonPath + '\'' +
+		return "Attributes{" +
+				"defaultValue='" + defaultValue + '\'' +
+				", maskCharacter='" + maskCharacter + '\'' +
+				", multiple=" + multiple +
+				", confirmation=" + confirmation +
 				'}';
 	}
 }

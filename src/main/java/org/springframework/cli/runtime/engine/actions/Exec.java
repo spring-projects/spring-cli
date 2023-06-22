@@ -50,29 +50,35 @@ public class Exec {
 	/**
 	 * The command to run/execute.
 	 */
+	@Nullable
 	private String command;
 
+	@Nullable
 	private String commandFile;
 
 	/**
 	 * If set, the path (relative to the current engine working directory) to use as the
 	 * {@link ProcessBuilder#directory(File) working directory} of the running process.
 	 */
+	@Nullable
 	private final String dir;
 
-	private final Define define;
+	private final String jsonPath;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	public Exec(@JsonProperty("to") String to, @JsonProperty("command") String command,
+	public Exec(@JsonProperty("to") String to,
+			@JsonProperty("command") String command,
 			@JsonProperty("command-file") String commandFile,
+			//TODO change to "error-to"
 			@JsonProperty("errto") String errto,
-			@JsonProperty("dir") String dir, @JsonProperty("define") Define define) {
+			@JsonProperty("dir") String dir,
+			@JsonProperty("json-path") String jsonPath) {
 		this.to = to;
 		this.command = command;
 		this.commandFile = commandFile;
 		this.errto = errto;
 		this.dir = Objects.requireNonNullElse(dir, "");
-		this.define = define;
+		this.jsonPath = jsonPath;
 	}
 
 	@Nullable
@@ -84,6 +90,7 @@ public class Exec {
 		return command;
 	}
 
+	@Nullable
 	public String getCommandFile() {
 		return commandFile;
 	}
@@ -97,8 +104,9 @@ public class Exec {
 		return dir;
 	}
 
-	public Define getDefine() {
-		return define;
+	@Nullable
+	public String getJsonPath() {
+		return jsonPath;
 	}
 
 	@Override
@@ -110,7 +118,7 @@ public class Exec {
 				", command='" + command + '\'' +
 				", commandFile='" + commandFile + '\'' +
 				", dir='" + dir + '\'' +
-				", define=" + define +
+				", jsonPath='" + jsonPath + '\'' +
 				'}';
 	}
 }

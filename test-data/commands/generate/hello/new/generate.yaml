@@ -1,0 +1,4 @@
+actions:
+  - generate:
+      to: hello.txt
+      text: "Hello {{greeting}} with Java {{java-version}} Root package {{root-package-dir}} Temp dir {{tmp-dir}}"

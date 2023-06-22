@@ -199,52 +199,6 @@ The template engine variable `tmp-dir` is defined by default and is the value of
 
 TBD
 
-=== Executing Programs and Defining Variables
-To define a new variable in the Handlebars template engine model, you can execute a program and utilize its output.
-The `define:` section within the `exec` action enables you to achieve this functionality.
-
-=== Using Raw Output
-Consider the following example:
-
-```yaml
-actions:
-  - exec:
-      command: echo 'from echo'
-      define:
-        name: message
-  - generate:
-      to:  hello.txt
-      text: Hello {{message}}
-```
-
-In this example, the output from the `echo` command, which is `from echo`, is assigned to the Handlebars template variable `message`.
-In the next action, the template variable `message` is utilized to generate the file `hello.txt` with the contents `Hello from echo`.
-
-=== Processing using JSON Path
-
-By including the `jsonPath:` key, you can define a JSON Path expression to select specific content from the JSON-formatted output.
-JSON is a common output format in many command line utilities.
-
-Here's is an example.
-
-```yml
-actions:
-  - exec:
-      command-file: echo-command.txt
-      define:
-        name: phone-type
-        jsonPath: $.phoneNumbers[:1].type
-```
-
-The contents of the `echo-command.txt` file are:
-
-```
-echo '{ "firstName": "John", "lastName": "doe", "age": 26, "address": { "streetAddress": "naist street", "city": "Nara", "postalCode": "630-0192" }, "phoneNumbers": [ { "type": "iPhone", "number": "0123-4567-8888" }, { "type": "home", "number": "0123-4567-8910" } ] }'
-```
-
-In this case, the variable named `phone-type` will be defined as the output from applying the https://github.com/json-path/JsonPath[JSON Path expression] to the command's output.
-Although a simple `echo` of JSON is used in this example, in a more practical scenario, it could be the output of a command line utility.
-
 == Inject Maven Dependency
 
 The `inject-maven-dependency` action is used to inject Maven dependency entries into your Maven pom.xml file.

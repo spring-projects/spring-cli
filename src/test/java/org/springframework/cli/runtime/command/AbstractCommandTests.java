@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
@@ -40,12 +41,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AbstractCommandTests {
 
 	public void runCommand(String noun, String verb, Map<String, Object> model, String commandLocation) throws IOException {
-		DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, Collections.emptyList(), TerminalMessage.noop());
+		DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, Collections.emptyList(), TerminalMessage.noop(), Optional.empty());
 		dynamicCommand.runCommand(Paths.get(commandLocation), ".spring", "commands", model);
 	}
 
 	public void runCommand(String noun, String verb, Map<String, Object> model, List<ModelPopulator> modelPopulators, String commandLocation) throws IOException {
-		DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, modelPopulators, TerminalMessage.noop());
+		DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, modelPopulators, TerminalMessage.noop(), Optional.empty());
 		dynamicCommand.runCommand(Paths.get(commandLocation), ".spring", "commands", model);
 	}
 
@@ -70,7 +71,7 @@ public class AbstractCommandTests {
 		Files.copy(fileToInject, backupFile, StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 
 		try {
-			DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, Collections.emptyList(), TerminalMessage.noop());
+			DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, Collections.emptyList(), TerminalMessage.noop(), Optional.empty());
 			dynamicCommand.runCommand(Paths.get(commandLocation), null, null, model);
 			List<String> expectedLines = Files.readAllLines(expectedFile);
 			List<String> actualLines = Files.readAllLines(fileToInject);

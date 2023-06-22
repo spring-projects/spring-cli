@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
+
+import org.jline.terminal.Terminal;
 
 import org.springframework.cli.runtime.command.DynamicCommand;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
@@ -36,6 +39,7 @@ import org.springframework.core.io.Resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
 
 public class CommandRunner {
 
@@ -48,6 +52,8 @@ public class CommandRunner {
 	private final String executeCommand;
 	private final List<Map.Entry<String, String>> arguments;
 
+	private final Terminal terminal;
+
 	private CommandRunner(Builder builder) {
 		this.context = builder.context;
 		this.projectName = builder.projectName;
@@ -55,6 +61,7 @@ public class CommandRunner {
 		this.commandGroup = builder.commandGroup;
 		this.executeCommand = builder.executeCommand;
 		this.arguments = builder.arguments;
+		this.terminal = builder.terminal;
 	}
 
 	public void run() {
@@ -63,7 +70,7 @@ public class CommandRunner {
 			String[] commandAndSubCommand = executeCommand.split("\\/");
 			Map<String, ModelPopulator> modelPopulatorMap = context.getBeansOfType(ModelPopulator.class);
 			DynamicCommand dynamicCommand = new DynamicCommand(commandAndSubCommand[0], commandAndSubCommand[1],
-					new ArrayList<>(modelPopulatorMap.values()), TerminalMessage.noop());
+					new ArrayList<>(modelPopulatorMap.values()), TerminalMessage.noop(), Optional.of(this.terminal));
 
 			Map<String, Object> model = new HashMap<>();
 			for (Entry<String, String> argument : arguments) {
@@ -96,6 +103,9 @@ public class CommandRunner {
 		private Path commandGroupPath;
 
 		private String executeCommand;
+
+		private Terminal terminal = mock(Terminal.class);
+
 		private List<Map.Entry<String, String>> arguments = new ArrayList<>();
 
 		public Builder(ApplicationContext context) {
@@ -137,6 +147,11 @@ public class CommandRunner {
 			assertThat(commandAndSubCommand)
 					.withFailMessage("The command must be of the form 'command/subcommand'. Actual value = '" + command + "'")
 					.hasSize(2);
+			return this;
+		}
+
+		public Builder withTerminal(Terminal terminal) {
+			this.terminal = Objects.requireNonNull(terminal);
 			return this;
 		}
 

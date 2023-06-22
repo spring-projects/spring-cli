@@ -1,0 +1,5 @@
+actions:
+  - if: "#{  (['functions'].runFile('echo-command.txt')).contains( 'John' )  }"
+    vars:
+      data:
+        name: "John is present in the output"

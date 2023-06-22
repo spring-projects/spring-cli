@@ -20,13 +20,13 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.model.SystemModelPopulator;
-import org.springframework.cli.util.SpringCliTerminal;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.CommandRegistration;
 
@@ -74,7 +74,7 @@ class DynamicMethodCommandResolverTests {
 		List<ModelPopulator> modelPopulators = new ArrayList<>();
 		modelPopulators.add(systemModelPopulator);
 		DynamicMethodCommandResolver resolver = new DynamicMethodCommandResolver(modelPopulators,
-				() -> CommandRegistration.builder(), TerminalMessage.noop());
+				() -> CommandRegistration.builder(), TerminalMessage.noop(), null);
 		// Move to mock scan so that we control results
 		DynamicMethodCommandResolver spy = Mockito.spy(resolver);
 		Mockito.when(spy.scanCommands()).thenReturn(commandScanResults);

@@ -17,8 +17,12 @@
 
 package org.springframework.cli.util;
 
+import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class JavaUtils {
 	public static int getJavaVersion(String javaVersionString) {
@@ -35,6 +39,15 @@ public class JavaUtils {
 			return true;
 		} catch (InvalidPathException e) {
 			return false;
+		}
+	}
+
+	public static Object inferType(Object value) {
+		ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
+		try {
+			return objectMapper.readValue(value.toString(), Object.class);
+		} catch (IOException e) {
+			return value.toString();
 		}
 	}
 }

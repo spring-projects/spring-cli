@@ -1,0 +1,11 @@
+actions:
+  - vars:
+      questions:
+        - question:
+          name: resource-group
+          label: Select a resource group.
+          type: dropdown
+          options:
+            exec:
+              command: az group list
+              json-path: $[*].name

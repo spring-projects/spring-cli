@@ -1,0 +1,11 @@
+actions:
+  - vars:
+      questions:
+        - question:
+          name: phone-number
+          label: Select a Phone Number
+          type: dropdown
+          options:
+            exec:
+              command-file: echo-command.txt
+              json-path: $.phoneNumbers[*].number

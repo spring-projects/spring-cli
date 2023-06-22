@@ -1,0 +1,15 @@
+actions:
+  - if: "#{ ['name'] == null }"
+    vars:
+      data:
+        name: John
+  - if: "#{ ['name'] == 'John' }"
+    vars:
+      data:
+        middle-name: Sam   # middle-name will be set as a variable
+  - if: "#{ ['name'] != 'John' }"
+    vars:
+      data:
+        last-name: Park  # last-name will NOT be set as a variable
+
+

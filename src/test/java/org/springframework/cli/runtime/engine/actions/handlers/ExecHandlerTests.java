@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
@@ -65,7 +66,7 @@ public class ExecHandlerTests {
 	}
 
 	@Test
-	@DisabledOnOs(OS.WINDOWS)
+	@Disabled
 	void testDefineVarUsingExecOutput(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir,
 			@TempDir(cleanup = CleanupMode.ALWAYS) Path tempPath) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
@@ -85,7 +86,7 @@ public class ExecHandlerTests {
 	}
 
 	@Test
-	@DisabledOnOs(OS.WINDOWS)
+	@Disabled
 	void testDefineVarUsingJsonPath(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir,
 			@TempDir(cleanup = CleanupMode.ALWAYS) Path tempPath) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
@@ -110,7 +111,7 @@ public class ExecHandlerTests {
 			@TempDir(cleanup = CleanupMode.ALWAYS) Path tempPath) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-			Path outputPath = tempPath.resolve("result");
+			Path outputPath = tempPath.resolve("result.txt");
 			Path commandPath = Path.of("test-data")
 					.resolve("commands").resolve("exec-redirect")
 					.resolve("working").resolve("dir");

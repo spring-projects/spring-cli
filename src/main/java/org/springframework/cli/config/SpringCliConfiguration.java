@@ -21,6 +21,7 @@ import java.util.Collection;
 import io.netty.resolver.DefaultAddressResolverGroup;
 import org.jline.terminal.Terminal;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactorNettyHttpClientMapper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cli.initializr.InitializrClientCache;
@@ -80,8 +81,8 @@ public class SpringCliConfiguration {
 
 	@Bean
 	public DynamicMethodCommandResolver dynamicMethodTargetRegistrar(Collection<ModelPopulator> modelPopulators,
-			CommandRegistration.BuilderSupplier builder, TerminalMessage terminalMessage) {
-		return new DynamicMethodCommandResolver(modelPopulators, builder, terminalMessage);
+			CommandRegistration.BuilderSupplier builder, TerminalMessage terminalMessage, ObjectProvider<Terminal> terminalProvider) {
+		return new DynamicMethodCommandResolver(modelPopulators, builder, terminalMessage, terminalProvider);
 	}
 
     @Bean

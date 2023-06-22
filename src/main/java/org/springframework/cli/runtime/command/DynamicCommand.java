@@ -28,13 +28,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import org.apache.maven.model.Model;
+import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.slf4j.Logger;
@@ -53,6 +52,8 @@ import org.springframework.cli.runtime.engine.actions.InjectMavenBuildPlugin;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependencyManagement;
 import org.springframework.cli.runtime.engine.actions.InjectMavenRepository;
+import org.springframework.cli.runtime.engine.actions.Vars;
+import org.springframework.cli.runtime.engine.actions.handlers.VarsActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.ExecActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.GenerateActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.InjectActionHandler;
@@ -61,6 +62,8 @@ import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenDepend
 import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenDependencyManagementActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenRepositoryActionHandler;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
+import org.springframework.cli.runtime.engine.spel.SpelFunctions;
+import org.springframework.cli.runtime.engine.spel.SpELCondition;
 import org.springframework.cli.runtime.engine.templating.HandlebarsTemplateEngine;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
 import org.springframework.cli.util.IoUtils;
@@ -69,8 +72,6 @@ import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.CommandContext;
 import org.springframework.shell.command.CommandParser.CommandParserResult;
 import org.springframework.util.StringUtils;
-
-import static org.springframework.cli.runtime.engine.model.MavenModelPopulator.MAVEN_MODEL;
 
 /**
  * Object that is registered and executed for all dynamic commands discovered
@@ -90,13 +91,18 @@ public class DynamicCommand {
 
 	private final TemplateEngine templateEngine;
 
+	private final Optional<Terminal> terminalOptional;
 
-	public DynamicCommand(String commandName, String subCommandName, Iterable<ModelPopulator> modelPopulators, TerminalMessage terminalMessage) {
+	public DynamicCommand(String commandName, String subCommandName,
+			Iterable<ModelPopulator> modelPopulators,
+			TerminalMessage terminalMessage,
+			Optional<Terminal> terminalOptional) {
 		this.commandName = commandName;
 		this.subCommandName = subCommandName;
 		this.modelPopulators = modelPopulators;
 		this.terminalMessage = terminalMessage;
 		this.templateEngine = new HandlebarsTemplateEngine();
+		this.terminalOptional = terminalOptional;
 	}
 
 	/**
@@ -119,6 +125,17 @@ public class DynamicCommand {
 			model.put(kebabOption, commandParserResult.value().toString());
 		}
 	}
+
+	/**
+	 * Adds to the model, values from the vars-{role}.yml file.
+	 * If any command line argument values were not explicitly passed in but are present
+	 * in the vars-{role}.yml file, the key-value pair will be present in the model available to actions.
+	 * If the command line argument was explicitly passed in and also present in the
+	 * vars-{role}.yml file, the key-value pair that was explicitly passed in is used and not
+	 * the key-value pair from the vars-{role}.yml file.
+	 * @param model  The model available to actions
+	 * @param commandContext The context of what CLI arguments were passed in.
+	 */
 	private void addRoleVariables(Map<String, Object> model, CommandContext commandContext) {
 		RoleService roleService = new RoleService();
 		String role = "";
@@ -163,10 +180,8 @@ public class DynamicCommand {
 			if (variableName.equals(optionName)) {
 				Object defaultOptionValue = commandParserResult.option().getDefaultValue();
 				Object optionValue = commandParserResult.value();
-				if (defaultOptionValue != null && optionValue != null) {
-					if (defaultOptionValue.equals(optionValue)) {
+				if (defaultOptionValue != null && optionValue != null && defaultOptionValue.equals(optionValue) ) {
 						usedDefaultValue = true;
-					}
 				}
 			}
 		}
@@ -221,6 +236,29 @@ public class DynamicCommand {
 			}
 
 			for (Action action : actions) {
+
+				RoleService roleService = new RoleService(cwd);
+				// TODO load from default role for now, later a list of roles
+				Map<String, Object> varMap = roleService.loadAsMap("");
+				model.putAll(varMap);
+
+				String ifExpression = action.getIfExpression();
+				if (StringUtils.hasText(ifExpression)) {
+					// Prepare to execute expression evaluation
+					String ifExpressionToUse = this.templateEngine.process(ifExpression, model);
+					ExecActionHandler execActionHandler = new ExecActionHandler(templateEngine, model, dynamicSubCommandPath, this.terminalMessage);
+					model.put("functions", new SpelFunctions(execActionHandler, cwd));
+
+					SpELCondition condition = new SpELCondition(ifExpressionToUse);
+					boolean evaluationResult = condition.evaluate(model);
+					logger.debug("If Expression = " + ifExpression);
+					logger.debug("Evaluation Result " + evaluationResult);
+					if (!evaluationResult) {
+						logger.debug("Not execution action, evaluation result = false");
+						continue;
+					}
+				}
+
 				Generate generate = action.getGenerate();
 				if (generate != null) {
 					GenerateActionHandler generateActionHandler = new GenerateActionHandler(templateEngine, model, cwd, dynamicSubCommandPath, terminalMessage);
@@ -262,9 +300,15 @@ public class DynamicCommand {
 				Exec exec = action.getExec();
 				if (exec != null) {
 					ExecActionHandler execActionHandler = new ExecActionHandler(templateEngine, model, dynamicSubCommandPath, terminalMessage);
-					execActionHandler.executeShellCommand(exec);
+					Map<String, Object> outputs = new HashMap<>();
+					execActionHandler.executeShellCommand(exec, outputs);
 				}
 
+				Vars vars = action.getVars();
+				if (vars != null) {
+					VarsActionHandler varsActionHandler = new VarsActionHandler(templateEngine, model, cwd, dynamicSubCommandPath, terminalMessage, terminalOptional.get());
+					varsActionHandler.execute(vars);
+				}
 			}
 		}
 
@@ -281,9 +325,10 @@ public class DynamicCommand {
 		}
 
 		// Then actually parse, retaining only those paths that yielded a result
+		ActionFileReader actionFileReader = new ActionFileReader();
 		return visitor.getMatches().stream() //
-				.map((p) -> new SimpleImmutableEntry<>(p, ActionFileReader.read(p))) //
-				.filter((kv) -> kv.getValue().isPresent()) //
+				.map(p -> new SimpleImmutableEntry<>(p, actionFileReader.read(p))) //
+				.filter(kv -> kv.getValue().isPresent()) //
 				.collect(toSortedMap(Entry::getKey, (e) -> e.getValue().get()));
 	}
 

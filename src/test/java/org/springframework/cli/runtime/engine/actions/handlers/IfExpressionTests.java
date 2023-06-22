@@ -18,80 +18,78 @@
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import java.nio.file.Path;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.cli.roles.RoleService;
 import org.springframework.cli.support.CommandRunner;
 import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
 import org.springframework.cli.support.MockConfigurations.MockUserConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GenerateHandlerTests {
+class IfExpressionTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
-	void generateFileUsingModelPopulators(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
+	void testIfExpressionWithRunFile(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 			CommandRunner commandRunner = new CommandRunner.Builder(context)
 					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("generate")
-					.executeCommand("hello/new")
-					.withArguments("greeting", "World")  // TODO default values are not working in this test framework
+					.installCommandGroup("if")
+					.executeCommand("run/define")
 					.build();
 			commandRunner.run();
-			Path helloPath = workingDir.resolve("hello.txt");
-			assertThat(helloPath).exists();
-			String tempDir = System.getProperty("java.io.tmpdir");
-			String expectedContents = "Hello World with Java 8 Root package com/example/restservice Temp dir " + tempDir;
-			assertThat(helloPath.toFile()).hasContent(expectedContents);
-
 		});
 
+		RoleService roleService = new RoleService(workingDir);
+		Map<String, Object> map = roleService.loadAsMap("");
+		assertThat(map).containsEntry("name", "John is present in the output");
 	}
 
-	@Test
-	@DisabledOnOs(OS.WINDOWS)
-	void generateFromFile(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
-		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
+	@Test
+	void testIfExpressionsWithSpel(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
+		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 			CommandRunner commandRunner = new CommandRunner.Builder(context)
 					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("generate")
-					.executeCommand("controller/new")
-					.withArguments("feature", "person")
+					.installCommandGroup("if")
+					.executeCommand("vars/notdefined")
+					.withArguments("name", "mark")
 					.build();
 			commandRunner.run();
-			assertThat(workingDir).exists().isDirectory();
-			Path controllerPath = workingDir.resolve("src").resolve("main").resolve("java")
-					.resolve("com").resolve("example")
-					.resolve("restservice").resolve("person")
-					.resolve("PersonController.java");
-			assertThat(controllerPath).exists();
 
-			String expectedContents = "package com.example.restservice.person;\n"
-					+ "\n"
-					+ "import org.springframework.web.bind.annotation.GetMapping;\n"
-					+ "import org.springframework.web.bind.annotation.RestController;\n"
-					+ "\n"
-					+ "@RestController\n"
-					+ "public class PersonController {\n"
-					+ "\n"
-					+ "\t@GetMapping(\"/person\")\n"
-					+ "\tpublic String greeting() {\n"
-					+ "\t\treturn \"Hello person\";\n"
-					+ "\t}\n"
-					+ "}\n";
-			assertThat(controllerPath.toFile()).hasContent(expectedContents);
+			RoleService roleService = new RoleService(workingDir);
+			Map<String, Object> map = roleService.loadAsMap("");
+			assertThat(map).containsEntry("name", "mark");
+		});
+	}
 
 
+	@Test
+	void testIfExpressions(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
+		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
+			CommandRunner commandRunner = new CommandRunner.Builder(context)
+					.prepareProject("rest-service", workingDir)
+					.installCommandGroup("if")
+					.executeCommand("vars/define")
+					.build();
+			commandRunner.run();
+
+			RoleService roleService = new RoleService(workingDir);
+			Map<String, Object> map = roleService.loadAsMap("");
+
+			//map.forEach((key, value) -> System.out.println(key + " " + value));
+			assertThat(map)
+					.containsEntry("name", "John")
+					.containsEntry("middle-name", "Sam")
+					.doesNotContainKey("last-name");
 		});
 
 	}
