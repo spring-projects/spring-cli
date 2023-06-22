@@ -449,7 +449,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>There are two ways to add code to existing projects</p>
+<p>There are two methods for adding code to existing projects</p>
 </div>
 <div class="ulist">
 <ul>
@@ -457,31 +457,30 @@
 <p>Using the command <code>boot add</code></p>
 </li>
 <li>
-<p>Using user defined commands</p>
+<p>Using user-defined commands</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_overview_of_the_boot_add_command"><a class="anchor" href="#_overview_of_the_boot_add_command"></a>Overview of the boot add command</h2>
+<h2 id="_using_the_boot_add_command"><a class="anchor" href="#_using_the_boot_add_command"></a>Using the boot add command</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>boot add</code> command will intelligently merge an existing project into your current project.
-The code of the existing project is located in a source code repository.
-The existing project that is to be merged is checked out into a temporary directory and it&#8217;s package structure is refactored to match your current project.
-Then all code and configuration is copied over from the temporary location, creating new files or updating existing ones as needed.</p>
+<p>The boot add command allows for intelligent merging of an existing project into the current project.
+The code of the existing project, located in a source code repository, is checked out into a temporary directory.
+The package structure of the existing project is then refactored to match the current project.
+Finally, all code and configuration are copied from the temporary location, creating new files or updating existing ones as necessary.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_overview_of_user_defined_commands"><a class="anchor" href="#_overview_of_user_defined_commands"></a>Overview of user defined commands</h2>
+<h2 id="_using_user_defined_commands"><a class="anchor" href="#_using_user_defined_commands"></a>Using User-Defined commands</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can register user defined commands with the shell.
-Adding code or configuration to an existing project is done through the use of action files that contain instructions of what code or configuration is to be generated and how it is to be incorporated into the current project.
-The template engine is Handlebars and is used to model the contents of the code or configuration to be added to a new file or injected into an existing file.
-Actions can be conditionally executed and can also execute shell actions.</p>
+<p>User-defined commands can be registered with the shell. Adding code or configuration to an existing project is accomplished through action files that contain instructions on what code or configuration needs to be generated and how it should be incorporated into the current project.
+The template engine used is Handlebars, which models the content of the code or configuration to be added to a new file or injected into an existing file.
+In addition, actions can execute shell actions, modify the Maven pom.xml file, and perform other tasks as needed.</p>
 </div>
 </div>
 </div>
