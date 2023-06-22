@@ -1,21 +1,19 @@
 = Adding To Existing Projects
 
-There are two ways to add code to existing projects
+There are two methods for adding code to existing projects
 
 * Using the command `boot add`
-* Using user defined commands
+* Using user-defined commands
 
-== Overview of the boot add command
+== Using the boot add command
 
-The `boot add` command will intelligently merge an existing project into your current project.
-The code of the existing project is located in a source code repository.
-The existing project that is to be merged is checked out into a temporary directory and it's package structure is refactored to match your current project.
-Then all code and configuration is copied over from the temporary location, creating new files or updating existing ones as needed.
+The boot add command allows for intelligent merging of an existing project into the current project.
+The code of the existing project, located in a source code repository, is checked out into a temporary directory.
+The package structure of the existing project is then refactored to match the current project.
+Finally, all code and configuration are copied from the temporary location, creating new files or updating existing ones as necessary.
 
-== Overview of user defined commands
+== Using User-Defined commands
 
-You can register user defined commands with the shell.
-Adding code or configuration to an existing project is done through the use of action files that contain instructions of what code or configuration is to be generated and how it is to be incorporated into the current project.
-The template engine is Handlebars and is used to model the contents of the code or configuration to be added to a new file or injected into an existing file.
-Actions can be conditionally executed and can also execute shell actions.
-
+User-defined commands can be registered with the shell. Adding code or configuration to an existing project is accomplished through action files that contain instructions on what code or configuration needs to be generated and how it should be incorporated into the current project.
+The template engine used is Handlebars, which models the content of the code or configuration to be added to a new file or injected into an existing file.
+In addition, actions can execute shell actions, modify the Maven pom.xml file, and perform other tasks as needed.

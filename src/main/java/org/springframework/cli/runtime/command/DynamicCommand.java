@@ -46,7 +46,6 @@ import org.springframework.cli.runtime.engine.actions.Action;
 import org.springframework.cli.runtime.engine.actions.ActionFileReader;
 import org.springframework.cli.runtime.engine.actions.ActionFileVisitor;
 import org.springframework.cli.runtime.engine.actions.ActionsFile;
-import org.springframework.cli.runtime.engine.actions.Conditional;
 import org.springframework.cli.runtime.engine.actions.Exec;
 import org.springframework.cli.runtime.engine.actions.Generate;
 import org.springframework.cli.runtime.engine.actions.Inject;
@@ -213,10 +212,6 @@ public class DynamicCommand {
 			Path path = kv.getKey();
 			ActionsFile actionsFile = kv.getValue();
 
-			if (actionsFile.getConditional() != null) {
-				checkConditional(actionsFile.getConditional(), model);
-			}
-
 			List<Action> actions = actionsFile.getActions();
 			if (actions.isEmpty()) {
 				terminalMessage.print("No actions to execute in " + path.toAbsolutePath());
@@ -273,19 +268,6 @@ public class DynamicCommand {
 
 
 	}
-
-	private void checkConditional(Conditional conditional, Map<String, Object> model) {
-		Model mavenModel = (Model) model.get(MAVEN_MODEL);
-		String artifactId = conditional.getArtifactId();
-		if (StringUtils.hasText(artifactId) && mavenModel != null) {
-			boolean hasArtifactId = mavenModel.getDependencies().stream()
-					.anyMatch((dependency) -> dependency.getArtifactId().equalsIgnoreCase(artifactId.trim()));
-			if (!hasArtifactId) {
-				throw new SpringCliException("Conditional on artifact-id not satisfied.  Expected artifact-id " + artifactId.trim() + " but was not found.");
-			}
-		}
-	}
-
 	private Map<Path, ActionsFile> findCommandActionFiles(Path dynamicSubCommandPath) {
 		// Do a first pass to find only text files
 		final ActionFileVisitor visitor = new ActionFileVisitor();

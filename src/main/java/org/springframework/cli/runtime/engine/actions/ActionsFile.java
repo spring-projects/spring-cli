@@ -27,19 +27,11 @@ import org.springframework.lang.Nullable;
 
 public class ActionsFile {
 
-	private final Conditional conditional;
-
 	private final List<Action> actions;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	ActionsFile(@JsonProperty("actions") @Nullable List<Action> actions,
-			@JsonProperty("conditional") Conditional conditional) {
+	ActionsFile(@JsonProperty("actions") @Nullable List<Action> actions) {
 		this.actions = Objects.requireNonNull(actions);
-		this.conditional = Objects.requireNonNullElse(conditional, new Conditional());
-	}
-
-	public Conditional getConditional() {
-		return conditional;
 	}
 
 	public List<Action> getActions() {
@@ -49,8 +41,7 @@ public class ActionsFile {
 	@Override
 	public String toString() {
 		return "ActionsFile{" +
-				"conditional=" + conditional +
-				", actions=" + actions +
+				"actions=" + actions +
 				'}';
 	}
 }

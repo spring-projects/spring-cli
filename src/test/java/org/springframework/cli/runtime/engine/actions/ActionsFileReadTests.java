@@ -49,14 +49,6 @@ public class ActionsFileReadTests {
 //	}
 
 	@Test
-	void readConditional() throws JsonProcessingException {
-		ClassPathResource classPathResource = TestResourceUtils.qualifiedResource(getClass(), "actions.yaml");
-		ActionFileReader actionFileReader = new ActionFileReader();
-		ActionsFile actionsFile = actionFileReader.read(classPathResource);
-		assertThat(actionsFile.getConditional().getArtifactId()).isEqualTo("spring-cloud-azure-starter-jdbc-postgresql");
-	}
-
-	@Test
 	void readInjectMavenDep() {
 		ClassPathResource classPathResource = TestResourceUtils.qualifiedResource(getClass(), "inject-maven-deps.yaml");
 
