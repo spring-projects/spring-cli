@@ -147,7 +147,9 @@ public class DynamicCommand {
 				model.putIfAbsent(roleKey, roleValue);
 			}
 		} else {
-			this.terminalMessage.print("Properties file for role '" + role + "' does not exist.");
+			if (StringUtils.hasText(role)) {
+				this.terminalMessage.print("File for role '" + role + "' does not exist.  Create role using 'role add'");
+			}
 		}
 
 	}
