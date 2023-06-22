@@ -9,7 +9,7 @@ To add a project catalog use the `spring project-catalog add` command.
 
 In this example, we will register a sample catalog available at the URL https://github.com/rd-1-2022/sample-project-catalog
 
-Within that repository, there is a file named project-repositories.yml.
+Within that repository, there is a file named project-catalog.yml.
 This is the filename that the command searches for.
 If you wish to use your own URL location, make sure to adjust the contents accordingly.
 

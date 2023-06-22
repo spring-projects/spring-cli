@@ -84,6 +84,8 @@ public class ProjectCommands {
 	public Table projectList() {
 
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description",  "URL", "Catalog", "Tags" });
+
+		// Retrieve project that were registered using the `project add` command and stored locally
 		Collection<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
 		Stream<String[]> rows;
 		if (projectRepositories != null) {
@@ -99,12 +101,13 @@ public class ProjectCommands {
 		}
 		List<String[]> allRows = rows.collect(Collectors.toList());
 
+		// List projects that are contained in catalogs that the user had added using the `project-catalog add` command
 		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 		for (ProjectCatalog projectCatalog : projectCatalogs) {
 			String url = projectCatalog.getUrl();
 			Path path = sourceRepositoryService.retrieveRepositoryContents(url);
 			YamlConfigFile yamlConfigFile = new YamlConfigFile();
-			projectRepositories = yamlConfigFile.read(Paths.get(path.toString(),"project-repositories.yml"),
+			projectRepositories = yamlConfigFile.read(Paths.get(path.toString(),"project-catalog.yml"),
 					ProjectRepositories.class).getProjectRepositories();
 			Stream<String[]> fromCatalogRows;
 			if (projectRepositories != null) {

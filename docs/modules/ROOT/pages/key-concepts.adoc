@@ -16,7 +16,7 @@ The commands related to projects are `project list`, `project add` and `project 
 *Project Catalog*: The Project Catalog is a collection of projects that share a common theme.
 
 After registering a catalog with the CLI, the projects are readily available for the user when using the `boot new` and `boot add` commands.
-The catalog is a YAML file with the name `project-repositories.yaml`.
+The catalog is a YAML file with the name `project-catalog.yaml`.
 It contains a list of project repository URLs, and an associated name.
 The catalog is hosted on GitHub or GitLab
 
