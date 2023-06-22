@@ -469,13 +469,13 @@
 <h2 id="_file_structure"><a class="anchor" href="#_file_structure"></a>File Structure</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For each role, a corresponding file in created in the <code>.spring/roles</code> directory.
+<p>For each role, a corresponding file in created in the <code>.spring/roles/vars</code> directory.
 For example, if there is a <code>qa</code> and <code>prod</code> role, the directory would look like the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ tree .spring/roles/ -lr
-.spring/roles/
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ tree .spring/roles/vars -lr
+.spring/roles/vars
 ├── vars.yml
 ├── vars-qa.yml
 └── vars-prod.yml</code></pre>
@@ -506,7 +506,7 @@ Key-value pair added to the default role</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The key-value pair is stored in the <code>./spring/roles/vars.yml</code> file under the root project directory</p>
+<p>The key-value pair is stored in the <code>./spring/roles/vars/vars.yml</code> file under the root project directory</p>
 </div>
 <div class="paragraph">
 <p>To retrieve the value of the variable, use the following command:</p>
@@ -663,7 +663,7 @@ Generated /home/mark/testing-spring-cli/roles/myapp/hello.txt</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">spring:&gt;. ! cat .spring/roles/vars.yml
+<pre class="highlightjs highlight"><code class="language-none hljs">spring:&gt;. ! cat .spring/roles/vars/vars.yml
 greeting: mondo</code></pre>
 </div>
 </div>
@@ -684,7 +684,7 @@ greeting: mondo</code></pre>
 <p>This crates a role named <code>qa</code>.</p>
 </div>
 <div class="paragraph">
-<p>A file named  <code>./spring/roles/vars-qa.yml</code> is created under the root project directory.</p>
+<p>A file named  <code>./spring/roles/vars/vars-qa.yml</code> is created under the root project directory.</p>
 </div>
 </div>
 </div>
