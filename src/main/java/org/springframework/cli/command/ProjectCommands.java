@@ -90,8 +90,9 @@ public class ProjectCommands {
 		Stream<String[]> rows;
 		if (projectRepositories != null) {
 			rows = projectRepositories.stream()
-				.map(tr -> new String[] { tr.getName(), tr.getUrl(),
+				.map(tr -> new String[] { tr.getName(),
 						Objects.requireNonNullElse(tr.getDescription(), ""),
+						tr.getUrl(),
 						"",
 						(Objects.requireNonNullElse(tr.getTags(), "")).toString() }
 			);

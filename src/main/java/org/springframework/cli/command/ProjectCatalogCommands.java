@@ -141,7 +141,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 	@Command(command = "add", description = "Add a project to a project catalog")
 	public void catalogAdd(
 			@Option(description = "Catalog name", required = true) String name,
-			@Option(description = "Catalog url") String url,
+			@Option(description = "Catalog url", required = true) String url,
 			@Option(description = "Catalog description") String description,
 			@Option(description = "Project tags") List<String> tags
 	) {
