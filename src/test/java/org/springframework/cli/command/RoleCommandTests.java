@@ -55,7 +55,7 @@ public class RoleCommandTests {
 			// create key-value pair foo=bar in the default role
 			roleCommands.roleSet("foo", "bar", role);
 			Path varsFilePath = workingDir.resolve(".spring").resolve("roles")
-					.resolve("vars.yml");
+					.resolve("vars").resolve("vars.yml");
 			assertRoleContents(roleCommands, role, varsFilePath);
 			String expected = terminalMessage.getPrintMessages().get(0);
 			assertThat(expected).isEqualTo("Key-value pair added to the default role");
@@ -92,7 +92,8 @@ public class RoleCommandTests {
 			// Add Role
 			roleCommands.roleAdd(role);
 			Path varsFilePath = workingDir.resolve(".spring").resolve("roles")
-					.resolve("vars-qa.yml");
+					.resolve("vars").resolve("vars-qa.yml");
+
 			assertThat(varsFilePath).exists();
 			String expected = terminalMessage.getPrintMessages().get(0);
 			assertThat(expected).isEqualTo("Role 'qa' created.");

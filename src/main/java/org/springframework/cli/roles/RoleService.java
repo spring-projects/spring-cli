@@ -129,7 +129,7 @@ public class RoleService {
 		if (! IoUtils.inProjectRootDirectory(this.workingDirectory) ) {
 			throw new SpringCliException("You need to be in the root project directory to run 'role' commands.");
 		}
-		File directory = getRolesPath();
+		File directory = getRolesVarPath();
 		if (!directory.exists()) {
 			directory.mkdirs();
 		}
@@ -143,12 +143,12 @@ public class RoleService {
 		} else {
 			fileName = "vars.yml";
 		}
-		String filePath = getRolesPath() + File.separator + fileName;
+		String filePath = getRolesVarPath() + File.separator + fileName;
 		File propertiesFile = new File(filePath);
 		return propertiesFile;
 	}
 
-	public File getRolesPath() {
-		return this.workingDirectory.resolve(".spring/roles").toFile();
+	public File getRolesVarPath() {
+		return this.workingDirectory.resolve(".spring/roles/vars").toFile();
 	}
 }

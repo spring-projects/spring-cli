@@ -12,13 +12,13 @@ Furthermore, roles can be utilized to supply values for command line options. If
 
 == File Structure
 
-For each role, a corresponding file in created in the `.spring/roles` directory.
+For each role, a corresponding file in created in the `.spring/roles/vars` directory.
 For example, if there is a `qa` and `prod` role, the directory would look like the following:
 
 [source,bash]
 ----
-$ tree .spring/roles/ -lr
-.spring/roles/
+$ tree .spring/roles/vars -lr
+.spring/roles/vars
 ├── vars.yml
 ├── vars-qa.yml
 └── vars-prod.yml
@@ -42,7 +42,7 @@ $ spring role set --key greeting --value Mondo
 Key-value pair added to the default role
 ----
 
-The key-value pair is stored in the `./spring/roles/vars.yml` file under the root project directory
+The key-value pair is stored in the `./spring/roles/vars/vars.yml` file under the root project directory
 
 To retrieve the value of the variable, use the following command:
 
@@ -173,7 +173,7 @@ You can also use the special command `. !` to view the full contents of the file
 
 [source]
 ----
-spring:>. ! cat .spring/roles/vars.yml
+spring:>. ! cat .spring/roles/vars/vars.yml
 greeting: mondo
 ----
 
@@ -188,7 +188,7 @@ spring role add qa
 
 This crates a role named `qa`.
 
-A file named  `./spring/roles/vars-qa.yml` is created under the root project directory.
+A file named  `./spring/roles/vars/vars-qa.yml` is created under the root project directory.
 
 == Listing Roles
 
