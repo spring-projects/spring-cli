@@ -63,8 +63,8 @@ public class ProjectCommandsTests {
 			System.out.println("SHould have 1 entry");
 			System.out.println(table.render(100));
 			verifyTableValue(table, 1, 0, "jpa");
-			verifyTableValue(table, 1, 1, "https://github.com/rd-1-2022/rpt-spring-data-jpa");
-			verifyTableValue(table, 1, 2, "Learn JPA");
+			verifyTableValue(table, 1, 1, "Learn JPA");
+			verifyTableValue(table, 1, 2, "https://github.com/rd-1-2022/rpt-spring-data-jpa");
 			verifyTableValue(table, 1, 3, "");  // This project is part of a catalog
 			verifyTableValue(table, 1, 4, "[data, jpa]");
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
