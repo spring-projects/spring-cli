@@ -70,7 +70,6 @@ public class MavenModelPopulator implements ModelPopulator {
 			model.putIfAbsent(PROJECT_DESCRIPTION, mavenModel.getDescription());
 			if (mavenProperties.containsKey("java-version")) {
 				model.put(JAVA_VERSION, JavaUtils.getJavaVersion(mavenProperties.getProperty("java-version")));
-				System.out.println(JAVA_VERSION + " = " + model.get(JAVA_VERSION));
 			}
 		}
 	}
