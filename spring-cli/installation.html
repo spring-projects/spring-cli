@@ -449,7 +449,8 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Spring CLI is available as a native binary for Windows, Mac and Linux as well as a Spring Boot uber-jar.</p>
+<p>The Spring CLI is available as Spring Boot uber-jar.
+Eventually it will be available as native binary for Windows, Mac and Linux.</p>
 </div>
 <div class="paragraph">
 <p>As the project is evolving quickly in the early days, you can download the Spring Boot uber-jar, Linux and Mac native binaries from the output of GitHub&#8217;s Continuous Integration Action.</p>
@@ -457,15 +458,13 @@
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/spring-projects-experimental/spring-cli/actions/workflows/ci.yml">Download CI artifacts here</a>.  The uber-jar is in the <code>artifacts.zip</code> file</p>
+<p><a href="https://github.com/spring-projects-experimental/spring-cli/actions/workflows/ci.yml">Browse CI artifacts here</a>.
+Select a CI run by clicking on the latest CI run, then you will see the uber-jar package as a <code>artifacts.zip</code> file.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>When available,  <a href="https://github.com/spring-projects-experimental/spring-cli/actions/workflows/release-milestone.yml">Download Milestone Releases here</a></p>
-</div>
-<div class="paragraph">
-<p>Follow the instructions on the project&#8217;s README file <a href="https://github.com/spring-projects-experimental/spring-cli#readme">to build the project from source</a> file.</p>
+<p>You can also build the uber-jar from source code, see below.</p>
 </div>
 </div>
 </div>
@@ -476,7 +475,14 @@
 <p>Even if you are using the Spring CLI on a Java 11 or Java 8 based project, the CLI itself needs to have access to an installation of Java 17.</p>
 </div>
 <div class="paragraph">
-<p>Create a <code>JAVA_HOME</code> environment variable that points to your Java 17 installation.</p>
+<p>Create a <code>JAVA_HOME</code> environment variable that points to your Java 17 installation.
+For example, for <code>bash</code> shells</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">export JAVA_HOME=jdk-install-dir
+export PATH=$JAVA_HOME/bin:$PATH</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>This is required by <a href="https://github.com/openrewrite/rewrite">OpenRewrite</a>, which is used internally.</p>
@@ -484,18 +490,37 @@
 </div>
 </div>
 <div class="sect1">
+<h2 id="_build_instructions"><a class="anchor" href="#_build_instructions"></a>Build Instructions</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">git clone https://github.com/spring-projects-experimental/spring-cli $HOME/temp/spring-cli
+
+cd $HOME/temp/spring-cli
+
+./gradlew clean build -x test</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now create an alias to invoke the CLI with the command 'spring'</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">alias spring='java -jar $HOME/temp/spring-cli/build/libs/spring-cli-0.0.1-SNAPSHOT.jar'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_setting_up_your_path_or_alias"><a class="anchor" href="#_setting_up_your_path_or_alias"></a>Setting up your PATH or alias</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you have downloaded the Spring Boot uber-jar, create the following alias with the directory appropriate for you download path.</p>
+<p>If you have downloaded the Spring Boot uber-jar, create the following alias with the directory appropriate for your download path.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">alias spring='java -jar /home/mark/downloads/spring-cli-0.0.1-SNAPSHOT.jar'</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>If you have downloaded the native binary, please add the directory to your <code>$PATH</code>.</p>
 </div>
 </div>
 </div>
