@@ -45,6 +45,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 
+import static org.springframework.cli.config.SpringCliUserConfig.PROJECT_CATALOGS_FILE_NAME;
+
 /**
  * Contain features to create and modify projects. This is kept outside
  * of terminal classes to make things easier to test.
@@ -368,7 +370,7 @@ public class ProjectHandler {
 	private String findUrlFromProjectName(String projectName) {
 		Collection<ProjectRepository> projectRepositories = springCliUserConfig.getProjectRepositories()
 				.getProjectRepositories();
-		if (projectRepositories != null) {
+		if (projectRepositories != null && projectRepositories.size() > 0) {
 			String url = findUrlFromProjectRepositories(projectName, projectRepositories);
 			if (url != null) return url;
 		}
@@ -379,7 +381,7 @@ public class ProjectHandler {
 				String url = projectCatalog.getUrl();
 				Path path = sourceRepositoryService.retrieveRepositoryContents(url);
 				YamlConfigFile yamlConfigFile = new YamlConfigFile();
-				projectRepositories = yamlConfigFile.read(Paths.get(path.toString(), "project-repositories.yml"),
+				projectRepositories = yamlConfigFile.read(Paths.get(path.toString(), "project-catalog.yml"),
 						ProjectRepositories.class).getProjectRepositories();
 				try {
 					FileSystemUtils.deleteRecursively(path);
