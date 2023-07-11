@@ -1,36 +1,53 @@
 = Installation
 
-The Spring CLI is available as a native binary for Windows, Mac and Linux as well as a Spring Boot uber-jar.  
+The Spring CLI is available as Spring Boot uber-jar.
+Eventually it will be available as native binary for Windows, Mac and Linux.
 
 As the project is evolving quickly in the early days, you can download the Spring Boot uber-jar, Linux and Mac native binaries from the output of GitHub's Continuous Integration Action. 
 
+* https://github.com/spring-projects-experimental/spring-cli/actions/workflows/ci.yml[Browse CI artifacts here].
+Select a CI run by clicking on the latest CI run, then you will see the uber-jar package as a `artifacts.zip` file.
 
-* https://github.com/spring-projects-experimental/spring-cli/actions/workflows/ci.yml[Download CI artifacts here].  The uber-jar is in the `artifacts.zip` file
-
-
-When available,  https://github.com/spring-projects-experimental/spring-cli/actions/workflows/release-milestone.yml[Download Milestone Releases here]
-
-
-Follow the instructions on the project's README file https://github.com/spring-projects-experimental/spring-cli#readme[to build the project from source] file.
+You can also build the uber-jar from source code, see below.
 
 == Java 17 installation required
 
 Even if you are using the Spring CLI on a Java 11 or Java 8 based project, the CLI itself needs to have access to an installation of Java 17.
 
 Create a `JAVA_HOME` environment variable that points to your Java 17 installation.
+For example, for `bash` shells
+
+```
+export JAVA_HOME=jdk-install-dir
+export PATH=$JAVA_HOME/bin:$PATH
+```
 
 This is required by https://github.com/openrewrite/rewrite[OpenRewrite], which is used internally.
 
+== Build Instructions
+
+```
+git clone https://github.com/spring-projects-experimental/spring-cli $HOME/temp/spring-cli
+
+cd $HOME/temp/spring-cli
+
+./gradlew clean build -x test
+```
+
+Now create an alias to invoke the CLI with the command 'spring'
+
+```
+alias spring='java -jar $HOME/temp/spring-cli/build/libs/spring-cli-0.0.1-SNAPSHOT.jar'
+```
+
 == Setting up your PATH or alias
 
-If you have downloaded the Spring Boot uber-jar, create the following alias with the directory appropriate for you download path.
+If you have downloaded the Spring Boot uber-jar, create the following alias with the directory appropriate for your download path.
 
 [source, bash]
 ----
 alias spring='java -jar /home/mark/downloads/spring-cli-0.0.1-SNAPSHOT.jar'
 ----
-
-If you have downloaded the native binary, please add the directory to your `$PATH`.
 
 == Interactive mode
 
