@@ -68,8 +68,9 @@ public class MavenModelPopulator implements ModelPopulator {
 			model.putIfAbsent(MAVEN_PROPERTIES, mavenProperties);
 			model.putIfAbsent(PROJECT_NAME, mavenModel.getName());
 			model.putIfAbsent(PROJECT_DESCRIPTION, mavenModel.getDescription());
-			if (mavenProperties.containsKey("java.version")) {
-				model.putIfAbsent(JAVA_VERSION, JavaUtils.getJavaVersion(mavenProperties.getProperty("java.version")));
+			if (mavenProperties.containsKey("java-version")) {
+				model.put(JAVA_VERSION, JavaUtils.getJavaVersion(mavenProperties.getProperty("java-version")));
+				System.out.println(JAVA_VERSION + " = " + model.get(JAVA_VERSION));
 			}
 		}
 	}
