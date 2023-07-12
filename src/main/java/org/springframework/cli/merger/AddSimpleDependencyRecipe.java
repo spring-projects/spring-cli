@@ -17,32 +17,117 @@
 
 package org.springframework.cli.merger;
 
-import org.openrewrite.*;
-import org.openrewrite.internal.ListUtils;
-import org.openrewrite.internal.lang.Nullable;
-import org.openrewrite.maven.tree.MavenResolutionResult;
-import org.openrewrite.maven.MavenVisitor;
-import org.openrewrite.xml.tree.Xml;
-
-import org.openrewrite.maven.AddDependency;
-
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class AddSimpleDependencyRecipe extends AddDependency {
-	public AddSimpleDependencyRecipe(String groupId, String artifactId, String version, @Nullable String versionPattern, @Nullable String scope, @Nullable Boolean releasesOnly, String onlyIfUsing, @Nullable String type, @Nullable String classifier, @Nullable Boolean optional, @Nullable String familyPattern) {
-		super(groupId, artifactId, version, versionPattern, scope, releasesOnly, onlyIfUsing, type, classifier, optional, familyPattern);
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.Recipe;
+import org.openrewrite.SourceFile;
+import org.openrewrite.Tree;
+import org.openrewrite.TreeVisitor;
+import org.openrewrite.internal.ListUtils;
+import org.openrewrite.internal.lang.Nullable;
+import org.openrewrite.maven.MavenVisitor;
+import org.openrewrite.maven.tree.MavenResolutionResult;
+import org.openrewrite.xml.tree.Xml;
+
+public class AddSimpleDependencyRecipe extends Recipe {
+
+	private final String groupId;
+
+	private final String artifactId;
+
+	private final String version;
+
+	private final String versionPattern;
+
+	private final String scope;
+
+	private final Boolean releasesOnly;
+
+	private final String onlyIfUsing;
+
+	private final String type;
+
+	private final String classifier;
+
+	private final Boolean optional;
+
+	private final String familyPattern;
+
+	public AddSimpleDependencyRecipe(final String groupId, final String artifactId, final String version, final @Nullable String versionPattern, final @Nullable String scope, final @Nullable Boolean releasesOnly, final String onlyIfUsing, final @Nullable String type, final @Nullable String classifier, final @Nullable Boolean optional, final @Nullable String familyPattern) {
+		this.groupId = groupId;
+		this.artifactId = artifactId;
+		this.version = version;
+		this.versionPattern = versionPattern;
+		this.scope = scope;
+		this.releasesOnly = releasesOnly;
+		this.onlyIfUsing = onlyIfUsing;
+		this.type = type;
+		this.classifier = classifier;
+		this.optional = optional;
+		this.familyPattern = familyPattern;
+	}
+
+	public String getGroupId() {
+		return groupId;
+	}
+
+	public String getArtifactId() {
+		return artifactId;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public String getVersionPattern() {
+		return versionPattern;
+	}
+
+	public String getScope() {
+		return scope;
+	}
+
+	public Boolean getReleasesOnly() {
+		return releasesOnly;
+	}
+
+	public String getOnlyIfUsing() {
+		return onlyIfUsing;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public String getClassifier() {
+		return classifier;
+	}
+
+	public Boolean getOptional() {
+		return optional;
+	}
+
+	public String getFamilyPattern() {
+		return familyPattern;
 	}
 
 	@Override
-	protected TreeVisitor<?, ExecutionContext> getApplicableTest() {
-		return null;
+	public String getDisplayName() {
+		return "Add Simple Maven Dependency";
 	}
 
 	@Override
+	public String getDescription() {
+		return "Add Simple Maven Dependency";
+	}
+
+
+	//TODO OR UPGRADE
 	protected List<SourceFile> visit(List<SourceFile> before, ExecutionContext ctx) {
 
-		Pattern familyPatternCompiled = this.getFamilyPattern() == null ? null : Pattern.compile(this.getFamilyPattern().replace("*", ".*"));
+		Pattern familyPatternCompiled = this.familyPattern == null ? null : Pattern.compile(this.familyPattern.replace("*", ".*"));
 
 		return ListUtils.map(before, s -> s.getMarkers().findFirst(MavenResolutionResult.class)
 				.map(javaProject -> (Tree) new MavenVisitor<ExecutionContext>() {

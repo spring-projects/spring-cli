@@ -22,11 +22,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
+import org.openrewrite.Changeset;
 import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.RecipeRun;
 import org.openrewrite.Result;
 import org.openrewrite.SourceFile;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
 import org.openrewrite.java.ChangePackage;
 import org.openrewrite.java.Java17Parser;
 import org.openrewrite.java.JavaParser;
@@ -54,13 +57,14 @@ public class RefactorUtils {
 		};
 		InMemoryExecutionContext executionContext = new InMemoryExecutionContext(onError);
 		List<Path> matches = collector.getMatches();
-		List<? extends SourceFile> compilationUnits = javaParser.parse(matches, null, executionContext);
+		Stream<SourceFile> sourceFileStream = javaParser.parse(matches, null, executionContext);
 		ResultsExecutor container = new ResultsExecutor();
 
 		ChangePackage recipe = new ChangePackage(oldPackage, newPackage, true);
-		RecipeRun run = recipe.run(compilationUnits);
-		List<Result> results = run.getResults();
-		container.addAll(results);
+		InMemoryLargeSourceSet inMemoryLargeSourceSet = new InMemoryLargeSourceSet(sourceFileStream.toList());
+		RecipeRun run = recipe.run(inMemoryLargeSourceSet, executionContext);
+		Changeset changeset = run.getChangeset();
+		container.addAll(changeset.getAllResults());
 		try {
 			container.execute();
 		}

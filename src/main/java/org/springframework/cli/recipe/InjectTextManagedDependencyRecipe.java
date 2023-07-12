@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.openrewrite.ExecutionContext;
+import org.openrewrite.Recipe;
 import org.openrewrite.SourceFile;
 import org.openrewrite.Tree;
 import org.openrewrite.Validated;
@@ -42,16 +43,31 @@ import static java.util.Objects.requireNonNull;
  * This is a cut-n-paste replacement that disables the version checking, making sure only
  * that the field has a not null value.
  */
-public class InjectTextManagedDependencyRecipe extends AddManagedDependency {
+public class InjectTextManagedDependencyRecipe extends Recipe {
 
 	private final String text;
+
+	private Boolean addToRootPom;
+
 	public InjectTextManagedDependencyRecipe(String text) {
-		super(null, null, null, null, null,
-				null, null, null, null, null);
 		this.text = text;
 	}
 
 	@Override
+	public String getDisplayName() {
+		return "Inject Text Maven Managed Dependency Recipe";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Inject Text Maven Managed Dependency Recipe";
+	}
+
+	public Boolean getAddToRootPom() {
+		return addToRootPom;
+	}
+
+	//TODO OR UPGRADE
 	protected List<SourceFile> visit(List<SourceFile> before, ExecutionContext ctx) {
 		List<SourceFile> rootPoms = new ArrayList<>();
 		for (SourceFile source : before) {

@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
@@ -31,8 +32,10 @@ import org.apache.maven.model.Model;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.openrewrite.InMemoryExecutionContext;
+import org.openrewrite.Recipe;
 import org.openrewrite.Result;
 import org.openrewrite.SourceFile;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
 import org.openrewrite.maven.AddManagedDependency;
 import org.openrewrite.maven.MavenParser;
 import org.slf4j.Logger;
@@ -76,11 +79,13 @@ public class MavenModificationTests {
 		paths.add(mergedPomPath);
 
 		for (Dependency dependency : toMergeDependencyManagementDependencies) {
-			AddManagedDependency addManagedDependency = ProjectMerger.getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
+			Recipe addManagedDependency = ProjectMerger.getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
 					dependency.getType(), dependency.getClassifier());
 
-			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, tempDir, executionContext);
-			List<Result> resultList = addManagedDependency.run(pomFiles).getResults();
+			Stream<SourceFile> sourceFileStream = mavenParser.parse(paths, tempDir, executionContext);
+			InMemoryLargeSourceSet inMemoryLargeSourceSet = new InMemoryLargeSourceSet(sourceFileStream.toList());
+			executionContext = new InMemoryExecutionContext(onError);
+			List<Result> resultList = addManagedDependency.run(inMemoryLargeSourceSet, executionContext).getChangeset().getAllResults();
 
 			assertThat(resultList.size()).isEqualTo(1);
 			for (Result result : resultList) {

@@ -20,6 +20,7 @@ package org.springframework.cli.recipe;
 import java.util.List;
 
 import org.openrewrite.ExecutionContext;
+import org.openrewrite.Recipe;
 import org.openrewrite.SourceFile;
 import org.openrewrite.Tree;
 import org.openrewrite.TreeVisitor;
@@ -29,21 +30,25 @@ import org.openrewrite.maven.MavenVisitor;
 import org.openrewrite.maven.tree.MavenResolutionResult;
 import org.openrewrite.xml.tree.Xml;
 
-public class InjectTextMavenDependencyRecipe extends AddDependency {
+public class InjectTextMavenDependencyRecipe extends Recipe {
 
 	private final String text;
 
 	public InjectTextMavenDependencyRecipe(String text) {
-		super(null, null, null, null, null, null, null, null, null, null, null);
 		this.text = text;
 	}
 
 	@Override
-	protected TreeVisitor<?, ExecutionContext> getApplicableTest() {
-		return null;
+	public String getDisplayName() {
+		return "Inject Text As Maven Dependency";
 	}
 
 	@Override
+	public String getDescription() {
+		return "Inject Text As Maven Dependency";
+	}
+
+	//TODO OR UPGRADE
 	protected List<SourceFile> visit(List<SourceFile> before, ExecutionContext ctx) {
 
 		return ListUtils.map(before, s -> s.getMarkers().findFirst(MavenResolutionResult.class)

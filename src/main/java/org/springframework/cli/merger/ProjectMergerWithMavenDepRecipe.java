@@ -27,6 +27,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
@@ -36,6 +37,7 @@ import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.Result;
 import org.openrewrite.SourceFile;
 import org.openrewrite.Tree;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
 import org.openrewrite.java.Java17Parser;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.java.marker.JavaProject;
@@ -99,8 +101,9 @@ public class ProjectMergerWithMavenDepRecipe {
 			// TODO may want to do something special in case java.version is set to be different
 			//System.out.println("Going to merge property key " + keyToMerge);
 			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true, false);
-			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.pathCurrentProject, getExecutionContext());
-			List<Result> resultList = changePropertyValueRecipe.run(pomFiles).getResults();
+			Stream<SourceFile> sourceFileStream = mavenParser.parse(paths, this.pathCurrentProject, getExecutionContext());
+			InMemoryLargeSourceSet inMemoryLargeSourceSet = new InMemoryLargeSourceSet(sourceFileStream.toList());
+			List<Result> resultList = changePropertyValueRecipe.run(inMemoryLargeSourceSet, getExecutionContext()).getChangeset().getAllResults();
 			updatePomFile(currentProjectPomPath, resultList);
  		}
 
@@ -114,8 +117,9 @@ public class ProjectMergerWithMavenDepRecipe {
 			AddManagedDependency addManagedDependency = getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
 					dependency.getType(), dependency.getClassifier());
 
-			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.pathCurrentProject, getExecutionContext());
-			List<Result> resultList = addManagedDependency.run(pomFiles).getResults();
+			Stream<SourceFile> sourceFileStream = mavenParser.parse(paths, this.pathCurrentProject, getExecutionContext());
+			InMemoryLargeSourceSet inMemoryLargeSourceSet = new InMemoryLargeSourceSet(sourceFileStream.toList());
+			List<Result> resultList = addManagedDependency.run(inMemoryLargeSourceSet, getExecutionContext()).getChangeset().getAllResults();
 			updatePomFile(currentProjectPomPath, resultList);
 		}
 
@@ -134,12 +138,13 @@ public class ProjectMergerWithMavenDepRecipe {
 
 		// Need to get source files
 		// TODO detect if java 11 or 8 or whatever....? JavaParser.fromJavaVersion() ?
-		JavaParser javaParser = new Java17Parser.Builder()
+/*		JavaParser javaParser = new Java17Parser.Builder()
 				.logCompilationWarningsAndErrors(true)
 				.classpath("spring-boot")
 				.build();
 
-		javaParser.setSourceSet("main");
+		// TODO: Open Rewrite Upgrade Investigation
+		//javaParser.setSourceSet("main");
 
 		FileTypeCollectingFileVisitor collector = new FileTypeCollectingFileVisitor(".java");
 		try {
@@ -149,15 +154,14 @@ public class ProjectMergerWithMavenDepRecipe {
 			throw new SpringCliException("Failed reading files in " + this.pathCurrentProject, e);
 		}
 
-//		List<? extends SourceFile> compilationUnits =
 		JavaProject javaProject = new JavaProject(Tree.randomId(), "myproject", null);
 
 
-
-		List<CompilationUnit> parsedJavaFiles = javaParser.parse(
+		Stream<SourceFile> sourceFileStream = javaParser.parse(
 				collector.getMatches(),
 				null,
 				getExecutionContext());
+		List<SourceFile> parsedJavaFiles = sourceFileStream.toList();
 		List<CompilationUnit> parsedJavaFilesToUse = parsedJavaFiles.stream().map(j -> j.withMarkers(j.getMarkers().addIfAbsent(javaProject))).collect(Collectors.toList());
 
 
@@ -168,12 +172,20 @@ public class ProjectMergerWithMavenDepRecipe {
 		System.out.println("--- Java Files End ---");
 
 		//List<? extends SourceFile> allSourceFiles;
-		List<Document> parsedPomFiles = mavenParser.parse(paths, this.pathCurrentProject, getExecutionContext());
+		List<Document> parsedPomFiles = mavenParser.parse(c, this.pathCurrentProject, getExecutionContext());
 		List<Document> parsedPomFilesToUse = parsedPomFiles.stream().map(j -> j.withMarkers(j.getMarkers().addIfAbsent(javaProject))).collect(Collectors.toList());
-
 		//Collections.copy(allSourceFiles, compilationUnits);
 		List untyped = (List)parsedJavaFilesToUse;
-		untyped.addAll(parsedPomFilesToUse);
+		untyped.addAll(parsedPomFilesToUse);*/
+
+		// Get current pom file.
+
+//		RewriteParser parser = new ReriteParser();
+//		ParsingResult result = parser.parse(List<Resource> pomFiles);
+//		Stream<SourceFile> poms = result.getAst();
+
+
+
 
 		System.out.println("\nMerging Maven Dependencies...");
 		for (Dependency dependency : dependenciesToMerge) {
@@ -185,7 +197,8 @@ public class ProjectMergerWithMavenDepRecipe {
 			AddDependency addDependency = getRecipeAddDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), null, "org.springframework.boot.SpringApplication");
 
 
-			List<Result> resultList = addDependency.run(untyped).getResults();
+			//List<Result> resultList = addDependency.run(untyped).getResults();
+			List<Result> resultList = new ArrayList<>();
 			updatePomFile(currentProjectPomPath, resultList);
 		}
 
@@ -220,7 +233,7 @@ public class ProjectMergerWithMavenDepRecipe {
 
 	private AddDependency getRecipeAddDependency(String groupId, String artifactId, String version, String scope, String onlyIfUsing) {
 
-		return new AddDependency(groupId, artifactId, version, null, scope, true, onlyIfUsing, null, null, false, null);
+		return new AddDependency(groupId, artifactId, version, null, scope, true, onlyIfUsing, null, null, false, null, null);
 	}
 
 }

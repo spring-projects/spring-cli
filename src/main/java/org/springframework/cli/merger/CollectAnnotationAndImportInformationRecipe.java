@@ -47,6 +47,11 @@ public class CollectAnnotationAndImportInformationRecipe extends Recipe {
 		return "Add or Update annotations on @SpringBootApplication class";
 	}
 
+	@Override
+	public String getDescription() {
+		return  "Add or Update annotations on @SpringBootApplication class";
+	}
+
 	public List<String> getDeclaredImports() {
 		return declaredImports;
 	}
@@ -56,7 +61,7 @@ public class CollectAnnotationAndImportInformationRecipe extends Recipe {
 	}
 
 	@Override
-	protected TreeVisitor<?, ExecutionContext> getVisitor() {
+	public TreeVisitor<?, ExecutionContext> getVisitor() {
 		return new JavaIsoVisitor<ExecutionContext>() {
 
 			@Override

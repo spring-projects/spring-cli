@@ -39,6 +39,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.model.Dependency;
@@ -50,9 +51,11 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.InMemoryExecutionContext;
+import org.openrewrite.Recipe;
 import org.openrewrite.RecipeRun;
 import org.openrewrite.Result;
 import org.openrewrite.SourceFile;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
 import org.openrewrite.java.AddImport;
 import org.openrewrite.java.Java17Parser;
 import org.openrewrite.java.JavaParser;
@@ -165,8 +168,9 @@ public class ProjectMerger {
 			List<Path> paths = new ArrayList<>();
 			paths.add(springBootApplicationFile.get().toPath());
 			JavaParser javaParser = new Java17Parser.Builder().build();
-			List<? extends SourceFile> compilationUnits = javaParser.parse(paths, null, executionContext);
-			collectAnnotationAndImportInformationRecipe.run(compilationUnits);
+			Stream<SourceFile> sourceFileStream = javaParser.parse(paths, null, executionContext);
+			InMemoryLargeSourceSet inMemoryLargeSourceSet = new InMemoryLargeSourceSet(sourceFileStream.toList());
+			collectAnnotationAndImportInformationRecipe.run(inMemoryLargeSourceSet, executionContext);
 
 			List<Annotation> declaredAnnotations = collectAnnotationAndImportInformationRecipe.getDeclaredAnnotations();
 			List<String> declaredImports = collectAnnotationAndImportInformationRecipe.getDeclaredImports();
@@ -192,14 +196,15 @@ public class ProjectMerger {
 				paths = new ArrayList<>();
 				paths.add(currentSpringBootApplicationFile.get().toPath());
 				javaParser = new Java17Parser.Builder().build();
-				compilationUnits = javaParser.parse(paths, null, executionContext);
+				sourceFileStream = javaParser.parse(paths, null, executionContext);
 				for (Entry<String, String> annotationImportEntry : annotationImportMap.entrySet()) {
 					String annotation = annotationImportEntry.getKey();
 					String importStatement = annotationImportEntry.getValue();
 					AddImport addImport = new AddImport(importStatement, null, false);
 					AddImportRecipe addImportRecipe = new AddImportRecipe(addImport);
-					List<Result> results = addImportRecipe.run(compilationUnits).getResults();
-					updateSpringApplicationClass(currentSpringBootApplicationFile.get().toPath(), results);
+					inMemoryLargeSourceSet = new InMemoryLargeSourceSet(sourceFileStream.toList());
+					RecipeRun run = addImportRecipe.run(inMemoryLargeSourceSet, executionContext);
+					updateSpringApplicationClass(currentSpringBootApplicationFile.get().toPath(), run.getChangeset().getAllResults());
 
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
@@ -392,14 +397,19 @@ public class ProjectMerger {
 			if (candidateDependencyAlreadyPresent(candidateDependency, currentDependencies)) {
 				logger.debug("mergeMavenDependencies: Not merging dependency " + candidateDependency);
 			} else {
-				List<Document> parsedPomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
+				Stream<SourceFile> sourceFileStream = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
 				String scope = candidateDependency.getScope();
 				if (scope == null) {
 					scope = "compile";
 				}
-				AddDependency addDependency = getRecipeAddDependency(candidateDependency.getGroupId(), candidateDependency.getArtifactId(), candidateDependency.getVersion(), scope, "org.springframework.boot.SpringApplication");
+				Recipe addDependency = getRecipeAddDependency(candidateDependency.getGroupId(), candidateDependency.getArtifactId(), candidateDependency.getVersion(), scope, "org.springframework.boot.SpringApplication");
 
-				List<Result> resultList = addDependency.run(parsedPomFiles).getResults();
+				InMemoryLargeSourceSet inMemoryLargeSourceSet = new InMemoryLargeSourceSet(sourceFileStream.toList());
+				Consumer<Throwable> onError = e -> {
+					logger.error("error in javaParser execution", e);
+				};
+				InMemoryExecutionContext executionContext = new InMemoryExecutionContext(onError);
+				List<Result> resultList = addDependency.run(inMemoryLargeSourceSet, executionContext).getChangeset().getAllResults();
 				if (!resultList.isEmpty()) {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
@@ -432,11 +442,16 @@ public class ProjectMerger {
 			List<Dependency> dependencies = dependencyManagement.getDependencies();
 
 			for (Dependency dependency : dependencies) {
-				AddManagedDependency addManagedDependency = getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
+				Recipe addManagedDependency = getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
 						dependency.getType(), dependency.getClassifier());
 
-				List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
-				List<Result> resultList = addManagedDependency.run(pomFiles).getResults();
+				Stream<SourceFile> sourceFileStream = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
+				InMemoryLargeSourceSet inMemoryLargeSourceSet = new InMemoryLargeSourceSet(sourceFileStream.toList());
+				Consumer<Throwable> onError = e -> {
+					logger.error("error in javaParser execution", e);
+				};
+				InMemoryExecutionContext executionContext = new InMemoryExecutionContext(onError);
+				List<Result> resultList = addManagedDependency.run(inMemoryLargeSourceSet, executionContext).getChangeset().getAllResults();
 				if (!resultList.isEmpty()) {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
@@ -459,9 +474,14 @@ public class ProjectMerger {
 		for (String keyToMerge : keysToMerge) {
 			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true, false);
 			// TODO - parse is expensive call, move out of loop?
-			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
-			RecipeRun recipeRun = changePropertyValueRecipe.run(pomFiles);
-			List<Result> resultList = recipeRun.getResults();
+			Stream<SourceFile> sourceFileStream = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
+			InMemoryLargeSourceSet inMemoryLargeSourceSet = new InMemoryLargeSourceSet(sourceFileStream.toList());
+			Consumer<Throwable> onError = e -> {
+				logger.error("error in javaParser execution", e);
+			};
+			InMemoryExecutionContext executionContext = new InMemoryExecutionContext(onError);
+			RecipeRun recipeRun = changePropertyValueRecipe.run(inMemoryLargeSourceSet, executionContext);
+			List<Result> resultList = recipeRun.getChangeset().getAllResults();
 			if (!resultList.isEmpty()) {
 				AttributedStringBuilder sb = new AttributedStringBuilder();
 				sb.style(sb.style().foreground(AttributedStyle.WHITE));
@@ -511,12 +531,12 @@ public class ProjectMerger {
 		return new InMemoryExecutionContext(onError);
 	}
 
-	public static AddManagedDependency getRecipeAddManagedDependency(String groupId, String artifactId, String version, String scope, String type, String classifier) {
-		return new AddSimpleManagedDependencyRecipe(groupId, artifactId, version, scope, type, classifier,
+	public static Recipe getRecipeAddManagedDependency(String groupId, String artifactId, String version, String scope, String type, String classifier) {
+		return new AddManagedDependency(groupId, artifactId, version, scope, type, classifier,
 				null, null, null, true);
 	}
-	public static AddSimpleDependencyRecipe getRecipeAddDependency(String groupId, String artifactId, String version, String scope, String onlyIfUsing) {
-		return new AddSimpleDependencyRecipe(groupId, artifactId, version, null, scope, true, onlyIfUsing, null, null, false, null);
+	public static AddDependency getRecipeAddDependency(String groupId, String artifactId, String version, String scope, String onlyIfUsing) {
+		return new AddDependency(groupId, artifactId, version, null, scope, true, onlyIfUsing, null, null, false, null, null);
 	}
 
 }

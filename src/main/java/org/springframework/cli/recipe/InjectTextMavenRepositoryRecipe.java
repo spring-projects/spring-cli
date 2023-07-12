@@ -38,10 +38,15 @@ public class InjectTextMavenRepositoryRecipe extends Recipe {
 
 	@Override
 	public String getDisplayName() {
-		return "Add Repository";
+		return "Add Maven Repository";
 	}
 
-	protected TreeVisitor<?, ExecutionContext> getVisitor() {
+	@Override
+	public String getDescription() {
+		return "Add Maven Repository";
+	}
+
+	public TreeVisitor<?, ExecutionContext> getVisitor() {
 		return new MavenIsoVisitor<ExecutionContext>() {
 			public Xml.Document visitDocument(Xml.Document document, ExecutionContext ctx) {
 				Xml.Tag root = document.getRoot();

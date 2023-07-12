@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.util.FileUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
@@ -19,6 +20,8 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.Result;
+import org.openrewrite.SourceFile;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
 import org.openrewrite.xml.XmlParser;
 import org.openrewrite.xml.tree.Xml.Document;
 import org.slf4j.Logger;
@@ -316,11 +319,12 @@ public class ProjectHandler {
 		Consumer<Throwable> onError = e -> {
 			logger.error("error in xml parser execution", e);
 		};
-		List<Document> documentList = xmlParser.parse(paths, repositoryContentsPath, new InMemoryExecutionContext(onError));
-
+		Stream<SourceFile> sourceFileStream = xmlParser.parse(paths, repositoryContentsPath, new InMemoryExecutionContext(onError));
+		InMemoryLargeSourceSet inMemoryLargeSourceSet = new InMemoryLargeSourceSet(sourceFileStream.toList());
 		// Execute Recipe
 		ChangeNewlyClonedPomRecipe changeNewlyClonedPomRecipe = new ChangeNewlyClonedPomRecipe(projectInfo);
-		List<Result> resultList = changeNewlyClonedPomRecipe.run(documentList).getResults();
+		InMemoryExecutionContext executionContext = new InMemoryExecutionContext(onError);
+		List<Result> resultList = changeNewlyClonedPomRecipe.run(inMemoryLargeSourceSet, executionContext).getChangeset().getAllResults();
 
 		// Write Results
 		RecipeUtils.writeResults("ChangeNewlyClonedPomRecipe", pomPath, resultList);

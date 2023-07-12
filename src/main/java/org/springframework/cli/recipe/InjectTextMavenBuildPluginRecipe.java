@@ -40,10 +40,15 @@ public class InjectTextMavenBuildPluginRecipe extends Recipe {
 
 	@Override
 	public String getDisplayName() {
-		return "Add Build Plugin";
+		return "Add Maven Build Plugin";
 	}
 
-	protected TreeVisitor<?, ExecutionContext> getVisitor() {
+	@Override
+	public String getDescription() {
+		return "Add Maven Build Plugin";
+	}
+
+	public TreeVisitor<?, ExecutionContext> getVisitor() {
 		return new AddPluginVisitor();
 	}
 

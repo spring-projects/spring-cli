@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.openrewrite.ExecutionContext;
+import org.openrewrite.Recipe;
 import org.openrewrite.SourceFile;
 import org.openrewrite.Tree;
 import org.openrewrite.Validated;
@@ -37,17 +38,106 @@ import org.openrewrite.xml.tree.Xml;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This subclass is needed since recent changes to the openrewrite recpie have strict
+ * This recipe is needed since recent changes to the openrewrite recpie have strict
  * version checks and a version such as ${spring-cloud-version} can't be used.
  * This is a cut-n-paste replacement that disables the version checking, making sure only
  * that the field has a not null value.
  */
-public class AddSimpleManagedDependencyRecipe extends AddManagedDependency {
-	public AddSimpleManagedDependencyRecipe(String groupId, String artifactId, String version, @Nullable String scope, @Nullable String type, @Nullable String classifier, @Nullable String versionPattern, @Nullable Boolean releasesOnly, @Nullable String onlyIfUsing, @Nullable Boolean addToRootPom) {
-		super(groupId, artifactId, version, scope, type, classifier, versionPattern, releasesOnly, onlyIfUsing, addToRootPom);
+public class AddSimpleManagedDependencyRecipe extends Recipe {
+
+	private final String groupId;
+
+	private final String artifactId;
+
+	private final String version;
+
+	private final String scope;
+
+	private final String type;
+
+	private final String classifier;
+
+	private final String versionPattern;
+
+	private final Boolean releasesOnly;
+
+	private final String onlyIfUsing;
+
+	private final Boolean addToRootPom;
+
+	public AddSimpleManagedDependencyRecipe(final String groupId,
+			final String artifactId,
+			final String version,
+			final @Nullable String scope,
+			final @Nullable String type,
+			final @Nullable String classifier,
+			final @Nullable String versionPattern,
+			final @Nullable Boolean releasesOnly,
+			final @Nullable String onlyIfUsing,
+			final @Nullable Boolean addToRootPom) {
+		this.groupId = groupId;
+		this.artifactId = artifactId;
+		this.version = version;
+		this.scope = scope;
+		this.type = type;
+		this.classifier = classifier;
+		this.versionPattern = versionPattern;
+		this.releasesOnly = releasesOnly;
+		this.onlyIfUsing = onlyIfUsing;
+		this.addToRootPom = addToRootPom;
+	}
+
+	public String getGroupId() {
+		return groupId;
+	}
+
+	public String getArtifactId() {
+		return artifactId;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public String getScope() {
+		return scope;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public String getClassifier() {
+		return classifier;
+	}
+
+	public String getVersionPattern() {
+		return versionPattern;
+	}
+
+	public Boolean getReleasesOnly() {
+		return releasesOnly;
+	}
+
+	public String getOnlyIfUsing() {
+		return onlyIfUsing;
+	}
+
+	public Boolean getAddToRootPom() {
+		return addToRootPom;
 	}
 
 	@Override
+	public String getDisplayName() {
+		return "Simple Maven Managed Dependency";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Simple Maven Managed Dependency";
+	}
+
+
 	protected List<SourceFile> visit(List<SourceFile> before, ExecutionContext ctx) {
 		List<SourceFile> rootPoms = new ArrayList<>();
 		for (SourceFile source : before) {

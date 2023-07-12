@@ -26,12 +26,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
+import org.openrewrite.Changeset;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.Recipe;
+import org.openrewrite.RecipeRun;
 import org.openrewrite.Result;
+import org.openrewrite.SourceFile;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
 import org.openrewrite.maven.MavenParser;
 import org.openrewrite.xml.tree.Xml.Document;
 import org.slf4j.Logger;
@@ -90,8 +95,12 @@ public abstract class AbstractInjectMavenActionHandler {
 		List<Path> paths = new ArrayList<>();
 		paths.add(pomPath);
 		MavenParser mavenParser = MavenParser.builder().build();
-		List<Document> parsedPomFiles = mavenParser.parse(paths, cwd, getExecutionContext());
-		List<Result> resultList = recipe.run(parsedPomFiles).getResults();
+		//List<Document> parsedPomFiles = mavenParser.parse(paths, cwd, getExecutionContext());
+		Stream<SourceFile> sourceFileStream = mavenParser.parse(paths, cwd, getExecutionContext());
+		InMemoryLargeSourceSet inMemoryLargeSourceSet = new InMemoryLargeSourceSet(sourceFileStream.toList());
+		RecipeRun run = recipe.run(inMemoryLargeSourceSet, getExecutionContext());
+		Changeset changeset = run.getChangeset();
+		List<Result> resultList = changeset.getAllResults();
 		try {
 			for (Result result : resultList) {
 				// write updated file.
