@@ -15,14 +15,24 @@
  */
 package org.springframework.cli.command;
 
+import org.openrewrite.*;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.merger.ProjectHandler;
 import org.springframework.cli.util.ProjectInfo;
 import org.springframework.cli.util.TerminalMessage;
+import org.springframework.core.io.Resource;
+import org.springframework.sbm.parsers.*;
+import org.springframework.sbm.recipes.RewriteRecipeDiscovery;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
+
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Command(command = "boot", group = "Boot")
 public class BootCommands extends AbstractSpringCliCommands {
@@ -34,8 +44,8 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	@Autowired
 	public BootCommands(SpringCliUserConfig springCliUserConfig,
-			SourceRepositoryService sourceRepositoryService,
-			TerminalMessage terminalMessage) {
+                        SourceRepositoryService sourceRepositoryService,
+                        TerminalMessage terminalMessage) {
 		this.springCliUserConfig = springCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
 		this.terminalMessage = terminalMessage;
@@ -63,6 +73,45 @@ public class BootCommands extends AbstractSpringCliCommands {
 			@Option(description = "Path") String path) {
 		ProjectHandler handler = new ProjectHandler(springCliUserConfig, sourceRepositoryService, terminalMessage);
 		handler.add(from, path);
+	}
+
+
+	@Autowired
+	private ProjectScanner scanner;
+	@Autowired
+	private RewriteMavenProjectParser parser;
+	@Autowired
+	private RewriteRecipeDiscovery discovery;
+
+	@Command(command = "upgrade")
+	public void bootUpgrade(@Option(description = "Path") String path) {
+		// generate a path for win and nux
+		Path baseDir = Path.of(path).toAbsolutePath().normalize();
+		if(!baseDir.toFile().exists() || !baseDir.toFile().isDirectory()) {
+			throw new IllegalArgumentException("Given path '%s' does not exist or is not a directory.".formatted(path));
+		}
+
+		List<Resource> resources = scanner.scan(baseDir, Set.of("**/.idea/**", "**/.DS_Store", "**/.git/**"));
+
+		ExecutionContext ctx = new InMemoryExecutionContext(t -> {throw new RuntimeException(t);});
+		RewriteProjectParsingResult parsingResult = parser.parse(baseDir/*, resources*/, ctx);
+
+		String recipeName = "org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_1";
+		List<Recipe> recipes = discovery.discoverRecipes();
+		Optional<Recipe> recipe = recipes.stream().filter(r -> recipeName.equals(r.getName())).findFirst();
+
+		if(recipe.isPresent()) {
+			List<SourceFile> sourceFiles = parsingResult.sourceFiles();
+			LargeSourceSet lss = new InMemoryLargeSourceSet(sourceFiles);
+			Recipe matchingRecipe = recipe.get();
+			System.out.println("Applying recipe '%s'".formatted(recipeName));
+			RecipeRun recipeRun = matchingRecipe.run(lss, ctx);
+			recipeRun.getChangeset().getAllResults().stream()
+					.map(Result::diff)
+					.forEach(System.out::println);
+		} else {
+			System.out.println("Could not find recipe " + recipeName + ".");
+		}
 	}
 
 }

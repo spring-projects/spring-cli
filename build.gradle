@@ -10,6 +10,7 @@ group = 'org.springframework.experimental'
 sourceCompatibility = '17'
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 	if (version.contains('-')) {
 		maven { url "https://repo.spring.io/milestone" }
@@ -26,9 +27,11 @@ ext {
 	set('kohsukeVersion', '1.301')
 	set('gitlab4jVersion', '4.19.0')
 	//set('openrewriteVersion', '7.34.3')
+	set('sbmOpenrewriteLauncherVersion', '0.0.1-SNAPSHOT')
 	set('openrewriteVersion', '8.1.6')
+	set('openrewriteSpringVersion', '5.0.5')
 	set('antVersion', '1.10.9')
-	set('mavenModelVersion', '3.5.4')
+	set('mavenModelVersion', '3.9.1')
 	set('tikaVersion', '1.18')
 	set('jimfsVersion', '1.2')
 	set('diffUtilsVersion', '4.12')
@@ -58,6 +61,8 @@ dependencies {
 	implementation 'org.openrewrite:rewrite-java-17'
 	implementation 'org.openrewrite:rewrite-maven'
 	implementation 'org.openrewrite:rewrite-xml'
+	implementation 'org.openrewrite.recipe:rewrite-spring'
+	implementation 'org.springframework.sbm:sbm-rewrite-maven-parser'
 	implementation 'org.apache.ant:ant'
 	implementation 'org.apache.maven:maven-model'
 	implementation 'org.apache.tika:tika-core'
@@ -88,8 +93,10 @@ dependencyManagement {
 		dependency("org.openrewrite:rewrite-maven:${openrewriteVersion}") {
 			exclude 'org.slf4j:jcl-over-slf4j'
 		}
+		dependency "org.springframework.sbm:sbm-rewrite-maven-parser:${sbmOpenrewriteLauncherVersion}"
+		dependency "org.openrewrite.recipe:rewrite-spring:${openrewriteSpringVersion}"
 		dependency "org.apache.ant:ant:${antVersion}"
-		dependency "org.apache.maven:maven-model:${mavenModelVersion}"
+//		dependency "org.apache.maven:maven-model:${mavenModelVersion}"
 		dependency "org.apache.tika:tika-core:${tikaVersion}"
 		dependency "com.github.jknack:handlebars:${handlebarsVersion}"
 		dependency "com.github.jknack:handlebars-humanize:${handlebarsVersion}"
