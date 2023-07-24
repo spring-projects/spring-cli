@@ -74,7 +74,7 @@ generate() {
         for F in "${FIELDS[@]:1}"; do
             echo $F
             NAME="${F// /-}"
-            java -jar $jarabsfile help $F > modules/ROOT/pages/commands/$NAME.adoc
+            java -jar $jarabsfile help $F &> modules/ROOT/pages/commands/$NAME.adoc
             echo "** xref:commands/$NAME.adoc[$F]" >> modules/ROOT/nav-commands.adoc
         done
     done
