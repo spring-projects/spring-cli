@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Spring CLI</title>
+    <title>initializr new :: Spring CLI</title>
     <link rel="prev" href="initializr-dependencies.html">
     <link rel="next" href="project-list.html">
     <meta name="generator" content="Antora 3.0.0">
@@ -457,7 +457,7 @@
   <div class="content">
     <div
       class="toc"
-      data-title=""
+      data-title="initializr new"
       data-levels="2"
     >
       <div class="toc-menu"></div>
@@ -500,7 +500,121 @@
   </ul>
 </nav>
 <article>
-
+<h1 id="page-title" class="page">initializr new</h1>
+<div class="sect1">
+<h2 id="_name"><a class="anchor" href="#_name"></a>NAME</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>initializr new</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_synopsis"><a class="anchor" href="#_synopsis"></a>SYNOPSIS</h2>
+<div class="sectionbody">
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">initializr new --server-id String --path String --project String --language String --boot-version String --version String --group String --artifact String --name String --description String --package-name String --dependencies List --packaging String --java-version String --help</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_options"><a class="anchor" href="#_options"></a>OPTIONS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>--server-id</code> String Server to use <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--path</code> String Path to extract <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--project</code> String Project <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--language</code> String Language <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--boot-version</code> String Language <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--version</code> String Version <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--group</code> String Group <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--artifact</code> String Artifact <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--name</code> String Name <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--description</code> String Description <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--package-name</code> String Package Name <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--dependencies</code> List Dependencies <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--packaging</code> String Packaging <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--java-version</code> String Java <strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p><code>--help or -h</code>  help for initializr new <strong>Optional</strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples"><a class="anchor" href="#_examples"></a>EXAMPLES</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Create new project.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring initializr new</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Create new project with all given options.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spring initializr new \
+  --path demo \
+  --project gradle-project \
+  --language java \
+  --boot-version 2.7.0 \
+  --version 0.0.1-SNAPSHOT \
+  --group com.example \
+  --artifact demo \
+  --name demo \
+  --description "Demo project" \
+  --package-name com.example.demo \
+  --dependencies web \
+  --packaging jar \
+  --java-version 17</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <nav class="pagination">
   <span class="prev"><a href="initializr-dependencies.html">initializr dependencies</a></span>
   <span class="next"><a href="project-list.html">project list</a></span>
