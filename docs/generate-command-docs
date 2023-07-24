@@ -67,7 +67,7 @@ generate() {
     jarabsfile=$(get_abs_filename $_arg_jar)
     pushd $DOCS_DIR > /dev/null
     echo ".Commands" > modules/ROOT/nav-commands.adoc
-    mapfile arr < <(java -jar $jarabsfile help)
+    mapfile arr < <(java -jar $jarabsfile help 2>&1)
     for path in "${arr[@]}"; do
         IFS=':' read -ra FIELDS <<< "$path"
         echo ${FIELDS[0]}
