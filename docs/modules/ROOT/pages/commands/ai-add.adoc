@@ -1,0 +1,27 @@
+= ai add
+Add code to the project from AI for a Spring Project project.
+
+== NAME
+ai add
+
+== SYNOPSIS
+====
+[source]
+----
+ai add --description String --path String --preview boolean --rewrite boolean --help 
+----
+====
+
+== OPTIONS
+`--description` String The description of the code to create, this can be as short as a well known Spring project name, e.g JPA. *Optional*
+
+`--path` String Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory. *Optional*
+
+`--preview` boolean Create the README.md file, but do not apply the changes to the code base. *Optional, default = false*
+
+`--rewrite` boolean Rewrite the 'description' option the README.md file, but do not apply the changes to the code base. *Optional, default = false*
+
+`--help or -h`  help for ai add *Optional*
+
+
+include::footers/ai-add-footer.adoc[opts=optional]

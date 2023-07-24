@@ -1,0 +1,21 @@
+= github auth status
+View authentication status
+
+== NAME
+github auth status
+
+== SYNOPSIS
+====
+[source]
+----
+github auth status --show-token boolean --help 
+----
+====
+
+== OPTIONS
+`--show-token` boolean Display the auth token *Optional, default = false*
+
+`--help or -h`  help for github auth status *Optional*
+
+
+include::footers/github-auth-status-footer.adoc[opts=optional]

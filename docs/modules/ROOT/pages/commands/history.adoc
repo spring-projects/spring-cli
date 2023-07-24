@@ -1,0 +1,21 @@
+= history
+Display or save the history of previously run commands
+
+== NAME
+history
+
+== SYNOPSIS
+====
+[source]
+----
+history --file File --help 
+----
+====
+
+== OPTIONS
+`--file` File A file to save history to. *Optional*
+
+`--help or -h`  help for history *Optional*
+
+
+include::footers/history-footer.adoc[opts=optional]

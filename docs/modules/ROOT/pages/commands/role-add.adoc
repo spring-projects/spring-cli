@@ -1,0 +1,21 @@
+= role add
+Add a role
+
+== NAME
+role add
+
+== SYNOPSIS
+====
+[source]
+----
+role add [--name String] --help 
+----
+====
+
+== OPTIONS
+`--name` String Role name *Mandatory*
+
+`--help or -h`  help for role add *Optional*
+
+
+include::footers/role-add-footer.adoc[opts=optional]

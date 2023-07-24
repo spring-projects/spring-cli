@@ -1,0 +1,19 @@
+= github auth login
+Authenticate with a GitHub
+
+== NAME
+github auth login
+
+== SYNOPSIS
+====
+[source]
+----
+github auth login --help 
+----
+====
+
+== OPTIONS
+`--help or -h`  help for github auth login *Optional*
+
+
+include::footers/github-auth-login-footer.adoc[opts=optional]

@@ -1,0 +1,23 @@
+= initializr set
+Set the Initializr server environment
+
+== NAME
+initializr set
+
+== SYNOPSIS
+====
+[source]
+----
+initializr set --server-id String --url String --help 
+----
+====
+
+== OPTIONS
+`--server-id` String Server to use *Optional*
+
+`--url` String Server base url *Optional*
+
+`--help or -h`  help for initializr set *Optional*
+
+
+include::footers/initializr-set-footer.adoc[opts=optional]

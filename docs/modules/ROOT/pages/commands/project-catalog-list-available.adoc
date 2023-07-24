@@ -1,0 +1,19 @@
+= project-catalog list-available
+List available catalogs
+
+== NAME
+project-catalog list-available
+
+== SYNOPSIS
+====
+[source]
+----
+project-catalog list-available --help 
+----
+====
+
+== OPTIONS
+`--help or -h`  help for project-catalog list-available *Optional*
+
+
+include::footers/project-catalog-list-available-footer.adoc[opts=optional]

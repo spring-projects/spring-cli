@@ -1,0 +1,23 @@
+= role get
+Get the value of a key for a role
+
+== NAME
+role get
+
+== SYNOPSIS
+====
+[source]
+----
+role get [--key String] --name String --help 
+----
+====
+
+== OPTIONS
+`--key` String Property key *Mandatory*
+
+`--name` String Role name *Optional*
+
+`--help or -h`  help for role get *Optional*
+
+
+include::footers/role-get-footer.adoc[opts=optional]

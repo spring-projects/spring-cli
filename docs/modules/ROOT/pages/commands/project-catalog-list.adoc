@@ -1,0 +1,19 @@
+= project-catalog list
+List installed catalogs
+
+== NAME
+project-catalog list
+
+== SYNOPSIS
+====
+[source]
+----
+project-catalog list --help 
+----
+====
+
+== OPTIONS
+`--help or -h`  help for project-catalog list *Optional*
+
+
+include::footers/project-catalog-list-footer.adoc[opts=optional]

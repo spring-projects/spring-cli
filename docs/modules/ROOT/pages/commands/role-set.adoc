@@ -1,0 +1,25 @@
+= role set
+Set a key value pair for a role
+
+== NAME
+role set
+
+== SYNOPSIS
+====
+[source]
+----
+role set [--key String] [--value ] --name String --help 
+----
+====
+
+== OPTIONS
+`--key` String A key *Mandatory*
+
+`--value`  A value *Mandatory*
+
+`--name` String Role name *Optional*
+
+`--help or -h`  help for role set *Optional*
+
+
+include::footers/role-set-footer.adoc[opts=optional]

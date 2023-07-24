@@ -1,0 +1,19 @@
+= completion bash
+Generate bash completion script
+
+== NAME
+completion bash
+
+== SYNOPSIS
+====
+[source]
+----
+completion bash --help 
+----
+====
+
+== OPTIONS
+`--help or -h`  help for completion bash *Optional*
+
+
+include::footers/completion-bash-footer.adoc[opts=optional]

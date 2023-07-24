@@ -1,0 +1,25 @@
+= command new
+Create a new user-defined command
+
+== NAME
+command new
+
+== SYNOPSIS
+====
+[source]
+----
+command new --command-name String --sub-command-name String --path String --help 
+----
+====
+
+== OPTIONS
+`--command-name` String The name of the user-defined command to create *Optional, default = hello*
+
+`--sub-command-name` String The name of the user-defined sub-command to create *Optional, default = new*
+
+`--path` String Path to execute command in *Optional*
+
+`--help or -h`  help for command new *Optional*
+
+
+include::footers/command-new-footer.adoc[opts=optional]

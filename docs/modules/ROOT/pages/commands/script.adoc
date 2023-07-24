@@ -1,0 +1,21 @@
+= script
+Read and execute commands from a file.
+
+== NAME
+script
+
+== SYNOPSIS
+====
+[source]
+----
+script [--file File] --help 
+----
+====
+
+== OPTIONS
+`--file` File  *Mandatory*
+
+`--help or -h`  help for script *Optional*
+
+
+include::footers/script-footer.adoc[opts=optional]

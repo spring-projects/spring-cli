@@ -1,0 +1,19 @@
+= version
+Show version info
+
+== NAME
+version
+
+== SYNOPSIS
+====
+[source]
+----
+version --help 
+----
+====
+
+== OPTIONS
+`--help or -h`  help for version *Optional*
+
+
+include::footers/version-footer.adoc[opts=optional]

@@ -1,0 +1,21 @@
+= initializr remove
+Remove the Initializr server environment
+
+== NAME
+initializr remove
+
+== SYNOPSIS
+====
+[source]
+----
+initializr remove --server-id String --help 
+----
+====
+
+== OPTIONS
+`--server-id` String Server to use *Optional*
+
+`--help or -h`  help for initializr remove *Optional*
+
+
+include::footers/initializr-remove-footer.adoc[opts=optional]

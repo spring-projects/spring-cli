@@ -1,0 +1,27 @@
+= project add
+Add a project to use with 'boot new' and 'boot add' commands
+
+== NAME
+project add
+
+== SYNOPSIS
+====
+[source]
+----
+project add [--name String] [--url String] --description String --tags List --help 
+----
+====
+
+== OPTIONS
+`--name` String Project name *Mandatory*
+
+`--url` String Project url *Mandatory*
+
+`--description` String Project description *Optional*
+
+`--tags` List Project tags *Optional*
+
+`--help or -h`  help for project add *Optional*
+
+
+include::footers/project-add-footer.adoc[opts=optional]

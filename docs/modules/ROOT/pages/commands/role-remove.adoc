@@ -1,0 +1,21 @@
+= role remove
+Remove a named role
+
+== NAME
+role remove
+
+== SYNOPSIS
+====
+[source]
+----
+role remove [--name String] --help 
+----
+====
+
+== OPTIONS
+`--name` String Role name *Mandatory*
+
+`--help or -h`  help for role remove *Optional*
+
+
+include::footers/role-remove-footer.adoc[opts=optional]

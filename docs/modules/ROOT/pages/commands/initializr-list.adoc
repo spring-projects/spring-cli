@@ -1,0 +1,19 @@
+= initializr list
+Show the Initializr server environments
+
+== NAME
+initializr list
+
+== SYNOPSIS
+====
+[source]
+----
+initializr list --help 
+----
+====
+
+== OPTIONS
+`--help or -h`  help for initializr list *Optional*
+
+
+include::footers/initializr-list-footer.adoc[opts=optional]

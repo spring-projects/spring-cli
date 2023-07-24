@@ -1,0 +1,23 @@
+= command remove
+Delete a user-defined command
+
+== NAME
+command remove
+
+== SYNOPSIS
+====
+[source]
+----
+command remove --commandName String --subCommandName String --help 
+----
+====
+
+== OPTIONS
+`--commandName` String Command name *Optional*
+
+`--subCommandName` String SubCommand name *Optional*
+
+`--help or -h`  help for command remove *Optional*
+
+
+include::footers/command-remove-footer.adoc[opts=optional]

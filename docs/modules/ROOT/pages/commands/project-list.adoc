@@ -1,0 +1,19 @@
+= project list
+List projects available for use with 'boot new' and 'boot add' commands
+
+== NAME
+project list
+
+== SYNOPSIS
+====
+[source]
+----
+project list --help 
+----
+====
+
+== OPTIONS
+`--help or -h`  help for project list *Optional*
+
+
+include::footers/project-list-footer.adoc[opts=optional]

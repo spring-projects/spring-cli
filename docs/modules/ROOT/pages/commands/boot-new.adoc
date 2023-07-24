@@ -1,0 +1,35 @@
+= boot new
+Create a new Spring Boot project from an existing project
+
+== NAME
+boot new
+
+== SYNOPSIS
+====
+[source]
+----
+boot new [--name String] --from String --group-id String --artifact-id String --version String --description String --package-name String --path String --help 
+----
+====
+
+== OPTIONS
+`--name` String Name of the new project *Mandatory*
+
+`--from` String Create project from existing project name or URL *Optional*
+
+`--group-id` String Group ID of the new project *Optional*
+
+`--artifact-id` String Artifact ID of the new project *Optional*
+
+`--version` String Version of the new project *Optional*
+
+`--description` String Description of the new project *Optional*
+
+`--package-name` String Package name for the new project *Optional*
+
+`--path` String Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory. *Optional*
+
+`--help or -h`  help for boot new *Optional*
+
+
+include::footers/boot-new-footer.adoc[opts=optional]

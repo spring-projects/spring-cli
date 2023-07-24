@@ -1,0 +1,21 @@
+= project remove
+Remove project
+
+== NAME
+project remove
+
+== SYNOPSIS
+====
+[source]
+----
+project remove [--name String] --help 
+----
+====
+
+== OPTIONS
+`--name` String Project name *Mandatory*
+
+`--help or -h`  help for project remove *Optional*
+
+
+include::footers/project-remove-footer.adoc[opts=optional]

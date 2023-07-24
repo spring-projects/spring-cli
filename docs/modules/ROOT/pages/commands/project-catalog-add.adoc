@@ -1,0 +1,27 @@
+= project-catalog add
+Add a project to a project catalog
+
+== NAME
+project-catalog add
+
+== SYNOPSIS
+====
+[source]
+----
+project-catalog add [--name String] [--url String] --description String --tags List --help 
+----
+====
+
+== OPTIONS
+`--name` String Catalog name *Mandatory*
+
+`--url` String Catalog url *Mandatory*
+
+`--description` String Catalog description *Optional*
+
+`--tags` List Project tags *Optional*
+
+`--help or -h`  help for project-catalog add *Optional*
+
+
+include::footers/project-catalog-add-footer.adoc[opts=optional]

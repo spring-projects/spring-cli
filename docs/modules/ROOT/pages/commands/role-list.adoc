@@ -1,0 +1,19 @@
+= role list
+List roles
+
+== NAME
+role list
+
+== SYNOPSIS
+====
+[source]
+----
+role list --help 
+----
+====
+
+== OPTIONS
+`--help or -h`  help for role list *Optional*
+
+
+include::footers/role-list-footer.adoc[opts=optional]

@@ -1,0 +1,19 @@
+= vars new
+create a new var
+
+== NAME
+vars new
+
+== SYNOPSIS
+====
+[source]
+----
+vars new --help 
+----
+====
+
+== OPTIONS
+`--help or -h`  help for vars new *Optional*
+
+
+include::footers/vars-new-footer.adoc[opts=optional]

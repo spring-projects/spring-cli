@@ -1,0 +1,19 @@
+= github auth logout
+Log out of a GitHub
+
+== NAME
+github auth logout
+
+== SYNOPSIS
+====
+[source]
+----
+github auth logout --help 
+----
+====
+
+== OPTIONS
+`--help or -h`  help for github auth logout *Optional*
+
+
+include::footers/github-auth-logout-footer.adoc[opts=optional]

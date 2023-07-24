@@ -1,0 +1,25 @@
+= initializr dependencies
+List supported dependencies
+
+== NAME
+initializr dependencies
+
+== SYNOPSIS
+====
+[source]
+----
+initializr dependencies --server-id String --search String --version String --help 
+----
+====
+
+== OPTIONS
+`--server-id` String Server to use *Optional*
+
+`--search` String Search string to limit results *Optional*
+
+`--version` String Limit to compatibility version *Optional*
+
+`--help or -h`  help for initializr dependencies *Optional*
+
+
+include::footers/initializr-dependencies-footer.adoc[opts=optional]
