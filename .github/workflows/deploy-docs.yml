@@ -1,0 +1,47 @@
+name: Deploy Docs
+run-name: ${{ format('{0} ({1})', github.workflow, github.event.inputs.build-refname || 'all') }}
+on:
+  workflow_dispatch:
+    inputs:
+      build-refname:
+        description: Enter git refname to build (e.g., main).
+        required: false
+  push:
+    branches: docs-build
+permissions: read-all
+jobs:
+  build:
+    if: github.repository_owner == 'spring-projects-experimental'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 5
+    - name: Set Up Gradle
+      uses: spring-io/spring-gradle-build-action@v2
+      with:
+        java-version: '17'
+        distribution: temurin
+    - name: Set up refname build
+      if: github.event.inputs.build-refname
+      run: |
+        git fetch --depth 1 https://github.com/$GITHUB_REPOSITORY ${{ github.event.inputs.build-refname }}
+        echo BUILD_REFNAME=${{ github.event.inputs.build-refname }} >> $GITHUB_ENV
+        echo BUILD_VERSION=$(git cat-file --textconv FETCH_HEAD:gradle.properties | sed -n '/^version=/ { s/^version=//;p }') >> $GITHUB_ENV
+    - name: Run Antora
+      run: ./gradlew antora
+    - name: Publish Docs
+      uses: spring-io/spring-doc-actions/rsync-antora-reference@v0.0.8
+      with:
+        dry-run: true
+        docs-username: ${{ secrets.DOCS_USERNAME }}
+        docs-host: ${{ secrets.DOCS_HOST }}
+        docs-ssh-key: ${{ secrets.DOCS_SSH_KEY }}
+        docs-ssh-host-key: ${{ secrets.DOCS_SSH_HOST_KEY }}
+    # - name: Bust Clouflare Cache
+    #   uses: spring-io/spring-doc-actions/bust-cloudflare-antora-cache@v0.0.8
+    #   with:
+    #     context-root: spring-framework
+    #     cloudflare-zone-id: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+    #     cloudflare-cache-token: ${{ secrets.CLOUDFLARE_CACHE_TOKEN }}

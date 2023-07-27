@@ -1,0 +1,41 @@
+antora:
+  extensions:
+  - '@antora/collector-extension'
+  - '@antora/atlas-extension'
+  - '@opendevise/antora-release-line-extension'
+  - '@springio/antora-extensions/latest-version-extension'
+  - require: '@springio/antora-extensions/root-component-extension'
+    root_component_name: 'cli'
+site:
+  title: Spring Cli
+  url: https://docs.spring.io/spring-cli/reference
+  robots: allow
+git:
+  ensure_git_suffix: false
+content:
+  sources:
+  - url: https://github.com/spring-projects-experimental/spring-cli
+    branches: ['main']
+    start_path: docs
+asciidoc:
+  extensions:
+    - '@asciidoctor/tabs'
+    - '@springio/asciidoctor-extensions'
+    - '@springio/asciidoctor-extensions/include-code-extension'
+  attributes:
+    page-stackoverflow-url: https://stackoverflow.com/questions/tagged/spring
+    page-pagination: ''
+    hide-uri-scheme: '@'
+    tabs-sync-option: '@'
+urls:
+  latest_version_segment_strategy: redirect:to
+  latest_version_segment: ''
+  redirect_facility: httpd
+# runtime:
+#   log:
+#     failure_level: warn
+#     format: pretty
+ui:
+  bundle:
+    url: https://github.com/spring-io/antora-ui-spring/releases/download/v0.3.3/ui-bundle.zip
+    snapshot: true
