@@ -10,11 +10,11 @@ node {
 antora {
 	version = '3.2.0-alpha.2'
 	options = ['--clean', '--fetch', '--stacktrace']
-	// environment = [
-	// 	'ALGOLIA_API_KEY': '042f6aaab6ce998d2ea29e60167e1660',
-	// 	'ALGOLIA_APP_ID': 'WB1FQYI187',
-	// 	'ALGOLIA_INDEX_NAME': 'springcli'
-	// ]
+	environment = [
+		'ALGOLIA_API_KEY': '042f6aaab6ce998d2ea29e60167e1660',
+		'ALGOLIA_APP_ID': 'WB1FQYI187',
+		'ALGOLIA_INDEX_NAME': 'springcli'
+	]
 	// NOTE remember to update the versions in lib/antora/templates/per-branch-antora-playbook.yml as well
 	dependencies = [
 		'@antora/atlas-extension': '1.0.0-alpha.1',
