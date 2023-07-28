@@ -188,13 +188,14 @@ antora {
 }
 
 tasks.named("generateAntoraYml") {
-        asciidocAttributes = project.provider( {
-                return  ["project-version": project.version ]
-        } )
+	asciidocAttributes = project.provider( {
+		return  ["project-version": project.version ]
+	} )
+	baseAntoraYmlFile = file('docs/antora.yml')
 }
 
 tasks.create("generateAntoraResources") {
-        dependsOn 'generateAntoraYml'
+	dependsOn 'generateAntoraYml'
 }
 
 task milestoneVersion {
