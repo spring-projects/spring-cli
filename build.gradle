@@ -4,8 +4,11 @@ plugins {
 	id 'java'
 	id 'com.gorylenko.gradle-git-properties' version '2.3.2'
 	id 'org.graalvm.buildtools.native' version '0.9.19'
+	id 'io.spring.antora.generate-antora-yml' version '0.0.1'
+	id 'org.antora' version '1.0.0'
 }
 
+description = 'Spring Cli'
 group = 'org.springframework.experimental'
 sourceCompatibility = '17'
 
@@ -153,6 +156,45 @@ graalvmNative {
 	metadataRepository {
 		enabled = true
 	}
+}
+
+node {
+	version = '16.15.0'
+}
+
+antora {
+	version = '3.2.0-alpha.2'
+	playbook = 'docs/cached-antora-playbook.yml'
+	playbookProvider {
+		repository = 'spring-projects-experimental/spring-cli'
+		branch = 'docs-build'
+		path = 'lib/antora/templates/per-branch-antora-playbook.yml'
+		checkLocalBranch = true
+	}
+	options = ['--clean', '--stacktrace']
+	// environment = [
+	// 	'ALGOLIA_API_KEY': '82c7ead946afbac3cf98c32446154691',
+	// 	'ALGOLIA_APP_ID': '244V8V9FGG',
+	// 	'ALGOLIA_INDEX_NAME': 'framework-docs'
+	// ]
+	dependencies = [
+		'@antora/atlas-extension': '1.0.0-alpha.1',
+		'@antora/collector-extension': '1.0.0-alpha.3',
+		'@asciidoctor/tabs': '1.0.0-beta.3',
+		'@opendevise/antora-release-line-extension': '1.0.0-alpha.2',
+		'@springio/antora-extensions': '1.3.0',
+		'@springio/asciidoctor-extensions': '1.0.0-alpha.9'
+	]
+}
+
+tasks.named("generateAntoraYml") {
+        asciidocAttributes = project.provider( {
+                return  ["project-version": project.version ]
+        } )
+}
+
+tasks.create("generateAntoraResources") {
+        dependsOn 'generateAntoraYml'
 }
 
 task milestoneVersion {

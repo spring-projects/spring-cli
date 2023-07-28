@@ -50,5 +50,6 @@ e2e/.vscode/*
 !e2e/.vscode/extensions.json
 
 # antora output
+cached-antora-playbook.yml
 docs/build/
 docs/node_modules/

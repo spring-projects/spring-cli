@@ -1,7 +1,13 @@
-name: spring-cli
-version: '1.0.0'
-prerelease: '-SNAPSHOT'
-start_page: ROOT:index.adoc
+name: cli
+version: true
+title: Spring Cli
 nav:
-- modules/ROOT/nav.adoc
-- modules/ROOT/nav-commands.adoc
+  - modules/ROOT/nav.adoc
+  - modules/ROOT/nav-commands.adoc
+ext:
+  collector:
+    run:
+      command: gradlew -q -PbuildSrc.skipTests=true "-Dorg.gradle.jvmargs=-Xmx3g -XX:+HeapDumpOnOutOfMemoryError" generateAntoraResources
+      local: true
+    scan:
+      dir: ./../build/generated-antora-resources
