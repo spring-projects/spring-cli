@@ -1,0 +1,44 @@
+name: JR Version
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: false
+        type: string
+    outputs:
+      ref:
+        description: "The ref to build on"
+        value: ${{ jobs.choose_release.outputs.ref }}
+      version:
+        description: "The version to build on"
+        value: ${{ jobs.choose_release.outputs.version }}
+
+jobs:
+  choose_release:
+    name: Generate output
+    runs-on: ubuntu-latest
+    outputs:
+      ref: ${{ steps.step1.outputs.ref }}
+      version: ${{ steps.step1.outputs.version }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: step1
+        run: |
+          snapshotVersion=$( awk -F '=' '$1 == "version" { print $2 }' gradle.properties )
+          if [ "${{ inputs.version }}" != '' ]; then
+            plainVersion=${snapshotVersion%-SNAPSHOT}
+            releaseVersion=${{ inputs.version }}
+            sed -i "s/version=$snapshotVersion/version=$releaseVersion/" gradle.properties
+            echo "ref=$releaseVersion" >> $GITHUB_OUTPUT
+            echo "version=$releaseVersion" >> $GITHUB_OUTPUT
+            git config --global user.name github-actions[bot]
+            git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git checkout -b $releaseVersion
+            git commit -a -m "Release $releaseVersion"
+            git tag "v$releaseVersion"
+            git push origin $releaseVersion --tags
+          else
+            echo "ref=main" >> $GITHUB_OUTPUT
+            echo "version=$snapshotVersion" >> $GITHUB_OUTPUT
+          fi

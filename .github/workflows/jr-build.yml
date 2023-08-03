@@ -1,0 +1,28 @@
+name: JR Build
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: 17
+          cache: gradle
+      - run: ./gradlew build -x test --no-daemon
+      - uses: actions/upload-artifact@v3
+        with:
+          name: fatjar
+          path: build/libs/*.jar
+          retention-days: 1

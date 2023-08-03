@@ -1,0 +1,75 @@
+name: JR Assemble JPackage
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+
+jobs:
+  assemble:
+    name: Assemble
+    strategy:
+      fail-fast: false
+      matrix:
+        job:
+          - { os: ubuntu-latest,  platform: linux-x86_64 }
+          - { os: windows-latest, platform: windows-x86_64 }
+    runs-on: ${{ matrix.job.os }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: 17
+          cache: gradle
+      - name: Download fatjar
+        uses: actions/download-artifact@v3
+        with:
+          name: fatjar
+          path: build/libs
+      - name: Jdks
+        shell: bash
+        run: ./gradlew copyJdksFromCache setupJdks
+      - name: Download jlink
+        uses: actions/download-artifact@v3
+        with:
+          name: jlink
+          path: out/jreleaser/assemble/spring-cli-jlink/jlink
+      - name: Expand jlink
+        shell: bash
+        run: |
+          cd out/jreleaser/assemble/spring-cli-jlink/jlink
+          ls -l
+          unzip -q -d work-${{ matrix.job.platform }} org.springframework.experimental.spring-cli-${{ inputs.version }}-${{ matrix.job.platform }}.zip
+      - name: JR Assemble
+        uses: jreleaser/release-action@v2
+        with:
+          arguments: assemble --assembler jpackage --select-current-platform
+        env:
+          JRELEASER_PROJECT_VERSION: ${{ inputs.version }}
+      - name: JReleaser output
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: jreleaser-jpackage-${{ runner.os }}
+          path: |
+            out/jreleaser/trace.log
+            out/jreleaser/output.properties
+      - name: Upload jpackage
+        uses: actions/upload-artifact@v3
+        with:
+          retention-days: 1
+          name: jpackage
+          path: |
+            out/jreleaser/assemble/spring-cli-installer/jpackage/*.pkg
+            out/jreleaser/assemble/spring-cli-installer/jpackage/*.msi
+            out/jreleaser/assemble/spring-cli-installer/jpackage/*.exe
+            out/jreleaser/assemble/spring-cli-installer/jpackage/*.deb
+            out/jreleaser/assemble/spring-cli-installer/jpackage/*.rpm
