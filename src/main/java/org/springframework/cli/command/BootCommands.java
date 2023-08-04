@@ -85,11 +85,15 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	@Command(command = "upgrade")
 	public void bootUpgrade(@Option(description = "Path") String path) {
+
 		// generate a path for win and nux
-		Path baseDir = Path.of(path).toAbsolutePath().normalize();
-		if(!baseDir.toFile().exists() || !baseDir.toFile().isDirectory()) {
-			throw new IllegalArgumentException("Given path '%s' does not exist or is not a directory.".formatted(path));
+		Path baseDir = Path.of(".").toAbsolutePath().normalize();
+		if(path != null) {
+			baseDir = Path.of(path).toAbsolutePath().normalize();
 		}
+//		if(!baseDir.toFile().exists() || !baseDir.toFile().isDirectory()) {
+//			throw new IllegalArgumentException("Given path '%s' does not exist or is not a directory.".formatted(path));
+//		}
 
 		List<Resource> resources = scanner.scan(baseDir, Set.of("**/.idea/**", "**/.DS_Store", "**/.git/**"));
 
@@ -110,7 +114,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 					.map(Result::diff)
 					.forEach(System.out::println);
 		} else {
-			System.out.println("Could not find recipe " + recipeName + ".");
+			System.err.println("Could not find recipe " + recipeName + ".");
 		}
 	}
 

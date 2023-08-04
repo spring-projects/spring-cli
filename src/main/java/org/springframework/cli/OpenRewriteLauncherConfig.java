@@ -23,6 +23,6 @@ import org.springframework.context.annotation.Configuration;
  * @author Fabian Krüger
  */
 @Configuration
-@ComponentScan(basePackageClasses = org.springframework.sbm.RewriteParserApplication.class)
+@ComponentScan(basePackages = "org.springframework.sbm")
 public class OpenRewriteLauncherConfig {
 }

@@ -62,7 +62,7 @@ dependencies {
 	implementation 'org.openrewrite:rewrite-maven'
 	implementation 'org.openrewrite:rewrite-xml'
 	implementation 'org.openrewrite.recipe:rewrite-spring'
-	implementation 'org.springframework.sbm:sbm-rewrite-maven-parser'
+	implementation 'org.springframework.sbm:sbm-support-rewrite'
 	implementation 'org.apache.ant:ant'
 	implementation 'org.apache.maven:maven-model'
 	implementation 'org.apache.tika:tika-core'
@@ -93,10 +93,10 @@ dependencyManagement {
 		dependency("org.openrewrite:rewrite-maven:${openrewriteVersion}") {
 			exclude 'org.slf4j:jcl-over-slf4j'
 		}
-		dependency "org.springframework.sbm:sbm-rewrite-maven-parser:${sbmOpenrewriteLauncherVersion}"
+		dependency "org.springframework.sbm:sbm-support-rewrite:${sbmOpenrewriteLauncherVersion}"
 		dependency "org.openrewrite.recipe:rewrite-spring:${openrewriteSpringVersion}"
 		dependency "org.apache.ant:ant:${antVersion}"
-//		dependency "org.apache.maven:maven-model:${mavenModelVersion}"
+		dependency "org.apache.maven:maven-model:${mavenModelVersion}"
 		dependency "org.apache.tika:tika-core:${tikaVersion}"
 		dependency "com.github.jknack:handlebars:${handlebarsVersion}"
 		dependency "com.github.jknack:handlebars-humanize:${handlebarsVersion}"
