@@ -32,7 +32,7 @@ import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.standard.commands.Help;
 
-@Command(command = "ai", group = "Ai")
+@Command(command = "ai", group = "AI")
 public class AiCommands implements ApplicationContextAware {
 
 	private final TerminalMessage terminalMessage;
@@ -54,21 +54,11 @@ public class AiCommands implements ApplicationContextAware {
 
 	@Command(command = "add", description = "Add code to the project from AI for a Spring Project project.")
 	public void aiAdd(
-			@Option(description = "The description of the code to create, this can be as short as a well known Spring project name, e.g JPA.") String description,
+			@Option(description = "The description of the code to create, this can be as short as a well known Spring project name, e.g JPA.", required = true) String description,
 			@Option(description = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.") String path,
 			@Option(description = "Create the README.md file, but do not apply the changes to the code base.") boolean preview,
 			@Option(description = "Rewrite the 'description' option the README.md file, but do not apply the changes to the code base.") boolean rewrite) {
-		handleNullDescription(description); 	// TODO Push this functinality into spring shell
-
 		this.openAiHandler.add(description, path, preview, rewrite, terminalMessage);
-	}
-
-	private void handleNullDescription(String description) {
-		if (description == null) {
-
-			printMissingDescriptionMessage();
-			throw new SpringCliException("Try again" + System.lineSeparator());
-		}
 	}
 
 	private void printMissingDescriptionMessage() {
