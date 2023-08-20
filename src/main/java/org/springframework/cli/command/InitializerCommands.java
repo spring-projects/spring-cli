@@ -57,8 +57,8 @@ import org.springframework.util.StringUtils;
  *
  * @author Janne Valkealahti
  */
-@Command(command = "initializr", group = "Initializr")
-public class InitializrCommands extends AbstractShellComponent {
+@Command(command = "initializer", group = "Initializer")
+public class InitializerCommands extends AbstractShellComponent {
 
 	private final static String PATH_NAME = "Path";
 	private final static String PATH_ID = "path";
@@ -106,8 +106,8 @@ public class InitializrCommands extends AbstractShellComponent {
 	private final SpringCliUserConfig springCliUserConfig;
 	private final SpringCliProperties springCliProperties;
 
-	InitializrCommands(InitializrClientCache clientCache, ComponentFlow.Builder componentFlowBuilder,
-			SpringCliUserConfig springCliUserConfig, SpringCliProperties springCliProperties) {
+	InitializerCommands(InitializrClientCache clientCache, ComponentFlow.Builder componentFlowBuilder,
+						SpringCliUserConfig springCliUserConfig, SpringCliProperties springCliProperties) {
 		this.clientCache = clientCache;
 		this.componentFlowBuilder = componentFlowBuilder;
 		this.springCliUserConfig = springCliUserConfig;

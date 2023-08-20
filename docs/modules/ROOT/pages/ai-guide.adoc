@@ -23,7 +23,7 @@ The `--preview` option of the `spring ai add` command generates the `README.md` 
 Once you are satisfied with the generated README.md file, you can apply it to your code base using the following command:
 
 ```bash
-spring readme apply <Name of the readme file>
+spring guide apply <Name of the guide markdown file>
 ```
 
 For further improvements and accuracy, you can ChatGPT to rewrite the description using the --rewrite option:
@@ -87,7 +87,7 @@ spring ai add "JPA functionality" --preview
 This command creates the file https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-simple-description.md[README-ai-jpa.md].
 Remember, it doesn't modify your project, but it provides the opportunity to review the content and determine its suitability for your specific requirements.
 
-If the generated instructions meet your needs, you can apply the changes to your code base by using the command `spring readme apply README-ai-jpa.md`.
+If the generated instructions meet your needs, you can apply the changes to your code base by using the command `spring guide apply README-ai-jpa.md`.
 
 == Iterating to get what you want
 
@@ -128,7 +128,7 @@ Once you are satisfied with the generated `README` file, apply the changes descr
 
 [source, bash]
 ----
-spring readme apply README-ai-jpa.md
+spring guide apply README-ai-jpa.md
 ----
 
 

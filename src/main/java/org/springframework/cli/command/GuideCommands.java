@@ -24,20 +24,20 @@ import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 
-@Command(command = "readme", group = "Readme")
-public class ReadmeCommands {
+@Command(command = "guide", group = "Guide")
+public class GuideCommands {
 
 	private final TerminalMessage terminalMessage;
 
 	private final OpenAiHandler openAiHandler;
 
 	@Autowired
-	public ReadmeCommands(TerminalMessage terminalMessage) {
+	public GuideCommands(TerminalMessage terminalMessage) {
 		this.terminalMessage = terminalMessage;
 		this.openAiHandler = new OpenAiHandler(new GenerateCodeAiService(this.terminalMessage));
 	}
 
-	public ReadmeCommands(OpenAiHandler openAiHandler, TerminalMessage terminalMessage) {
+	public GuideCommands(OpenAiHandler openAiHandler, TerminalMessage terminalMessage) {
 		this.terminalMessage = terminalMessage;
 		this.openAiHandler = openAiHandler;
 	}

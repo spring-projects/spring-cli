@@ -6,7 +6,7 @@ For example if there is a file named `README-ai-jpa.md` in the root of your proj
 
 [source, bash]
 ----
-spring readme apply README-ai-jpa.md
+spring guide apply README-ai-jpa.md
 ----
 
 will apply the changes.  You can keep track of what has changed by commiting your work using Git before applying the change.
