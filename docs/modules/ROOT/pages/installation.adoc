@@ -3,10 +3,20 @@
 The Spring CLI is available as Spring Boot uber-jar.
 Eventually it will be available as native binary for Windows, Mac and Linux.
 
+== Getting releases
+
+You can pick up a release on the https://github.com/spring-projects-experimental/spring-cli/releases[Release Page]
+
+Note that *Java 17* is required, see below.
+
+You will also likely need to create an alias to invoke the CLi using the word 'spring'.  See below.
+
+== Getting Snapshots
 As the project is evolving quickly in the early days, you can download the Spring Boot uber-jar, Linux and Mac native binaries from the output of GitHub's Continuous Integration Action. 
 
 * https://github.com/spring-projects-experimental/spring-cli/actions/workflows/ci.yml[Browse CI artifacts here].
-Select a CI run by clicking on the latest CI run, then you will see the uber-jar package as a `artifacts.zip` file.
+Select a CI run by clicking on the latest CI run.
+On the bottom of that page you will see the section *Artifacts* and inside that you will see the uber-jar package as a `artifacts.zip` file.
 
 You can also build the uber-jar from source code, see below.
 
