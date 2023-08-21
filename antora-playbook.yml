@@ -16,6 +16,7 @@ content:
   sources:
   - url: https://github.com/spring-projects-experimental/spring-cli
     branches: ['main']
+    tags: ['v({0..9}).+({0..9}).+({0..9})?(-{RC,M}+({0..9}))']
     start_path: docs
 asciidoc:
   extensions:
