@@ -30,7 +30,7 @@ jobs:
           path: build/libs
       - name: Jdks
         shell: bash
-        run: ./gradlew copyJdksFromCache setupJdks
+        run: ./gradlew copyJdksFromCache setupJdks -PcliRelease=true
       - name: JR Assemble
         uses: jreleaser/release-action@v2
         with:
