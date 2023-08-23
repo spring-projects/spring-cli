@@ -20,7 +20,7 @@ jobs:
           distribution: adopt
           java-version: 17
           cache: gradle
-      - run: ./gradlew build -x test --no-daemon
+      - run: ./gradlew build -x test --no-daemon -PcliRelease=true
       - uses: actions/upload-artifact@v3
         with:
           name: fatjar

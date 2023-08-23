@@ -194,21 +194,23 @@ tasks.create("generateAntoraResources") {
 	dependsOn 'generateAntoraYml'
 }
 
-jdks {
-	bellsoft17Osx {
-		platform = 'osx-x86_64'
-		url = 'https://download.bell-sw.com/java/17.0.8+7/bellsoft-jdk17.0.8+7-macos-amd64.tar.gz'
-		checksum = 'sha1/c15050d4c38402f64d811d4c55290dc1e9ccbb4e'
-	}
-	bellsoft17Linux {
-		platform = 'linux-x86_64'
-		url = 'https://download.bell-sw.com/java/17.0.8+7/bellsoft-jdk17.0.8+7-linux-amd64.tar.gz'
-		checksum = 'sha1/04dee41344ba66d6f3b693785921351dd0cd1d28'
-	}
-	bellsoft17Windows {
-		platform = 'windows-x86_64'
-		url = 'https://download.bell-sw.com/java/17.0.8+7/bellsoft-jdk17.0.8+7-windows-amd64.zip'
-		checksum = 'sha1/e1350e0f338f3fafb950d5e0a9093dedda434ca3'
+if (project.hasProperty('cliRelease') && cliRelease.toBoolean()) {
+	jdks {
+		bellsoft17Osx {
+			platform = 'osx-x86_64'
+			url = 'https://download.bell-sw.com/java/17.0.8+7/bellsoft-jdk17.0.8+7-macos-amd64.tar.gz'
+			checksum = 'sha1/c15050d4c38402f64d811d4c55290dc1e9ccbb4e'
+		}
+		bellsoft17Linux {
+			platform = 'linux-x86_64'
+			url = 'https://download.bell-sw.com/java/17.0.8+7/bellsoft-jdk17.0.8+7-linux-amd64.tar.gz'
+			checksum = 'sha1/04dee41344ba66d6f3b693785921351dd0cd1d28'
+		}
+		bellsoft17Windows {
+			platform = 'windows-x86_64'
+			url = 'https://download.bell-sw.com/java/17.0.8+7/bellsoft-jdk17.0.8+7-windows-amd64.zip'
+			checksum = 'sha1/e1350e0f338f3fafb950d5e0a9093dedda434ca3'
+		}
 	}
 }
 
