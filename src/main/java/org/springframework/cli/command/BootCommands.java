@@ -77,8 +77,6 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 
 	@Autowired
-	private ProjectScanner scanner;
-	@Autowired
 	private RewriteMavenProjectParser parser;
 	@Autowired
 	private RewriteRecipeDiscovery discovery;
@@ -95,10 +93,8 @@ public class BootCommands extends AbstractSpringCliCommands {
 //			throw new IllegalArgumentException("Given path '%s' does not exist or is not a directory.".formatted(path));
 //		}
 
-		List<Resource> resources = scanner.scan(baseDir, Set.of("**/.idea/**", "**/.DS_Store", "**/.git/**"));
-
 		ExecutionContext ctx = new InMemoryExecutionContext(t -> {throw new RuntimeException(t);});
-		RewriteProjectParsingResult parsingResult = parser.parse(baseDir/*, resources*/, ctx);
+		RewriteProjectParsingResult parsingResult = parser.parse(baseDir, ctx);
 
 		String recipeName = "org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_1";
 		List<Recipe> recipes = discovery.discoverRecipes();

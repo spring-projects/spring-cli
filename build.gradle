@@ -27,7 +27,6 @@ ext {
 	set('kohsukeVersion', '1.301')
 	set('gitlab4jVersion', '4.19.0')
 	//set('openrewriteVersion', '7.34.3')
-	set('sbmOpenrewriteLauncherVersion', '0.0.1-SNAPSHOT')
 	set('openrewriteVersion', '8.1.6')
 	set('openrewriteSpringVersion', '5.0.5')
 	set('antVersion', '1.10.9')
@@ -43,6 +42,7 @@ ext {
 	set('jacksonVersion', '2.15.0')
 	set('openaiVersion', '0.12.0')
 	set('commonmarkVersion', '0.21.0')
+	set('sbmVersion', "0.1.0-SNAPSHOT")
 }
 
 configurations.all {
@@ -62,7 +62,6 @@ dependencies {
 	implementation 'org.openrewrite:rewrite-maven'
 	implementation 'org.openrewrite:rewrite-xml'
 	implementation 'org.openrewrite.recipe:rewrite-spring'
-	implementation 'org.springframework.sbm:sbm-support-rewrite'
 	implementation 'org.apache.ant:ant'
 	implementation 'org.apache.maven:maven-model'
 	implementation 'org.apache.tika:tika-core'
@@ -73,6 +72,7 @@ dependencies {
 	implementation 'org.glassfish.jaxb:jaxb-runtime'
 	implementation 'com.theokanning.openai-gpt3-java:service'
 	implementation 'org.commonmark:commonmark'
+	implementation 'org.springframework.experimental:sbm-support-rewrite'
 	testImplementation 'org.openrewrite:rewrite-test'
 	testImplementation 'uk.org.webcompere:system-stubs-jupiter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -93,7 +93,6 @@ dependencyManagement {
 		dependency("org.openrewrite:rewrite-maven:${openrewriteVersion}") {
 			exclude 'org.slf4j:jcl-over-slf4j'
 		}
-		dependency "org.springframework.sbm:sbm-support-rewrite:${sbmOpenrewriteLauncherVersion}"
 		dependency "org.openrewrite.recipe:rewrite-spring:${openrewriteSpringVersion}"
 		dependency "org.apache.ant:ant:${antVersion}"
 		dependency "org.apache.maven:maven-model:${mavenModelVersion}"
@@ -109,6 +108,7 @@ dependencyManagement {
 		dependency "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
 		dependency "com.theokanning.openai-gpt3-java:service:${openaiVersion}"
 		dependency "org.commonmark:commonmark:${commonmarkVersion}"
+		dependency "org.springframework.experimental:sbm-support-rewrite:${sbmVersion}"
 	}
 	imports {
 		mavenBom "org.springframework.shell:spring-shell-dependencies:${springShellVersion}"
