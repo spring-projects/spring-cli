@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cli.support.CommandRunner;
 import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
 import org.springframework.cli.support.MockConfigurations.MockUserConfig;
+import org.springframework.sbm.boot.autoconfigure.DiscoveryConfiguration;
+import org.springframework.sbm.parsers.RewriteParserConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
 /*
@@ -37,7 +39,7 @@ class InjectMavenRepositoryActionHandlerTest {
 
 	@Test
 	void injectMavenDependency(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
-		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
+		this.contextRunner.withUserConfiguration(MockUserConfig.class, DiscoveryConfiguration.class, RewriteParserConfig.class).run((context) -> {
 
 			CommandRunner commandRunner = new CommandRunner.Builder(context)
 					.prepareProject("rest-service", workingDir)
@@ -53,7 +55,7 @@ class InjectMavenRepositoryActionHandlerTest {
 
 	@Test
 	void injectMavenDependencyUsingVar(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
-		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
+		this.contextRunner.withUserConfiguration(MockUserConfig.class, DiscoveryConfiguration.class, RewriteParserConfig.class).run((context) -> {
 
 			CommandRunner commandRunner = new CommandRunner.Builder(context)
 					.prepareProject("rest-service", workingDir)
