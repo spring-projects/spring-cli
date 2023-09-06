@@ -17,26 +17,24 @@
 
 package org.springframework.cli.runtime.engine.actions.handlers;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
-
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cli.support.CommandRunner;
 import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
 import org.springframework.cli.support.MockConfigurations.MockUserConfig;
+import org.springframework.sbm.boot.autoconfigure.SbmSupportRewriteConfiguration;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class InjectHandlerTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withUserConfiguration(MockBaseConfig.class);
+			.withUserConfiguration(MockBaseConfig.class, SbmSupportRewriteConfiguration.class);
 
 	@Test
 	void injectBefore(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {

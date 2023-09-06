@@ -1,19 +1,15 @@
 package org.springframework.cli.runtime.engine.actions.handlers;
 
-import java.nio.file.Path;
-
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
-
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cli.support.CommandRunner;
 import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
 import org.springframework.cli.support.MockConfigurations.MockUserConfig;
-import org.springframework.sbm.boot.autoconfigure.DiscoveryConfiguration;
-import org.springframework.sbm.parsers.RewriteParserConfig;
+import org.springframework.sbm.boot.autoconfigure.SbmSupportRewriteConfiguration;
+
+import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 /*
@@ -39,7 +35,7 @@ class InjectMavenRepositoryActionHandlerTest {
 
 	@Test
 	void injectMavenDependency(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
-		this.contextRunner.withUserConfiguration(MockUserConfig.class, DiscoveryConfiguration.class, RewriteParserConfig.class).run((context) -> {
+		this.contextRunner.withUserConfiguration(MockUserConfig.class, SbmSupportRewriteConfiguration.class).run((context) -> {
 
 			CommandRunner commandRunner = new CommandRunner.Builder(context)
 					.prepareProject("rest-service", workingDir)
@@ -55,7 +51,7 @@ class InjectMavenRepositoryActionHandlerTest {
 
 	@Test
 	void injectMavenDependencyUsingVar(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
-		this.contextRunner.withUserConfiguration(MockUserConfig.class, DiscoveryConfiguration.class, RewriteParserConfig.class).run((context) -> {
+		this.contextRunner.withUserConfiguration(MockUserConfig.class, SbmSupportRewriteConfiguration.class).run((context) -> {
 
 			CommandRunner commandRunner = new CommandRunner.Builder(context)
 					.prepareProject("rest-service", workingDir)

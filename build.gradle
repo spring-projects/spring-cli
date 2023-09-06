@@ -43,6 +43,7 @@ ext {
 	set('openaiVersion', '0.12.0')
 	set('commonmarkVersion', '0.21.0')
 	set('sbmVersion', "0.1.0-SNAPSHOT")
+	set('junitPioneerVersion', '2.0.1')
 }
 
 configurations.all {
@@ -79,6 +80,7 @@ dependencies {
 	testImplementation 'com.google.jimfs:jimfs'
 	testImplementation 'com.squareup.okhttp3:mockwebserver'
 	testImplementation 'io.github.java-diff-utils:java-diff-utils'
+	testImplementation 'org.junit-pioneer:junit-pioneer'
 }
 
 dependencyManagement {
@@ -109,6 +111,7 @@ dependencyManagement {
 		dependency "com.theokanning.openai-gpt3-java:service:${openaiVersion}"
 		dependency "org.commonmark:commonmark:${commonmarkVersion}"
 		dependency "org.springframework.experimental:sbm-support-rewrite:${sbmVersion}"
+		dependency "org.junit-pioneer:junit-pioneer:${junitPioneerVersion}"
 	}
 	imports {
 		mavenBom "org.springframework.shell:spring-shell-dependencies:${springShellVersion}"

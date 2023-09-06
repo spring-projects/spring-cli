@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cli.support.CommandRunner;
 import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
 import org.springframework.cli.support.MockConfigurations.MockUserConfig;
+import org.springframework.sbm.boot.autoconfigure.SbmSupportRewriteConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 /*
@@ -31,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class InjectMavenBuildPluginActionHandlerTest {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withUserConfiguration(MockBaseConfig.class);
+			.withUserConfiguration(MockBaseConfig.class, SbmSupportRewriteConfiguration.class);
 
 	@Test
 	void injectMavenBuildPlugin(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
