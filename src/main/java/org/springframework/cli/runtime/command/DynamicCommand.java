@@ -17,8 +17,10 @@
 
 package org.springframework.cli.runtime.command;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -69,6 +71,12 @@ import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.CommandContext;
 import org.springframework.shell.command.CommandParser.CommandParserResult;
 import org.springframework.util.StringUtils;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import static org.springframework.cli.runtime.engine.model.MavenModelPopulator.MAVEN_MODEL;
 
@@ -238,7 +246,6 @@ public class DynamicCommand {
 					InjectMavenDependencyActionHandler injectMavenDependencyActionHandler = new InjectMavenDependencyActionHandler(templateEngine, model, cwd, terminalMessage);
 					injectMavenDependencyActionHandler.execute(injectMavenDependency);
 				}
-
 				InjectMavenBuildPlugin injectMavenBuildPlugin = action.getInjectMavenBuildPlugin();
 				if (injectMavenBuildPlugin != null) {
 					InjectMavenBuildPluginActionHandler injectMavenBuildPluginActionHandler = new InjectMavenBuildPluginActionHandler(templateEngine, model, cwd, terminalMessage);
@@ -247,9 +254,30 @@ public class DynamicCommand {
 
 				InjectMavenDependencyManagement injectMavenDependencyManagement = action.getInjectMavenDependencyManagement();
 				if (injectMavenDependencyManagement != null) {
-					InjectMavenDependencyManagementActionHandler injectMavenDependencyDependnecyActionHandler
+//					try {
+//						DocumentBuilderFactory factory =
+//								DocumentBuilderFactory.newInstance();
+//						DocumentBuilder builder = factory.newDocumentBuilder();
+//						StringBuilder xmlStringBuilder = new StringBuilder();
+//						xmlStringBuilder.append("<?xml version=\"1.0\"?> <class> </class>");
+//						ByteArrayInputStream input = new ByteArrayInputStream(
+//								xmlStringBuilder.toString().getBytes("UTF-8"));
+//						Document doc = builder.parse(input);
+//						doc.getElementsByTagName("build/")
+//					} catch (ParserConfigurationException e) {
+//						throw new RuntimeException(e);
+//					} catch (UnsupportedEncodingException e) {
+//						throw new RuntimeException(e);
+//					} catch (IOException e) {
+//						throw new RuntimeException(e);
+//					} catch (SAXException e) {
+//						throw new RuntimeException(e);
+//					}
+
+
+					InjectMavenDependencyManagementActionHandler injectMavenDependencyActionHandler
 							= new InjectMavenDependencyManagementActionHandler(templateEngine, model, cwd, terminalMessage);
-					injectMavenDependencyDependnecyActionHandler.execute(injectMavenDependencyManagement);
+					injectMavenDependencyActionHandler.execute(injectMavenDependencyManagement);
 				}
 
 				InjectMavenRepository injectMavenRepository = action.getInjectMavenRepository();

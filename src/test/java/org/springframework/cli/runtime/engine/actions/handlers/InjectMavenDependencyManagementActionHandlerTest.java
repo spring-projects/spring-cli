@@ -35,7 +35,6 @@ class InjectMavenDependencyManagementActionHandlerTest {
 			.withUserConfiguration(MockBaseConfig.class, SbmSupportRewriteConfiguration.class);
 
 	@Test
-	@ExpectedToFail("FIXME: spring-modulith-bom not there")
 	void injectMavenDependency(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 

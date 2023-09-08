@@ -4,7 +4,7 @@ actions:
         <dependency>
           <groupId>org.springframework.modulith</groupId>
           <artifactId>spring-modulith-bom</artifactId>
-          <version>0.6.0.RELEASE</version>
+          <version>1.0.0</version>
           <scope>import</scope>
           <type>pom</type>
         </dependency>

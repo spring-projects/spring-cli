@@ -29,8 +29,10 @@ import java.util.stream.Stream;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junitpioneer.jupiter.ExpectedToFail;
 import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.Recipe;
 import org.openrewrite.Result;
@@ -72,7 +74,7 @@ public class MavenModificationTests {
 		List<Dependency> toMergeDependencyManagementDependencies = dependencyManagement.getDependencies();
 
 		Consumer<Throwable> onError = e -> {
-			logger.error("error in javaParser execution", e);
+			throw new RuntimeException(e);
 		};
 		InMemoryExecutionContext executionContext = new InMemoryExecutionContext(onError);
 		List<Path> paths = new ArrayList<>();
@@ -82,7 +84,17 @@ public class MavenModificationTests {
 			Recipe addManagedDependency = ProjectMerger.getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
 					dependency.getType(), dependency.getClassifier());
 
-			Stream<SourceFile> sourceFileStream = mavenParser.parse(paths, tempDir, executionContext);
+			paths.stream()
+					.map(p -> {
+						try {
+							return Files.readString(p);
+						} catch (IOException e) {
+							throw new RuntimeException(e);
+						}
+					})
+					.forEach(System.out::println);
+
+			Stream<SourceFile> sourceFileStream = MavenParser.builder().build().parse(paths, tempDir, executionContext);
 			InMemoryLargeSourceSet inMemoryLargeSourceSet = new InMemoryLargeSourceSet(sourceFileStream.toList());
 			executionContext = new InMemoryExecutionContext(onError);
 			List<Result> resultList = addManagedDependency.run(inMemoryLargeSourceSet, executionContext).getChangeset().getAllResults();
@@ -110,5 +122,58 @@ public class MavenModificationTests {
 //		return new AddManagedDependency(groupId, artifactId, version, scope, type, classifier,
 //				null, null, null, true);
 //	}
+
+	@Test
+	@DisplayName("parse failing pom")
+	void parseFailingPom() {
+		SourceFile sourceFile = MavenParser.builder().build().parse("""
+				<?xml version="1.0" encoding="UTF-8"?>
+				<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+						 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+					<modelVersion>4.0.0</modelVersion>
+					<parent>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-starter-parent</artifactId>
+						<version>2.6.3</version>
+						<relativePath/> <!-- lookup parent from repository -->
+					</parent>
+					<groupId>com.example</groupId>
+					<artifactId>demo</artifactId>
+					<version>0.0.1-SNAPSHOT</version>
+					<name>demo</name>
+					<description>Demo project for Spring Data JPA</description>
+					<properties>
+						<java.version>1.8</java.version>
+					</properties>
+					<dependencies>
+						<dependency>
+							<groupId>org.springframework.boot</groupId>
+							<artifactId>spring-boot-starter-data-jpa</artifactId>
+						</dependency>
+				    
+						<dependency>
+							<groupId>com.h2database</groupId>
+							<artifactId>h2</artifactId>
+							<scope>runtime</scope>
+						</dependency>
+						<dependency>
+							<groupId>org.springframework.boot</groupId>
+							<artifactId>spring-boot-starter-test</artifactId>
+							<scope>test</scope>
+						</dependency>
+					</dependencies>
+				    
+					<build>
+						<plugins>
+							<plugin>
+								<groupId>org.springframework.boot</groupId>
+								<artifactId>spring-boot-maven-plugin</artifactId>
+							</plugin>
+						</plugins>
+					</build>
+				    
+				</project>
+				""").toList().get(0);
+	}
 
 }
