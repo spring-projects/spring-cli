@@ -104,6 +104,8 @@ public class BootCommands extends AbstractSpringCliCommands {
 		// parse to AST
 		RewriteProjectParsingResult parsingResult = parser.parse(baseDir);
 
+		System.out.println("Parsed AST of %d resources".formatted(parsingResult.sourceFiles().size()));
+
 		// discover recipe
 		String recipeName = "org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_1";
 		List<Recipe> recipes = discovery.discoverRecipes();
@@ -111,13 +113,17 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 		if(recipe.isPresent()) {
 
+			System.out.println("Found recipe %s".formatted(recipeName));
+
 			// Use ProjectResourceSet abstraction
 			ProjectResourceSet projectResourceSet = resourceSetFactory.create(baseDir, parsingResult.sourceFiles());
 
 			// To apply recipes
+			System.out.println("Applying recipe %s".formatted(recipeName));
 			projectResourceSet.apply(recipe.get());
 
 			// And synchronize changes with FS
+			System.out.println("Applyed recipe %s. Writing back changes.".formatted(recipeName));
 			serializer.writeChanges(projectResourceSet);
 
 		} else {
