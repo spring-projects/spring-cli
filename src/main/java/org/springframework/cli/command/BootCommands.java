@@ -123,7 +123,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 			projectResourceSet.apply(recipe.get());
 
 			// And synchronize changes with FS
-			System.out.println("Applyed recipe %s. Writing back changes.".formatted(recipeName));
+			System.out.println("Applied recipe %s. Writing back changes.".formatted(recipeName));
 			serializer.writeChanges(projectResourceSet);
 
 		} else {
