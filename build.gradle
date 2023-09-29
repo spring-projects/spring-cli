@@ -28,6 +28,9 @@ ext {
 	//set('openrewriteVersion', '7.34.3')
 	set('openrewriteVersion', '8.5.1')
 	set('openrewriteSpringVersion', '5.0.10')
+	set('openrewriteMigrateJavaVersion', '2.1.0')
+	set('openrewriteJavaDependenciesVersion', '1.0.9')
+//	set('openrewriteHibernateVersion', '1.0.4')
 	set('antVersion', '1.10.9')
 	//set('mavenModelVersion', '3.9.1')
 	set('tikaVersion', '1.18')
@@ -60,6 +63,9 @@ dependencies {
 	implementation 'org.kohsuke:github-api'
 	implementation 'org.gitlab4j:gitlab4j-api'
 	implementation 'org.openrewrite.recipe:rewrite-spring'
+//	implementation 'org.openrewrite.recipe:rewrite-migrate-java'
+//	implementation 'org.openrewrite.recipe:rewrite-java-dependencies'
+//	implementation "org.openrewrite.recipe:rewrite-hibernate"
 	implementation 'org.apache.ant:ant'
 	implementation 'org.apache.maven:maven-model'
 	implementation 'org.apache.tika:tika-core'
@@ -89,6 +95,9 @@ dependencyManagement {
 		dependency "org.gitlab4j:gitlab4j-api:${gitlab4jVersion}"
 		dependency "org.openrewrite:rewrite-test:${openrewriteVersion}"
 		dependency "org.openrewrite.recipe:rewrite-spring:${openrewriteSpringVersion}"
+		dependency "org.openrewrite.recipe:rewrite-migrate-java:${openrewriteMigrateJavaVersion}"
+//		dependency "org.openrewrite.recipe:rewrite-java-dependencies:${openrewriteJavaDependenciesVersion}"
+//		dependency "org.openrewrite.recipe:rewrite-hibernate:${openrewriteHibernateVersion}"
 		dependency "org.apache.ant:ant:${antVersion}"
 		// dependency "org.apache.maven:maven-model:${mavenModelVersion}"
 		dependency "org.apache.tika:tika-core:${tikaVersion}"

@@ -23,9 +23,16 @@ import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.merger.ProjectHandler;
 import org.springframework.cli.util.ProjectInfo;
 import org.springframework.cli.util.TerminalMessage;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
 import org.springframework.sbm.parsers.*;
+import org.springframework.sbm.parsers.events.FinishedParsingResourceEvent;
+import org.springframework.sbm.project.resource.ProjectResourceSet;
+import org.springframework.sbm.project.resource.ProjectResourceSetFactory;
+import org.springframework.sbm.project.resource.ProjectResourceSetSerializer;
+import org.springframework.sbm.project.resource.RewriteMigrationResultMerger;
 import org.springframework.sbm.recipes.RewriteRecipeDiscovery;
+import org.springframework.sbm.utils.OsAgnosticPathMatcher;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 
@@ -77,9 +84,13 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 
 	@Autowired
-	private RewriteMavenProjectParser parser;
+	private RewriteProjectParser parser;
 	@Autowired
 	private RewriteRecipeDiscovery discovery;
+	@Autowired
+	private ProjectResourceSetFactory resourceSetFactory;
+	@Autowired
+	ProjectResourceSetSerializer serializer;
 
 	@Command(command = "upgrade")
 	public void bootUpgrade(@Option(description = "Path") String path) {
@@ -89,26 +100,26 @@ public class BootCommands extends AbstractSpringCliCommands {
 		if(path != null) {
 			baseDir = Path.of(path).toAbsolutePath().normalize();
 		}
-//		if(!baseDir.toFile().exists() || !baseDir.toFile().isDirectory()) {
-//			throw new IllegalArgumentException("Given path '%s' does not exist or is not a directory.".formatted(path));
-//		}
 
-		ExecutionContext ctx = new InMemoryExecutionContext(t -> {throw new RuntimeException(t);});
-		RewriteProjectParsingResult parsingResult = parser.parse(baseDir, ctx);
+		// parse to AST
+		RewriteProjectParsingResult parsingResult = parser.parse(baseDir);
 
+		// discover recipe
 		String recipeName = "org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_1";
 		List<Recipe> recipes = discovery.discoverRecipes();
 		Optional<Recipe> recipe = recipes.stream().filter(r -> recipeName.equals(r.getName())).findFirst();
 
 		if(recipe.isPresent()) {
-			List<SourceFile> sourceFiles = parsingResult.sourceFiles();
-			LargeSourceSet lss = new InMemoryLargeSourceSet(sourceFiles);
-			Recipe matchingRecipe = recipe.get();
-			System.out.println("Applying recipe '%s'".formatted(recipeName));
-			RecipeRun recipeRun = matchingRecipe.run(lss, ctx);
-			recipeRun.getChangeset().getAllResults().stream()
-					.map(Result::diff)
-					.forEach(System.out::println);
+
+			// Use ProjectResourceSet abstraction
+			ProjectResourceSet projectResourceSet = resourceSetFactory.create(baseDir, parsingResult.sourceFiles());
+
+			// To apply recipes
+			projectResourceSet.apply(recipe.get());
+
+			// And synchronize changes with FS
+			serializer.writeChanges(projectResourceSet);
+
 		} else {
 			System.err.println("Could not find recipe " + recipeName + ".");
 		}
