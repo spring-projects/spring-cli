@@ -26,6 +26,7 @@ jobs:
       - name: JR Assemble
         uses: jreleaser/release-action@v2
         with:
+          version: early-access
           arguments: assemble
         env:
           JRELEASER_PROJECT_VERSION: ${{ inputs.version }}
