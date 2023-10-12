@@ -8,6 +8,7 @@ on:
 jobs:
 
   precheck:
+    if: github.repository_owner == 'spring-projects-experimental' || github.event_name == 'workflow_dispatch'
     uses: ./.github/workflows/jr-version.yml
     with:
       version:
