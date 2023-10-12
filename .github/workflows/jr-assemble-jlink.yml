@@ -44,4 +44,4 @@ jobs:
           retention-days: 1
           name: jlink
           path: |
-            out/jreleaser/assemble/spring-cli-jlink/jlink/*.zip
+            out/jreleaser/assemble/spring-cli-standalone/jlink/*.zip

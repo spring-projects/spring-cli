@@ -39,6 +39,6 @@ jobs:
             git tag "v$releaseVersion"
             git push origin $releaseVersion --tags
           else
-            echo "ref=main" >> $GITHUB_OUTPUT
+            echo "ref=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_OUTPUT
             echo "version=$snapshotVersion" >> $GITHUB_OUTPUT
           fi

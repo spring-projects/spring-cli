@@ -41,11 +41,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: jlink
-          path: out/jreleaser/assemble/spring-cli-jlink/jlink
+          path: out/jreleaser/assemble/spring-cli-standalone/jlink
       - name: Expand jlink
         shell: bash
         run: |
-          cd out/jreleaser/assemble/spring-cli-jlink/jlink
+          cd out/jreleaser/assemble/spring-cli-standalone/jlink
           ls -l
           unzip -q -d work-${{ matrix.job.platform }} org.springframework.experimental.spring-cli-${{ inputs.version }}-${{ matrix.job.platform }}.zip
       - name: JR Assemble
