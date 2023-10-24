@@ -361,26 +361,27 @@ public class ProjectMerger {
 
 		logger.debug("Looking for @SpringBootApplication in directory " + this.currentProjectPath.toFile());
 		Optional<String> currentRootPackageName = RootPackageFinder.findRootPackage(this.currentProjectPath.toFile());
+		boolean foundRootPackage = true;
 		if (currentRootPackageName.isEmpty()) {
-			terminalMessage.print("Could not find root package containing class with @SpringBootApplication in " + this.currentProjectPath.toFile());
-			terminalMessage.print("Stopping");
-			return;
+			foundRootPackage = false;
 		}
 
 		logger.debug("Looking for @SpringBootApplication in directory " + this.toMergeProjectPath.toFile());
 		Optional<String> toMergeRootPackageName = RootPackageFinder.findRootPackage(this.toMergeProjectPath.toFile());
 		if (toMergeRootPackageName.isEmpty()) {
-			terminalMessage.print("Could find not root package containing class with @SpringBootApplication in " + this.toMergeProjectPath.toFile());
-			terminalMessage.print("Stopping");
-			return;
+			foundRootPackage = false;
 		}
 
-		AttributedStringBuilder sb = new AttributedStringBuilder();
-		sb.style(sb.style().foreground(AttributedStyle.WHITE));
-		sb.append("Refactoring code base that is to be merged to package name " + currentRootPackageName.get());
-		terminalMessage.print(sb.toAttributedString());
-		refactorPackage(currentRootPackageName.get(), toMergeRootPackageName.get(), this.toMergeProjectPath);
-		logger.debug("look in " + this.toMergeProjectPath + " to see if refactoring of 'to merge code base' was done correctly");
+		if (foundRootPackage) {
+			AttributedStringBuilder sb = new AttributedStringBuilder();
+			sb.style(sb.style().foreground(AttributedStyle.WHITE));
+			sb.append("Refactoring code base that is to be merged to package name " + currentRootPackageName.get());
+			terminalMessage.print(sb.toAttributedString());
+			refactorPackage(currentRootPackageName.get(), toMergeRootPackageName.get(), this.toMergeProjectPath);
+			logger.debug("look in " + this.toMergeProjectPath + " to see if refactoring of 'to merge code base' was done correctly");
+		} else {
+			terminalMessage.print("WARNING: Could not find root package containing class with @SpringBootApplication in " + this.currentProjectPath.toFile());
+		}
 	}
 
 	private void mergeMavenDependencies(Path currentProjectPomPath, Model currentModel, Model toMergeModel, List<Path> paths, MavenParser mavenParser) throws IOException {
