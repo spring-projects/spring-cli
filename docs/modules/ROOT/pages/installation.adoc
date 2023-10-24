@@ -1,81 +1,64 @@
 = Installation
 
-The Spring CLI is available as Spring Boot uber-jar.
-Eventually it will be available as native binary for Windows, Mac and Linux.
+The Spring CLI is available in various formats allowing user to pick their favourite installation method.
 
-== Getting releases
+[tabs]
+====
+Windows::
++
+--
+Manually:::
 
-You can pick up a release on the https://github.com/spring-projects-experimental/spring-cli/releases[Release Page]
+Download the pre-compiled binary from the https://github.com/spring-projects-experimental/spring-cli/releases[Release Page].
+_spring-cli-standalone-<version>-windows.x86_64.zip_ is based on JDK's _jlink_ and thus doesn't need a JDK installation.
+_spring-cli-installer-<version>-windows-x86_64.msi_ is an installer and based on _zip_ file mentioned previously.
 
-Note that *Java 17* is required, see below.
+--
 
-You will also likely need to create an alias to invoke the CLi using the word 'spring'.  See below.
+Linux::
++
+--
+Manually:::
 
-== Getting Snapshots
-As the project is evolving quickly in the early days, you can download the Spring Boot uber-jar, Linux and Mac native binaries from the output of GitHub's Continuous Integration Action. 
+Download the pre-compiled binary from the https://github.com/spring-projects-experimental/spring-cli/releases[Release Page].
+_spring-cli-standalone-<version>-linux.x86_64.zip_ is based on JDK's _jlink_ and thus doesn't need a JDK installation.
+_spring-cli-installer-<version>-1.x86_64.rpm_ and _spring-cli-installer_<version>-1_amd64.deb_ are installers and based on _zip_ file mentioned previously.
 
-* https://github.com/spring-projects-experimental/spring-cli/actions/workflows/ci.yml[Browse CI artifacts here].
-Select a CI run by clicking on the latest CI run.
-On the bottom of that page you will see the section *Artifacts* and inside that you will see the uber-jar package as a `artifacts.zip` file.
+Homebrew Tap:::
 
-You can also build the uber-jar from source code, see below.
-
-== Java 17 installation required
-
-Even if you are using the Spring CLI on a Java 11 or Java 8 based project, the CLI itself needs to have access to an installation of Java 17.
-
-Create a `JAVA_HOME` environment variable that points to your Java 17 installation.
-For example, for `bash` shells
-
-```
-export JAVA_HOME=jdk-install-dir
-export PATH=$JAVA_HOME/bin:$PATH
-```
-
-This is required by https://github.com/openrewrite/rewrite[OpenRewrite], which is used internally.
-
-== Build Instructions
-
-```
-git clone https://github.com/spring-projects-experimental/spring-cli $HOME/temp/spring-cli
-
-cd $HOME/temp/spring-cli
-
-./gradlew clean build -x test
-```
-
-Now create an alias to invoke the CLI with the command 'spring'
-
-```
-alias spring='java -jar $HOME/temp/spring-cli/build/libs/spring-cli-0.0.1-SNAPSHOT.jar'
-```
-
-== Setting up your PATH or alias
-
-If you have downloaded the Spring Boot uber-jar, create the following alias with the directory appropriate for your download path.
-
-[source, bash]
+[source]
 ----
-alias spring='java -jar /home/mark/downloads/spring-cli-0.0.1-SNAPSHOT.jar'
+brew tap spring-projects-experimental/spring-cli
+brew install spring-cli
 ----
+--
 
-== Interactive mode
+Mac::
++
+--
+Manually:::
 
-In addition to running the Spring Boot uber-jar via an alias or running the native binary using `spring` at the command line, you can enter an interactive mode where the Spring CLI will remain up and running.  In this case you do not need to add the `spring` keyword to execute the commands.
+Download the pre-compiled binary from the https://github.com/spring-projects-experimental/spring-cli/releases[Release Page].
+_spring-cli-standalone-<version>-osx.x86_64.zip_ is based on JDK's _jlink_ and thus doesn't need a JDK installation.
 
-The interactive mode provides command option completion but you can also rely on positional option values.
+Homebrew Tap:::
 
-== Command Completion
-
-In non-interactive mode, you can get command completion in your shell by executing the following:
-
-[source, bash]
+[source]
 ----
-source <(spring completion bash)
+brew tap spring-projects-experimental/spring-cli
+brew install spring-cli
 ----
+--
 
-== Getting Help
+Generic::
++
+--
+Manually:::
 
-The command `spring help` will show help for all the commands.  
+Download the pre-compiled binary from the https://github.com/spring-projects-experimental/spring-cli/releases[Release Page].
+_spring-cli-<version>.jar_ is a plain executable jar and need an existing JDK 17 installation.
+_spring-cli-<version>.zip_ contains executable jar and scripts for unix and windows and need an
+existing JDK 17 installation.
+--
 
-To get help on a specific command, just type `spring help` and the command plus sub-command name, e.g. `spring help boot new`
+====
