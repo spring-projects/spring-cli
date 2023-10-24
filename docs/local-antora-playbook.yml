@@ -15,7 +15,7 @@ urls:
   redirect_facility: static
 ui:
   bundle:
-    url: https://github.com/spring-io/antora-ui-spring/releases/download/latest/ui-bundle.zip
+    url: https://github.com/spring-io/antora-ui-spring/releases/download/v0.4.7/ui-bundle.zip
     snapshot: true
   supplemental_files:
   - path: ui.yml
