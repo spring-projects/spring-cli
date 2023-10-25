@@ -71,7 +71,7 @@ To view the registered projects in the default "getting started" catalog, execut
 
 [source, shell]
 ----
-spring catalog list
+spring project-catalog list
 ----
 
 This command displays the available project catalogs that can be used with the `spring boot new` command.
