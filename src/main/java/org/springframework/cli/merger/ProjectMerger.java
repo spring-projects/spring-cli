@@ -114,7 +114,13 @@ public class ProjectMerger {
 		PomReader pomReader = new PomReader();
 		Path toMergeProjectPomPath = this.toMergeProjectPath.resolve("pom.xml");
 		if (Files.notExists(toMergeProjectPomPath)) {
-			throw new SpringCliException("Could not find pom.xml in " + this.toMergeProjectPath);
+			// only do the copy of files
+			try {
+				copyToMergeCodebase();
+				return;
+			} catch (IOException e) {
+				throw new SpringCliException("Error copying files from to be merged project.  Error Message = " +e.getMessage(), e);
+			}
 		}
 		Path currentProjectPomPath = this.currentProjectPath.resolve("pom.xml");
 		if (Files.notExists(currentProjectPomPath)) {
@@ -287,7 +293,7 @@ public class ProjectMerger {
 					continue;
 				}
 			}
-			if (destFile.exists()) {
+			if (destFile.exists() && srcFile.getName().equals("application")) {
 				Optional<String> extension = getExtension(srcFile.getName());
 				if (extension.isPresent() && extension.get().equals("properties")) {
 					mergeAndWriteProperties(srcFile, destFile);
@@ -296,7 +302,6 @@ public class ProjectMerger {
 				} else {
 					logger.debug("WARNING: Not copying file as it already exists: " + srcFile);
 				}
-				//TODO handle renaming readme.adoc etc.
 			} else {
 				logger.debug("Copying srcFile = " + srcFile + " to destFile = " + destFile);
 				FileUtils.getFileUtils().copyFile(srcFile, destFile);
@@ -354,8 +359,6 @@ public class ProjectMerger {
 				.filter(f -> f.contains("."))
 				.map(f -> f.substring(filename.lastIndexOf(".") + 1));
 	}
-
-
 
 	private void refactorToMergeCodebase() {
 
