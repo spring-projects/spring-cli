@@ -44,6 +44,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Repository;
 import org.apache.tools.ant.util.FileUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.jline.utils.AttributedStringBuilder;
@@ -57,10 +58,7 @@ import org.openrewrite.java.AddImport;
 import org.openrewrite.java.Java17Parser;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.java.tree.J.Annotation;
-import org.openrewrite.maven.AddDependency;
-import org.openrewrite.maven.AddManagedDependency;
-import org.openrewrite.maven.ChangePropertyValue;
-import org.openrewrite.maven.MavenParser;
+import org.openrewrite.maven.*;
 import org.openrewrite.xml.tree.Xml.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,19 +139,18 @@ public class ProjectMerger {
 			mergeMavenProperties(currentProjectPomPath, toMergeModel);
 			mergeMavenDependencyManagement(currentProjectPomPath, toMergeModel, paths, mavenParser);
 			mergeMavenDependencies(currentProjectPomPath, currentModel, toMergeModel, paths, mavenParser);
+			mergeMavenRepositories(currentProjectPomPath, currentModel, toMergeModel, paths, mavenParser);
 
 			// Code Refactoring
 			refactorToMergeCodebase();
-			copyToMergeCodebase();
 			// Copy and merge files
+			copyToMergeCodebase();
 
 			mergeSpringBootApplicationClassAnnotations();
 		} catch (IOException ex) {
 			throw new SpringCliException("Error merging projects.", ex);
 		}
 	}
-
-
 
 
 
@@ -430,6 +427,19 @@ public class ProjectMerger {
 		return candidateDependencyAlreadyPresent;
 	}
 
+	private boolean candidateRepositoryAlreadyPresent(Repository candidateRepository, List<Repository> currentRepositories) {
+		String candidateRepositoryId = candidateRepository.getId();
+		boolean candidateRepositoryIdAlreadyPresent = false;
+		for (Repository currentRepository : currentRepositories) {
+			String currentRepositoryId = currentRepository.getId();
+			if (candidateRepositoryId.equals(currentRepositoryId)) {
+				candidateRepositoryIdAlreadyPresent = true;
+				break;
+			}
+		}
+		return candidateRepositoryIdAlreadyPresent;
+	}
+
 	private void mergeMavenDependencyManagement(Path currentProjectPomPath, Model modelToMerge, List<Path> paths, MavenParser mavenParser) throws IOException {
 		DependencyManagement dependencyManagement = modelToMerge.getDependencyManagement();
 		if (dependencyManagement != null) {
@@ -477,6 +487,27 @@ public class ProjectMerger {
 		}
 	}
 
+	private void mergeMavenRepositories(Path currentProjectPomPath, Model currentModel, Model toMergeModel, List<Path> paths, MavenParser mavenParser) throws IOException {
+		logger.debug("mergeMavenRepositories: Merging Maven Repositories...");
+		List<Repository> toMergeRepositories = toMergeModel.getRepositories();
+		List<Repository> currentRepositories = currentModel.getRepositories();
+		for (Repository candidateRepository : toMergeRepositories) {
+			if (candidateRepositoryAlreadyPresent(candidateRepository, currentRepositories)) {
+				logger.debug("mergeMavenDependencies: Not merging repository " + candidateRepository);
+			} else {
+				AddRepository recipeAddRepository = getRecipeAddRepository(candidateRepository.getId(), candidateRepository.getUrl(), candidateRepository.getName(), false, false);
+				List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
+				List<Result> resultList = recipeAddRepository.run(pomFiles).getResults();
+				if (!resultList.isEmpty()) {
+					AttributedStringBuilder sb = new AttributedStringBuilder();
+					sb.style(sb.style().foreground(AttributedStyle.WHITE));
+					sb.append("Merging repository section " + candidateRepository.getId() + ", " + candidateRepository.getUrl());
+					terminalMessage.print(sb.toAttributedString());
+				}
+				updatePomFile(currentProjectPomPath, resultList);
+			}
+		}
+	}
 
 	private void updateSpringApplicationClass(Path pathToCurrentSpringApplicationClass, List<Result> resultList) throws IOException {
 		if (resultList.isEmpty()) {
@@ -523,4 +554,7 @@ public class ProjectMerger {
 		return new AddSimpleDependencyRecipe(groupId, artifactId, version, null, scope, true, onlyIfUsing, null, null, false, null);
 	}
 
+	public static AddRepository getRecipeAddRepository(String id, String url,  String name, boolean snapshotsEnabled, boolean releasesEnabled) {
+		return new AddRepository(id, url, name, null, snapshotsEnabled, null, null, releasesEnabled, null, null );
+	}
 }
