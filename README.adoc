@@ -41,7 +41,7 @@ TIP: There is a CI workflow which builds native binaries for linux, macos and wi
 ./gradlew antora
 ```
 
-Output is in `./build/site`
+Output is in `./docs/build/site/index.html`
 
 For more information on the build see https://github.com/spring-projects-experimental/spring-cli/tree/docs-build[README in the docs-build branch].
 
