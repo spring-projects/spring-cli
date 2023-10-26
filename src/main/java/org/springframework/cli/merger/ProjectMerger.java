@@ -136,10 +136,10 @@ public class ProjectMerger {
 
 		try {
 			// Maven merges
+			mergeMavenRepositories(currentProjectPomPath, currentModel, toMergeModel, paths, mavenParser);
 			mergeMavenProperties(currentProjectPomPath, toMergeModel);
 			mergeMavenDependencyManagement(currentProjectPomPath, toMergeModel, paths, mavenParser);
 			mergeMavenDependencies(currentProjectPomPath, currentModel, toMergeModel, paths, mavenParser);
-			mergeMavenRepositories(currentProjectPomPath, currentModel, toMergeModel, paths, mavenParser);
 
 			// Code Refactoring
 			refactorToMergeCodebase();
