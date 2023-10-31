@@ -201,6 +201,11 @@ if (project.hasProperty('cliRelease') && cliRelease.toBoolean()) {
 			url = 'https://download.bell-sw.com/java/17.0.8+7/bellsoft-jdk17.0.8+7-macos-amd64.tar.gz'
 			checksum = 'sha1/c15050d4c38402f64d811d4c55290dc1e9ccbb4e'
 		}
+		bellsoft17OsxArm {
+			platform = 'osx-aarch64'
+			url = 'https://download.bell-sw.com/java/17.0.8+7/bellsoft-jdk17.0.8+7-macos-aarch64.tar.gz'
+			checksum = 'sha1/8188376216a81a1c6ed15f3c7c96b49448807469'
+		}
 		bellsoft17Linux {
 			platform = 'linux-x86_64'
 			url = 'https://download.bell-sw.com/java/17.0.8+7/bellsoft-jdk17.0.8+7-linux-amd64.tar.gz'
