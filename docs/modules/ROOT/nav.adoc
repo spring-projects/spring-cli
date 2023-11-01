@@ -5,7 +5,7 @@
 * xref:registering-new-projects.adoc[Registering Projects]
 * xref:adding-to-existing-projects.adoc[Adding to Existing Projects]
 * xref:boot-add-guide.adoc[Using "boot add"]
-* xref:ai-guide.adoc[Using to "ai commands"]
+* xref:ai-guide.adoc[Guide to "ai commands"]
 * xref:user-command-guide.adoc[User defined commands]
 * xref:action-file-overview.adoc[Overview of Action Files]
 * xref:action-guide.adoc[Guide to Action Files]
