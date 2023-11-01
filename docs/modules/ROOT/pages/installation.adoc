@@ -1,6 +1,8 @@
 = Installation
 
-The Spring CLI is available in various formats allowing user to pick their favourite installation method.
+The Spring CLI is available in various formats allowing user to pick their favourite installation
+method. Downloadable artifacts are available from the
+https://github.com/spring-projects-experimental/spring-cli/releases[Release Page].
 
 == Binary Release
 [tabs]
@@ -10,9 +12,8 @@ Windows::
 --
 Manually:::
 
-Download the pre-compiled binary from the https://github.com/spring-projects-experimental/spring-cli/releases[Release Page].
-_spring-cli-standalone-<version>-windows.x86_64.zip_ is based on JDK's _jlink_ and thus doesn't need a JDK installation.
-_spring-cli-installer-<version>-windows-x86_64.msi_ is an installer and based on _zip_ file mentioned previously.
+* _spring-cli-standalone-<version>-windows.x86_64.zip_ - bundled _x86_ JDK
+* _spring-cli-installer-<version>-windows-x86_64.msi_ - _msi_ installation with bundled _x86_ JDK
 
 --
 
@@ -21,9 +22,9 @@ Linux::
 --
 Manually:::
 
-Download the pre-compiled binary from the https://github.com/spring-projects-experimental/spring-cli/releases[Release Page].
-_spring-cli-standalone-<version>-linux.x86_64.zip_ is based on JDK's _jlink_ and thus doesn't need a JDK installation.
-_spring-cli-installer-<version>-1.x86_64.rpm_ and _spring-cli-installer_<version>-1_amd64.deb_ are installers and based on _zip_ file mentioned previously.
+* _spring-cli-standalone-<version>-linux.x86_64.zip_ - bundled _x86_ JDK
+* _spring-cli-installer-<version>-1.x86_64.rpm_ - _rpm_ installation with bundled _x86_ JDK
+* _spring-cli-installer_<version>-1_amd64.deb_ - _dep_ installation with bundled _x86_ JDK
 
 Homebrew Tap:::
 
@@ -39,10 +40,12 @@ Mac::
 --
 Manually:::
 
-Download the pre-compiled binary from the https://github.com/spring-projects-experimental/spring-cli/releases[Release Page].
-_spring-cli-standalone-<version>-osx.x86_64.zip_ is based on JDK's _jlink_ and thus doesn't need a JDK installation.
+* _spring-cli-standalone-<version>-osx.x86_64.zip_ - bundled _x86_ JDK
+* _spring-cli-standalone-<version>-osx.aarch64.zip_ - bundled _arm_ JDK
 
 Homebrew Tap:::
+
+Tap formula will choose between _x86_ and _aarch64_ depending on your brew setup.
 
 [source]
 ----
@@ -56,10 +59,8 @@ Generic::
 --
 Manually:::
 
-Download the pre-compiled binary from the https://github.com/spring-projects-experimental/spring-cli/releases[Release Page].
-_spring-cli-<version>.jar_ is a plain executable jar and need an existing JDK 17 installation.
-_spring-cli-<version>.zip_ contains executable jar and scripts for unix and windows and need an
-existing JDK 17 installation.
+* _spring-cli-<version>.jar_ - plain fatjar, needs separate JDK17 installation
+* _spring-cli-<version>.zip_ - plain fatjar with start scripts, needs separate JDK17 installation
 --
 
 ====
