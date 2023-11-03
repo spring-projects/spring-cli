@@ -198,23 +198,23 @@ if (project.hasProperty('cliRelease') && cliRelease.toBoolean()) {
 	jdks {
 		bellsoft17Osx {
 			platform = 'osx-x86_64'
-			url = 'https://download.bell-sw.com/java/17.0.8+7/bellsoft-jdk17.0.8+7-macos-amd64.tar.gz'
-			checksum = 'sha1/c15050d4c38402f64d811d4c55290dc1e9ccbb4e'
+			url = 'https://download.bell-sw.com/java/17.0.9+11/bellsoft-jdk17.0.9+11-macos-amd64.tar.gz'
+			checksum = 'sha1/9cce19a8be85dcd3bd61df1e4a62aacccb6599ed'
 		}
 		bellsoft17OsxArm {
 			platform = 'osx-aarch64'
-			url = 'https://download.bell-sw.com/java/17.0.8+7/bellsoft-jdk17.0.8+7-macos-aarch64.tar.gz'
-			checksum = 'sha1/8188376216a81a1c6ed15f3c7c96b49448807469'
+			url = 'https://download.bell-sw.com/java/17.0.9+11/bellsoft-jdk17.0.9+11-macos-aarch64.tar.gz'
+			checksum = 'sha1/c2b82658fb2305aaabce6ec5bbc8f15093dee6dd'
 		}
 		bellsoft17Linux {
 			platform = 'linux-x86_64'
-			url = 'https://download.bell-sw.com/java/17.0.8+7/bellsoft-jdk17.0.8+7-linux-amd64.tar.gz'
-			checksum = 'sha1/04dee41344ba66d6f3b693785921351dd0cd1d28'
+			url = 'https://download.bell-sw.com/java/17.0.9+11/bellsoft-jdk17.0.9+11-linux-amd64.tar.gz'
+			checksum = 'sha1/af3de4524646058018c7b885b54f7606c5d0a592'
 		}
 		bellsoft17Windows {
 			platform = 'windows-x86_64'
-			url = 'https://download.bell-sw.com/java/17.0.8+7/bellsoft-jdk17.0.8+7-windows-amd64.zip'
-			checksum = 'sha1/e1350e0f338f3fafb950d5e0a9093dedda434ca3'
+			url = 'https://download.bell-sw.com/java/17.0.9+11/bellsoft-jdk17.0.9+11-windows-amd64.zip'
+			checksum = 'sha1/c70350612b58dd0482b707955c0407d3250e8677'
 		}
 	}
 }
