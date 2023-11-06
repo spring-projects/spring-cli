@@ -16,14 +16,14 @@ on:
 
 jobs:
   choose_release:
-    name: Generate output
+    name: Choose Release
     runs-on: ubuntu-latest
     outputs:
-      ref: ${{ steps.step1.outputs.ref }}
-      version: ${{ steps.step1.outputs.version }}
+      ref: ${{ steps.info.outputs.ref }}
+      version: ${{ steps.info.outputs.version }}
     steps:
       - uses: actions/checkout@v3
-      - id: step1
+      - id: info
         run: |
           snapshotVersion=$( awk -F '=' '$1 == "version" { print $2 }' gradle.properties )
           if [ "${{ inputs.version }}" != '' ]; then
