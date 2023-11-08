@@ -117,7 +117,7 @@ In non-interactive mode, you can get command completion in your shell by executi
 
 [source, bash]
 ----
-eval "$(java -jar $HOME/temp/spring-cli/build/libs/spring-cli-0.7.2-SNAPSHOT.jar completion bash 2>&1)"
+eval "$(java -jar $HOME/temp/spring-cli/build/libs/spring-cli-0.7.2-SNAPSHOT.jar completion bash)"
 ----
 
 == Getting Help
