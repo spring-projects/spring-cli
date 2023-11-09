@@ -25,6 +25,9 @@ assemble:
         path: build/libs/{{distributionName}}-{{projectVersion}}.jar
       executable:
         name: spring
+      artifacts:
+        - path: build/completion/bash/spring
+          transform: completion/bash/spring
 
   jlink:
     spring-cli-standalone:
@@ -38,6 +41,9 @@ assemble:
         - jdk.crypto.ec
       mainJar:
         path: 'build/libs/spring-cli-{{projectVersion}}.jar'
+      artifacts:
+        - path: build/completion/bash/spring
+          transform: completion/bash/spring
       targetJdks:
         - path: 'build/jdks/bellsoft17Linux/jdk-17.0.9'
           platform: 'linux-x86_64'

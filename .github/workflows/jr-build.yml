@@ -6,6 +6,9 @@ on:
       ref:
         required: true
         type: string
+      version:
+        required: true
+        type: string
 
 jobs:
   build:
@@ -20,9 +23,19 @@ jobs:
           distribution: adopt
           java-version: 17
           cache: gradle
-      - run: ./gradlew build -x test --no-daemon -PcliRelease=true
+      - name: Gradle Build
+        run: ./gradlew build -x test --no-daemon -PcliRelease=true
+      - name: Completion Files
+        run: |
+          mkdir -p build/completion/bash
+          java -jar build/libs/spring-cli-${{ inputs.version }}.jar completion bash > build/completion/bash/spring
       - uses: actions/upload-artifact@v3
         with:
           name: fatjar
           path: build/libs/*.jar
+          retention-days: 1
+      - uses: actions/upload-artifact@v3
+        with:
+          name: completion
+          path: build/completion
           retention-days: 1

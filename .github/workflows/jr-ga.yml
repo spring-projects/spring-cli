@@ -18,6 +18,7 @@ jobs:
     uses: ./.github/workflows/jr-build.yml
     with:
       ref: ${{ needs.precheck.outputs.ref }}
+      version: ${{ needs.precheck.outputs.version }}
   javaarchive:
     needs: [precheck,build]
     uses: ./.github/workflows/jr-assemble-javaarchive.yml

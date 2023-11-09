@@ -28,6 +28,11 @@ jobs:
         with:
           name: fatjar
           path: build/libs
+      - name: Download completion
+        uses: actions/download-artifact@v3
+        with:
+          name: completion
+          path: build/completion
       - name: Jdks
         shell: bash
         run: ./gradlew copyJdksFromCache setupJdks -PcliRelease=true
