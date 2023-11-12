@@ -39,6 +39,7 @@ assemble:
       additionalModuleNames:
         - java.desktop
         - jdk.crypto.ec
+        - jdk.compiler
       mainJar:
         path: 'build/libs/spring-cli-{{projectVersion}}.jar'
       artifacts:
