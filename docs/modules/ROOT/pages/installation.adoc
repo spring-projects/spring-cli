@@ -115,13 +115,16 @@ The interactive mode provides command option completion but you can also rely on
 
 In non-interactive mode, you can get command completion in your shell by executing the following:
 
-[source, bash]
+[source, bash, subs="attributes"]
 ----
-eval "$(java -jar $HOME/temp/spring-cli/build/libs/spring-cli-0.7.2-SNAPSHOT.jar completion bash)"
+eval "$(java -jar $HOME/temp/spring-cli/build/libs/spring-cli-{project-version}.jar completion bash)"
 ----
+
+NOTE: Homebrew formula sets bash completion if you've configured it https://docs.brew.sh/Shell-Completion.
 
 == Getting Help
 
 The command `spring help` will show help for all the commands.
 
 To get help on a specific command, just type `spring help` and the command plus sub-command name, e.g. `spring help boot new`bg
+
