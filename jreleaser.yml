@@ -13,7 +13,7 @@ project:
   links:
     homepage: https://github.com/spring-projects-experimental/spring-cli
   java:
-    groupId: org.springframework.experimental
+    groupId: org.springframework.cli
     version: 17
   inceptionYear: 2023
 
@@ -32,6 +32,7 @@ assemble:
   jlink:
     spring-cli-standalone:
       active: ALWAYS
+      imageName: '{{distributionName}}-{{projectVersion}}'
       executable: spring
       jdeps:
         multiRelease: base
@@ -101,16 +102,16 @@ distributions:
       tap:
         name: homebrew-spring-cli
     artifacts:
-      - path: '{{jlinkDir}}/org.springframework.experimental.spring-cli-{{projectVersion}}-linux-x86_64.zip'
+      - path: '{{jlinkDir}}/{{distributionName}}-{{projectVersion}}-linux-x86_64.zip'
         transform: '{{distributionName}}/{{distributionName}}-{{projectVersion}}-linux.x86_64.zip'
         platform: 'linux-x86_64'
-      - path: '{{jlinkDir}}/org.springframework.experimental.spring-cli-{{projectVersion}}-osx-x86_64.zip'
+      - path: '{{jlinkDir}}/{{distributionName}}-{{projectVersion}}-osx-x86_64.zip'
         transform: '{{distributionName}}/{{distributionName}}-{{projectVersion}}-osx.x86_64.zip'
         platform: 'osx-x86_64'
-      - path: '{{jlinkDir}}/org.springframework.experimental.spring-cli-{{projectVersion}}-osx-aarch64.zip'
+      - path: '{{jlinkDir}}/{{distributionName}}-{{projectVersion}}-osx-aarch64.zip'
         transform: '{{distributionName}}/{{distributionName}}-{{projectVersion}}-osx.aarch64.zip'
         platform: 'osx-aarch_64'
-      - path: '{{jlinkDir}}/org.springframework.experimental.spring-cli-{{projectVersion}}-windows-x86_64.zip'
+      - path: '{{jlinkDir}}/{{distributionName}}-{{projectVersion}}-windows-x86_64.zip'
         transform: '{{distributionName}}/{{distributionName}}-{{projectVersion}}-windows.x86_64.zip'
         platform: 'windows-x86_64'
   spring-cli-installer:
