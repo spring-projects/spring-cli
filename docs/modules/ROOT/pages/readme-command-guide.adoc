@@ -1,14 +1,12 @@
 = Guide to README Commands
 
-When you have created a `README` file, either manually or as the result of running the `ai add --preview --description "Create a JPA application"` you can apply the changes described in that `README` file using the command `readme apply`
+When you have created a `README` file, either manually or as the result of running the `ai add --preview --description "Create a JPA application"` command, you can apply the changes described in that `README` file by using the `readme apply` command.
 
-For example if there is a file named `README-ai-jpa.md` in the root of your project, the command
+For example, if there is a file named `README-ai-jpa.md` in the root of your project, the following command applies the changes:
 
 [source, bash]
 ----
 spring guide apply README-ai-jpa.md
 ----
 
-will apply the changes.  You can keep track of what has changed by commiting your work using Git before applying the change.
-
-
+You can keep track of what has changed by committing your work in Git before applying the change.

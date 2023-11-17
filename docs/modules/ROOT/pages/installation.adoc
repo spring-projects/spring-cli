@@ -1,6 +1,6 @@
 = Installation
 
-The Spring CLI is available in various formats allowing user to pick their favourite installation
+The Spring CLI is available in various formats that let you pick your favorite installation
 method. Downloadable artifacts are available from the
 https://github.com/spring-projects/spring-cli/releases[Release Page].
 
@@ -45,7 +45,7 @@ Manually:::
 
 Homebrew Tap:::
 
-Tap formula will choose between _x86_ and _aarch64_ depending on your brew setup.
+The Tap formula chooses between _x86_ and _aarch64_, depending on your brew setup.
 
 [source]
 ----
@@ -59,28 +59,28 @@ Generic::
 --
 Manually:::
 
-* _spring-cli-<version>.jar_ - plain fatjar, needs separate JDK17 installation
-* _spring-cli-<version>.zip_ - plain fatjar with start scripts, needs separate JDK17 installation
+* _spring-cli-<version>.jar_ - plain fat jar, needs separate JDK17 installation
+* _spring-cli-<version>.zip_ - plain fat jar with start scripts, needs separate JDK17 installation
 --
 
 ====
 
 == Getting Snapshot Binaries
-As the project is evolving quickly in the early days, you can download the Spring Boot uber-jar, Linux and Mac native binaries from the output of GitHub's Continuous Integration Action.
+As the project is evolving quickly in its early days, you can download the Spring Boot uber-jar and Linux and Mac native binaries from the output of GitHub's Continuous Integration Action.
 
-* https://github.com/spring-projects/spring-cli/actions/workflows/ci.yml[Browse CI artifacts here].
+You can https://github.com/spring-projects/spring-cli/actions/workflows/ci.yml[browse CI artifacts here].
 Select a CI run by clicking on the latest CI run.
-On the bottom of that page you will see the section *Artifacts* and inside that you will see the uber-jar package as a `artifacts.zip` file.
+On the bottom of that page, you can see the *Artifacts* section. Inside of that, you can see the uber-jar package as an `artifacts.zip` file.
 
-You can also build the uber-jar from source code, see below.
+You can also build the uber-jar from source code, as described <<installation-build-instructions,later on this page>>.
 
 == Building from source
-=== Java 17 installation required
+=== Java 17 Installation Required
 
-Even if you are using the Spring CLI on a Java 11 or Java 8 based project, the CLI itself needs to have access to an installation of Java 17.
+Even if you use the Spring CLI on a Java 11 or Java 8 project, the CLI itself needs to have access to an installation of Java 17.
 
 Create a `JAVA_HOME` environment variable that points to your Java 17 installation.
-For example, for `bash` shells
+For example, for `bash` shells, you can run the following commands:
 
 ```
 export JAVA_HOME=jdk-install-dir
@@ -89,7 +89,10 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 This is required by https://github.com/openrewrite/rewrite[OpenRewrite], which is used internally.
 
+[[installation-build-instructions]]
 === Build Instructions
+
+To build the jar yourself, run the following commands:
 
 ```
 git clone https://github.com/spring-projects/spring-cli $HOME/temp/spring-cli
@@ -99,32 +102,31 @@ cd $HOME/temp/spring-cli
 ./gradlew clean build -x test
 ```
 
-Now create an alias to invoke the CLI with the command 'spring'
+Now create an alias to invoke the CLI with a command of 'spring':
 
 ```
 alias spring='java -jar $HOME/temp/spring-cli/build/libs/spring-cli-0.7.2-SNAPSHOT.jar'
 ```
 
-== Interactive mode
+== Interactive Mode
 
-In addition to running the Spring Boot uber-jar via an alias or running the native binary using `spring` at the command line, you can enter an interactive mode where the Spring CLI will remain up and running.  In this case you do not need to add the `spring` keyword to execute the commands.
+In addition to running the Spring Boot uber-jar with an alias or running the native binary by using `spring` at the command line, you can enter an interactive mode where the Spring CLI continues to run. In this case, you need not add the `spring` keyword to run the commands.
 
-The interactive mode provides command option completion but you can also rely on positional option values.
+The interactive mode provides command option completion, but you can also rely on positional option values.
 
 == Command Completion
 
-In non-interactive mode, you can get command completion in your shell by executing the following:
+In non-interactive mode, you can get command completion in your shell by running the following command:
 
 [source, bash, subs="attributes"]
 ----
 eval "$(java -jar $HOME/temp/spring-cli/build/libs/spring-cli-{project-version}.jar completion bash)"
 ----
 
-NOTE: Homebrew formula sets bash completion if you've configured it https://docs.brew.sh/Shell-Completion.
+NOTE: The Homebrew formula sets bash completion if you have configured https://docs.brew.sh/Shell-Completion.
 
 == Getting Help
 
-The command `spring help` will show help for all the commands.
+The `spring help` command shows help for all the commands.
 
-To get help on a specific command, just type `spring help` and the command plus sub-command name, e.g. `spring help boot new`bg
-
+To get help on a specific command, type `spring help` and the command plus sub-command name -- for example, `spring help boot new`.

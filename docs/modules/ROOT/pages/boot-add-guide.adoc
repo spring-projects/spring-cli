@@ -1,25 +1,25 @@
-= Guide to "boot add"
+= Guide to Using Boot Add
 
-All the projects that are available in the `project list` command can be used to add code and configuration to an existing project.
+You can use all the projects that are available in the `project list` command to add code and configuration to an existing project.
 
-The CLI does this by
+The CLI does this by:
 
-* Merging the Maven build file, so that any missing project properties, dependencies, dependency management, plug-ins are added into the target project.
-* Performing a package refactoring so that the code to be copied into the target project has the same package structure.
-* Adding any missing annotations on the Spring Boot main application in the target project are added.
-* Renaming the `README.adoc`` file (or, .md file) to `README-<project-name>.adoc` so that additional information about what code was added can be described to the user.
-* Merging `application.yaml` and `application.properties` files
+* Merging the Maven build file, so that any missing project properties, dependencies, dependency management, and plug-ins are added into the target project.
+* Performing a package refactoring so that the code to be copied into the target project with the same package structure.
+* Adding any missing annotations on the Spring Boot main application in the target project.
+* Renaming the `README.adoc` (or .md) file  to `README-<project-name>.adoc` so that you can describe additional information about what code was added.
+* Merging `application.yaml` and `application.properties` files.
 
 The heuristic to perform this task is not 100% complete at this time, so expect a few bumps if you are an early adopter.
 
-For example, let's assume we have added the getting started catalog.
+For example, assume we have added the getting started catalog:
 
 [source, bash]
 ----
 spring catalog add gs https://github.com/rd-1-2022/spring-gs-catalog
 ----
 
-This gives us the following projects to select from
+This gives us the following projects from which to select:
 
 [source, bash]
 ----
@@ -36,7 +36,7 @@ This gives us the following projects to select from
 └──────────┴────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴───────┴──────────────┘
 ----
 
-We can create a new web project and then add JPA functionality to that project by the following steps
+We can create a new web project and then add JPA functionality to that project by running the following commands:
 
 [source, bash]
 ----
@@ -45,7 +45,7 @@ cd demo
 spring boot add jpa
 ----
 
-The project tree now contains both the web application and the JPA functionality.
+The project tree now contains both the web application and the JPA functionality:
 
 [source, bash]
 ----
@@ -82,14 +82,14 @@ $ tree
 ----
 
 == Conventions
-In order to perform an intelligent merge of the code base when running `spring boot add` the following conventions in the project must be followed.
+To perform an intelligent merge of the code base when you run `spring boot add`, the following conventions in the project must be followed:
 
-* The main `@SpringBootApplication` should be placed at the root of the package hiearachy with all other code in subpackages.
+* You should place the main `@SpringBootApplication` at the root of the package hierarchy with all other code in subpackages.
 * There should be no additional `@Bean` annotations in the `@SpringBootApplication` class.
-Any configuration should live in a separate `@Configuration` class
+Any configuration should live in a separate `@Configuration` class.
 
 
 == Limitations
-Curently only single module Maven projects are supported.
-Support for single module Gradle projects is planned for the 1.0 release.
+Currently, only single-module Maven projects are supported.
+Support for single-module Gradle projects is planned for the 1.0 release.
 No timeline is defined for supporting multi-module projects.

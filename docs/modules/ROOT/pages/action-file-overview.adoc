@@ -1,32 +1,34 @@
 = Action Files
 
-Action files are what powers xref:user-command-guide.adoc[user defined commands].
+Action files power xref:user-command-guide.adoc[user defined commands].
 These files are written in YAML format and are stored in the directory that defines the command.
 
-See the documentation on xref:user-command-guide.adoc#_structure[Action file Structure] for more information on the directory structure for user defined commands.
+See the documentation on xref:user-command-guide.adoc#_structure[Action file Structure] for more information on the directory structure for user-defined commands.
 
-Each file contains a series of actions that are executed in the order they are defined in the file.
+Each file contains a series of actions that are run in the order in which they are defined in the file.
 An action performs a task that is commonly needed to help developers add or modify code and configuration to their current project.
-An action can run another executable application, which helps automate development tasks such as deployment using a vendor's CLI application.
+An action can run another executable application, which helps automate development tasks, such as deployment using a vendor's CLI application.
 
-There can be multiple action files in a directory, and they are evaluated in alphabetical order.  **NOTE:** This may change.
+There can be multiple action files in a directory, and they are evaluated in alphabetical order.
 
-There are only a few actions currently, but many more have been prototypes and will be available soon.
+NOTE: The order of evaluation may change in a future release.
+
+Currently, only a few actions exist, but many more have been prototypes and will be available soon.
 
 The list of actions are:
 
-* *generate* - Create a new file
-* *inject* - Inject text in a specific location in an existing file
-* *inject-maven-dependency* - Appends a dependency entry to the current pom.xml file.
-* *inject-maven-plugin* - Appends a maven plugin entry to the current pom.xml file
-* *inject-maven-dependency-management* - Appends a dependency management entry to the current pom.xml file.
-* *inject-maven-repository* - Appends a repository entry to the current pom.xml file
-* *inject-properties* - Appends properties to a Java properties file.
-* *exec* - Execute another program.
+* *generate* - Create a new file.
+* *inject* - Inject text into a specific location in an existing file.
+* *inject-maven-dependency* - Append a dependency entry to the current pom.xml file.
+* *inject-maven-plugin* - Append a Maven plugin entry to the current pom.xml file
+* *inject-maven-dependency-management* - Append a dependency management entry to the current pom.xml file.
+* *inject-maven-repository* - Append a repository entry to the current pom.xml file
+* *inject-properties* - Append properties to a Java properties file.
+* *exec* - Run another program.
 
-== An introductory example
+== An Introductory Example
 
-The CLI command `command new` creates a simple user defined command that we can use to demonstrate the components of an actions file.
+The CLI `command new` command creates a simple user-defined command that we can use to demonstrate the components of an actions file.
 
 ```
 spring command new --commandName hello --subCommandName create
@@ -47,7 +49,7 @@ $ tree .spring
 ----
 
 The content of `command.yaml`, shown below, defines a command line argument named `greeting`.
-This argument will be used in the action file `hello.yaml`.
+This argument is used in the `hello.yaml` action file.
 
 [source, shell]
 command:
@@ -72,17 +74,17 @@ actions:
 
 
 == Understanding the actions file
-To help you understand how YAML syntax is used to create actions file, this section explains each line of the introduction's example:
+To help you understand how YAML syntax is used to create an actions file, this section explains each line of the introduction's example:
 [options="header"]
 |============================================================================
-| Code      | Explanation
-| actions:  | Groups together all the actions
-| generate: | The type of action to take, this action type generates files
-| to:       | Where in the file system to generate the file
+| Code      | Explanation.
+| actions:  | Groups together all the actions.
+| generate: | The type of action to take. For example, this action type generates files.
+| to:       | Where in the file system to generate the file.
 | text:     | The content of the file to generate.
 |============================================================================
 
-== Running the user defined command
+== Running the User-defined Command
 
 ```bash
 $ spring hello create --greeting World!

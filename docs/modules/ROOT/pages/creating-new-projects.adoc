@@ -7,16 +7,16 @@ This command copies the content from the source code repository of an existing f
 To get started, specify the `--name` option, which creates a basic RESTful web application with a test.
 You can also use the `--from` option to create projects with different functionalities, such as Spring Data JPA or Spring Cloud Stream.
 
-For further customization, you have the flexibility to specify various options such as `--group`, `--artifact-id`, and `--version`, as well as the `--package-name` and `--description`.
-If you provide the `--package-name` the code will be refactored after cloning the source code repository.
+For further customization, you have the flexibility to specify various options (such as `--group`, `--artifact-id`, and `--version`) as well as `--package-name` and `--description`.
+If you provide the `--package-name`, the code is refactored after cloning the source code repository.
 
 The following sections provide detailed explanations of each of these topics.
 
-For more information on adding additional code to an already existing application, look at the sections xref:boot-add-guide.adoc[spring boot add] and xref:user-command-guide.adoc[User Defined Commands].
+For more information on adding additional code to an already existing application, see xref:boot-add-guide.adoc[spring boot add] and xref:user-command-guide.adoc[User Defined Commands].
 
 == Quick Start
 
-To quickly create a simple web application in a new directory, execute the following commands:
+To quickly create a simple web application in a new directory, run the following commands:
 
 [source, bash]
 ----
@@ -25,10 +25,10 @@ cd my-app
 ./mnvw spring-boot:run
 ----
 
-This creates a basic web application in the directory "my-app".
-The `--name` option is passsed positionally in this example, equivalent to `spring boot new --name my-app`.
+This creates a basic web application in the `my-app` directory.
+The `--name` option is passed positionally in this example, equivalent to `spring boot new --name my-app`.
 
-If you prefer to create a project in your current working directory, specify `.` as the name.
+If you prefer to create a project in your current working directory, specify `.` as the name:
 
 [source, bash]
 ----
@@ -49,32 +49,32 @@ cd my-app
 ./mnvw spring-boot:run
 ----
 
-This command will create a new application that includes Spring Data JPA functionality.
+The preceding command creates a new application that includes Spring Data JPA functionality.
 
-In the above example both the name of the new app, `my-app` and the `--from` option `jpa` is provied as a positional parameter.
+In the preceding example, both the name of the new app (`my-app`) and the `--from` option (`jpa`) are provided as positional parameters.
 It is equivalent to using `spring boot new --name my-app --from jpa`.
 
-The name `jpa` is registered with the default getting started project catalog and serves as an alias to a specific URL with some additional metadata.
+The name, `jpa`, is registered with the default getting started project catalog and serves as an alias to a specific URL with some additional metadata.
 This is described more in the following section.
 
-== Creating by name
+== Creating by Name
 
 The project catalog contains a list of code repositories that demonstrate specific Spring technologies.
 The repositories in the default project catalog, resembling the content in the Spring Getting Started Guides, provide a range of functionalities.
 
 You can have the option to register your own catalogs, offering code repositories of varying complexity and functionality.
 
-The project catalog helps you find for the desired functionality you your new projects.
-Additionally, you can refer to the project names from the project catalog when adding code to an exisiting project using the `spring boot add` command.
+The project catalog helps you find the desired functionality for your new projects.
+You can also refer to the project names from the project catalog when adding code to an existing project by using the `spring boot add` command.
 
-To view the registered projects in the default "getting started" catalog, execute the command:
+To view the registered projects in the default "getting started" catalog, run the following command:
 
 [source, shell]
 ----
 spring project-catalog list
 ----
 
-This command displays the available project catalogs that can be used with the `spring boot new` command.
+This command displays the available project catalogs that you can use with the `spring boot new` command:
 
 [source, shell]
 ┌────┬──────────────────────────────────────────────┬───────────────────────┬───────────────────┐
@@ -84,14 +84,15 @@ This command displays the available project catalogs that can be used with the `
 └────┴──────────────────────────────────────────────┴───────────────────────┴───────────────────┘
 ```
 
-To view the available projects, use the command:
+To view the available projects, use the following command:
 
 [source, shell]
 ----
 spring project list
 ----
 
-This command provides a list of projects that you can use.  Each project has a name that can be passsed to `spring boot new`.
+This command provides a list of projects that you can use.  Each project has a name that you can passed to `spring boot new`.
+The following table shows typical output:
 
 ```
 ┌─────────────┬────────────────────────────────────────────────────────┬─────────────────────┬───────┬───────────────┐
@@ -115,26 +116,23 @@ This command provides a list of projects that you can use.  Each project has a n
 ├─────────────┼────────────────────────────────────────────────────────┼─────────────────────┼───────┼───────────────┤
 │graphql      │https://github.com/rd-1-2022/rpt-spring-graphql         │Spring GraphQL       │gs     │[graphql]      │
 └─────────────┴────────────────────────────────────────────────────────┴─────────────────────┴───────┴───────────────┘
-
-
-
 ```
 
-To create a new project using Spring Data JPA, execute the following command:
+To create a new project that uses Spring Data JPA, run the following command:
 
 ```
 spring boot new my-jpa jpa
 ```
 
-This command uses the application from the source code repository URL `https://github.com/rd-1-2022/rpt-spring-data-jpa`.
+This command uses the application from the source code repository URL: `https://github.com/rd-1-2022/rpt-spring-data-jpa`.
 
-NOTE: You can also use the name of the project as the argument to the command  `spring boot add`
+NOTE: You can also use the name of the project as the argument to the `spring boot add` command.
 
 == Creating by URL
 
 Instead of adding a project to the Spring CLI so as to reference it with a short name, you can use the URL of the project's source repository directly.
 
-For example, to create the Spring JPA project, use the command
+For example, to create the Spring JPA project, you can use the following command:
 
 [source, shell]
 ----
@@ -143,14 +141,14 @@ spring boot new my-jpa https://github.com/rd-1-2022/rpt-spring-data-jpa
 
 == Options
 
-The `spring boot new` command takes the following options, which can be seen by executing the command
+The `spring boot new` command takes the following options, which you can see by running the following command:
 
 [source, shell]
 ----
 spring boot new --help
 ----
 
-Which displays
+That command shows the following output:
 
 [source, shell]
 ----
@@ -203,8 +201,8 @@ OPTIONS
 
 == Options and Default Values
 
-By specifying just the `--name` option, the `artifactId` will default to the value of the `--name` option.
-For example
+By specifying just the `--name` option, the `artifactId` defaults to the value of the `--name` option.
+Consider the following example:
 
 [source, shell]
 ----
@@ -213,7 +211,7 @@ Cloning project from https://github.com/rd-1-2022/rest-service
 Created project in directory 'myapp'
 ----
 
-Looking into the generated `pom.xml` the name `myapp` is used as the `artifactId` and the `name` of the project
+In the generated `pom.xml`, the name (`myapp`) is used as the `artifactId` and the `name` of the project:
 
 [source, xml]
 ----
@@ -224,9 +222,9 @@ Looking into the generated `pom.xml` the name `myapp` is used as the `artifactId
 	<description>RESTful web application</description>
 ----
 
-Adding the option `--groupid` will not only change the value of the `groupId` tag, but also the package name.
-A refactoring of the project to the new package name will be performed.
-For example:
+Adding the `--groupid` option changes not only the value of the `groupId` tag but also the package name.
+A refactoring of the project to the new package name is performed.
+Consider the following example:
 
 [source, shell]
 ----
@@ -236,7 +234,7 @@ Refactoring package to com.xkcd.myapp
 Created project in directory 'myapp'
 ----
 
-The generated `pom.xml` contains
+The generated `pom.xml` contains the following content:
 
 [source, xml]
 ----
@@ -247,7 +245,7 @@ The generated `pom.xml` contains
 	<description>RESTful web application</description>
 ----
 
-and the directory structure of the project is
+The directory structure of the project is as follows:
 
 [source]
 ----
@@ -277,5 +275,3 @@ myapp/
                             └── GreetingControllerTests.java
 
 ----
-
-

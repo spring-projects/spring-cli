@@ -1,41 +1,44 @@
-= Guide to user defined commands
+= Guide to User-defined Commands
 
-User defined commands let you add custom commands to the Spring CLI.
-The directory structure commands represents the command and sub-command that are introduced into the shell.
+User-defined commands let you add custom commands to the Spring CLI.
+The directory structure for commands represents the command and sub-command that are introduced into the shell.
 
 For example, the directory structure of `controller\new` translates to the command `controller new` in the CLI.
 
 The files located in the sub-command directory are:
 
-  * A file named `command.yaml` that describes the command and its arguments.
-  * One or more Action Files that describe the actions to take to add code or configuration to the project.
+* A file named `command.yaml` that describes the command and its arguments.
+* One or more action files that describe the actions to take to add code or configuration to the project.
 
-User defined commands are registered with the CLI using the command
+User-defined commands are registered with the CLI by using the following command:
 ```
 command add --from <repository-url>
 ```
+
 The contents of that repository are copied into your existing project.
 
-As an example, look at the contents of the repository https://github.com/rd-1-2022/udc-spring-controller
+For example, look at the contents of the https://github.com/rd-1-2022/udc-spring-controller repository.
 
 == Structure
 
-The directory structure for all user defined commands are under the path
+The directory structure for all user-defined commands are under the following path:
 
 ```
 .spring/commands
 ```
 
-So for the user defined command `controller new` mentioned previously, the full directory structure where the command description file and action files are located would be
+So, for the user defined command, `controller new`, mentioned previously, the full directory structure where the command description file and action files are located would be:
+
 ```
 .spring/commands/controller/new
 ```
 
-Inside this directory you can define
-  * The file `command.yaml` that describes what the command does and the arguments of the command
-  * One or more Action Files that define the actions to execute for this command.
+Inside this directory, you can define:
 
-For example, the directory contents of the repository https://github.com/rd-1-2022/udc-spring-controller are
+* The `command.yaml` file that describes what the command does and the arguments of the command.
+* One or more action files that define the actions to run for this command.
+
+For example, the directory contents of the https://github.com/rd-1-2022/udc-spring-controller repository are as follows:
 
 ```
 .
@@ -50,9 +53,9 @@ For example, the directory contents of the repository https://github.com/rd-1-20
 
 ```
 
-=== Describing the command
+=== Describing the Command
 
-The contents of the `command.yaml` file for the `controller new` command mentioned previously is:
+The contents of the `command.yaml` file for the `controller new` command mentioned previously are as follows:
 
 ```
 command:
@@ -69,11 +72,12 @@ command:
 
 The file contains a brief description of the command and an array of command line options.
 
-The `name` of the options is required.  The default `dataType` is `string`
+The `name` of the options is required.  The default `dataType` is `string`.
 
-The `dataType` can be `int`, `integer`, `bool`, `boolean`, `double`, `float`, `long`, `short`, and `string`.
+The `dataType` can be `int`, `integer`, `bool`, `boolean`, `double`, `float`, `long`, `short`, or `string`.
 
-The CLI incorporates these commands at runtime and appear when asking for general help and the command help.
+Spring CLI incorporates these commands at runtime, and they appear when asking for general help and command-specific help.
+The following listing shows an example:
 
 ```
 $spring help
@@ -84,7 +88,7 @@ User-defined Commands
        controller new: Generate a new Spring Controller
 ```
 
-and
+The following listing show a second example:
 
 ```
 $ spring help controller new
@@ -101,13 +105,13 @@ OPTIONS
 ```
 
 === Action Files
-Action files are structred similar to GitHub Action files.
+Action files are structured similarly to GitHub action files.
 
-Acitons files can be named anything you like, the CLI will look for files with a `.yaml` or `.yml` file extension
+Action files can be named anything you like. The CLI looks for files with `.yaml` and `.yml` file extensions.
 
-There can be as many action files as you need to accomplish a specific task.  The order of Action Files execution is depth first and alphabetical.
+There can be as many action files as you need to accomplish a specific task. The order in which action files are run is depth-first and then alphabetical.
 
-Here is a very simple example
+The following listing shows a simple example:
 
 ```
 actions:
@@ -116,13 +120,14 @@ actions:
       text: Hello at {{now}} on {{os-name}}.
 ```
 
-This will generate the file `hello.txt`, if it does not already exist, in the current working directory.
-The template contents contains kebab-case variable names.
+This action generates a file called `hello.txt`, if it does not already exist, in the current working directory.
+The template contents contain kebab-case variable names.
 
-The variables `user-name` and `os-name` come from Java system properties and are automatically registered with the template engine.
-The variable `now` is the value of `new java.util.Date()` when the command was executed.
+The `user-name` and `os-name` variables come from Java system properties and are automatically registered with the template engine.
+The `now` variable is the value of `new java.util.Date()` when the command was run.
 
-As a more realistic example to create Java code, the Action File named `Controller.java` in the repository https://github.com/rd-1-2022/udc-spring-controller is shown below.  The `feature` variable is a command option
+As a more realistic example to create Java code, the following three listings show the contents of the action file named `Controller.java` and its related action and templated Java files in the repository https://github.com/rd-1-2022/udc-spring-controller.
+The `feature` variable is a command option.
 
 * Command File
 
@@ -148,9 +153,11 @@ actions:
       from: RestController.java
 ```
 
-* Templated Java File
+The `to:` field defines the location of the file to be generated.
 
-The file `RestController.java` is a templated text file shown below:
+If the file to generate already exists, it is not overwritten unless an additional field named `overwrite:` is added at the same level as the `to:` field.
+
+* Templated Java File
 
 ```java
 package {{root-package}}.{{feature}};
@@ -168,15 +175,9 @@ public class {{capitalizeFirst feature}}Controller {
 }
 ```
 
-The `to:` field defines the location of the file to be generated.
+All command-line arguments are passed to the template engine as variables. In this case, the `feature` option is passed.
 
-
-If the file to generate already exists, it will not be overwritten unless the additional field `overwrite:` at the same level of `generate` is added at the same level of the `to:` field.
-
-All command line arguments are passed to the template engine as variables, in this case the `feature` option.
-
-One of the useful built-in variables is `root-package-dir` which is the directory where the class containing the `@SpringApplication` annotation is located.
-
+One useful built-in variable is `root-package-dir`, which is the directory where the class containing the `@SpringApplication` annotation is located.
 
 == Template Engine
 
@@ -187,45 +188,44 @@ Several Handlebar helpers are registered by default
   * https://github.com/jknack/handlebars.java#humanize[HumanizeHelper]
   * https://github.com/jknack/handlebars.java#conditional-helpers[Conditional Helpers]
 
-In the previous example, the template variable `{{capitalizeFirst feature}}` is an example of using a Handlebar helper
+In the previous example, the `{{capitalizeFirst feature}}` template variable is an example of using a Handlebars helper.
 
-Several system variables are exposed to the template engine by default.
+By default, several system variables are exposed to the template engine:
 
-  * `System.getProperties()` is available under `{{system-properties}}`
-  * `System.getenv()` is available under `{{system-environment}}`
-  * The current time defined by `new Date().toString()` is available under `{{now}}`
-  * The System Property `java.io.tmpdir` is available under `{{tmp-dir}}`
-  * The System Property `file.separator` is available under `{{file-separator}}`
-  * The System Property `os.name` is available under `{{os-name}}`
-  * The System Property `user.name` is available under `{{user.name}}`
+* `System.getProperties()` is available as `{{system-properties}}`
+* `System.getenv()` is available as `{{system-environment}}`
+* The current time (defined by `new Date().toString()`) is available as `{{now}}`
+* The `java.io.tmpdir` system property is available as `{{tmp-dir}}`
+* The `file.separator` system property is available as `{{file-separator}}`* The `os.name` system property is available as `{{os-name}}`
+* The `user.name` system property is available as `{{user.name}}`
 
-The Java package name where the Spring Boot main application class resides is available under `{{root-package}}`
+The Java package name where the Spring Boot main application class resides is available as `{{root-package}}`.
 
-The directory where the Spring Boot main applicaiton class resides is available under `{{root-package-dir}}`
+The directory where the Spring Boot main application class resides is available as `{{root-package-dir}}`.
 
-The Maven model exposes several variables:
+The Maven model also exposes several variables:
 
-  * `{{artifact-id}}`
-  * `{{artifact-version}}`
-  * `{{artifact-path}}`
-  * `{{project-name}}`
-  * `{{project-descriptoin}}`
-  * `{{maven-model}` - This the class https://maven.apache.org/ref/3.9.0/maven-model/apidocs/org/apache/maven/model/Model.html[org.apache.maven.model.Model]
-  * `{{maven-properties}}` - This is a Java Properties object that has as keys, the values of what each entry in the POM's `<properties>` section.
-  * `{{java-version}}` - This looks for a Maven Property in the POM of the name `java.version`.  If it the value is `1.8`, it is converted to the value `8`.
+* `{{artifact-id}}`
+* `{{artifact-version}}`
+* `{{artifact-path}}`
+* `{{project-name}}`
+* `{{project-descriptoin}}`
+* `{{maven-model}` - This is the https://maven.apache.org/ref/3.9.0/maven-model/apidocs/org/apache/maven/model/Model.html[org.apache.maven.model.Model] class.
+* `{{maven-properties}}` - This is a Java properties object that has, as keys, the values of each entry in the POM's `<properties>` section.
+* `{{java-version}}` - This looks for a Maven Property named `java.version` in the POM. If the value is `1.8`, it is converted to a value of `8`.
 
-== Creating a new user defined command
+== Creating a New User-defined Command
 
-A simple way to get started is to run the command
+A simple way to get started is to run the following command:
 
 ```
 spring command new hello create
 ```
 
-This creates an user defined command named `hello` with the sub-command named `create`.
+This creates a user-defined command named `hello` with a sub-command named `create`.
 
-You can view the full set of options for `spring command new` by executing `spring command new --help`.
-The output is shown below.
+You can view the full set of options for `spring command new` by running `spring command new --help`.
+The following listing shows the output is:
 
 ```
 $ spring command new --help
@@ -253,7 +253,7 @@ OPTIONS
        [Optional]
 ```
 
-Executing `spring command new hello create` generates following directory structure and files as discussed previously.
+Running `spring command new hello create` generates the following directory structure and files.
 
 ```
 .
@@ -267,7 +267,7 @@ Executing `spring command new hello create` generates following directory struct
 
 ```
 
-The contents of the `command.yaml` file is shown below.  It contains one command line argument, named `greeting`
+The following listing shows the contents of the `command.yaml` file.  It contains one command line argument, named `greeting`.
 
 ```
 command:
@@ -281,7 +281,7 @@ command:
       inputType: text     # TEXT
 ```
 
-And the action file `hello.yaml` is shown below.  It generates the file named `hello.txt`
+The following listing shows the action file named `hello.yaml`. It generates the file named `hello.txt`
 
 ```
 actions:
@@ -290,7 +290,7 @@ actions:
       text: Hello {{greeting}} at {{now}} on {{os-name}}.
 ```
 
-The command is listed under the heading `User-defined Commands` when executing the command `spring help`.
+The command is listed under the `User-defined Commands` heading when you run the `spring help` command.
 
 ```
 ...
@@ -299,7 +299,7 @@ User-defined Commands
 ```
 
 
-Executing the command `spring hello create` generates the file hello.txt with the following contents:
+Running the `spring hello create` command generates the `hello.txt` file with the following contents:
 
 ```
 Hello World at Mar 9, 2023 on Linux.
@@ -307,4 +307,4 @@ Hello World at Mar 9, 2023 on Linux.
 
 == Learning more
 
-The section xref:action-file-overview.adoc[Action Guide] describes all the options available for you to use in Action Files to add or modify code and configuration to a project.
+The xref:action-file-overview.adoc[Action Guide] describes all the options available for you to use in action files (to add or modify code and configuration to a project).

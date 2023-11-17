@@ -1,3 +1,5 @@
 = Contributing Project Catalogs
 
-Project catalogs can be registered using the command `spring catalog add` but in
+You can register project catalogs by using the `spring catalog add` command.
+
+TBD

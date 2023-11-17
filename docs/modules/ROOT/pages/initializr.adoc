@@ -1,15 +1,15 @@
 = Initializr
 
-Spring CLI can be used as a client for an instance of a https://github.com/spring-io/initializr and defaults to
-https://start.spring.io. Shell style project creation mimics how project is created from an UI and example
-of it can be seen below.
+You can use Spring CLI as a client for https://github.com/spring-io/initializr and defaults to
+https://start.spring.io. Shell style project creation mimics how a project is created from the UI.
+The following image shows an example of it:
 
 image::initializr-1.svg[initializr-1]
 
 == New Command
 
-Generic use of a `new` command is that options can be defined on a command line and if something is needed
-then shell enters interactive mode to ask various questions from a user.
+To use the `new` command, define options on the command line.
+Then, if Initializr needs more information, it goes into its interactive mode to ask clarifying questions.
 
 ====
 [source]
@@ -81,7 +81,7 @@ OPTIONS
 ----
 ====
 
-Below example shows how all options are given and command just pass through without asking anything.
+The following example shows all the options being provided and the command just passing through without anything being asked.
 
 ====
 [source, bash]
@@ -105,7 +105,7 @@ $ spring initializr new \
 
 == List Command
 
-Use `list` command to see what custom _initializr_ servers you have defined.
+You can use the `list` command to see the custom _initializr_ servers you have defined:
 
 ====
 [source]
@@ -120,7 +120,7 @@ SYNOPSIS
 ----
 ====
 
-Having one defined you'd see something like.
+If you have defined one custom Initializr,the output resembles the following:
 
 ====
 [source, bash]
@@ -134,10 +134,9 @@ $ spring initializr list
 ----
 ====
 
-
 == Set Command
 
-Use `set` command to define a new server environment.
+You can use the `set` command to define a new server environment:
 
 ====
 [source]
@@ -160,7 +159,7 @@ OPTIONS
 ----
 ====
 
-You can for example define your local _initializr_ server like this.
+You can, for example, define your local _initializr_ server, as follows:
 
 ====
 [source, bash]
@@ -171,7 +170,7 @@ $ spring initializr set --server-id local --url http://localhost:8080
 
 == Remove Command
 
-Use `remove` command to remove a server environment.
+You can use the `remove` command to remove a server environment:
 
 ====
 [source]
@@ -191,7 +190,7 @@ OPTIONS
 ----
 ====
 
-You can for example remove your local _initializr_ server like this.
+You can, for example, remove your local _initializr_ server, as follows:
 
 ====
 [source, bash]
@@ -202,7 +201,7 @@ $ spring initializr remove --server-id local
 
 == Dependencies Command
 
-Use `dependencies` command to list and search _initializr_ dependencies.
+You can use the `dependencies` command to list and search _initializr_ dependencies:
 
 ====
 [source]
@@ -230,7 +229,7 @@ OPTIONS
 ----
 ====
 
-You can for example search _initializr_ server like this.
+You can, for example, search _initializr_ server, as follows:
 
 ====
 [source, bash]
