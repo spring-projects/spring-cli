@@ -56,7 +56,7 @@ Your workspace will be the folder that contains the git worktrees of the project
 . Clone the project repository and create the primary worktree for the main branch.
 Then change into the new _main_ folder.
 
- $ git clone https://github.com/spring-projects-experimental/spring-cli main
+ $ git clone https://github.com/spring-projects/spring-cli main
  $ cd main
 
 . Switch to the required JDK using SDKMAN by running the following command:
