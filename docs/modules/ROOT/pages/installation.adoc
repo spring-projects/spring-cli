@@ -2,7 +2,7 @@
 
 The Spring CLI is available in various formats allowing user to pick their favourite installation
 method. Downloadable artifacts are available from the
-https://github.com/spring-projects-experimental/spring-cli/releases[Release Page].
+https://github.com/spring-projects/spring-cli/releases[Release Page].
 
 == Binary Release
 [tabs]
@@ -30,7 +30,7 @@ Homebrew Tap:::
 
 [source]
 ----
-brew tap spring-projects-experimental/spring-cli
+brew tap spring-projects/spring-cli
 brew install spring-cli
 ----
 --
@@ -49,7 +49,7 @@ Tap formula will choose between _x86_ and _aarch64_ depending on your brew setup
 
 [source]
 ----
-brew tap spring-projects-experimental/spring-cli
+brew tap spring-projects/spring-cli
 brew install spring-cli
 ----
 --
@@ -68,7 +68,7 @@ Manually:::
 == Getting Snapshot Binaries
 As the project is evolving quickly in the early days, you can download the Spring Boot uber-jar, Linux and Mac native binaries from the output of GitHub's Continuous Integration Action.
 
-* https://github.com/spring-projects-experimental/spring-cli/actions/workflows/ci.yml[Browse CI artifacts here].
+* https://github.com/spring-projects/spring-cli/actions/workflows/ci.yml[Browse CI artifacts here].
 Select a CI run by clicking on the latest CI run.
 On the bottom of that page you will see the section *Artifacts* and inside that you will see the uber-jar package as a `artifacts.zip` file.
 
@@ -92,7 +92,7 @@ This is required by https://github.com/openrewrite/rewrite[OpenRewrite], which i
 === Build Instructions
 
 ```
-git clone https://github.com/spring-projects-experimental/spring-cli $HOME/temp/spring-cli
+git clone https://github.com/spring-projects/spring-cli $HOME/temp/spring-cli
 
 cd $HOME/temp/spring-cli
 

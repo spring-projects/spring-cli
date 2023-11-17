@@ -1,6 +1,6 @@
 site:
   title: Spring CLI
-  url: https://spring-projects-experimental.github.io/spring-cli
+  url: https://docs.spring.io/spring-cli/reference
   start_page: spring-cli::index.adoc
 asciidoc:
   attributes:

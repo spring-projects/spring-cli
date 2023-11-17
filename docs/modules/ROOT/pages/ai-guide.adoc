@@ -42,7 +42,7 @@ As we continue to explore the potential of AI technology, we anticipate refining
 spring ai add "JPA functionality with an integration test.  Include all Java code in the same package." --preview
 ----
 
-Here the https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-with-test.md[README-ai-jpa.md] file that was created using the previous command.
+Here the https://github.com/spring-projects/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-with-test.md[README-ai-jpa.md] file that was created using the previous command.
 
 == Prerequisite
 Before using the AI commands, make sure you have a developer token from OpenAI.
@@ -69,7 +69,7 @@ Example:
 spring ai add "JPA functionality"
 ----
 
-This command creates the file https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-simple-description.md[README-ai-jpa.md] and applies the changes outlined in that file to your project.
+This command creates the file https://github.com/spring-projects/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-simple-description.md[README-ai-jpa.md] and applies the changes outlined in that file to your project.
 
 **NOTE:** Code generation may take 3-4 minutes.
 
@@ -84,14 +84,14 @@ This allows you to review the file and evaluate whether it provides an acceptabl
 spring ai add "JPA functionality" --preview
 ----
 
-This command creates the file https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-simple-description.md[README-ai-jpa.md].
+This command creates the file https://github.com/spring-projects/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-simple-description.md[README-ai-jpa.md].
 Remember, it doesn't modify your project, but it provides the opportunity to review the content and determine its suitability for your specific requirements.
 
 If the generated instructions meet your needs, you can apply the changes to your code base by using the command `spring guide apply README-ai-jpa.md`.
 
 == Iterating to get what you want
 
-If you examine the file https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-simple-description.md[README-ai-jpa.md] from the previous step, you will notice that it did not include any tests.
+If you examine the file https://github.com/spring-projects/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-simple-description.md[README-ai-jpa.md] from the previous step, you will notice that it did not include any tests.
 It is always recommended to include tests as a best practice, so the provided description should be updated.
 
 This is the general back and forth you will have when working with the `ai add` command.
@@ -103,7 +103,7 @@ For example, in the previous case, the code that was created was missing an inte
 spring ai add "JPA functionality with an integration test.  Include all Java code in the same package." --preview
 ----
 
-Here the https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-with-test.md[README-ai-jpa.md] file that was created using the previous command.
+Here the https://github.com/spring-projects/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-with-test.md[README-ai-jpa.md] file that was created using the previous command.
 
 == Rewriting the project description automatically
 
@@ -120,7 +120,7 @@ The description has been rewritten to be: Please provide instructions for creati
 Generating code.  This will take a few minutes ...
 ----
 
-Here the https://github.com/spring-projects-experimental/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-rewrite.md[README-ai-jpa.md] file that was created using the previous command.
+Here the https://github.com/spring-projects/spring-cli/blob/main/src/test/resources/ai/sample-output/README-ai-jpa-rewrite.md[README-ai-jpa.md] file that was created using the previous command.
 
 == Applying the `README`
 
