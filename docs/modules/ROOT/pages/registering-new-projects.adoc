@@ -1,47 +1,42 @@
 = Registering Projects
 
-You can register new projects in two ways: using a Project Catalog or by providing a name and URL.
+You can register new projects in two ways: by using a xref:key-concepts.adoc#key-concepts-project-catalog[project catalog] or by providing a name and URL.
 
-The Project Catalog consists of a collection of projects that can be referenced by name when using the spring boot new and spring boot add commands.
+The project catalog consists of a collection of projects that can be referenced by name when using the `spring boot new` and `spring boot add` commands.
 
-== Adding using a Project Catalog
-To add a project catalog use the `spring project-catalog add` command.
+== Adding a Project Catalog
 
-In this example, we will register a sample catalog available at the URL https://github.com/rd-1-2022/sample-project-catalog
+To add a project catalog, use the `spring project-catalog add` command.
 
-Within that repository, there is a file named project-catalog.yml.
-This is the filename that the command searches for.
+In this example, we register a sample catalog that is available at https://github.com/rd-1-2022/sample-project-catalog.
+
+Within that repository, there is a file named `project-catalog.yml`.
+This is the filename for which the command searches.
 If you wish to use your own URL location, make sure to adjust the contents accordingly.
+The following listing shows the command:
 
 [source, bash]
 ----
 spring project-catalog add dapr https://github.com/rd-1-2022/sample-project-catalog
 ----
 
-The command above registers a Project Catalog named `darp` from the URL `https://github.com/rd-1-2022/sample-project-catalog` using positional parameters.
+The preceding command registers a project catalog named `darp` from `https://github.com/rd-1-2022/sample-project-catalog` using positional parameters.
 
-You can achieve the same result using named options as follows:
+You can achieve the same result by using the `name` option, as follows:
 
 [source, bash]
 ----
 spring project-catalog add --name dapr --url https://github.com/rd-1-2022/sample-project-catalog
 ----
 
-Now, you can view the available projects in the catalog by running the command:
+Now, you can view the available projects in the catalog by running the following command:
 
 [source, bash]
 ----
 spring project list
 ----
 
-This will display a table of projects, and you should see a project named read in the list.
-
-[source, bash]
-----
-spring project list
-----
-
-That returns the following table
+This command displays a table of projects, and you should see a project named read in the list:
 
 [source, bash]
 ----
@@ -61,14 +56,14 @@ That returns the following table
 
 ----
 
-To create a new project from the "read" project, use the command:
+To create a new project from the `read` project, use the following command:
 
 [source, bash]
 ----
 spring boot new read-app read
 ----
 
-If you want to specify a package name for the project, you can use the --package-name option:
+If you want to specify a package name for the project, you can use the `--package-name` option:
 
 [source, bash]
 ----
@@ -77,16 +72,16 @@ spring boot new read-app read --package-name com.xkcd.read
 
 == Adding using a name and URL
 
-If you prefer not to use a project catalog, you can add an individual project using the spring project add command. For example:
+If you prefer not to use a project catalog, you can add an individual project by using the `spring project add` command, as follows:
 
 [source, bash]
 ----
 spring project add read-app --url https://github.com/ciberkleid/dapr-testcontainers?subPath=read-app
 ----
 
-After running the above command, if you execute spring project list, you will see the newly added project in addition to the ones from the catalog.
+After running this command, if you run `spring project list`, you can see the newly added project in addition to the ones from the catalog.
 
-Now, you can create a new project based on that repository by running the command:
+Now, you can create a new project based on that repository by running the following command:
 
 [source, bash]
 ----
@@ -95,7 +90,6 @@ Getting project from https://github.com/ciberkleid/dapr-testcontainers?subPath=r
 Created project in directory 'my-read-app'
 ----
 
-== Removing project and catalogs
+== Removing Projects and Catalogs
 
-The commands `spring project-catalog remove` and `spring project remove` let you remove Project Catalogs and Projects.
-
+The `spring project-catalog remove` and `spring project remove` commands let you remove project catalogs and projects, respectively.

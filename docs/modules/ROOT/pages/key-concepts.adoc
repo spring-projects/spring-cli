@@ -1,60 +1,71 @@
 = Key Concepts
 
+Spring CLI relies on a number of key concepts, which appear throughout the project:
 
+* <<key-concepts-project>>
+* <<key-concepts-project-catalog>>
+* <<key-concepts-user-defined-commands>>
+* <<key-concepts-action-files>>
+* <<key-concepts-roles>>
+
+[[key-concepts-project]]
 == Project
 
 *Project*: A "Plain Old Java Project" hosted in GitHub or GitLab. 
 Projects are registered with the CLI so that a simple name can refer to them. 
 
-For example, if you register the GitHub URL of a project that uses Spring Data JPA under the name ‘jpa’, you can create a new project from that one by invoking the command `boot new my-jpa-app jpa`.
-Similarly, you can add JPA functionality to an existing project by invoking the command `boot add jpa`.
+For example, if you register the GitHub URL of a project that uses Spring Data JPA with a name of ‘jpa’, you can create a new project from that one by invoking the command `boot new my-jpa-app jpa` command.
+Similarly, you can add JPA functionality to an existing project by invoking the `boot add jpa` command.
 
-The commands related to projects are `project list`, `project add` and `project remove`
+The commands related to projects are `project list`, `project add`, and `project remove`.
 
+[[key-concepts-project-catalog]]
 == Project Catalog
 
 *Project Catalog*: The Project Catalog is a collection of projects that share a common theme.
 
-After registering a catalog with the CLI, the projects are readily available for the user when using the `boot new` and `boot add` commands.
-The catalog is a YAML file with the name `project-catalog.yaml`.
-It contains a list of project repository URLs, and an associated name.
+After registering a catalog with the CLI, the projects are readily available when using the `boot new` and `boot add` commands.
+The catalog is a YAML file with a name of `project-catalog.yaml`.
+It contains a list of project repository URLs and an associated name.
 The catalog is hosted on GitHub or GitLab
 
-The commands related to project catalogs are `catalog list`, `catalog add` and `catalog remove`
+The commands related to project catalogs are `catalog list`, `catalog add`, and `catalog remove`
 
+[[key-concepts-user-defined-commands]]
 == User Defined Commands
 
 *Commands*: These are declaratively defined commands that let you add or modify code and configuration files.
 
-You can also run arbitrary executables to help solve any arbitrary task commonly occurring in your development workflow.
+You can also run arbitrary executables to perform any arbitrary task that commonly occurs in your development workflow.
 User-defined commands are integrated into the CLI and appear the same as the built-in commands.
 
-The user-defined command has three parts, the `command name`, the `sub-command name`, and the `options.
-The command name and sub-command name are defined using a directory structure convention. 
+A user-defined command has three parts: the `command name`, the `sub-command name`, and the `options`.
+The command name and sub-command name are defined by using a directory structure convention.
 
-As an example, to create a new user-defined command, with a command name of `controller` and a sub-command name of `new`, make the following directory structure
+For example, to create a new user-defined command with a command name of `controller` and a sub-command name of `new`, make the following directory structure:
 
 ```
 .spring/commands/controller/new
 ```
 
 In this directory, you can have one file named `command.yaml` that defines the command's description, options, and default values.
-Also in this directory or subdirectories are action files that define the actions to take on the project. 
+This directory (and subdirectories) contain action files that define the actions to take on the project. 
 
+[[key-concepts-action-files]]
 == Action Files
 
-*Action Files*
+*Action Files*: These define the actions that can be taken on a project.
 
+[[key-concepts-roles]]
 == Roles
 
-Roles in your CLI provide a way to organize and reuse variables across user-defined commands.
+In your CLI, roles provide a way to organize and reuse variables across user-defined commands.
 
 The Spring CLI includes a default, unnamed role that is always present.
-Additionally, roles can be associated with specific names to further differentiate their purpose and usage. These roles are stored as YAML files within the .spring/roles directory, which is located alongside the .spring/commands directory.
+Also, roles can be associated with specific names to further differentiate their purpose and usage. These roles are stored as YAML files within the `.spring/roles` directory, which is located alongside the `.spring/commands` directory.
 
-These roles allow you to define variables that are accessible in an Action File, providing a way to share data between commands.
+These roles let you define variables that are accessible in an action file, providing a way to share data between commands.
 
-Additionally, roles can be used to supply values for command line options. If a command line option does not have a value specified, and there is a role variable with the same name as the command option, the command will utilize the value of the role variable for that specific command option.
+You can also use roles to supply values for command line options. If a command-line option does not have a specified value and a role variable has been defined with the same name as the command option, the command uses the value of the role variable for that specific command option.
 
-Some of the commands related to projects are `role add`, `role remove` and `role set`
-
+Some common role commands related to projects are `role add`, `role remove`, and `role set`

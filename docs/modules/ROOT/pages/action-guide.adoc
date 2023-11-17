@@ -1,13 +1,24 @@
 = Action Guide
 
+This page describes the actions you can use:
+
+* <<action-generate>>
+* <<action-inject>>
+* <<action-exec>>
+* <<action-inject-maven-dependency>>
+* <<action-inject-maven-dependency-management>>
+* <<action-inject-maven-build-plugin>>
+* <<action-inject-maven-repository>>
+
+[[action-generate]]
 == Generate
 
-The `generate` action is used to generate files.  It requires a `to` key to specify the destination path.
-The path is relative where the user-defined command was executed.  If the file already exists, it will not be overwritten.
+The `generate` action is used to generate files. It requires a `to` key to specify the destination path.
+The path is relative to where the user-defined command was executed.  If the file already exists, it is not overwritten.
 
-The content of the file is defined using the `text` key.
+The content of the file is defined by using the `text` key.
 
-Here's a simple example of the `generate` action is:
+The following example shows a simple `generate` action:
 
 
 ```yml
@@ -17,18 +28,18 @@ actions:
       text: Hello {{user-name}} on {{os-name}}.
 ```
 
-The variables `{{user-name}}` and `{{os-name}} will be replaced with actual values using the Handlebars template engine.
+The `{{user-name}}` and `{{os-name}} variables are replaced with actual values by the Handlebars template engine.
 Command line options passed to user-defined command are exposed as variables to be used by the template engine.
 
-For more information on predefined template engine variables, refer to the xref:user-command-guide.adoc#_template_engine[Template Engine] section.
+For more information on predefined template engine variables, see the xref:user-command-guide.adoc#_template_engine[Template Engine] section.
 
-=== Literal syntax
+=== Literal Syntax
 
 YAML's literal syntax allows representing multi-line strings or preserving formatting and whitespace within a string.
 
-The literal syntax is useful when you want to maintain line breaks, indentation, but some special characters must be escaped with a slash character.
+The literal syntax is useful when you want to maintain line breaks and indentation but some special characters must be escaped with a slash character.
 
-Here's an example of using the literal syntax in YAML:
+The following example uses the literal syntax in YAML:
 
 ```yml
 actions:
@@ -45,17 +56,18 @@ actions:
         \u2713 This is a Unicode character (checkmark symbol).
 ```
 
-By using the | character followed by an indented block, the string is treated as a literal, and line breaks and indentation are preserved.
+By using the `|` character followed by an indented block, the string is treated as a literal, and line breaks and indentation are preserved.
 
-=== External file
+=== External File
 
-In some cases, it is diffiuclt to embed text using the literal syntax due to required escaping.
-JSON files, regular expresssions, and file paths are common examples where such difficulties arise.
-Additionally, you may want to edit the text content separately from the action file to leverage syntax highlighting and validation features of text editors.
+In some cases, it is difficult to embed text by using the literal syntax, due to required escaping.
+JSON files, regular expressions, and file paths are common examples where such difficulties arise.
+Additionally, you may want to edit the text content separately from the action file to use the syntax highlighting and validation features of text editors.
 
-To address these cases, you can use the from key to specify the source file for generating the text.
+To address these cases, you can use the `from` key to specify the source file for generating the text.
 
-Here's an example using the `from` key
+The following example uses the `from` key:
+
 ```
 actions:
   - generate:
@@ -63,9 +75,10 @@ actions:
       from: json-template.json
 ```
 
-The `to` key is relative to the director where the command is executed.
+The `to` key is relative to the directory where the command is run.
 
-The file `json-template.json` is located in the same directory as the command, `.spring/commands/hello/create` and its contents are:
+The `json-template.json` file is located in the same directory as the command, `.spring/commands/hello/create`
+The following listing shows its contents:
 
 ```json
 {
@@ -83,7 +96,7 @@ The file `json-template.json` is located in the same directory as the command, `
 }
 ```
 
-Executing `spring hello create` from the xref:action-file-overview.adoc#_an_introductory_example[introductory example] produces the file `hello.json` as shown below
+Running `spring hello create` from the xref:action-file-overview.adoc#_an_introductory_example[introductory example] produces a file called `hello.json`, as follows:
 
 ```
 $ spring hello create
@@ -107,12 +120,11 @@ $ cat hello.json
 }
 ```
 
+=== Variable Replacement in Keys
 
-=== Variable replacement in keys
+You can also use Handlebars template variables in the `to`, `from`, and `text` keys.
 
-You can also use Handlebars template variables in the `to`, `from` and `text` keys.
-
-Here is an example that uses Handlebars template variables in the `to` key.
+The following example uses Handlebars template variables in the `to` key:
 
 ```yml
 actions:
@@ -121,24 +133,24 @@ actions:
       from: RestController.java
 ```
 
-For more information on predefined template engine variables, refer to the xref:user-command-guide.adoc#_template_engine[Template Engine] section.
+For more information on predefined template engine variables, see the xref:user-command-guide.adoc#_template_engine[Template Engine] section.
 
 == Inject
 
 The `inject` action is used to inject text into a file.
 
-You need to define either the `after:` key or the `before:` to indicate the location where to inject the text.
+You need to define either the `after:` key or the `before:` key to indicate the location where to inject the text.
 
-Here is a sample file.
+The following listing shows a sample file:
 
 ```text
-hello there
-this is a test file
-we are going to insert before the line that has the word marker1
+Hello there.
+This is a test file.
+We are going to insert before the line that has the word marker1
 marker2
 ```
 
-An `inject` action that will inject the text `INJECTED AFTER` after the line that contains the word `marker2` is:
+The following listing shows an `inject` action that injects `INJECTED AFTER` after the line that contains the word `marker2`:
 
 ```yaml
 actions:
@@ -151,14 +163,14 @@ actions:
 The text file after running this action is:
 
 ```text
-hello there
-this is a test file
-we are going to insert before the line that has the word marker1
+Hello there.
+This is a test file.
+We are going to insert before the line that has the word marker1
 marker2
 INJECTED AFTER
 ```
 
-An `inject` action that will inject the text `INJECTED BEFORE` before the line that contains the word `marker1` is:
+The following listing shows an `inject` action that injects `INJECTED BEFORE` before the line that contains the word `marker1`:
 
 ```yaml
 actions:
@@ -171,20 +183,19 @@ actions:
 The text file after running this action is:
 
 ```text
-hello there
-this is a test file
+Hello there.
+This is a test file.
 INJECTED BEFORE
-we are going to insert before the line that has the word marker1
+We are going to insert before the line that has the word marker1
 marker2
 ```
 
-
-
+[[action-exec]]
 == Exec
 
-The `exec` action is used to execute a shell command.
+The `exec` action runs a shell command.
 
-The basic form to execute a shell command is:
+The following listing shows the basic form to run a shell command:
 
 ```yam.
 actions:
@@ -192,20 +203,20 @@ actions:
       command: mkdir {{tmp-dir}}/scratch
 ```
 
+The `tmp-dir` template engine variable is defined by default and is the value of the `java.io.tmpdir` Java System Property.
 
-The template engine variable `tmp-dir` is defined by default and is the value of the Java System Property `java.io.tmpdir`.
-
-=== Redirecting output
+=== Redirecting Output
 
 TBD
 
+[[action-inject-maven-dependency]]
 == Inject Maven Dependency
 
-The `inject-maven-dependency` action is used to inject Maven dependency entries into your Maven pom.xml file.
+The `inject-maven-dependency` action injects Maven dependency entries into your Maven pom.xml file.
 
-You can use Handlebars template variables and expressions inside the `text:` field, and they will be processed.
+You can use Handlebars template variables and expressions inside the `text:` field.
 
-The basic form to inject a Maven dependency is
+The following example shows the basic syntax for injecting a Maven dependency:
 
 ```yml
 actions:
@@ -229,13 +240,14 @@ actions:
         </dependency>
 ```
 
+[[action-inject-maven-dependency-management]]
 == Inject Maven Dependency Management
 
-The `inject-maven-dependency-management` action is used to inject Maven dependency management entries into your Maven pom.xml file.
+The `inject-maven-dependency-management` action injects Maven dependency management entries into your Maven pom.xml file.
 
-You can use Handlebars template variables and expressions inside the `text:` field, and they will be processed.
+You can use Handlebars template variables and expressions inside the `text:` field.
 
-The basic form to inject a Maven dependency is:
+The following listing shows the basic syntax to inject a Maven dependency:
 
 ```yaml
 actions:
@@ -250,13 +262,15 @@ actions:
         </dependency>
 ```
 
+[[action-inject-maven-build-plugin]]
 == Inject Maven Build Plugin
 
-The `inject-maven-build-plugin` action is used to inject Maven Build Plugin entrires into your Maven pom.xml file.
+The `inject-maven-build-plugin` action injects Maven Build Plugin entries into your Maven pom.xml file.
 
-You can use Handlebars template variables and expressions inside the `text:` field, and they will be processed.
+You can use Handlebars template variables and expressions inside the `text:` field.
 
-The basic form to inject a Maven dependency is:
+The following example shows the basic syntax to inject a Maven dependency:
+
 ```yaml
 actions:
   - inject-maven-build-plugin:
@@ -278,13 +292,14 @@ actions:
          </plugin>
 ```
 
+[[action-inject-maven-repository]]
 == Inject Maven Repository
 
-The `inject-maven-repository` action is used to inject Maven repository entries into your Maven pom.xml file.
+The `inject-maven-repository` action injects Maven repository entries into your Maven pom.xml file.
 
-You can use Handlebars template variables and expressions inside the `text:` field, and they will be processed.
+You can use Handlebars template variables and expressions inside the `text:` field.
 
-The basic form to inject a Maven repository is:
+The following example shows the basic syntax to inject a Maven repository:
 
 ```yaml
 actions:

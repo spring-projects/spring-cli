@@ -1,4 +1,4 @@
-*Note: The code provided is just an example and may not be suitable for production use.*
+CAUTION: The provided code is only an example and may not be suitable for production use.
 
 Generated on May 24, 2023, 11:28:40 AM
 

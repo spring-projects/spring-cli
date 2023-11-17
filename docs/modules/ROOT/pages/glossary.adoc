@@ -1,4 +1,4 @@
 = Glossary
 
 Action File::
-    A file that contains an array of actions to perfom, such as generating code or executing other commands.
+    A file that contains an array of actions to perform, such as generating code or executing other commands.

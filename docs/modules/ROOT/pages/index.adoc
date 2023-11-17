@@ -1,13 +1,13 @@
 = Spring CLI
 
-The goal of the Spring CLI is to increase your productivity when creating new projects and adding functionality to existing projects. It does this by providing the following high-level features.
+The goal of the Spring CLI is to increase your productivity when you create new projects and when you add functionality to existing projects. It does this by providing the following high-level features:
 
-1. The command `boot new` clones an external project and optinally perform a package refactoring to your chosen package name. You can also optionally specify the new project’s group id, artifact id, and version
+. The `boot new` command clones an external project and optionally performs a package refactoring to your chosen package name. You can also optionally specify the new project’s group id, artifact id, and version.
 
-2. The command `boot add` will merge an external project to your current project. It performs an intelligent merge of project dependencies, plug-ins, annotations, application configuration files, and refactoring of the external project code into your current project’s package structure.
+. The `boot add` command merges an external project to your current project. It performs an intelligent merge of project dependencies, plug-ins, annotations, and application configuration files. It also refactors the external project code into your current project’s package structure.
 
-3. User-provided `commands` provides a user-friendly way to define and execute custom commands that can perform everyday tasks on your project. With declarative command definitions living alongside your code, you can easily create new controllers, add dependencies, or configure files. You can also execute other command-line applications as needed resembling a client-side GitHub Actions like experience.  
+. User-provided `commands` provide a user-friendly way to define and run custom commands that can perform everyday tasks on your project. With declarative command definitions living alongside your code, you can easily create new controllers, add dependencies, or configure files. You can also run other command-line applications as needed, creating a client-side GitHub Actions like experience.  
 
-Following a "Plain Old Java Projects" approach to code generation, implemented in the `boot new` and `boot add` commands, allows companies to define a standard set of projects with preferred libraries and coding styles. By including a `README.md`` file in these projects, it's easy for team members to get started with new libraries or programming approaches. For instance, running boot add jpa not only adds code to your project, but also renames the `README.md` file to `README-jpa.md` file for easy discovery.
+Following a "Plain Old Java Projects" approach to code generation, implemented in the `boot new` and `boot add` commands, lets companies and other groups of developers define a standard set of projects with preferred libraries and coding styles. By including a `README.md`` file in these projects, team members can quickly get started with new libraries or programming approaches. For instance, running `boot add jpa`` not only adds code to your project but also renames the `README.md` file to `README-jpa.md` file for easy discovery.
 
-User-defined commands are ideal for repetitive coding tasks. Since command definitions living alongside the your code, anyone on the your team can contribute or improve existing commands without the need to create, update, and publish additional artifacts or projects.
+User-defined commands are ideal for repetitive coding tasks. Since command definitions live alongside the your code, anyone on the your team can contribute or improve existing commands without the need to create, update, and publish additional artifacts or projects.

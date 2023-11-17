@@ -1,22 +1,22 @@
 = Getting Started
 
-Creating a new project is as simple as typing `spring boot new my-app`
+Creating a new project is as simple as typing `spring boot new my-app`:
 
 [source, bash]
 ----
 spring boot new my-app
 ----
 
-The output will be
+The output is
 [source, bash]
 ----
 Cloning project from https://github.com/rd-1-2022/rest-service
 Created project in directory 'my-app'
 ----
 
-`**Note**` If the CLI seems to be stuck at the cloning step, you might be hitting GitHub rate limiting.  Use the command `spring github auth login` to authenticate.
+NOTE: If the CLI seems to be stuck at the cloning step, you might be hitting GitHub rate limiting. Use the `spring github auth login` command to authenticate.
  
-You can now `cd` into the `my-app` directory and build and run the application, which is a simple web application with a single endpoint by default.
+You can now `cd` into the `my-app` directory and build and run the application, which is,  by default, a simple web application with a single endpoint:
 
 [source, bash]
 ----
@@ -24,14 +24,14 @@ cd my-app
 ./mnvw spring-boot:run
 ----
 
-Then in another terminal windows, interact with the endpoint using curl.
+Then, in another terminal windows, you can interact with the endpoint by using curl:
 
 [source, bash]
 ----
 curl http://localhost:8080/greeting
 ----
 
-which returns the default 'Hello World' greeting
+The curl command returns the default 'Hello World' greeting:
 
 [source, bash]
 ----
@@ -42,6 +42,6 @@ The README.adoc file in the new project contains more information on how the web
 
 == Next steps
 
-The section xref:creating-new-projects.adoc[Creating New Projects] shows you how to create applications other than the default application.
+The xref:creating-new-projects.adoc[Creating New Projects] section shows you how to create applications other than the default application.
 
-The section xref:adding-to-existing-projects.adoc[Adding To Existing Projects] shows you how to add additional applications into your current working project.
+The xref:adding-to-existing-projects.adoc[Adding To Existing Projects] section shows you how to add additional applications into your current working project.
