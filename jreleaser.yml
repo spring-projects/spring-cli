@@ -77,6 +77,7 @@ assemble:
         types: [msi]
         console: true
         dirChooser: true
+        resourceDir: 'src/jreleaser/jpackage/windows'
 
 platform:
   replacements:
