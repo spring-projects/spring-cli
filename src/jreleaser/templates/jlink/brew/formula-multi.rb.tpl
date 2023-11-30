@@ -22,6 +22,7 @@ class {{brewFormulaName}} < Formula
     libexec.install Dir["*"]
     bin.install_symlink "#{libexec}/bin/{{distributionExecutableUnix}}" => "{{distributionExecutableName}}"
     bash_completion.install Dir["#{libexec}/completion/bash/spring"]
+    zsh_completion.install Dir["#{libexec}/completion/zsh/_spring"]
   end
 
   def post_install

@@ -28,6 +28,8 @@ assemble:
       artifacts:
         - path: build/completion/bash/spring
           transform: completion/bash/spring
+        - path: build/completion/zsh/_spring
+          transform: completion/zsh/_spring
 
   jlink:
     spring-cli-standalone:
@@ -46,6 +48,8 @@ assemble:
       artifacts:
         - path: build/completion/bash/spring
           transform: completion/bash/spring
+        - path: build/completion/zsh/_spring
+          transform: completion/zsh/_spring
       targetJdks:
         - path: 'build/jdks/bellsoft17Linux/jdk-17.0.9'
           platform: 'linux-x86_64'

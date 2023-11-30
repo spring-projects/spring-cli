@@ -28,7 +28,9 @@ jobs:
       - name: Completion Files
         run: |
           mkdir -p build/completion/bash
+          mkdir -p build/completion/zsh
           java -jar build/libs/spring-cli-${{ inputs.version }}.jar completion bash > build/completion/bash/spring
+          java -jar build/libs/spring-cli-${{ inputs.version }}.jar completion zsh > build/completion/zsh/_spring
       - uses: actions/upload-artifact@v3
         with:
           name: fatjar
