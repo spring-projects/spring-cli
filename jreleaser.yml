@@ -7,6 +7,7 @@ project:
   name: spring-cli
   description: Spring Cli
   longDescription: Spring Cli
+  vendor: VMware
   authors:
     - jvalkeal
   license: Apache-2.0
@@ -68,7 +69,6 @@ assemble:
       applicationPackage:
         appName: spring
         appVersion: '{{projectVersionNumber}}'
-        vendor: Spring
 
       mainJar:
         path: 'build/libs/{{distributionName}}-{{projectVersion}}.jar'
