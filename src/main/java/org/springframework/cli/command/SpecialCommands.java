@@ -35,7 +35,7 @@ public class SpecialCommands {
 		this.terminalMessage = terminalMessage;
 	}
 
-	@Command(command = "!", description = "execute OS-specific shell command.", interactionMode = InteractionMode.INTERACTIVE)
+	@Command(command = "!", description = "run OS-specific shell command.", interactionMode = InteractionMode.INTERACTIVE)
 	public void dotExec(@Option(description = "command") String command) {
 		// Hack to try and avoid having to use quotes in the CLI to surround the command
 		String[] stringArray = StringUtils.commaDelimitedListToStringArray(command);

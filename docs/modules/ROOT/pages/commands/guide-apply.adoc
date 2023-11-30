@@ -1,0 +1,23 @@
+= guide apply
+Apply the instructions in the readme to the code base.
+
+== NAME
+guide apply
+
+== SYNOPSIS
+====
+[source]
+----
+guide apply --file String --path String --help 
+----
+====
+
+== OPTIONS
+`--file` String The readme file that contains the instructions of how to modify the code base, e.g. README-ai-jpa.md *Optional*
+
+`--path` String Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory. *Optional*
+
+`--help or -h`  help for guide apply *Optional*
+
+
+include::footers/guide-apply-footer.adoc[opts=optional]

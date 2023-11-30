@@ -1,0 +1,47 @@
+= initializer new
+Create a new project from start.spring.io
+
+== NAME
+initializer new
+
+== SYNOPSIS
+====
+[source]
+----
+initializer new --server-id String --path String --project String --language String --boot-version String --version String --group String --artifact String --name String --description String --package-name String --dependencies List --packaging String --java-version String --help 
+----
+====
+
+== OPTIONS
+`--server-id` String Server to use *Optional*
+
+`--path` String Path to extract *Optional*
+
+`--project` String Project *Optional*
+
+`--language` String Language *Optional*
+
+`--boot-version` String Language *Optional*
+
+`--version` String Version *Optional*
+
+`--group` String Group *Optional*
+
+`--artifact` String Artifact *Optional*
+
+`--name` String Name *Optional*
+
+`--description` String Description *Optional*
+
+`--package-name` String Package Name *Optional*
+
+`--dependencies` List Dependencies *Optional*
+
+`--packaging` String Packaging *Optional*
+
+`--java-version` String Java *Optional*
+
+`--help or -h`  help for initializer new *Optional*
+
+
+include::footers/initializer-new-footer.adoc[opts=optional]

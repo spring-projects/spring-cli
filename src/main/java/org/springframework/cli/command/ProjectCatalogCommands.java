@@ -181,7 +181,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		}
 	}
 
-	@Command(command = "remove", description = "Remove a project from a catalog")
+	@Command(command = "remove", description = "Remove a project from a project catalog")
 	public void catalogRemove(
 		@Option(description = "Catalog name", required = true) String name
 	) {

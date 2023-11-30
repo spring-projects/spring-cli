@@ -61,11 +61,11 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 		this.terminalMessage = terminalMessage;
 	}
 
-	@Command(command = "new", description="Create a new user-defined command")
+	@Command(command = "new", description="Create a new user-defined command.")
 	public void commandNew(
-			@Option(description = "The name of the user-defined command to create", defaultValue = "hello", longNames = "command-name") String commandName,
-			@Option(description = "The name of the user-defined sub-command to create", defaultValue = "new", longNames = "sub-command-name") String subCommandName,
-			@Option(description = "Path to execute command in") String path) {
+			@Option(description = "The name of the user-defined command to create.", defaultValue = "hello", longNames = "command-name") String commandName,
+			@Option(description = "The name of the user-defined sub-command to create.", defaultValue = "new", longNames = "sub-command-name") String subCommandName,
+			@Option(description = "Path on which to run the command.") String path) {
 		Path projectPath = path != null ? IoUtils.getProjectPath(path) : IoUtils.getWorkingDirectory();
 		//TODO check validity of passed in names as directory names.
 		Path commandPath = projectPath.resolve(".spring").resolve("commands").resolve(commandName).resolve(subCommandName);
@@ -74,12 +74,12 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 		IoUtils.writeToDir(commandPath.toFile(), "hello.yaml", classPathResource);
 		classPathResource = new ClassPathResource("org/springframework/cli/commands/command.yaml");
 		IoUtils.writeToDir(commandPath.toFile(), "command.yaml", classPathResource);
-		terminalMessage.print("Created user defined command " + commandPath);
+		terminalMessage.print("Created user defined command: " + commandPath);
 	}
 
 	@Command(command = "add", description = "Add a user-defined command")
 	public void commandAdd(
-			@Option(description = "Add user-defined command from a URL") String from) {
+			@Option(description = "Add user-defined command from a URL.") String from) {
 		Path downloadedCommandPath = sourceRepositoryService.retrieveRepositoryContents(from);
 		logger.debug("downloaded command path ", downloadedCommandPath);
 		Path cwd = IoUtils.getWorkingDirectory().toAbsolutePath();
@@ -88,7 +88,7 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 			FileSystemUtils.copyRecursively(downloadedCommandPath, cwd);
 		}
 		catch (IOException e) {
-			throw new SpringCliException("Could not add command", e);
+			throw new SpringCliException("Could not add command.", e);
 		}
 
 		// Display which commands were added.
@@ -110,17 +110,17 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 				Path readmePath = Paths.get(cwd.toString(), readmeName);
 				logger.debug("README PATH = "+ readmePath);
 				if (Files.exists(readmePath)) {
-					sb.append("Refer to " + readmeName + " for more information.");
+					sb.append("See " + readmeName + " for more information.");
 					sb.append(System.lineSeparator());
 				}
 			}
-			sb.append("Execute 'spring help' for more information on User-defined commands.");
+			sb.append("Run 'spring help' for more information on User-defined commands.");
 			terminalMessage.print(sb.toAttributedString());
 
 			try {
 				FileSystemUtils.deleteRecursively(downloadedCommandPath);
 			} catch (IOException ex) {
-				logger.warn("Could not delete path " + downloadedCommandPath, ex);
+				logger.warn("Could not delete path: " + downloadedCommandPath, ex);
 			}
 		}
 	}

@@ -44,8 +44,8 @@ public class GuideCommands {
 
 	@Command(command = "apply", description = "Apply the instructions in the readme to the code base.")
 	public void readmeApply(
-			@Option(description = "The readme file that contains the instructions of how to modify the code base, e.g. README-ai-jpa.md") String file,
-			@Option(description = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.") String path) {
+			@Option(description = "The readme file that contains the instructions for how to modify the code base, such as README-ai-jpa.md") String file,
+			@Option(description = "Path on which to run the command. Most of the time, you can not specify the path and use the default value, which is the current working directory.") String path) {
 
 		this.openAiHandler.apply(file, path, terminalMessage);
 	}

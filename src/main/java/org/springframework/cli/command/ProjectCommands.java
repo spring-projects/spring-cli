@@ -65,7 +65,7 @@ public class ProjectCommands {
 		this.terminalMessage = terminalMessage;
 	}
 
-	@Command(command = "add", description = "Add a project to use with 'boot new' and 'boot add' commands")
+	@Command(command = "add", description = "Add a project to use with the 'boot new' and 'boot add' commands")
 	public void projectAdd(
 		@Option(description = "Project name", required = true) String name,
 		@Option(description = "Project url", required = true) String url,
@@ -80,7 +80,7 @@ public class ProjectCommands {
 		this.terminalMessage.print("Project '" + name + "' added from URL = " + url);
 	}
 
-	@Command(command = "list", description = "List projects available for use with 'boot new' and 'boot add' commands")
+	@Command(command = "list", description = "List projects available for use with the 'boot new' and 'boot add' commands")
 	public Table projectList() {
 
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description",  "URL", "Catalog", "Tags" });
