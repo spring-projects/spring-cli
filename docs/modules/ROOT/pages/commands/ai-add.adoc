@@ -8,12 +8,12 @@ ai add
 ====
 [source]
 ----
-ai add --description String --path String --preview boolean --rewrite boolean --help 
+ai add [--description String] --path String --preview boolean --rewrite boolean --help 
 ----
 ====
 
 == OPTIONS
-`--description` String The description of the code to create, this can be as short as a well known Spring project name, e.g JPA. *Optional*
+`--description` String The description of the code to create. This can be as short as a well known Spring project name, such as 'JPA'. *Mandatory*
 
 `--path` String Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory. *Optional*
 

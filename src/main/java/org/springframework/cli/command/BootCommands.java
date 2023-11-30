@@ -41,7 +41,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 		this.terminalMessage = terminalMessage;
 	}
 
-	@Command(command = "new", description = "Create a new Spring Boot project from an existing project")
+	@Command(command = "new", description = "Create a new Spring Boot project from an existing project.")
 	public void bootNew(
 			@Option(description = "Name of the new project", required = true) String name,
 			@Option(description = "Create project from existing project name or URL") String from,
@@ -50,7 +50,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 			@Option(description = "Version of the new project") String version,
 			@Option(description = "Description of the new project") String description,
 			@Option(longNames = "package-name", description = "Package name for the new project") String packageName,
-			@Option(description = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.") String path) {
+			@Option(description = "Path on which to run the command. Most of the time, you can not specify the path and use the default value, which is the current working directory.") String path) {
 		ProjectInfo projectInfo = new ProjectInfo(groupId, artifactId, version, name, description, packageName);
 		ProjectHandler handler = new ProjectHandler(springCliUserConfig, sourceRepositoryService, terminalMessage);
 		handler.create(from, path, projectInfo);
@@ -59,7 +59,7 @@ public class BootCommands extends AbstractSpringCliCommands {
 
 	@Command(command = "add", description = "Merge an existing project into the current Spring Boot project")
 	public void bootAdd(
-			@Option(description = "Add to project from an existing project name or URL") String from,
+			@Option(description = "Add to the current project from an existing project by specifying the existing project's name or URL.") String from,
 			@Option(description = "Path") String path) {
 		ProjectHandler handler = new ProjectHandler(springCliUserConfig, sourceRepositoryService, terminalMessage);
 		handler.add(from, path);

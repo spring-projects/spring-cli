@@ -45,12 +45,12 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 	}
 
 	// TODO - consider renaming to 'default set'
-	@Command(command = "set", description = "For a given command name, set a default value for an option")
+	@Command(command = "set", description = "For a given command name, set the default value for an option.")
 	public void configSet(
-			@Option(description = "Name of command") String commandName,
-			@Option(description = "Name of subcommand") String subCommandName,
-			@Option(description = "Name of option") String optionName,
-			@Option(description = "Default value of option") String optionValue) {
+			@Option(description = "Name of the command.") String commandName,
+			@Option(description = "Name of the subcommand.") String subCommandName,
+			@Option(description = "Name of the option.") String optionName,
+			@Option(description = "Default value of the option.") String optionValue) {
 		// get current defaults
 		SpringCliUserConfig.CommandDefaults commandDefaults = new SpringCliUserConfig.CommandDefaults();
 		List<CommandDefault> commandDefaultList = new ArrayList<>();
@@ -63,11 +63,11 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 		this.springCliUserConfig.setCommandDefaults(commandDefaults);
 	}
 
-	@Command(command = "unset", description = "For a given command name, unset a default value for an option")
+	@Command(command = "unset", description = "For a given command name, unset the default value for a given option.")
 	public boolean configUnSet(
-			@Option(description = "Name of command") String commandName,
-			@Option(description = "Name of subcommand") String subCommandName,
-			@Option(description = "Name of option") String optionName) {
+			@Option(description = "Name of the command.") String commandName,
+			@Option(description = "Name of the subcommand.") String subCommandName,
+			@Option(description = "Name of the option.") String optionName) {
 		CommandDefaults commandDefaults = this.springCliUserConfig.getCommandDefaults();
 		List<CommandDefault> commandDefaultList = commandDefaults.getCommandDefaults();
 		Iterator<CommandDefault> it = commandDefaultList.iterator();
@@ -100,7 +100,7 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 
 	}
 
-	@Command(command = "list", description = "List configuration values")
+	@Command(command = "list", description = "List configuration values.")
 	public Table configList() {
 
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Command", "Sub Command", "Option Name/Values"});

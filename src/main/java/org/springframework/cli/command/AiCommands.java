@@ -52,12 +52,12 @@ public class AiCommands implements ApplicationContextAware {
 		this.openAiHandler = openAiHandler;
 	}
 
-	@Command(command = "add", description = "Add code to the project from AI for a Spring Project project.")
+	@Command(command = "add", description = "Add code to the project from AI for a Spring project.")
 	public void aiAdd(
-			@Option(description = "The description of the code to create, this can be as short as a well known Spring project name, e.g JPA.", required = true) String description,
-			@Option(description = "Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory.") String path,
-			@Option(description = "Create the README.md file, but do not apply the changes to the code base.") boolean preview,
-			@Option(description = "Rewrite the 'description' option the README.md file, but do not apply the changes to the code base.") boolean rewrite) {
+			@Option(description = "The description of the code to create. This can be as short as a well known Spring project name, such as 'JPA'.", required = true) String description,
+			@Option(description = "Path on which to run the command. Most of the time, you can not specify the path and use the default value, which is the current working directory.") String path,
+			@Option(description = "Create the README.md file but do not apply the changes to the code base.") boolean preview,
+			@Option(description = "Rewrite the 'description' option of the README.md file but do not apply the changes to the code base.") boolean rewrite) {
 		this.openAiHandler.add(description, path, preview, rewrite, terminalMessage);
 	}
 

@@ -75,7 +75,7 @@ public class GithubCommands extends AbstractSpringCliCommands {
 	 * Login command for github. Makes user to choose either starting a device flow
 	 * via browser or pasting a token created manually.
 	 */
-	@Command(command = "login", description = "Authenticate with a GitHub")
+	@Command(command = "login", description = "Authenticate with GitHub.")
 	public void login() {
 		String authType = askAuthType();
 		String clientId = getCliProperties().getGithub().getClientId();
@@ -87,7 +87,7 @@ public class GithubCommands extends AbstractSpringCliCommands {
 
 			AttributedString styledStr = terminal.styledString("!", StyleSettings.TAG_LEVEL_WARN);
 			styledStr = terminal.join(styledStr,
-					terminal.styledString(" Open browser with https://github.com/login/device and paste device code ", null));
+					terminal.styledString(" Open your browser with https://github.com/login/device and paste the device code ", null));
 			styledStr = terminal.join(styledStr, terminal.styledString(response.get("user_code"), StyleSettings.TAG_HIGHLIGHT));
 			terminal.print(styledStr);
 
@@ -97,25 +97,25 @@ public class GithubCommands extends AbstractSpringCliCommands {
 					Integer.parseInt(response.get("interval")));
 			if (token.isPresent()) {
 				userConfig.updateHost("github.com", new Host(token.get(), null));
-				terminal.print("logged in to github");
+				terminal.print("logged in to GitHub");
 			}
 			else {
-				terminal.print("failed logging in to github");
+				terminal.print("failed logging in to github.");
 			}
 		}
 		else if (ObjectUtils.nullSafeEquals(authType, "paste")) {
-			terminal.print("Tip: you can generate a Personal Access Token here https://github.com/settings/tokens");
-			terminal.print("The minimum required scopes are 'repo', 'read:org'");
+			terminal.print("Tip: you can generate a Personal Access Token here: https://github.com/settings/tokens");
+			terminal.print("The minimum required scopes are 'repo' and 'read:org'.");
 			String token = askToken();
 			userConfig.updateHost("github.com", new Host(token, null));
-			terminal.print("logged in to github");
+			terminal.print("logged in to GitHub.");
 		}
 	}
 
 	/**
 	 * Logout command which essentially removes local token if exists.
 	 */
-	@Command(command = "logout", description = "Log out of a GitHub")
+	@Command(command = "logout", description = "Log out of GitHub.")
 	public void logout() {
 		Host host = null;
 		Map<String, Host> hostsMap = userConfig.getHosts();
@@ -126,14 +126,14 @@ public class GithubCommands extends AbstractSpringCliCommands {
 			host = hostsMap.get("github.com");
 		}
 		if (host == null) {
-			terminal.print("not logged in to github");
+			terminal.print("not logged in to GitHub");
 		}
 		else {
 			hostsMap.remove("github.com");
 			Hosts hosts = new Hosts();
 			hosts.setHosts(hostsMap);
 			userConfig.setHosts(hosts);
-			terminal.print("removed authentication token");
+			terminal.print("Removed authentication token.");
 		}
 	}
 
@@ -143,9 +143,9 @@ public class GithubCommands extends AbstractSpringCliCommands {
 	 * @param showToken flag if actual token should be shown.
 	 * @return the content
 	 */
-	@Command(command = "status", description = "View authentication status")
+	@Command(command = "status", description = "View authentication status.")
 	public AttributedString status(
-			@Option(longNames = "show-token", description = "Display the auth token") boolean showToken
+			@Option(longNames = "show-token", description = "Display the auth token.") boolean showToken
 		) {
 		Host host = null;
 		Map<String, Host> hosts = userConfig.getHosts();
@@ -153,7 +153,7 @@ public class GithubCommands extends AbstractSpringCliCommands {
 			host = hosts.get("github.com");
 		}
 		if (host == null) {
-			return new AttributedString("You are not logged into github");
+			return new AttributedString("You are not logged into GitHub.");
 		}
 		else {
 			String loginName = null;
@@ -165,9 +165,9 @@ public class GithubCommands extends AbstractSpringCliCommands {
 				loginName = gh.getMyself().getLogin();
 				log.debug("Got loginName {}", loginName);
 			} catch (IOException e) {
-				log.error("Error getting github login", e);
+				log.error("Error getting GitHub login.", e);
 			}
-			AttributedString ret = terminal.styledString("You are logged into github as ", null);
+			AttributedString ret = terminal.styledString("You are logged into GitHub as ", null);
 			ret = terminal.join(ret, terminal.styledString(loginName, StyleSettings.TAG_HIGHLIGHT));
 			if (showToken) {
 				ret = terminal.join(ret, terminal.styledString(", with token ", null));
@@ -188,7 +188,7 @@ public class GithubCommands extends AbstractSpringCliCommands {
 		authType.put("Paste an authentication token", "paste");
 		ComponentFlow wizard = componentFlowBuilder.clone().reset()
 				.withSingleItemSelector("authType")
-					.name("How would you like to authenticate GitHub CLI")
+					.name("How would you like to authenticate GitHub CLI?")
 					.resultMode(ResultMode.ACCEPT)
 					.selectItems(authType)
 					.and()
