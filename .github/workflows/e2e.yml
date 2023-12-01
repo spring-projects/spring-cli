@@ -19,7 +19,7 @@ jobs:
             os: ubuntu-latest
             graal: 22.3.1
           - nickname: windows
-            os: custom-large-windows-2022
+            os: win22-8-32
             graal: 22.3.1
     name: E2E ${{ matrix.nickname }}
     steps:

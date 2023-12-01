@@ -11,8 +11,8 @@ jobs:
       matrix:
         include:
           - nickname: win
-            os: custom-large-windows-2022
-            graal: 22.3.0
+            os: win22-8-32
+            graal: dev
     name: CI Native ${{ matrix.nickname }}
     steps:
       - uses: actions/checkout@v2
