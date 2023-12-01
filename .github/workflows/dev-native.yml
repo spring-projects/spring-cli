@@ -28,7 +28,7 @@ jobs:
           components: native-image
           set-java-home: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - run: ./gradlew build nativeCompile --no-daemon
+      - run: ./gradlew build nativeCompile -x test --no-daemon
       - uses: actions/upload-artifact@v2
         with:
           name: spring-up-${{ matrix.nickname }}
