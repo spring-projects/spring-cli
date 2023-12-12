@@ -70,6 +70,9 @@ public class SpringCliRuntimeHints implements RuntimeHintsRegistrar {
 				Name.class, PackageName.class, Packaging.class, PackagingValues.class, ProjectType.class,
 				ProjectTypeValue.class, Version.class);
 		registerForMostReflection(hints.reflection(), EncodingDetectingInputStream.class);
+
+        // DefaultHelperRegistry in handlebars
+        hints.resources().registerPattern("helpers.nashorn.js");
 	}
 
 	private void registerForMostReflection(ReflectionHints reflectionHints, Class<?>... classes) {
