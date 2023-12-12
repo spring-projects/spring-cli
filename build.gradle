@@ -2,7 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '3.1.6'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'com.gorylenko.gradle-git-properties' version '2.3.2'
+	id 'com.gorylenko.gradle-git-properties' version '2.4.1'
 	id 'org.graalvm.buildtools.native' version '0.9.19'
 	id 'io.spring.antora.generate-antora-yml' version '0.0.1'
 	id 'org.antora' version '1.0.0'
