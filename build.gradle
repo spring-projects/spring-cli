@@ -143,6 +143,20 @@ rootProject.tasks.named("processIntegrationTestResources") {
 	duplicatesStrategy = 'include'
 }
 
+gitProperties {
+	// https://github.com/n0mer/gradle-git-properties/issues/14
+	def dotGitPath = rootProject.layout.projectDirectory.asFile.toPath().resolve(".git")
+	if (java.nio.file.Files.isRegularFile(dotGitPath)) {
+		java.nio.file.Files.lines(dotGitPath).withCloseable { ditGitFileLines ->
+			dotGitDirectory = ditGitFileLines
+				.filter { it.startsWith("gitdir: ") }
+				.map { it.substring('gitdir: '.length(), it.lastIndexOf('/.git/')) }
+				.map { project.objects.directoryProperty().convention(project.layout.projectDirectory.dir(it)) }
+				.findFirst()
+				.orElse(project.objects.directoryProperty().convention(project.layout.projectDirectory.dir(".git")))
+		}
+	}
+}
 
 springBoot {
 	buildInfo()
