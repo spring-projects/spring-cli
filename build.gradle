@@ -2,7 +2,6 @@ plugins {
 	id 'org.springframework.boot' version '3.1.6'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'com.gorylenko.gradle-git-properties' version '2.4.1'
 	id 'org.graalvm.buildtools.native' version '0.9.19'
 	id 'io.spring.antora.generate-antora-yml' version '0.0.1'
 	id 'org.antora' version '1.0.0'
@@ -143,20 +142,38 @@ rootProject.tasks.named("processIntegrationTestResources") {
 	duplicatesStrategy = 'include'
 }
 
-gitProperties {
-	// https://github.com/n0mer/gradle-git-properties/issues/14
-	def dotGitPath = rootProject.layout.projectDirectory.asFile.toPath().resolve(".git")
-	if (java.nio.file.Files.isRegularFile(dotGitPath)) {
-		java.nio.file.Files.lines(dotGitPath).withCloseable { ditGitFileLines ->
-			dotGitDirectory = ditGitFileLines
-				.filter { it.startsWith("gitdir: ") }
-				.map { it.substring('gitdir: '.length(), it.lastIndexOf('/.git/')) }
-				.map { project.objects.directoryProperty().convention(project.layout.projectDirectory.dir(it)) }
-				.findFirst()
-				.orElse(project.objects.directoryProperty().convention(project.layout.projectDirectory.dir(".git")))
+task generateGitProperties {
+	doLast {
+		try {
+			def branch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
+			def revision = 'git rev-list --max-count 1 --timestamp HEAD'.execute().text.trim()
+			def commitHash = revision.split(' ').last()
+			def timestamp = revision ? new java.util.Date(java.util.concurrent.TimeUnit.SECONDS.toMillis(revision.split(' ').first() as long)).format("yyyy-MM-dd'T'HH:mm:ssZ") : null
+			def commitHashShort = 'git rev-parse --short HEAD'.execute().text.trim()
+
+			File resourcesDir = new File(project.getBuildDir(), 'resources/main')
+			File propertiesFile = new File(resourcesDir, 'git.properties')
+
+			if(timestamp) {
+				if(!propertiesFile.exists()) {
+					resourcesDir.mkdirs()
+					propertiesFile.createNewFile()
+				}
+				propertiesFile.text = """git.branch=${branch}
+git.commit.id=${commitHash}
+git.commit.id.abbrev=${commitHashShort}
+git.commit.time=${timestamp}
+"""
+			} else {
+				project.logger.error('Unable to generate Git properties file.')
+			}
+		} catch (e) {
+			project.logger.error('Unable to generate Git properties file.', e)
 		}
 	}
 }
+
+project.tasks.bootJar.dependsOn('generateGitProperties')
 
 springBoot {
 	buildInfo()
