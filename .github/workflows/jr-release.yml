@@ -48,7 +48,8 @@ jobs:
           version: early-access
           arguments: full-release
         env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.JRELEASER_GITHUB_TOKEN }}
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.SPRING_CLI_REPO_JR_TOKEN }}
+          JRELEASER_HOMEBREW_GITHUB_TOKEN: ${{ secrets.SPRING_CLI_ORG_JR_TOKEN }}
           JRELEASER_PROJECT_VERSION: ${{ inputs.version }}
 
       - name: JReleaser release output
