@@ -21,7 +21,7 @@ You can now `cd` into the `my-app` directory and build and run the application, 
 [source, bash]
 ----
 cd my-app
-./mnvw spring-boot:run
+./mvnw spring-boot:run
 ----
 
 Then, in another terminal windows, you can interact with the endpoint by using curl:
