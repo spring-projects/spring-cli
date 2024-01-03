@@ -22,6 +22,7 @@ import org.openrewrite.Recipe;
 import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.AddImport;
 
+// FIXME: Use AddImport instead?
 public class AddImportRecipe extends Recipe {
 
 	private AddImport addImport;
@@ -36,7 +37,12 @@ public class AddImportRecipe extends Recipe {
 	}
 
 	@Override
-	protected TreeVisitor<?, ExecutionContext> getVisitor() {
+	public String getDescription() {
+		return getDisplayName();
+	}
+
+	@Override
+	public TreeVisitor<?, ExecutionContext> getVisitor() {
 		return addImport;
 	}
 }

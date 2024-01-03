@@ -17,40 +17,22 @@
 
 package org.springframework.cli.merger;
 
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.InMemoryExecutionContext;
+import org.openrewrite.Result;
+import org.openrewrite.internal.lang.Nullable;
+import org.openrewrite.java.JavaParser;
+import org.openrewrite.maven.AddDependency;
+import org.openrewrite.maven.AddManagedDependency;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-import java.util.Set;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.DependencyManagement;
-import org.apache.maven.model.Model;
-import org.openrewrite.ExecutionContext;
-import org.openrewrite.InMemoryExecutionContext;
-import org.openrewrite.Result;
-import org.openrewrite.SourceFile;
-import org.openrewrite.Tree;
-import org.openrewrite.java.Java17Parser;
-import org.openrewrite.java.JavaParser;
-import org.openrewrite.java.marker.JavaProject;
-import org.openrewrite.java.tree.J.CompilationUnit;
-import org.openrewrite.maven.AddDependency;
-import org.openrewrite.maven.AddManagedDependency;
-import org.openrewrite.maven.ChangePropertyValue;
-import org.openrewrite.maven.MavenParser;
-import org.openrewrite.xml.tree.Xml.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.cli.SpringCliException;
-import org.springframework.cli.util.FileTypeCollectingFileVisitor;
-import org.springframework.cli.util.PomReader;
 
 /**
  * This is a WIP class that tried to use the default AddDependency recipe from OpenRewrite.
@@ -72,6 +54,19 @@ public class ProjectMergerWithMavenDepRecipe {
 		this.pathCurrentProject = pathCurrentProject;
 	}
 
+	/**
+	 * FIXME: What does this method? Parsing JavaSources without classpath will prevent type resolution.
+	 * FIXME: Parsing pom files without reading settings.xml will fail if private repo is used. Can we reuse functionality from spring-rewrite-commons instead?
+	 */
+
+	/**
+	 * this approach does not work in our use case since it needs to construct a classpath for the application, that is the 'spring up shell'.
+	 * The rationale is that the recpie does not want to add a dependency, in particular in a multi-module project, to module that does not
+	 * use the code.  This involves loading classes from the classpath.  fall back to simple XML manipulation.
+	 */
+
+
+	/* FIXME: Code has no usages
 	public void merge() throws IOException {
 		PomReader pomReader = new PomReader();
 		Path pomToMerge = this.pathToMerge.resolve("pom.xml");
@@ -99,8 +94,8 @@ public class ProjectMergerWithMavenDepRecipe {
 			// TODO may want to do something special in case java.version is set to be different
 			//System.out.println("Going to merge property key " + keyToMerge);
 			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true, false);
-			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.pathCurrentProject, getExecutionContext());
-			List<Result> resultList = changePropertyValueRecipe.run(pomFiles).getResults();
+			List<SourceFile> pomFiles = mavenParser.parse(paths, this.pathCurrentProject, getExecutionContext()).toList();
+			List<Result> resultList = changePropertyValueRecipe.run(new InMemoryLargeSourceSet(pomFiles), getExecutionContext()).getChangeset().getAllResults();
 			updatePomFile(currentProjectPomPath, resultList);
  		}
 
@@ -114,32 +109,26 @@ public class ProjectMergerWithMavenDepRecipe {
 			AddManagedDependency addManagedDependency = getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
 					dependency.getType(), dependency.getClassifier());
 
-			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.pathCurrentProject, getExecutionContext());
-			List<Result> resultList = addManagedDependency.run(pomFiles).getResults();
+			List<SourceFile> pomFiles = mavenParser.parse(paths, this.pathCurrentProject, getExecutionContext()).toList();
+			List<Result> resultList = addManagedDependency.run(new InMemoryLargeSourceSet(pomFiles), getExecutionContext()).getChangeset().getAllResults();
 			updatePomFile(currentProjectPomPath, resultList);
 		}
 
 		// Dependencies Section
 
 
-		/**
-		 * this approach does not work in our use case since it needs to construct a classpath for the application, that is the 'spring up shell'.
-		 * The rationale is that the recpie does not want to add a dependency, in particular in a multi-module project, to module that does not
-		 * use the code.  This involves loading classes from the classpath.  fall back to simple XML manipulation.
-		 */
-
-
 
 		List<Dependency> dependenciesToMerge = modelToMerge.getDependencies();
 
 		// Need to get source files
-		// TODO detect if java 11 or 8 or whatever....? JavaParser.fromJavaVersion() ?
-		JavaParser javaParser = new Java17Parser.Builder()
+		JavaParser javaParser = JavaParser.fromJavaVersion()
 				.logCompilationWarningsAndErrors(true)
 				.classpath("spring-boot")
 				.build();
 
-		javaParser.setSourceSet("main");
+		// FIXME: How to deal wih additional parsing here?
+
+//		javaParser.setSourceSet("main");
 
 		FileTypeCollectingFileVisitor collector = new FileTypeCollectingFileVisitor(".java");
 		try {
@@ -185,11 +174,11 @@ public class ProjectMergerWithMavenDepRecipe {
 			AddDependency addDependency = getRecipeAddDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), null, "org.springframework.boot.SpringApplication");
 
 
-			List<Result> resultList = addDependency.run(untyped).getResults();
+			List<Result> resultList = addDependency.run(new InMemoryLargeSourceSet(untyped), getExecutionContext()).getChangeset().getAllResults();
 			updatePomFile(currentProjectPomPath, resultList);
 		}
-
 	}
+ */
 
 	private void updatePomFile(Path currentProjectPomPath, List<Result> resultList) throws IOException {
 		if (resultList.isEmpty()) {
@@ -219,8 +208,8 @@ public class ProjectMergerWithMavenDepRecipe {
 	}
 
 	private AddDependency getRecipeAddDependency(String groupId, String artifactId, String version, String scope, String onlyIfUsing) {
-
-		return new AddDependency(groupId, artifactId, version, null, scope, true, onlyIfUsing, null, null, false, null);
+		@Nullable Boolean acceptTransitive = true;
+		return new AddDependency(groupId, artifactId, version, null, scope, true, onlyIfUsing, null, null, false, null, acceptTransitive);
 	}
 
 }

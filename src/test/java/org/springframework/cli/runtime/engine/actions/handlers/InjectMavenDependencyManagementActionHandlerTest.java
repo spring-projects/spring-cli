@@ -1,17 +1,14 @@
 package org.springframework.cli.runtime.engine.actions.handlers;
 
-import java.nio.file.Path;
-
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
-
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cli.support.CommandRunner;
 import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
 import org.springframework.cli.support.MockConfigurations.MockUserConfig;
+
+import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 /*
@@ -61,13 +58,25 @@ class InjectMavenDependencyManagementActionHandlerTest {
 					.prepareProject("rest-service", workingDir)
 					.installCommandGroup("inject-maven-dependency-mgmt")
 					.executeCommand("dependency/add-using-var")
-					.withArguments("release", "1.0.0.RELEASE")
+					.withArguments("release", "1.1.1")
 					.build();
 			commandRunner.run();
 
 			Path pomPath = workingDir.resolve("pom.xml");
 
-			assertThat(pomPath).content().contains("<version>1.0.0.RELEASE</version>");
+			assertThat(pomPath).content().containsIgnoringWhitespaces(
+											"""
+											<dependencyManagement>
+												<dependencies>
+													<dependency>
+														<groupId>org.springframework.modulith</groupId>
+														<artifactId>spring-modulith-bom</artifactId>
+														<version>1.1.1</version>
+														<type>import</type>
+													</dependency>
+												</dependencies>
+											</dependencyManagement>
+											""");
 
 		});
 	}
