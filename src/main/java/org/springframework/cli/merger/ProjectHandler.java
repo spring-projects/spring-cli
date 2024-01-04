@@ -1,5 +1,32 @@
 package org.springframework.cli.merger;
 
+import org.apache.tools.ant.util.FileUtils;
+import org.codehaus.plexus.util.DirectoryScanner;
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.InMemoryExecutionContext;
+import org.openrewrite.Result;
+import org.openrewrite.SourceFile;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
+import org.openrewrite.xml.XmlParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cli.SpringCliException;
+import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.config.SpringCliUserConfig.CommandDefaults;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
+import org.springframework.cli.git.SourceRepositoryService;
+import org.springframework.cli.recipe.RecipeUtils;
+import org.springframework.cli.support.configfile.YamlConfigFile;
+import org.springframework.cli.util.*;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StringUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -12,40 +39,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-
-import org.apache.tools.ant.util.FileUtils;
-import org.codehaus.plexus.util.DirectoryScanner;
-import org.jline.utils.AttributedStringBuilder;
-import org.jline.utils.AttributedStyle;
-import org.openrewrite.InMemoryExecutionContext;
-import org.openrewrite.Result;
-import org.openrewrite.xml.XmlParser;
-import org.openrewrite.xml.tree.Xml.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.cli.SpringCliException;
-import org.springframework.cli.config.SpringCliUserConfig;
-import org.springframework.cli.config.SpringCliUserConfig.CommandDefaults;
-import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
-import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
-import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
-import org.springframework.cli.git.SourceRepositoryService;
-import org.springframework.cli.recipe.RecipeUtils;
-import org.springframework.cli.support.configfile.YamlConfigFile;
-import org.springframework.cli.util.IoUtils;
-import org.springframework.cli.util.JavaUtils;
-import org.springframework.cli.util.PackageNameUtils;
-import org.springframework.cli.util.ProjectInfo;
-import org.springframework.cli.util.RefactorUtils;
-import org.springframework.cli.util.RootPackageFinder;
-import org.springframework.cli.util.TerminalMessage;
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.FileSystemUtils;
-import org.springframework.util.StringUtils;
-
-import static org.springframework.cli.config.SpringCliUserConfig.PROJECT_CATALOGS_FILE_NAME;
 
 /**
  * Contain features to create and modify projects. This is kept outside
@@ -316,11 +309,12 @@ public class ProjectHandler {
 		Consumer<Throwable> onError = e -> {
 			logger.error("error in xml parser execution", e);
 		};
-		List<Document> documentList = xmlParser.parse(paths, repositoryContentsPath, new InMemoryExecutionContext(onError));
+		List<SourceFile> documentList = xmlParser.parse(paths, repositoryContentsPath, new InMemoryExecutionContext(onError)).toList();
 
 		// Execute Recipe
 		ChangeNewlyClonedPomRecipe changeNewlyClonedPomRecipe = new ChangeNewlyClonedPomRecipe(projectInfo);
-		List<Result> resultList = changeNewlyClonedPomRecipe.run(documentList).getResults();
+		ExecutionContext executionContext = new InMemoryExecutionContext();
+		List<Result> resultList = changeNewlyClonedPomRecipe.run( new InMemoryLargeSourceSet(documentList), executionContext).getChangeset().getAllResults();
 
 		// Write Results
 		RecipeUtils.writeResults("ChangeNewlyClonedPomRecipe", pomPath, resultList);

@@ -17,23 +17,23 @@
 
 package org.springframework.cli.util;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.function.Consumer;
-
 import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.RecipeRun;
 import org.openrewrite.Result;
 import org.openrewrite.SourceFile;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
 import org.openrewrite.java.ChangePackage;
 import org.openrewrite.java.Java17Parser;
 import org.openrewrite.java.JavaParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.cli.SpringCliException;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class RefactorUtils {
 
@@ -54,12 +54,12 @@ public class RefactorUtils {
 		};
 		InMemoryExecutionContext executionContext = new InMemoryExecutionContext(onError);
 		List<Path> matches = collector.getMatches();
-		List<? extends SourceFile> compilationUnits = javaParser.parse(matches, null, executionContext);
+		List<SourceFile> compilationUnits = javaParser.parse(matches, null, executionContext).toList();
 		ResultsExecutor container = new ResultsExecutor();
 
 		ChangePackage recipe = new ChangePackage(oldPackage, newPackage, true);
-		RecipeRun run = recipe.run(compilationUnits);
-		List<Result> results = run.getResults();
+		RecipeRun run = recipe.run(new InMemoryLargeSourceSet(compilationUnits), executionContext);
+		List<Result> results = run.getChangeset().getAllResults();
 		container.addAll(results);
 		try {
 			container.execute();

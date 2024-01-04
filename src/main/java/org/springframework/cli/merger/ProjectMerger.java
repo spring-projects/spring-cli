@@ -17,29 +17,6 @@
 
 package org.springframework.cli.merger;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-import java.util.function.Consumer;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
@@ -49,29 +26,36 @@ import org.apache.tools.ant.util.FileUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
-import org.openrewrite.ExecutionContext;
-import org.openrewrite.InMemoryExecutionContext;
-import org.openrewrite.RecipeRun;
-import org.openrewrite.Result;
-import org.openrewrite.SourceFile;
+import org.openrewrite.*;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
+import org.openrewrite.internal.lang.Nullable;
 import org.openrewrite.java.AddImport;
 import org.openrewrite.java.Java17Parser;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.java.tree.J.Annotation;
 import org.openrewrite.maven.*;
-import org.openrewrite.xml.tree.Xml.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
-
 import org.springframework.beans.factory.config.YamlMapFactoryBean;
 import org.springframework.beans.factory.config.YamlProcessor.ResolutionMethod;
 import org.springframework.cli.SpringCliException;
+import org.springframework.cli.recipe.AddManagedDependencyRecipeFactory;
 import org.springframework.cli.util.PomReader;
 import org.springframework.cli.util.RootPackageFinder;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.FileSystemResource;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Consumer;
 
 import static org.springframework.cli.util.PropertyFileUtils.mergeProperties;
 import static org.springframework.cli.util.RefactorUtils.refactorPackage;
@@ -168,8 +152,8 @@ public class ProjectMerger {
 			List<Path> paths = new ArrayList<>();
 			paths.add(springBootApplicationFile.get().toPath());
 			JavaParser javaParser = new Java17Parser.Builder().build();
-			List<? extends SourceFile> compilationUnits = javaParser.parse(paths, null, executionContext);
-			collectAnnotationAndImportInformationRecipe.run(compilationUnits);
+			List<SourceFile> compilationUnits = javaParser.parse(paths, null, executionContext).toList();
+			collectAnnotationAndImportInformationRecipe.run(new InMemoryLargeSourceSet(compilationUnits), executionContext);
 
 			List<Annotation> declaredAnnotations = collectAnnotationAndImportInformationRecipe.getDeclaredAnnotations();
 			List<String> declaredImports = collectAnnotationAndImportInformationRecipe.getDeclaredImports();
@@ -195,13 +179,13 @@ public class ProjectMerger {
 				paths = new ArrayList<>();
 				paths.add(currentSpringBootApplicationFile.get().toPath());
 				javaParser = new Java17Parser.Builder().build();
-				compilationUnits = javaParser.parse(paths, null, executionContext);
+				compilationUnits = javaParser.parse(paths, null, executionContext).toList();
 				for (Entry<String, String> annotationImportEntry : annotationImportMap.entrySet()) {
 					String annotation = annotationImportEntry.getKey();
 					String importStatement = annotationImportEntry.getValue();
 					AddImport addImport = new AddImport(importStatement, null, false);
 					AddImportRecipe addImportRecipe = new AddImportRecipe(addImport);
-					List<Result> results = addImportRecipe.run(compilationUnits).getResults();
+					List<Result> results = addImportRecipe.run(new InMemoryLargeSourceSet(compilationUnits), executionContext).getChangeset().getAllResults();
 					updateSpringApplicationClass(currentSpringBootApplicationFile.get().toPath(), results);
 
 					AttributedStringBuilder sb = new AttributedStringBuilder();
@@ -393,14 +377,14 @@ public class ProjectMerger {
 			if (candidateDependencyAlreadyPresent(candidateDependency, currentDependencies)) {
 				logger.debug("mergeMavenDependencies: Not merging dependency " + candidateDependency);
 			} else {
-				List<Document> parsedPomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
+				List<SourceFile> parsedPomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext()).toList();
 				String scope = candidateDependency.getScope();
 				if (scope == null) {
 					scope = "compile";
 				}
 				AddDependency addDependency = getRecipeAddDependency(candidateDependency.getGroupId(), candidateDependency.getArtifactId(), candidateDependency.getVersion(), scope, "org.springframework.boot.SpringApplication");
 
-				List<Result> resultList = addDependency.run(parsedPomFiles).getResults();
+				List<Result> resultList = addDependency.run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext()).getChangeset().getAllResults();
 				if (!resultList.isEmpty()) {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
@@ -446,11 +430,9 @@ public class ProjectMerger {
 			List<Dependency> dependencies = dependencyManagement.getDependencies();
 
 			for (Dependency dependency : dependencies) {
-				AddManagedDependency addManagedDependency = getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
-						dependency.getType(), dependency.getClassifier());
-
-				List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
-				List<Result> resultList = addManagedDependency.run(pomFiles).getResults();
+				List<SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext()).toList();
+				Recipe addManagedDependency = new AddManagedDependencyRecipeFactory().create(dependency);
+				List<Result> resultList = addManagedDependency.run(new InMemoryLargeSourceSet(pomFiles), getExecutionContext()).getChangeset().getAllResults();
 				if (!resultList.isEmpty()) {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
@@ -473,9 +455,9 @@ public class ProjectMerger {
 		for (String keyToMerge : keysToMerge) {
 			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true, false);
 			// TODO - parse is expensive call, move out of loop?
-			List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
-			RecipeRun recipeRun = changePropertyValueRecipe.run(pomFiles);
-			List<Result> resultList = recipeRun.getResults();
+			List<SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext()).toList();
+			RecipeRun recipeRun = changePropertyValueRecipe.run(new InMemoryLargeSourceSet(pomFiles), getExecutionContext());
+			List<Result> resultList = recipeRun.getChangeset().getAllResults();
 			if (!resultList.isEmpty()) {
 				AttributedStringBuilder sb = new AttributedStringBuilder();
 				sb.style(sb.style().foreground(AttributedStyle.WHITE));
@@ -496,8 +478,8 @@ public class ProjectMerger {
 				logger.debug("mergeMavenDependencies: Not merging repository " + candidateRepository);
 			} else {
 				AddRepository recipeAddRepository = getRecipeAddRepository(candidateRepository.getId(), candidateRepository.getUrl(), candidateRepository.getName(), false, false);
-				List<? extends SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext());
-				List<Result> resultList = recipeAddRepository.run(pomFiles).getResults();
+				List<SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext()).toList();
+				List<Result> resultList = recipeAddRepository.run(new InMemoryLargeSourceSet(pomFiles), getExecutionContext()).getChangeset().getAllResults();
 				if (!resultList.isEmpty()) {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
@@ -547,11 +529,12 @@ public class ProjectMerger {
 	}
 
 	public static AddManagedDependency getRecipeAddManagedDependency(String groupId, String artifactId, String version, String scope, String type, String classifier) {
-		return new AddSimpleManagedDependencyRecipe(groupId, artifactId, version, scope, type, classifier,
-				null, null, null, true);
+		return new AddManagedDependency(groupId, artifactId, version, scope, type, classifier, null, null, null, true);
 	}
-	public static AddSimpleDependencyRecipe getRecipeAddDependency(String groupId, String artifactId, String version, String scope, String onlyIfUsing) {
-		return new AddSimpleDependencyRecipe(groupId, artifactId, version, null, scope, true, onlyIfUsing, null, null, false, null);
+
+	public static AddDependency getRecipeAddDependency(String groupId, String artifactId, String version, String scope, String onlyIfUsing) {
+		@Nullable Boolean acceptTransitive = true;
+		return new AddDependency(groupId, artifactId, version, null, scope, true, onlyIfUsing, null, null, false, null, acceptTransitive);
 	}
 
 	public static AddRepository getRecipeAddRepository(String id, String url,  String name, boolean snapshotsEnabled, boolean releasesEnabled) {

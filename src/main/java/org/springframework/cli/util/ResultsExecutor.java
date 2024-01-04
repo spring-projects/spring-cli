@@ -16,20 +16,15 @@
 
 package org.springframework.cli.util;
 
+import org.openrewrite.Result;
+import org.springframework.cli.SpringCliException;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
-
-import org.openrewrite.Result;
-
-import org.springframework.cli.SpringCliException;
 
 /**
  * A container for Rewrite {@link Result}s that can perform the actual
@@ -89,7 +84,7 @@ public class ResultsExecutor {
 
 	public void execute() throws IOException {
 		check();
-
+		// TODO:  ProjectResourceSet could be used here
 		for (Result result : results) {
 			if (result.getAfter() == null || fileMoved(result)) {
 				Files.delete(result.getBefore().getSourcePath());

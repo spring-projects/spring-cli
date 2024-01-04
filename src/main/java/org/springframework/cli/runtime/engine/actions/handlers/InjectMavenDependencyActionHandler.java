@@ -17,30 +17,32 @@
 
 package org.springframework.cli.runtime.engine.actions.handlers;
 
-import java.nio.file.Path;
-import java.util.Map;
-
-import org.springframework.cli.recipe.InjectTextMavenDependencyRecipe;
+import org.openrewrite.Recipe;
+import org.springframework.cli.recipe.AddDependencyRecipeFactory;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
 import org.springframework.cli.util.MavenDependencyReader;
 import org.springframework.cli.util.TerminalMessage;
 
-public class InjectMavenDependencyActionHandler extends AbstractInjectMavenActionHandler{
+import java.nio.file.Path;
+import java.util.Map;
 
-	public InjectMavenDependencyActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, TerminalMessage terminalMessage) {
-		super(templateEngine, model, cwd, terminalMessage);
-	}
+public class InjectMavenDependencyActionHandler extends AbstractInjectMavenActionHandler {
 
-	public void execute(InjectMavenDependency injectMavenDependency) {
-		Path pomPath = getPomPath();
-		String text = getTextToUse(injectMavenDependency.getText(), "Inject Maven Dependency");
-		MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
-		String[] mavenDependencies = mavenDependencyReader.parseMavenSection(text);
-		for (String mavenDependency : mavenDependencies) {
-			InjectTextMavenDependencyRecipe injectTextMavenDependencyRecipe = new InjectTextMavenDependencyRecipe(mavenDependency);
-			runRecipe(pomPath, injectTextMavenDependencyRecipe);
-		}
-	}
+    public InjectMavenDependencyActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, TerminalMessage terminalMessage) {
+        super(templateEngine, model, cwd, terminalMessage);
+    }
+
+    public void execute(InjectMavenDependency injectMavenDependency) {
+        String text = getTextToUse(injectMavenDependency.getText(), "Inject Maven Dependency");
+        MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
+        String[] mavenDependencies = mavenDependencyReader.parseMavenSection(text);
+        for (String mavenDependency : mavenDependencies) {
+            AddDependencyRecipeFactory recipeFactory = new AddDependencyRecipeFactory();
+            Recipe addDependency = recipeFactory.create(mavenDependency);
+            Path pomPath = getPomPath();
+            runRecipe(pomPath, addDependency);
+        }
+    }
 
 }

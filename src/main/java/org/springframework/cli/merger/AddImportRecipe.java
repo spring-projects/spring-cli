@@ -36,7 +36,12 @@ public class AddImportRecipe extends Recipe {
 	}
 
 	@Override
-	protected TreeVisitor<?, ExecutionContext> getVisitor() {
+	public String getDescription() {
+		return getDisplayName();
+	}
+
+	@Override
+	public TreeVisitor<?, ExecutionContext> getVisitor() {
 		return addImport;
 	}
 }
