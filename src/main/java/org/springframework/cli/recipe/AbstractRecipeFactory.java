@@ -27,8 +27,8 @@ public class AbstractRecipeFactory {
     private static XmlMapper mapper = new XmlMapper();
 
     @org.jetbrains.annotations.Nullable
-    protected static String getNullOrTextValue(JsonNode jsonNode, String version) {
-        return jsonNode.get(version) != null ? AbstractRecipeFactory.getTextValue(jsonNode, version) : null;
+    protected static String getNullOrTextValue(JsonNode jsonNode, String field) {
+        return jsonNode.get(field) != null ? AbstractRecipeFactory.getTextValue(jsonNode, field) : null;
     }
 
     protected static String getTextValue(JsonNode jsonNode, String field) {
@@ -44,4 +44,10 @@ public class AbstractRecipeFactory {
         JsonNode jsonNode = mapper.readTree(mavenDependencySnippet);
         return jsonNode;
     }
+
+    protected String getTextOrDefaultValue(JsonNode jsonNode, String version, String defaultValue) {
+        String nullOrTextValue = getNullOrTextValue(jsonNode, version);
+        return nullOrTextValue == null ? defaultValue : nullOrTextValue;
+    }
+
 }

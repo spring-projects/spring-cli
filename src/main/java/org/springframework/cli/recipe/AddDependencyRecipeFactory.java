@@ -17,13 +17,8 @@ package org.springframework.cli.recipe;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.openrewrite.ExecutionContext;
-import org.openrewrite.Recipe;
-import org.openrewrite.TreeVisitor;
 import org.openrewrite.internal.lang.Nullable;
 import org.openrewrite.maven.AddDependency;
-import org.openrewrite.maven.AddDependencyVisitor;
 import org.openrewrite.maven.table.MavenMetadataFailures;
 
 import java.util.regex.Pattern;
@@ -31,48 +26,46 @@ import java.util.regex.Pattern;
 /**
  * @author Fabian Krüger
  */
-public class AddDependencyRecipeFactory {
-
+public class AddDependencyRecipeFactory extends AbstractRecipeFactory {
     /**
      * Create {@link AddDependency} recipe from Maven dependency XML snippet.
+     *
+     * <pre>
+     * {@code
+     * <dependency>
+     *  <groupId>groupId</groupId>
+     *  <artifactId>artifactId</artifactId>
+     *  <version>${some.version}</version>
+     *  <classifier>classifier</classifier>
+     *  <scope>scope</scope>
+     *  <type>pom</type>
+     *  <optional>true</optional>
+     * </dependency>
+     * }
+     * </pre>
+     *
      */
-    public Recipe create(String mavenDependency) {
+    public AddDependencyRecipe create(String mavenDependency) {
         try {
-            XmlMapper mapper = new XmlMapper();
-            JsonNode jsonNode = null;
-            jsonNode = mapper.readTree(mavenDependency);
-            String groupId = jsonNode.get("groupId").textValue();
-            String artifactId = jsonNode.get("artifactId").textValue();
-            String version = jsonNode.get("version") != null ? jsonNode.get("version").textValue() : "latest";
-            String scope = jsonNode.get("scope") != null ? jsonNode.get("scope").textValue() : null;
-            String type = jsonNode.get("type") != null ? jsonNode.get("type").textValue() : null;
-            @Nullable String classifier = jsonNode.get("classifier") != null ? jsonNode.get("classifier").textValue() : null;
-            @Nullable Boolean optional = jsonNode.get("optional") != null ? Boolean.valueOf(jsonNode.get("optional").textValue()) : null;
+            JsonNode jsonNode = getJsonNode(mavenDependency);
+            String groupId = getTextValue(jsonNode, "groupId");
+            String artifactId = getTextValue(jsonNode, "artifactId");
+            String version = getTextOrDefaultValue(jsonNode, "version", "latest");
+            String scope = getTextValue(jsonNode, "scope");
+            String type = getTextValue(jsonNode, "type");
+            @Nullable String classifier = getNullOrTextValue(jsonNode, "classifier");
+            @Nullable Boolean optional = Boolean.parseBoolean(getNullOrTextValue(jsonNode, "optional"));
             @Nullable String familyPattern = null;
             Pattern familyRegex = familyPattern == null ? null : Pattern.compile(familyPattern);
             @Nullable Boolean acceptTransitive = null;
             MavenMetadataFailures metadataFailures = null;
-            AddDependencyVisitor addDependencyVisitor = new AddDependencyVisitor(groupId, artifactId, version, null, scope, true, type, classifier, optional, familyRegex, metadataFailures);
-            return new Recipe() {
 
-                @Override
-                public String getDisplayName() {
-                    return "Add dependency '%s:%s'".formatted(groupId, artifactId);
-                }
-
-                @Override
-                public String getDescription() {
-                    return getDisplayName();
-                }
-
-                @Override
-                public TreeVisitor<?, ExecutionContext> getVisitor() {
-                    return addDependencyVisitor;
-                }
-            };
+            AddDependencyRecipe recipe = new AddDependencyRecipe(groupId, artifactId, version, scope, type, classifier, optional, familyRegex, metadataFailures);
+            return recipe;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
     }
+
 }
