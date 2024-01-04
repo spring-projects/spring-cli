@@ -51,8 +51,8 @@ public class AddDependencyRecipeFactory extends AbstractRecipeFactory {
             String groupId = getTextValue(jsonNode, "groupId");
             String artifactId = getTextValue(jsonNode, "artifactId");
             String version = getTextOrDefaultValue(jsonNode, "version", "latest");
-            String scope = getTextValue(jsonNode, "scope");
-            String type = getTextValue(jsonNode, "type");
+            @Nullable String scope = getNullOrTextValue(jsonNode, "scope");
+            @Nullable String type = getNullOrTextValue(jsonNode, "type");
             @Nullable String classifier = getNullOrTextValue(jsonNode, "classifier");
             @Nullable Boolean optional = Boolean.parseBoolean(getNullOrTextValue(jsonNode, "optional"));
             @Nullable String familyPattern = null;

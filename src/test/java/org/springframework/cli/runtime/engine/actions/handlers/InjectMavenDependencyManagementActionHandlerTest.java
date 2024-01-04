@@ -69,10 +69,11 @@ class InjectMavenDependencyManagementActionHandlerTest {
 											<dependencyManagement>
 												<dependencies>
 													<dependency>
-														<groupId>org.springframework.modulith</groupId>
-														<artifactId>spring-modulith-bom</artifactId>
-														<version>1.1.1</version>
-														<type>import</type>
+													  <groupId>org.springframework.modulith</groupId>
+													  <artifactId>spring-modulith-bom</artifactId>
+													  <version>1.1.1</version>
+													  <type>pom</type>
+													  <scope>import</scope>
 													</dependency>
 												</dependencies>
 											</dependencyManagement>
