@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.YamlMapFactoryBean;
 import org.springframework.beans.factory.config.YamlProcessor.ResolutionMethod;
 import org.springframework.cli.SpringCliException;
+import org.springframework.cli.recipe.AddManagedDependencyRecipeFactory;
 import org.springframework.cli.util.PomReader;
 import org.springframework.cli.util.RootPackageFinder;
 import org.springframework.cli.util.TerminalMessage;
@@ -435,24 +436,7 @@ public class ProjectMerger {
 //					version = pomFiles.get(0).getMarkers().findFirst(MavenResolutionResult.class).get().getPom().getProperties().
 //				}
 
-
-				Recipe addManagedDependency = new Recipe() {
-
-					@Override
-					public String getDisplayName() {
-						return "Add managed dependency";
-					}
-
-					@Override
-					public String getDescription() {
-						return getDisplayName();
-					}
-
-					@Override
-					public TreeVisitor<?, ExecutionContext> getVisitor() {
-						return new AddManagedDependencyVisitor(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(), dependency.getType(), dependency.getClassifier());
-					}
-				};
+				Recipe addManagedDependency = new AddManagedDependencyRecipeFactory().create(dependency);
 
 //						getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
 //						dependency.getType(), dependency.getClassifier());

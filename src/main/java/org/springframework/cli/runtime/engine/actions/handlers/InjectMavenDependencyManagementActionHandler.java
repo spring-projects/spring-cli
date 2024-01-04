@@ -17,8 +17,8 @@
 
 package org.springframework.cli.runtime.engine.actions.handlers;
 
-import org.openrewrite.maven.AddManagedDependency;
 import org.springframework.cli.SpringCliException;
+import org.springframework.cli.recipe.AddManagedDependencyRecipe;
 import org.springframework.cli.recipe.AddManagedDependencyRecipeFactory;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependencyManagement;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
@@ -46,7 +46,7 @@ public class InjectMavenDependencyManagementActionHandler extends AbstractInject
 		String[] mavenDependencies = mavenDependencyReader.parseMavenSection(text);
 		for (String mavenDependency : mavenDependencies) {
 			AddManagedDependencyRecipeFactory recipeFactory = new AddManagedDependencyRecipeFactory();
-			AddManagedDependency addManagedDependency = recipeFactory.create(mavenDependency);
+			AddManagedDependencyRecipe addManagedDependency = recipeFactory.create(mavenDependency);
   			runRecipe(pomPath, addManagedDependency);
 		}
 	}

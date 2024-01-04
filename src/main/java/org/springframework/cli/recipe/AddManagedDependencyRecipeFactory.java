@@ -17,32 +17,61 @@ package org.springframework.cli.recipe;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import org.apache.maven.model.Dependency;
+import org.jetbrains.annotations.NotNull;
+import org.openrewrite.Recipe;
 import org.openrewrite.internal.lang.Nullable;
-import org.openrewrite.maven.AddManagedDependency;
+import org.openrewrite.maven.AddManagedDependencyVisitor;
 
 /**
  * @author Fabian Krüger
  */
-public class AddManagedDependencyRecipeFactory {
+public class AddManagedDependencyRecipeFactory extends AbstractRecipeFactory {
 
     /**
-     * Create a {@link AddManagedDependency} recipe from XML snippet of a managed dependency.
+     * Create a {@link AddManagedDependencyRecipe} from a Maven dependency XML snippet.
+     *
+     * <pre>
+     * {@code
+     * <dependency>
+     *  <groupId>groupId</groupId>
+     *  <artifactId>artifactId</artifactId>
+     *  <version>${some.version}</version>
+     *  <classifier>classifier</classifier>
+     *  <type>pom</type>
+     * </dependency>
+     * }
+     * </pre>
      */
-    public AddManagedDependency create(String mavenDependencySnippet) {
+    public AddManagedDependencyRecipe create(String mavenDependencySnippet) {
         try {
-            XmlMapper mapper = new XmlMapper();
-            JsonNode jsonNode = mapper.readTree(mavenDependencySnippet);
-            String groupId = jsonNode.get("groupId").textValue();
-            String artifactId = jsonNode.get("artifactId").textValue();
-            String version = jsonNode.get("version") != null ? jsonNode.get("version").textValue() : null;
-            String scope = jsonNode.get("scope") != null ? jsonNode.get("scope").textValue() : null;
-            @Nullable String classifier = jsonNode.get("classifier") != null ? jsonNode.get("classifier").textValue() : null;
-            @Nullable Boolean addToRootPom = null;
-            AddManagedDependency addManagedDependency = new AddManagedDependency(groupId, artifactId, version, null, scope, classifier, null, true, null, addToRootPom);
+            JsonNode jsonNode = getJsonNode(mavenDependencySnippet);
+            String groupId = getTextValue(jsonNode, "groupId");
+            String artifactId = getTextValue(jsonNode, "artifactId");
+            @Nullable String version = getNullOrTextValue(jsonNode, "version");
+            @Nullable String scope = getNullOrTextValue(jsonNode, "scope");
+            @Nullable String classifier = getNullOrTextValue(jsonNode, "classifier");
+            @Nullable String type = getNullOrTextValue(jsonNode, "type");
+            AddManagedDependencyRecipe addManagedDependency = new AddManagedDependencyRecipe(groupId, artifactId, version, scope, type, classifier);
             return addManagedDependency;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Create a {@link AddManagedDependencyRecipe} from a {@link Dependency}.
+     */
+    public AddManagedDependencyRecipe create(Dependency dependency) {
+        String groupId = dependency.getGroupId();
+        String artifactId = dependency.getArtifactId();
+        String version = dependency.getVersion();
+        String scope = dependency.getScope();
+        String type = dependency.getType();
+        String classifier = dependency.getClassifier();
+        AddManagedDependencyRecipe addManagedDependency = new AddManagedDependencyRecipe(groupId, artifactId, version, scope, type, classifier);
+        return addManagedDependency;
+    }
+
+
 }
