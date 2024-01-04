@@ -431,16 +431,7 @@ public class ProjectMerger {
 
 			for (Dependency dependency : dependencies) {
 				List<SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext()).toList();
-//				String version = dependency.getVersion();
-//				if(dependency.getVersion().contains("${")) {
-//					version = pomFiles.get(0).getMarkers().findFirst(MavenResolutionResult.class).get().getPom().getProperties().
-//				}
-
 				Recipe addManagedDependency = new AddManagedDependencyRecipeFactory().create(dependency);
-
-//						getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
-//						dependency.getType(), dependency.getClassifier());
-
 				List<Result> resultList = addManagedDependency.run(new InMemoryLargeSourceSet(pomFiles), getExecutionContext()).getChangeset().getAllResults();
 				if (!resultList.isEmpty()) {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
