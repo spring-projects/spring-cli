@@ -60,7 +60,6 @@ public abstract class AbstractInjectMavenActionHandler {
 		Consumer<Throwable> onError = e -> {
 			logger.error("error in javaParser execution", e);
 		};
-		// FIXME: Problematic, the ExecutionContext is stateful and should be created only once.
 		return new InMemoryExecutionContext(onError);
 	}
 
@@ -87,7 +86,6 @@ public abstract class AbstractInjectMavenActionHandler {
 		List<Path> paths = new ArrayList<>();
 		paths.add(pomPath);
 		MavenParser mavenParser = MavenParser.builder().build();
-		// FIXME: problematic (e.g. settings.xml), use 	rewrite-commons here?
 		List<SourceFile> parsedPomFiles = mavenParser.parse(paths, cwd, getExecutionContext()).toList();
 		List<Result> resultList = recipe.run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext()).getChangeset().getAllResults();
 		try {
