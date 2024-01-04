@@ -313,7 +313,6 @@ public class ProjectHandler {
 
 		// Execute Recipe
 		ChangeNewlyClonedPomRecipe changeNewlyClonedPomRecipe = new ChangeNewlyClonedPomRecipe(projectInfo);
-		// FIXME: Use injected ExecutionContext. But this requires the parser to be used too.
 		ExecutionContext executionContext = new InMemoryExecutionContext();
 		List<Result> resultList = changeNewlyClonedPomRecipe.run( new InMemoryLargeSourceSet(documentList), executionContext).getChangeset().getAllResults();
 
