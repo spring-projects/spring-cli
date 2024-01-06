@@ -42,6 +42,7 @@ assemble:
         ignoreMissingDeps: true
       additionalModuleNames:
         - java.desktop
+        - java.logging
         - jdk.crypto.ec
         - jdk.compiler
       mainJar:
@@ -73,7 +74,7 @@ assemble:
       mainJar:
         path: 'build/libs/{{distributionName}}-{{projectVersion}}.jar'
       java:
-        mainClass: org.springframework.boot.loader.JarLauncher
+        mainClass: org.springframework.boot.loader.launch.JarLauncher
       linux:
         types: [deb,rpm]
         maintainer: jreleaser@kordamp.org

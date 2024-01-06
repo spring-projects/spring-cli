@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '3.1.6'
+	id 'org.springframework.boot' version '3.2.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'org.graalvm.buildtools.native' version '0.9.19'
@@ -23,7 +23,7 @@ repositories {
 }
 
 ext {
-	set('springShellVersion', '3.1.6')
+	set('springShellVersion', '3.2.0')
 	set('initializrVersion', '0.11.1')
 	set('jarchivelibVersion', '1.2.0')
 	set('kohsukeVersion', '1.301')
