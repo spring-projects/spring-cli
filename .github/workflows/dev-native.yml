@@ -16,19 +16,13 @@ jobs:
     name: CI Native ${{ matrix.nickname }}
     steps:
       - uses: actions/checkout@v2
-      # - uses: actions/setup-java@v3
-      #   with:
-      #     distribution: adopt
-      #     java-version: 17
-      #     cache: gradle
       - uses: graalvm/setup-graalvm@v1
         with:
           version: ${{ matrix.graal }}
-          java-version: 17
-          components: native-image
+          java-version: 21
           set-java-home: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - run: ./gradlew build nativeCompile --no-daemon
+      - run: ./gradlew build nativeCompile
       - uses: actions/upload-artifact@v2
         with:
           name: spring-up-${{ matrix.nickname }}
