@@ -7,8 +7,8 @@ export const cliPathRelative = isWindows
   ? '..\\..\\build\\native\\nativeCompile\\spring.exe'
   : '../../build/native/nativeCompile/spring';
 export const jarPathRelative = isWindows
-  ? '..\\..\\build\\libs\\spring-cli-0.0.1-SNAPSHOT.jar'
-  : '../../build/libs/spring-cli-0.0.1-SNAPSHOT.jar';
+  ? '..\\..\\build\\libs\\spring-cli-0.8.0-SNAPSHOT.jar'
+  : '../../build/libs/spring-cli-0.8.0-SNAPSHOT.jar';
 export const cliPath = path.resolve(cliPathRelative);
 export const jarPath = path.resolve(jarPathRelative);
 export const nativeDesc = 'native';

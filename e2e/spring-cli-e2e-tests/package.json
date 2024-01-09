@@ -36,6 +36,6 @@
     "wait-for-expect": "^3.0.2"
   },
   "dependencies": {
-    "spring-shell-e2e": "https://gitpkg.now.sh/spring-projects/spring-shell/e2e/spring-shell-e2e?main"
+    "spring-shell-e2e": "https://gitpkg.vercel.app/spring-projects/spring-shell/e2e/spring-shell-e2e?main"
   }
 }
