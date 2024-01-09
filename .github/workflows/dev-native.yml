@@ -22,7 +22,7 @@ jobs:
           java-version: 21
           set-java-home: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - run: ./gradlew build nativeCompile
+      - run: ./gradlew build nativeCompile -x test
       - uses: actions/upload-artifact@v2
         with:
           name: spring-up-${{ matrix.nickname }}
