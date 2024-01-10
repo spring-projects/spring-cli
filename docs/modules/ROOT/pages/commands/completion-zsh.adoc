@@ -1,0 +1,19 @@
+= completion zsh
+Generate zsh completion script
+
+== NAME
+completion zsh
+
+== SYNOPSIS
+====
+[source]
+----
+completion zsh --help 
+----
+====
+
+== OPTIONS
+`--help or -h`  help for completion zsh *Optional*
+
+
+include::footers/completion-zsh-footer.adoc[opts=optional]

@@ -13,9 +13,9 @@ guide apply --file String --path String --help
 ====
 
 == OPTIONS
-`--file` String The readme file that contains the instructions of how to modify the code base, e.g. README-ai-jpa.md *Optional*
+`--file` String The readme file that contains the instructions for how to modify the code base, such as README-ai-jpa.md *Optional*
 
-`--path` String Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory. *Optional*
+`--path` String Path on which to run the command. Most of the time, you can not specify the path and use the default value, which is the current working directory. *Optional*
 
 `--help or -h`  help for guide apply *Optional*
 

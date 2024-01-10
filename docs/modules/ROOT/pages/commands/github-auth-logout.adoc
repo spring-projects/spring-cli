@@ -1,5 +1,5 @@
 = github auth logout
-Log out of a GitHub
+Log out of GitHub.
 
 == NAME
 github auth logout

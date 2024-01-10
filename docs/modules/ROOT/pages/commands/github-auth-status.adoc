@@ -1,5 +1,5 @@
 = github auth status
-View authentication status
+View authentication status.
 
 == NAME
 github auth status
@@ -13,7 +13,7 @@ github auth status --show-token boolean --help
 ====
 
 == OPTIONS
-`--show-token` boolean Display the auth token *Optional, default = false*
+`--show-token` boolean Display the auth token. *Optional, default = false*
 
 `--help or -h`  help for github auth status *Optional*
 

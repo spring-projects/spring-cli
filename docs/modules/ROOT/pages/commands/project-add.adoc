@@ -1,5 +1,5 @@
 = project add
-Add a project to use with 'boot new' and 'boot add' commands
+Add a project to use with the 'boot new' and 'boot add' commands
 
 == NAME
 project add

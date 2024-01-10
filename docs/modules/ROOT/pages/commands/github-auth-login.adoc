@@ -1,5 +1,5 @@
 = github auth login
-Authenticate with a GitHub
+Authenticate with GitHub.
 
 == NAME
 github auth login

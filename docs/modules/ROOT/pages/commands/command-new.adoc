@@ -1,5 +1,5 @@
 = command new
-Create a new user-defined command
+Create a new user-defined command.
 
 == NAME
 command new
@@ -13,11 +13,11 @@ command new --command-name String --sub-command-name String --path String --help
 ====
 
 == OPTIONS
-`--command-name` String The name of the user-defined command to create *Optional, default = hello*
+`--command-name` String The name of the user-defined command to create. *Optional, default = hello*
 
-`--sub-command-name` String The name of the user-defined sub-command to create *Optional, default = new*
+`--sub-command-name` String The name of the user-defined sub-command to create. *Optional, default = new*
 
-`--path` String Path to execute command in *Optional*
+`--path` String Path on which to run the command. *Optional*
 
 `--help or -h`  help for command new *Optional*
 

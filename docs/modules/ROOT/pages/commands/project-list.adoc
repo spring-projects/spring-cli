@@ -1,5 +1,5 @@
 = project list
-List projects available for use with 'boot new' and 'boot add' commands
+List projects available for use with the 'boot new' and 'boot add' commands
 
 == NAME
 project list

@@ -13,7 +13,7 @@ boot add --from String --path String --help
 ====
 
 == OPTIONS
-`--from` String Add to project from an existing project name or URL *Optional*
+`--from` String Add to the current project from an existing project by specifying the existing project's name or URL. *Optional*
 
 `--path` String Path *Optional*
 

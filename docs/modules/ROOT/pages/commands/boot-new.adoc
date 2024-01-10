@@ -1,5 +1,5 @@
 = boot new
-Create a new Spring Boot project from an existing project
+Create a new Spring Boot project from an existing project.
 
 == NAME
 boot new
@@ -27,7 +27,7 @@ boot new [--name String] --from String --group-id String --artifact-id String --
 
 `--package-name` String Package name for the new project *Optional*
 
-`--path` String Path to run the command in, most of the time this is not necessary to specify and the default value is the current working directory. *Optional*
+`--path` String Path on which to run the command. Most of the time, you can not specify the path and use the default value, which is the current working directory. *Optional*
 
 `--help or -h`  help for boot new *Optional*
 

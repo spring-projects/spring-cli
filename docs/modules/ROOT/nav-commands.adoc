@@ -4,6 +4,7 @@
 ** xref:commands/boot-new.adoc[boot new]
 ** xref:commands/help.adoc[help]
 ** xref:commands/completion-bash.adoc[completion bash]
+** xref:commands/completion-zsh.adoc[completion zsh]
 ** xref:commands/history.adoc[history]
 ** xref:commands/version.adoc[version]
 ** xref:commands/script.adoc[script]

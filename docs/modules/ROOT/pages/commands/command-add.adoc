@@ -13,7 +13,7 @@ command add --from String --help
 ====
 
 == OPTIONS
-`--from` String Add user-defined command from a URL *Optional*
+`--from` String Add user-defined command from a URL. *Optional*
 
 `--help or -h`  help for command add *Optional*
 

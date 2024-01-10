@@ -1,5 +1,5 @@
 = project-catalog remove
-Remove a project from a catalog
+Remove a project from a project catalog
 
 == NAME
 project-catalog remove
