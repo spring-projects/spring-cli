@@ -30,7 +30,7 @@ Homebrew Tap:::
 
 [source]
 ----
-brew tap spring-projects/spring-cli
+brew tap spring-cli-projects/spring-cli
 brew install spring-cli
 ----
 --
@@ -49,7 +49,7 @@ The Tap formula chooses between _x86_ and _aarch64_, depending on your brew setu
 
 [source]
 ----
-brew tap spring-projects/spring-cli
+brew tap spring-cli-projects/spring-cli
 brew install spring-cli
 ----
 --
