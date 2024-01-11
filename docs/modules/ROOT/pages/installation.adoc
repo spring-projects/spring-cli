@@ -66,11 +66,7 @@ Manually:::
 ====
 
 == Getting Snapshot Binaries
-As the project is evolving quickly in its early days, you can download the Spring Boot uber-jar and Linux and Mac native binaries from the output of GitHub's Continuous Integration Action.
-
-You can https://github.com/spring-projects/spring-cli/actions/workflows/ci.yml[browse CI artifacts here].
-Select a CI run by clicking on the latest CI run.
-On the bottom of that page, you can see the *Artifacts* section. Inside of that, you can see the uber-jar package as an `artifacts.zip` file.
+Latest snapshot binaries are available in a https://github.com/spring-projects/spring-cli/releases/tag/early-access[GitHub Releases early-access].
 
 You can also build the uber-jar from source code, as described <<installation-build-instructions,later on this page>>.
 
@@ -104,9 +100,10 @@ cd $HOME/temp/spring-cli
 
 Now create an alias to invoke the CLI with a command of 'spring':
 
-```
-alias spring='java -jar $HOME/temp/spring-cli/build/libs/spring-cli-0.7.2-SNAPSHOT.jar'
-```
+[source, bash, subs="attributes"]
+----
+alias spring='java -jar $HOME/temp/spring-cli/build/libs/spring-cli-{project-version}.jar'
+----
 
 == Interactive Mode
 
