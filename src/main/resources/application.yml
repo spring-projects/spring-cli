@@ -21,12 +21,12 @@ spring:
 logging:
   pattern:
     console:
-# log debug from a cli
-#  file:
-#    name: shell.log
-  level:
-    root: DEBUG
-    org:
-      springframework:
-        cli: DEBUG
-        shell: DEBUG
+## log debug from a cli
+  # file:
+  #   name: shell.log
+  # level:
+  #   root: DEBUG
+  #   org:
+  #     springframework:
+  #       cli: DEBUG
+  #       shell: DEBUG
