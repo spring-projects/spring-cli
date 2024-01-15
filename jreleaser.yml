@@ -43,6 +43,7 @@ assemble:
       additionalModuleNames:
         - java.desktop
         - java.logging
+        - java.sql
         - jdk.crypto.ec
         - jdk.compiler
       mainJar:
