@@ -5,8 +5,26 @@ environment:
 
 project:
   name: spring-cli
-  description: Spring Cli
-  longDescription: Spring Cli
+  description: Spring CLI improves your productivity when creating new Spring projects or adding functionality to existing projects
+  longDescription: |
+    The goal of the Spring CLI is to increase your productivity when creating new
+    projects and adding functionality to existing projects. It does this by
+    providing the following high-level features.
+
+    The command boot new clones an external project and optionally perform a package
+    refactoring to your chosen package name. You can also optionally specify the new
+    project’s group id, artifact id, and version
+
+    The command boot add will merge an external project to your current project. It
+    performs an intelligent merge of project dependencies, plug-ins, annotations,
+    application configuration files, and refactoring of the external project code
+    into your current project’s package structure.
+
+    User-provided commands provide a user-friendly way to define and execute custom
+    commands that can perform everyday tasks on your project. With declarative command
+    definitions living alongside your code, you can easily create new controllers,
+    add dependencies, or configure files. You can also execute other command-line
+    applications as needed resembling a client-side GitHub Actions like experience.
   vendor: VMware
   authors:
     - jvalkeal
