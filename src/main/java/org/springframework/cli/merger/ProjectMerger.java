@@ -56,6 +56,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 import static org.springframework.cli.util.PropertyFileUtils.mergeProperties;
 import static org.springframework.cli.util.RefactorUtils.refactorPackage;
@@ -382,7 +383,14 @@ public class ProjectMerger {
 				if (scope == null) {
 					scope = "compile";
 				}
-				AddDependency addDependency = getRecipeAddDependency(candidateDependency.getGroupId(), candidateDependency.getArtifactId(), candidateDependency.getVersion(), scope, "org.springframework.boot.SpringApplication");
+				String version = candidateDependency.getVersion() == null ? "latest" : candidateDependency.getVersion();
+				@Nullable String versionPattern = ".*";
+				@Nullable String type = null;
+				@Nullable Boolean optional = null;
+				@Nullable String classifier = null;
+				@Nullable Pattern familyRegex = null;
+				@Nullable Boolean acceptTransitive = false;
+				Recipe addDependency = getRecipeAddDependency(candidateDependency.getGroupId(), candidateDependency.getArtifactId(), version, scope, "org.springframework.boot.SpringApplication", versionPattern, type, classifier, optional, familyRegex, acceptTransitive);
 
 				List<Result> resultList = addDependency.run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext()).getChangeset().getAllResults();
 				if (!resultList.isEmpty()) {
@@ -532,9 +540,24 @@ public class ProjectMerger {
 		return new AddManagedDependency(groupId, artifactId, version, scope, type, classifier, null, null, null, true);
 	}
 
-	public static AddDependency getRecipeAddDependency(String groupId, String artifactId, String version, String scope, String onlyIfUsing) {
-		@Nullable Boolean acceptTransitive = true;
-		return new AddDependency(groupId, artifactId, version, null, scope, true, onlyIfUsing, null, null, false, null, acceptTransitive);
+	public static Recipe getRecipeAddDependency(String groupId, String artifactId, String version, String scope, String onlyIfUsing, @Nullable String versionPattern, @Nullable String type, @Nullable String classifier, @Nullable Boolean optional, @Nullable Pattern familyRegex, @Nullable Boolean acceptTransitive) {
+		return new Recipe(){
+			@Override
+			public String getDisplayName() {
+				return "Add dependency";
+			}
+
+			@Override
+			public String getDescription() {
+				return getDisplayName();
+			}
+
+			@Override
+			public TreeVisitor<?, ExecutionContext> getVisitor() {
+				return new AddDependencyVisitor(groupId, artifactId, version, versionPattern, scope, false, type, classifier, optional, familyRegex);
+			}
+		};
+
 	}
 
 	public static AddRepository getRecipeAddRepository(String id, String url,  String name, boolean snapshotsEnabled, boolean releasesEnabled) {
