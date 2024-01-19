@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.Test;
 
@@ -112,9 +113,14 @@ public class ProjectCatalogCommandsTests {
 		}
 
 		@Bean
+		ObjectMapper objectMapper() {
+			return new ObjectMapper();
+		}
+
+		@Bean
 		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
-				SourceRepositoryService sourceRepositoryService) {
-			ProjectCatalogCommands projectCatalogCommands = new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
+													  SourceRepositoryService sourceRepositoryService, ObjectMapper objectMapper) {
+			ProjectCatalogCommands projectCatalogCommands = new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), objectMapper);
 			return projectCatalogCommands;
 		}
 	}

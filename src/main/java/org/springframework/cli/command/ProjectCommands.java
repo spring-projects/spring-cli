@@ -24,6 +24,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,14 +57,16 @@ public class ProjectCommands {
 	private final SourceRepositoryService sourceRepositoryService;
 
 	private final TerminalMessage terminalMessage;
+	private final ObjectMapper objectMapper;
 
 	@Autowired
 	public ProjectCommands(SpringCliUserConfig upCliUserConfig,
-			SourceRepositoryService sourceRepositoryService,
-			TerminalMessage terminalMessage) {
+						   SourceRepositoryService sourceRepositoryService,
+						   TerminalMessage terminalMessage, ObjectMapper objectMapper) {
 		this.upCliUserConfig = upCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
 		this.terminalMessage = terminalMessage;
+		this.objectMapper = objectMapper;
 	}
 
 	@Command(command = "add", description = "Add a project to use with the 'boot new' and 'boot add' commands")
@@ -139,6 +143,30 @@ public class ProjectCommands {
 		TableModel model = new ArrayTableModel(data);
 		TableBuilder tableBuilder = new TableBuilder(model);
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
+	}
+
+	@Command(command = "list-json", description = "List projects available for use with the 'boot new' and 'boot add' commands")
+	public String projectListJson() throws JsonProcessingException {
+
+		// Retrieve project that were registered using the `project add` command and stored locally
+		List<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
+
+		// List projects that are contained in catalogs that the user had added using the `project-catalog add` command
+		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		for (ProjectCatalog projectCatalog : projectCatalogs) {
+			String url = projectCatalog.getUrl();
+			Path path = sourceRepositoryService.retrieveRepositoryContents(url);
+			YamlConfigFile yamlConfigFile = new YamlConfigFile();
+			projectRepositories.addAll(yamlConfigFile.read(Paths.get(path.toString(),"project-catalog.yml"),
+					ProjectRepositories.class).getProjectRepositories());
+			// clean up temp files
+			try {
+				FileSystemUtils.deleteRecursively(path);
+			} catch (IOException ex) {
+				logger.warn("Could not delete path " + path, ex);
+			}
+		}
+		return objectMapper.writeValueAsString(projectRepositories);
 	}
 
 	@Command(command = "remove", description = "Remove project")

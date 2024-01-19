@@ -26,6 +26,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,14 +62,17 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 	private final SourceRepositoryService sourceRepositoryService;
 
 	private final TerminalMessage terminalMessage;
+	private final ObjectMapper objectMapper;
 
 
 	@Autowired
 	public ProjectCatalogCommands(SpringCliUserConfig springCliUserConfig,
-			SourceRepositoryService sourceRepositoryService, TerminalMessage terminalMessage) {
+								  SourceRepositoryService sourceRepositoryService, TerminalMessage terminalMessage,
+								  ObjectMapper objectMapper) {
 		this.springCliUserConfig = springCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
 		this.terminalMessage = terminalMessage;
+		this.objectMapper = objectMapper;
 	}
 
 	@Command(command = "list-available", description = "List available catalogs")
@@ -96,6 +101,11 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		TableModel model = new ArrayTableModel(data);
 		TableBuilder tableBuilder = new TableBuilder(model);
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
+	}
+
+	@Command(command = "list-available-json", description = "List available catalogs")
+	public String catalogListAvailableJson() throws JsonProcessingException {
+		return objectMapper.writeValueAsString(getCatalogRepositories());
 	}
 
 	private Collection<CatalogRepository> getCatalogRepositories() {
@@ -137,6 +147,12 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		TableBuilder tableBuilder = new TableBuilder(model);
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
 	}
+
+	@Command(command = "list-json", description = "List installed catalogs")
+	public String catalogListJson() throws JsonProcessingException {
+		return objectMapper.writeValueAsString(springCliUserConfig.getProjectCatalogs().getProjectCatalogs());
+	}
+
 
 	@Command(command = "add", description = "Add a project to a project catalog")
 	public void catalogAdd(

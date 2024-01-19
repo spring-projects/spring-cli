@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.Test;
 
@@ -102,9 +103,14 @@ public class ProjectCatalogInitializerTests {
 		}
 
 		@Bean
+		ObjectMapper objectMapper() {
+			return new ObjectMapper();
+		}
+
+		@Bean
 		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
-				SourceRepositoryService sourceRepositoryService) {
-			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
+				SourceRepositoryService sourceRepositoryService, ObjectMapper objectMapper) {
+			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), objectMapper);
 		}
 
 		@Bean
@@ -148,8 +154,13 @@ public class ProjectCatalogInitializerTests {
 		}
 
 		@Bean
+		ObjectMapper objectMapper() {
+			return new ObjectMapper();
+		}
+
+		@Bean
 		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
-				SourceRepositoryService sourceRepositoryService) {
+				SourceRepositoryService sourceRepositoryService, ObjectMapper objectMapper) {
 			List<ProjectCatalog> projectCatalogList = new ArrayList<ProjectCatalog>();
 			projectCatalogList.add(ProjectCatalog.of("fooname", "foodescription", "foourl", Arrays.asList("footag1, footag2")));
 
@@ -158,7 +169,7 @@ public class ProjectCatalogInitializerTests {
 			projectCatalogs.setProjectCatalogs(projectCatalogList);
 			springCliUserConfig.setProjectCatalogs(projectCatalogs);
 
-			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
+			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), objectMapper);
 		}
 
 		@Bean
