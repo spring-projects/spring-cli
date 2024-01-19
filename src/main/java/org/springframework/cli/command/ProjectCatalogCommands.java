@@ -76,10 +76,16 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 	}
 
 	@Command(command = "list-available", description = "List available catalogs")
-	public Table catalogListAvailable() {
+	public Object catalogListAvailable(
+			@Option(description = "JSON format output", required = false, defaultValue = "false") boolean json
+	) throws JsonProcessingException {
+		Collection<CatalogRepository> catalogRepositories = getCatalogRepositories();
+		if (json) {
+			return objectMapper.writeValueAsString(catalogRepositories);
+		}
+
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description", "URL", "Tags"});
 		List<String[]> allRows = new ArrayList<>();
-		Collection<CatalogRepository> catalogRepositories = getCatalogRepositories();
 
 		// TODO enforce all entries have name and Url
 		Stream<String[]> fromCatalogRows;
@@ -103,11 +109,6 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
 	}
 
-	@Command(command = "list-available-json", description = "List available catalogs")
-	public String catalogListAvailableJson() throws JsonProcessingException {
-		return objectMapper.writeValueAsString(getCatalogRepositories());
-	}
-
 	private Collection<CatalogRepository> getCatalogRepositories() {
 		Path path = sourceRepositoryService.retrieveRepositoryContents("https://github.com/rd-1-2022/available-catalog-repositories");
 		YamlConfigFile yamlConfigFile = new YamlConfigFile();
@@ -126,9 +127,14 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 
 	@Command(command = "list", description = "List installed catalogs")
-	public Table catalogList() {
-		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description" , "URL", "Tags" });
+	public Object catalogList(
+			@Option(description = "JSON format output", required = false, defaultValue = "false") boolean json
+	) throws JsonProcessingException {
 		Collection<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		if (json) {
+			return objectMapper.writeValueAsString(projectCatalogs);
+		}
+		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description" , "URL", "Tags" });
 		Stream<String[]> rows = null;
 		if (projectCatalogs != null) {
 			rows = projectCatalogs.stream()
@@ -147,12 +153,6 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		TableBuilder tableBuilder = new TableBuilder(model);
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
 	}
-
-	@Command(command = "list-json", description = "List installed catalogs")
-	public String catalogListJson() throws JsonProcessingException {
-		return objectMapper.writeValueAsString(springCliUserConfig.getProjectCatalogs().getProjectCatalogs());
-	}
-
 
 	@Command(command = "add", description = "Add a project to a project catalog")
 	public void catalogAdd(

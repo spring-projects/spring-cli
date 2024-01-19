@@ -55,7 +55,7 @@ public class ProjectCatalogInitializerTests {
 		contextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(ProjectCatalogCommands.class);
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
-			Table table = projectCatalogCommands.catalogList();
+			Table table = (Table) projectCatalogCommands.catalogList(false);
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 			verifyTableValue(table, 1, 0, "gs");
 			verifyTableValue(table, 1, 1, "Getting Started Catalog");
@@ -77,7 +77,7 @@ public class ProjectCatalogInitializerTests {
 		contextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(ProjectCatalogCommands.class);
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
-			Table table = projectCatalogCommands.catalogList();
+			Table table = (Table) projectCatalogCommands.catalogList(false);
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 			verifyTableValue(table, 1, 0, "myname");
 			verifyTableValue(table, 1, 1, "mydescription");
@@ -126,7 +126,7 @@ public class ProjectCatalogInitializerTests {
 		contextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(ProjectCatalogCommands.class);
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
-			Table table = projectCatalogCommands.catalogList();
+			Table table = (Table) projectCatalogCommands.catalogList(false);
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 			verifyTableValue(table, 1, 0, "fooname");
 			verifyTableValue(table, 1, 1, "foodescription");

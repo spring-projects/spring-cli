@@ -18,9 +18,7 @@ package org.springframework.cli.command;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -84,89 +82,54 @@ public class ProjectCommands {
 		this.terminalMessage.print("Project '" + name + "' added from URL = " + url);
 	}
 
+	private record ProjectRepositoryData(String name, String url, String description, List<String> tags, String catalog) {}
+
 	@Command(command = "list", description = "List projects available for use with the 'boot new' and 'boot add' commands")
-	public Table projectList() {
+	public Object projectList(
+			@Option(description = "JSON format output", required = false, defaultValue = "false") boolean json
+	) throws JsonProcessingException {
+		// Retrieve project that were registered using the `project add` command and stored locally
+		List<ProjectRepository> repos = upCliUserConfig.getProjectRepositories().getProjectRepositories();
+		List<ProjectRepositoryData> projectRepositories = (repos == null ? Stream.<ProjectRepository>empty() : repos.stream())
+				.map(pr -> new ProjectRepositoryData(pr.getName(), pr.getUrl(), pr.getDescription(), pr.getTags(), null))
+				.collect(Collectors.toList());
+
+		// List projects that are contained in catalogs that the user had added using the `project-catalog add` command
+		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		for (ProjectCatalog projectCatalog : projectCatalogs) {
+			String url = projectCatalog.getUrl();
+			Path path = sourceRepositoryService.retrieveRepositoryContents(url);
+			YamlConfigFile yamlConfigFile = new YamlConfigFile();
+			for (ProjectRepository pr : yamlConfigFile.read(Paths.get(path.toString(),"project-catalog.yml"), ProjectRepositories.class).getProjectRepositories()) {
+				projectRepositories.add(new ProjectRepositoryData(pr.getName(), pr.getUrl(), pr.getDescription(), pr.getTags(), projectCatalog.getName()));
+			}
+			// clean up temp files
+			try {
+				FileSystemUtils.deleteRecursively(path);
+			} catch (IOException ex) {
+				logger.warn("Could not delete path " + path, ex);
+			}
+		}
+
+		if (json) {
+			return objectMapper.writeValueAsString(projectRepositories);
+		}
 
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description",  "URL", "Catalog", "Tags" });
 
 		// Retrieve project that were registered using the `project add` command and stored locally
-		Collection<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
-		Stream<String[]> rows;
-		if (projectRepositories != null) {
-			rows = projectRepositories.stream()
-				.map(tr -> new String[] { tr.getName(),
-						Objects.requireNonNullElse(tr.getDescription(), ""),
-						tr.getUrl(),
-						"",
-						(Objects.requireNonNullElse(tr.getTags(), "")).toString() }
-			);
-		}
-		else {
-			rows = Stream.empty();
-		}
-		List<String[]> allRows = rows.collect(Collectors.toList());
+		Stream<String[]> rows = projectRepositories.stream()
+			.map(tr -> new String[] { tr.name(),
+					Objects.requireNonNullElse(tr.description, ""),
+					tr.url(),
+					"",
+					(Objects.requireNonNullElse(tr.tags(), "")).toString() }
+		);
 
-		// List projects that are contained in catalogs that the user had added using the `project-catalog add` command
-		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
-		for (ProjectCatalog projectCatalog : projectCatalogs) {
-			String url = projectCatalog.getUrl();
-			Path path = sourceRepositoryService.retrieveRepositoryContents(url);
-			YamlConfigFile yamlConfigFile = new YamlConfigFile();
-			projectRepositories = yamlConfigFile.read(Paths.get(path.toString(),"project-catalog.yml"),
-					ProjectRepositories.class).getProjectRepositories();
-			Stream<String[]> fromCatalogRows;
-			if (projectRepositories != null) {
-				fromCatalogRows = projectRepositories.stream()
-						.map(tr -> new String[] {
-								tr.getName(),
-								Objects.requireNonNullElse(tr.getDescription(), ""),
-								tr.getUrl(),
-								projectCatalog.getName(),
-								(Objects.requireNonNullElse(tr.getTags(), "")).toString() }
-						);
-			} else {
-				fromCatalogRows = Stream.empty();
-			}
-			List<String[]> projectCatalogRows = fromCatalogRows.collect(Collectors.toList());
-			allRows.addAll(projectCatalogRows);
-
-			// clean up temp files
-			try {
-				FileSystemUtils.deleteRecursively(path);
-			} catch (IOException ex) {
-				logger.warn("Could not delete path " + path, ex);
-			}
-
-		}
-
-		String[][] data = Stream.concat(header, allRows.stream()).toArray(String[][]::new);
+		String[][] data = Stream.concat(header, rows).toArray(String[][]::new);
 		TableModel model = new ArrayTableModel(data);
 		TableBuilder tableBuilder = new TableBuilder(model);
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
-	}
-
-	@Command(command = "list-json", description = "List projects available for use with the 'boot new' and 'boot add' commands")
-	public String projectListJson() throws JsonProcessingException {
-
-		// Retrieve project that were registered using the `project add` command and stored locally
-		List<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
-
-		// List projects that are contained in catalogs that the user had added using the `project-catalog add` command
-		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
-		for (ProjectCatalog projectCatalog : projectCatalogs) {
-			String url = projectCatalog.getUrl();
-			Path path = sourceRepositoryService.retrieveRepositoryContents(url);
-			YamlConfigFile yamlConfigFile = new YamlConfigFile();
-			projectRepositories.addAll(yamlConfigFile.read(Paths.get(path.toString(),"project-catalog.yml"),
-					ProjectRepositories.class).getProjectRepositories());
-			// clean up temp files
-			try {
-				FileSystemUtils.deleteRecursively(path);
-			} catch (IOException ex) {
-				logger.warn("Could not delete path " + path, ex);
-			}
-		}
-		return objectMapper.writeValueAsString(projectRepositories);
 	}
 
 	@Command(command = "remove", description = "Remove project")
@@ -186,4 +149,5 @@ public class ProjectCommands {
 			this.terminalMessage.print("Project '" + name + "' removed");
 		}
 	}
+
 }

@@ -50,7 +50,7 @@ public class ProjectCommandsTests {
 			ProjectCommands projectCommands = context.getBean(ProjectCommands.class);
 
 			// Get empty table, assert header values
-			Table table = projectCommands.projectList();
+			Table table = (Table) projectCommands.projectList(false);
 			System.out.println("should be empty table");
 			System.out.println(table.render(100));
 			assertEmptyProjectListTable(table);
@@ -60,7 +60,7 @@ public class ProjectCommandsTests {
 			tags.add("data");
 			tags.add("jpa");
 			projectCommands.projectAdd("jpa", "https://github.com/rd-1-2022/rpt-spring-data-jpa", "Learn JPA", tags);
-			table = projectCommands.projectList();
+			table = (Table) projectCommands.projectList(false);
 			System.out.println("SHould have 1 entry");
 			System.out.println(table.render(100));
 			verifyTableValue(table, 1, 0, "jpa");
@@ -72,7 +72,7 @@ public class ProjectCommandsTests {
 
 			// Remove project
 			projectCommands.projectRemove("jpa");
-			table = projectCommands.projectList();
+			table = (Table) projectCommands.projectList(false);
 			System.out.println("Should be empty table");
 			System.out.println(table.render(100));
 			assertThat(table.getModel().getColumnCount()).isEqualTo(5);
