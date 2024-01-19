@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.Test;
 
@@ -61,7 +63,7 @@ public class ProjectCatalogCommandsTests {
 			tags.add("spring");
 			tags.add("guide");
 			projectCatalogCommands.catalogAdd("getting-started", "https://github.com/rd-1-2022/spring-gs-catalog/", "Spring Getting Started Projects", tags);
-			table = projectCatalogCommands.catalogList();
+			table = (Table) projectCatalogCommands.catalogList(false);
 			System.out.println(table.render(100));
 			verifyTableValue(table, 1, 0, "getting-started");
 			verifyTableValue(table, 1, 1, "Spring Getting Started Projects");
@@ -80,8 +82,8 @@ public class ProjectCatalogCommandsTests {
 		});
 	}
 
-	private static void verifyEmptyCatalog(ProjectCatalogCommands projectCatalogCommands) {
-		Table table = projectCatalogCommands.catalogList();
+	private static void verifyEmptyCatalog(ProjectCatalogCommands projectCatalogCommands) throws JsonProcessingException {
+		Table table = (Table) projectCatalogCommands.catalogList(false);
 		System.out.println(table.render(100));
 		assertThat(table.getModel().getColumnCount()).isEqualTo(4);
 		assertThat(table.getModel().getRowCount()).isEqualTo(1);
@@ -112,9 +114,14 @@ public class ProjectCatalogCommandsTests {
 		}
 
 		@Bean
+		ObjectMapper objectMapper() {
+			return new ObjectMapper();
+		}
+
+		@Bean
 		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
-				SourceRepositoryService sourceRepositoryService) {
-			ProjectCatalogCommands projectCatalogCommands = new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
+													  SourceRepositoryService sourceRepositoryService, ObjectMapper objectMapper) {
+			ProjectCatalogCommands projectCatalogCommands = new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), objectMapper);
 			return projectCatalogCommands;
 		}
 	}

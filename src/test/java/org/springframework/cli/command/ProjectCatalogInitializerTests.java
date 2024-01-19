@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +55,7 @@ public class ProjectCatalogInitializerTests {
 		contextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(ProjectCatalogCommands.class);
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
-			Table table = projectCatalogCommands.catalogList();
+			Table table = (Table) projectCatalogCommands.catalogList(false);
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 			verifyTableValue(table, 1, 0, "gs");
 			verifyTableValue(table, 1, 1, "Getting Started Catalog");
@@ -76,7 +77,7 @@ public class ProjectCatalogInitializerTests {
 		contextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(ProjectCatalogCommands.class);
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
-			Table table = projectCatalogCommands.catalogList();
+			Table table = (Table) projectCatalogCommands.catalogList(false);
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 			verifyTableValue(table, 1, 0, "myname");
 			verifyTableValue(table, 1, 1, "mydescription");
@@ -102,9 +103,14 @@ public class ProjectCatalogInitializerTests {
 		}
 
 		@Bean
+		ObjectMapper objectMapper() {
+			return new ObjectMapper();
+		}
+
+		@Bean
 		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
-				SourceRepositoryService sourceRepositoryService) {
-			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
+				SourceRepositoryService sourceRepositoryService, ObjectMapper objectMapper) {
+			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), objectMapper);
 		}
 
 		@Bean
@@ -120,7 +126,7 @@ public class ProjectCatalogInitializerTests {
 		contextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(ProjectCatalogCommands.class);
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
-			Table table = projectCatalogCommands.catalogList();
+			Table table = (Table) projectCatalogCommands.catalogList(false);
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 			verifyTableValue(table, 1, 0, "fooname");
 			verifyTableValue(table, 1, 1, "foodescription");
@@ -148,8 +154,13 @@ public class ProjectCatalogInitializerTests {
 		}
 
 		@Bean
+		ObjectMapper objectMapper() {
+			return new ObjectMapper();
+		}
+
+		@Bean
 		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
-				SourceRepositoryService sourceRepositoryService) {
+				SourceRepositoryService sourceRepositoryService, ObjectMapper objectMapper) {
 			List<ProjectCatalog> projectCatalogList = new ArrayList<ProjectCatalog>();
 			projectCatalogList.add(ProjectCatalog.of("fooname", "foodescription", "foourl", Arrays.asList("footag1, footag2")));
 
@@ -158,7 +169,7 @@ public class ProjectCatalogInitializerTests {
 			projectCatalogs.setProjectCatalogs(projectCatalogList);
 			springCliUserConfig.setProjectCatalogs(projectCatalogs);
 
-			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
+			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), objectMapper);
 		}
 
 		@Bean

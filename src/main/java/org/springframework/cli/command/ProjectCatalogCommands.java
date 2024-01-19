@@ -23,9 +23,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,6 @@ import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.table.ArrayTableModel;
 import org.springframework.shell.table.BorderStyle;
-import org.springframework.shell.table.Table;
 import org.springframework.shell.table.TableBuilder;
 import org.springframework.shell.table.TableModel;
 import org.springframework.util.FileSystemUtils;
@@ -54,27 +54,37 @@ import org.springframework.util.StringUtils;
 public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectCatalogCommands.class);
+	private static final String PROJECT_CATALOG = "Project Catalog '";
 
 	private final SpringCliUserConfig springCliUserConfig;
 
 	private final SourceRepositoryService sourceRepositoryService;
 
 	private final TerminalMessage terminalMessage;
+	private final ObjectMapper objectMapper;
 
 
 	@Autowired
 	public ProjectCatalogCommands(SpringCliUserConfig springCliUserConfig,
-			SourceRepositoryService sourceRepositoryService, TerminalMessage terminalMessage) {
+								  SourceRepositoryService sourceRepositoryService, TerminalMessage terminalMessage,
+								  ObjectMapper objectMapper) {
 		this.springCliUserConfig = springCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
 		this.terminalMessage = terminalMessage;
+		this.objectMapper = objectMapper;
 	}
 
 	@Command(command = "list-available", description = "List available catalogs")
-	public Table catalogListAvailable() {
+	public Object catalogListAvailable(
+			@Option(description = "JSON format output", required = false, defaultValue = "false") boolean json
+	) throws JsonProcessingException {
+		Collection<CatalogRepository> catalogRepositories = getCatalogRepositories();
+		if (json) {
+			return objectMapper.writeValueAsString(catalogRepositories);
+		}
+
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description", "URL", "Tags"});
 		List<String[]> allRows = new ArrayList<>();
-		Collection<CatalogRepository> catalogRepositories = getCatalogRepositories();
 
 		// TODO enforce all entries have name and Url
 		Stream<String[]> fromCatalogRows;
@@ -89,7 +99,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		} else {
 			fromCatalogRows = Stream.empty();
 		}
-		List<String[]> catalogRepositoryRows = fromCatalogRows.collect(Collectors.toList());
+		List<String[]> catalogRepositoryRows = fromCatalogRows.toList();
 		allRows.addAll(catalogRepositoryRows);
 
 		String[][] data = Stream.concat(header, allRows.stream()).toArray(String[][]::new);
@@ -116,9 +126,14 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 
 	@Command(command = "list", description = "List installed catalogs")
-	public Table catalogList() {
-		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description" , "URL", "Tags" });
+	public Object catalogList(
+			@Option(description = "JSON format output", required = false, defaultValue = "false") boolean json
+	) throws JsonProcessingException {
 		Collection<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
+		if (json) {
+			return objectMapper.writeValueAsString(projectCatalogs);
+		}
+		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description" , "URL", "Tags" });
 		Stream<String[]> rows = null;
 		if (projectCatalogs != null) {
 			rows = projectCatalogs.stream()
@@ -165,9 +180,9 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 				ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
 				projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
 				springCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
-				this.terminalMessage.print("Project Catalog '" + name + "' added.");
+				this.terminalMessage.print(PROJECT_CATALOG + name + "' added.");
 			} else {
-				this.terminalMessage.print("Project Catalog '" + name + "' not found.");
+				this.terminalMessage.print(PROJECT_CATALOG + name + "' not found.");
 			}
 		} else {
 			// Add using URL
@@ -177,7 +192,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 			ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
 			projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
 			springCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
-			this.terminalMessage.print("Project Catalog '" + name + "' added from URL = " + url);
+			this.terminalMessage.print(PROJECT_CATALOG + name + "' added from URL = " + url);
 		}
 	}
 
@@ -187,8 +202,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 	) {
 		List<ProjectCatalog> originalProjectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 		List<ProjectCatalog> updatedProjectCatalogs = originalProjectCatalogs.stream()
-			.filter(tc -> !ObjectUtils.nullSafeEquals(tc.getName(), name))
-			.collect(Collectors.toList());
+			.filter(tc -> !ObjectUtils.nullSafeEquals(tc.getName(), name)).toList();
 		if (updatedProjectCatalogs.size() < originalProjectCatalogs.size()) {
 			ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
 			projectCatalogsConfig.setProjectCatalogs(updatedProjectCatalogs);
