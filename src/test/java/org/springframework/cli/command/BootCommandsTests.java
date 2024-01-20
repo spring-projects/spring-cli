@@ -19,6 +19,7 @@ import java.nio.file.Path;
 
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -128,11 +129,7 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew("test-add", null,null, null, null, null, "com.xkcd", path);
-			assertThat(workingDir).exists().isDirectory();
-			assertThat(workingDir.resolve("test-add")).exists();
-			assertThat(workingDir.resolve("test-add/src/main/java/com/xkcd/greeting")).exists();
-			assertThat(workingDir.resolve("test-add/src/test/java/com/xkcd/greeting")).exists();
+			newBoot(workingDir, bootCommands, "test-add", path);
 
 			String addPath = workingDir.resolve("test-add").toAbsolutePath().toString();
 			bootCommands.bootAdd("https://github.com/rd-1-2022/rpt-spring-data-jpa", addPath);
@@ -153,13 +150,10 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew("test-add", null,  null, null, null, null, "com.xkcd", path);
-			assertThat(workingDir).exists().isDirectory();
-			assertThat(workingDir.resolve("test-add")).exists();
-			assertThat(workingDir.resolve("test-add/src/main/java/com/xkcd/greeting")).exists();
-			assertThat(workingDir.resolve("test-add/src/test/java/com/xkcd/greeting")).exists();
+			String name = "test-add";
+			newBoot(workingDir, bootCommands, name, path);
 
-			String addPath = workingDir.resolve("test-add").toAbsolutePath().toString();
+			String addPath = workingDir.resolve(name).toAbsolutePath().toString();
 
 			PomReader pomReader = new PomReader();
 			Model model = pomReader.readPom(workingDir.resolve("test-add/pom.xml").toFile());
@@ -183,8 +177,37 @@ public class BootCommandsTests {
 			assertThat(dependencyManagement.getDependencies().get(0).getType()).isEqualTo("pom");
 			assertThat(dependencyManagement.getDependencies().get(0).getScope()).isEqualTo("import");
 
-
 		});
+	}
+
+	@Test
+	@DisplayName("Can create a new Boot project and add JPA to it")
+	void canCreateANewBootProjectAndAddJpaToIt(final @TempDir Path workingDir) {
+		this.contextRunner.withUserConfiguration(MockUserConfig.class).run(context -> {
+			assertThat(context).hasSingleBean(BootCommands.class);
+			BootCommands bootCommands = context.getBean(BootCommands.class);
+			String name = "test-add";
+			String path = workingDir.toAbsolutePath().toString();
+			newBoot(workingDir, bootCommands, name, path);
+			Path projectDir = workingDir.resolve(name);
+			bootCommands.bootAdd("https://github.com/rd-1-2022/rpt-spring-data-jpa", projectDir.toString());
+			assertThat(projectDir).exists().isDirectory();
+			assertThat(projectDir.resolve("pom.xml")).exists();
+			assertThat(projectDir.resolve("README-rpt-spring-data-jpa.md")).exists();
+			PomReader pomReader = new PomReader();
+			Model model = pomReader.readPom(projectDir.resolve("pom.xml").toFile());
+			assertThat(model.getDependencies())
+					.anyMatch(d -> d.getGroupId().equals("org.springframework.boot") && d.getArtifactId().equals("spring-boot-starter-data-jpa"))
+					.anyMatch(d -> d.getGroupId().equals("com.h2database") && d.getArtifactId().equals("h2") && d.getScope().equals("runtime"));
+		});
+	}
+
+	private static void newBoot(Path workingDir, BootCommands bootCommands, String name, String path) {
+		bootCommands.bootNew(name, null,  null, null, null, null, "com.xkcd", path);
+		assertThat(workingDir).exists().isDirectory();
+		assertThat(workingDir.resolve(name)).exists();
+		assertThat(workingDir.resolve("test-add/src/main/java/com/xkcd/greeting")).exists();
+		assertThat(workingDir.resolve("test-add/src/test/java/com/xkcd/greeting")).exists();
 	}
 
 }
