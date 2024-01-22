@@ -122,7 +122,7 @@ public class ProjectCommands {
 			.map(tr -> new String[] { tr.name(),
 					Objects.requireNonNullElse(tr.description, ""),
 					tr.url(),
-					tr.catalog,
+					Objects.requireNonNullElse(tr.catalog, ""),
 					(Objects.requireNonNullElse(tr.tags(), "")).toString() }
 		);
 
