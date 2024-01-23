@@ -56,6 +56,7 @@ import static org.mockito.Mockito.when;
 
 @Import(SpringRewriteCommonsConfiguration.class)
 public class MockConfigurations {
+
 	@Configuration
 	@Import(SpringRewriteCommonsConfiguration.class)
 	public static class MockBaseConfig {
