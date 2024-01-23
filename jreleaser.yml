@@ -30,7 +30,7 @@ project:
     - jvalkeal
   license: Apache-2.0
   links:
-    homepage: https://github.com/spring-projects-experimental/spring-cli
+    homepage: https://spring.io/projects/spring-cli
   java:
     groupId: org.springframework.cli
     version: 17
