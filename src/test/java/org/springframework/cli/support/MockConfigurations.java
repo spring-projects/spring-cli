@@ -17,14 +17,8 @@
 
 package org.springframework.cli.support;
 
-import java.nio.file.FileSystem;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.function.Function;
-
 import com.google.common.jimfs.Jimfs;
 import org.jline.terminal.Terminal;
-
 import org.springframework.cli.command.BootCommands;
 import org.springframework.cli.command.CommandCommands;
 import org.springframework.cli.command.RoleCommands;
@@ -43,13 +37,23 @@ import org.springframework.cli.runtime.engine.model.SystemModelPopulator;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.rewrite.boot.autoconfigure.RewriteLauncherConfiguration;
+import org.springframework.rewrite.execution.RewriteRecipeLauncher;
 import org.springframework.shell.style.ThemeResolver;
+
+import java.nio.file.FileSystem;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.function.Function;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class MockConfigurations {
+
 	@Configuration
+	@Import(RewriteLauncherConfiguration.class) // required for boot upgrade command
 	public static class MockBaseConfig {
 
 		@Bean
@@ -73,10 +77,11 @@ public class MockConfigurations {
 		SpecialCommands specialCommands() {
 			return new SpecialCommands(TerminalMessage.noop());
 		}
+
 		@Bean
 		BootCommands bootCommands(SpringCliUserConfig springCliUserConfig,
-				SourceRepositoryService sourceRepositoryService) {;
-			BootCommands bootCommands = new BootCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
+				SourceRepositoryService sourceRepositoryService, RewriteRecipeLauncher rewriteRecipeLauncher) {;
+			BootCommands bootCommands = new BootCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), rewriteRecipeLauncher);
 			return bootCommands;
 		}
 
