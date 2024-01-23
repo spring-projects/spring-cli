@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.merger.ProjectHandler;
+import org.springframework.cli.recipe.RewriteRecipeRunner;
 import org.springframework.cli.util.ProjectInfo;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.annotation.Command;
@@ -31,15 +32,17 @@ public class BootCommands extends AbstractSpringCliCommands {
 	private final SourceRepositoryService sourceRepositoryService;
 
 	private final TerminalMessage terminalMessage;
+	private final RewriteRecipeRunner rewriteRecipeRunner;
 
 	@Autowired
 	public BootCommands(SpringCliUserConfig springCliUserConfig,
-			SourceRepositoryService sourceRepositoryService,
-			TerminalMessage terminalMessage) {
+                        SourceRepositoryService sourceRepositoryService,
+                        TerminalMessage terminalMessage, RewriteRecipeRunner rewriteRecipeRunner) {
 		this.springCliUserConfig = springCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
 		this.terminalMessage = terminalMessage;
-	}
+        this.rewriteRecipeRunner = rewriteRecipeRunner;
+    }
 
 	@Command(command = "new", description = "Create a new Spring Boot project from an existing project.")
 	public void bootNew(
@@ -63,6 +66,11 @@ public class BootCommands extends AbstractSpringCliCommands {
 			@Option(description = "Path") String path) {
 		ProjectHandler handler = new ProjectHandler(springCliUserConfig, sourceRepositoryService, terminalMessage);
 		handler.add(from, path);
+	}
+
+	@Command(command = "upgrade", description = "Apply a set of automated migrations to upgrade a Boot application.")
+	public void bootUpgrade(@Option(description = "Path") String path) {
+		rewriteRecipeRunner.run("org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_1", path);
 	}
 
 }
