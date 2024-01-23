@@ -17,14 +17,8 @@
 
 package org.springframework.cli.support;
 
-import java.nio.file.FileSystem;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.function.Function;
-
 import com.google.common.jimfs.Jimfs;
 import org.jline.terminal.Terminal;
-
 import org.springframework.cli.command.BootCommands;
 import org.springframework.cli.command.CommandCommands;
 import org.springframework.cli.command.RoleCommands;
@@ -36,6 +30,7 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
 import org.springframework.cli.git.GitSourceRepositoryService;
 import org.springframework.cli.git.SourceRepositoryService;
+import org.springframework.cli.recipe.RewriteRecipeRunner;
 import org.springframework.cli.runtime.engine.model.MavenModelPopulator;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.model.RootPackageModelPopulator;
@@ -43,13 +38,26 @@ import org.springframework.cli.runtime.engine.model.SystemModelPopulator;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.rewrite.boot.autoconfigure.SpringRewriteCommonsConfiguration;
+import org.springframework.rewrite.parsers.RewriteProjectParser;
+import org.springframework.rewrite.project.resource.ProjectResourceSetFactory;
+import org.springframework.rewrite.project.resource.ProjectResourceSetSerializer;
+import org.springframework.rewrite.recipes.RewriteRecipeDiscovery;
 import org.springframework.shell.style.ThemeResolver;
+
+import java.nio.file.FileSystem;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.function.Function;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@Import(SpringRewriteCommonsConfiguration.class)
 public class MockConfigurations {
 	@Configuration
+	@Import(SpringRewriteCommonsConfiguration.class)
 	public static class MockBaseConfig {
 
 		@Bean
@@ -73,10 +81,16 @@ public class MockConfigurations {
 		SpecialCommands specialCommands() {
 			return new SpecialCommands(TerminalMessage.noop());
 		}
+
+		@Bean
+		RewriteRecipeRunner rewriteRecipeRunner(RewriteProjectParser parser, RewriteRecipeDiscovery discovery, ProjectResourceSetFactory resourceSetFactory, ProjectResourceSetSerializer serilizer){
+			return new RewriteRecipeRunner(parser, discovery, resourceSetFactory, serilizer);
+		}
+
 		@Bean
 		BootCommands bootCommands(SpringCliUserConfig springCliUserConfig,
-				SourceRepositoryService sourceRepositoryService) {;
-			BootCommands bootCommands = new BootCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop());
+				SourceRepositoryService sourceRepositoryService, RewriteRecipeRunner rewriteRecipeRunner) {;
+			BootCommands bootCommands = new BootCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), rewriteRecipeRunner);
 			return bootCommands;
 		}
 
