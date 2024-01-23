@@ -19,14 +19,16 @@ spring:
 
 ## disable/enable console logging
 logging:
-  pattern:
-    console:
 ## log debug from a cli
-  # file:
-  #   name: shell.log
-  # level:
-  #   root: DEBUG
-  #   org:
-  #     springframework:
-  #       cli: DEBUG
-  #       shell: DEBUG
+      # file:
+      #   name: shell.log
+  pattern:
+    console: "%msg%n"
+  level:
+    root: INFO
+    org:
+      springframework:
+        rewrite: WARN
+        cli.recipe.RewriteRecipeRunner: INFO
+        cli: WARN
+        shell: WARN
