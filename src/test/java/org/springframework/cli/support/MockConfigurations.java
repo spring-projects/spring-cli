@@ -19,7 +19,10 @@ package org.springframework.cli.support;
 
 import com.google.common.jimfs.Jimfs;
 import org.jline.terminal.Terminal;
-import org.springframework.cli.command.*;
+import org.springframework.cli.command.BootCommands;
+import org.springframework.cli.command.CommandCommands;
+import org.springframework.cli.command.RoleCommands;
+import org.springframework.cli.command.SpecialCommands;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
@@ -37,11 +40,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.rewrite.boot.autoconfigure.RewriteLauncherConfiguration;
 import org.springframework.rewrite.execution.RewriteRecipeLauncher;
-import org.springframework.rewrite.execution.RewriteRecipeLauncher;
-import org.springframework.rewrite.parsers.RewriteProjectParser;
-import org.springframework.rewrite.project.resource.ProjectResourceSetFactory;
-import org.springframework.rewrite.project.resource.ProjectResourceSetSerializer;
-import org.springframework.rewrite.recipes.RewriteRecipeDiscovery;
 import org.springframework.shell.style.ThemeResolver;
 
 import java.nio.file.FileSystem;
