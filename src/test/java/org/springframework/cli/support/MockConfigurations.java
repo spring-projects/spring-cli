@@ -19,10 +19,7 @@ package org.springframework.cli.support;
 
 import com.google.common.jimfs.Jimfs;
 import org.jline.terminal.Terminal;
-import org.springframework.cli.command.BootCommands;
-import org.springframework.cli.command.CommandCommands;
-import org.springframework.cli.command.RoleCommands;
-import org.springframework.cli.command.SpecialCommands;
+import org.springframework.cli.command.*;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
@@ -30,6 +27,7 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
 import org.springframework.cli.git.GitSourceRepositoryService;
 import org.springframework.cli.git.SourceRepositoryService;
+import org.springframework.cli.merger.RecipeRunHandler;
 import org.springframework.cli.runtime.engine.model.MavenModelPopulator;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.model.RootPackageModelPopulator;
@@ -40,6 +38,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.rewrite.boot.autoconfigure.RewriteLauncherConfiguration;
 import org.springframework.rewrite.execution.RewriteRecipeLauncher;
+import org.springframework.rewrite.parsers.RewriteProjectParser;
+import org.springframework.rewrite.project.resource.ProjectResourceSetFactory;
+import org.springframework.rewrite.project.resource.ProjectResourceSetSerializer;
 import org.springframework.shell.style.ThemeResolver;
 
 import java.nio.file.FileSystem;
@@ -91,13 +92,13 @@ public class MockConfigurations {
 		}
 
 		@Bean
-		RecipeRunHandler recipeRunHandler(SpringCliUserConfig springCliUserConfig, SourceRepositoryService sourceRepositoryService, TerminalMessage terminalMessage, RewriteProjectParser parser, ProjectResourceSetFactory resourceSetFactory, ProjectResourceSetSerializer serializer) {
-			return new RecipeRunHandler(springCliUserConfig, sourceRepositoryService, terminalMessage, parser, resourceSetFactory, serializer);
+        RecipeRunHandler recipeRunHandler(SpringCliUserConfig springCliUserConfig, SourceRepositoryService sourceRepositoryService, RewriteProjectParser parser, ProjectResourceSetFactory resourceSetFactory, ProjectResourceSetSerializer serializer) {
+			return new RecipeRunHandler(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), parser, resourceSetFactory, serializer);
 		}
 
 		@Bean
-        OrRecipeCommands orRecipeCommands(TerminalMessage terminalMessage, RecipeRunHandler recipeRunHandler) {
-			return new OrRecipeCommands(recipeRunHandler, terminalMessage);
+        OrRecipeCommands orRecipeCommands(RecipeRunHandler recipeRunHandler) {
+			return new OrRecipeCommands(recipeRunHandler, TerminalMessage.noop());
 		}
 
 		@Bean
