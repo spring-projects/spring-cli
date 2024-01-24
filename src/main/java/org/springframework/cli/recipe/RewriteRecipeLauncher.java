@@ -16,12 +16,9 @@
 package org.springframework.cli.recipe;
 
 import org.jetbrains.annotations.NotNull;
-import org.jline.utils.AttributedStringBuilder;
-import org.jline.utils.AttributedStyle;
 import org.openrewrite.Recipe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cli.util.TerminalMessage;
 import org.springframework.rewrite.parsers.RewriteProjectParser;
 import org.springframework.rewrite.parsers.RewriteProjectParsingResult;
 import org.springframework.rewrite.project.resource.ProjectResourceSet;
@@ -40,48 +37,66 @@ import java.util.concurrent.TimeUnit;
  * @author Fabian Krüger
  */
 @Component
-public class RewriteRecipeRunner {
+public class RewriteRecipeLauncher {
 
-    private static final Logger logger = LoggerFactory.getLogger(RewriteRecipeRunner.class);
+    private static final Logger logger = LoggerFactory.getLogger(RewriteRecipeLauncher.class);
 
     private final RewriteProjectParser parser;
     private final RewriteRecipeDiscovery discovery;
     private final ProjectResourceSetFactory resourceSetFactory;
     private final ProjectResourceSetSerializer serializer;
-    private final TerminalMessage terminalMessage;
 
-    public RewriteRecipeRunner(RewriteProjectParser parser, RewriteRecipeDiscovery discovery, ProjectResourceSetFactory resourceSetFactory, ProjectResourceSetSerializer serializer, TerminalMessage terminalMessage) {
+    public interface RewriteRecipeRunnerProgressListener {
+        void publish(String progressMessage);
+    }
+
+    public RewriteRecipeLauncher(RewriteProjectParser parser, RewriteRecipeDiscovery discovery, ProjectResourceSetFactory resourceSetFactory, ProjectResourceSetSerializer serializer) {
         this.parser = parser;
         this.discovery = discovery;
         this.resourceSetFactory = resourceSetFactory;
         this.serializer = serializer;
-        this.terminalMessage = terminalMessage;
     }
 
     public void run(String recipeName, String path) {
+        run(recipeName, path, __ -> {});
+    }
+
+    public void run(String recipeName, String path, RewriteRecipeRunnerProgressListener listener) {
         Path baseDir = getBaseDir(path);
-        RewriteProjectParsingResult parsingResult = parseProject(baseDir);
+        RewriteProjectParsingResult parsingResult = parseProject(baseDir, listener);
         Optional<Recipe> recipe = discoverRecipe(recipeName);
         if (recipe.isPresent()) {
-            applyRecipe(recipeName, baseDir, parsingResult, recipe);
+            applyRecipe(recipeName, baseDir, parsingResult, recipe, listener);
         } else {
             logger.error("Could not find recipe " + recipeName + ".");
         }
     }
 
-    private void applyRecipe(String recipeName, Path baseDir, RewriteProjectParsingResult parsingResult, Optional<Recipe> recipe) {
+    @NotNull
+    private RewriteProjectParsingResult parseProject(Path baseDir, RewriteRecipeRunnerProgressListener listener) {
+        listener.publish("Start parsing dir '%s'".formatted(baseDir));
+        StopWatch stopWatch = new StopWatch("parse");
+        stopWatch.start();
+        RewriteProjectParsingResult parsingResult = parser.parse(baseDir);
+        stopWatch.stop();
+        double parseTime = stopWatch.getTotalTime(TimeUnit.SECONDS);
+        listener.publish("Parsed %d resources in %f sec.".formatted(parsingResult.sourceFiles().size(), parseTime));
+        return parsingResult;
+    }
+
+    private void applyRecipe(String recipeName, Path baseDir, RewriteProjectParsingResult parsingResult, Optional<Recipe> recipe, RewriteRecipeRunnerProgressListener listener) {
         StopWatch stopWatch = new StopWatch("parse");
         stopWatch.start();
         // Use ProjectResourceSet abstraction
         ProjectResourceSet projectResourceSet = resourceSetFactory.create(baseDir, parsingResult.sourceFiles());
         // To apply recipes
-        print("Applying recipe %s, this may take a few minutes.".formatted(recipeName));
+        listener.publish("Applying recipe %s, this may take a few minutes.".formatted(recipeName));
         projectResourceSet.apply(recipe.get());
         stopWatch.stop();
         double recipeRunTime = stopWatch.getTotalTime(TimeUnit.MINUTES);
-        print("Applied recipe %s in %f min.".formatted(recipeName, recipeRunTime));
+        listener.publish("Applied recipe %s in %f min.".formatted(recipeName, recipeRunTime));
         // Synchronize changes with filesystem
-        print("Write changes from %s.".formatted(recipeName));
+        listener.publish("Write changes from %s.".formatted(recipeName));
         serializer.writeChanges(projectResourceSet);
     }
 
@@ -94,30 +109,11 @@ public class RewriteRecipeRunner {
     }
 
     @NotNull
-    private RewriteProjectParsingResult parseProject(Path baseDir) {
-        print("Start parsing dir '%s'".formatted(baseDir));
-        StopWatch stopWatch = new StopWatch("parse");
-        stopWatch.start();
-        RewriteProjectParsingResult parsingResult = parser.parse(baseDir);
-        stopWatch.stop();
-        double parseTime = stopWatch.getTotalTime(TimeUnit.SECONDS);
-        print("Parsed %d resources in %f sec.".formatted(parsingResult.sourceFiles().size(), parseTime));
-        return parsingResult;
-    }
-
-    @NotNull
     private static Path getBaseDir(String path) {
         Path baseDir = Path.of(".").toAbsolutePath().normalize();
         if(path != null) {
             baseDir = Path.of(path).toAbsolutePath().normalize();
         }
         return baseDir;
-    }
-
-    private void print(String message) {
-        AttributedStringBuilder sb = new AttributedStringBuilder();
-        sb.style(sb.style().foreground(AttributedStyle.WHITE));
-        sb.append(message);
-        terminalMessage.print(sb.toAttributedString());
     }
 }

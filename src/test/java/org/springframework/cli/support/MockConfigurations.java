@@ -30,7 +30,7 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
 import org.springframework.cli.git.GitSourceRepositoryService;
 import org.springframework.cli.git.SourceRepositoryService;
-import org.springframework.cli.recipe.RewriteRecipeRunner;
+import org.springframework.cli.recipe.RewriteRecipeLauncher;
 import org.springframework.cli.runtime.engine.model.MavenModelPopulator;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.model.RootPackageModelPopulator;
@@ -84,14 +84,14 @@ public class MockConfigurations {
 		}
 
 		@Bean
-		RewriteRecipeRunner rewriteRecipeRunner(RewriteProjectParser parser, RewriteRecipeDiscovery discovery, ProjectResourceSetFactory resourceSetFactory, ProjectResourceSetSerializer serilizer){
-			return new RewriteRecipeRunner(parser, discovery, resourceSetFactory, serilizer);
+		RewriteRecipeLauncher rewriteRecipeRunner(RewriteProjectParser parser, RewriteRecipeDiscovery discovery, ProjectResourceSetFactory resourceSetFactory, ProjectResourceSetSerializer serilizer){
+			return new RewriteRecipeLauncher(parser, discovery, resourceSetFactory, serilizer);
 		}
 
 		@Bean
 		BootCommands bootCommands(SpringCliUserConfig springCliUserConfig,
-				SourceRepositoryService sourceRepositoryService, RewriteRecipeRunner rewriteRecipeRunner) {;
-			BootCommands bootCommands = new BootCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), rewriteRecipeRunner);
+				SourceRepositoryService sourceRepositoryService, RewriteRecipeLauncher rewriteRecipeLauncher) {;
+			BootCommands bootCommands = new BootCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), rewriteRecipeLauncher);
 			return bootCommands;
 		}
 
