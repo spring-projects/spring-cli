@@ -21,9 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.merger.ProjectHandler;
+import org.springframework.rewrite.execution.RewriteRecipeLauncher;
 import org.springframework.cli.util.ProjectInfo;
 import org.springframework.cli.util.TerminalMessage;
-import org.springframework.rewrite.execution.RewriteRecipeLauncher;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 

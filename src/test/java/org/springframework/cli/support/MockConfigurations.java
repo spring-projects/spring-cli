@@ -27,7 +27,6 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
 import org.springframework.cli.git.GitSourceRepositoryService;
 import org.springframework.cli.git.SourceRepositoryService;
-import org.springframework.cli.merger.RecipeRunHandler;
 import org.springframework.cli.runtime.engine.model.MavenModelPopulator;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
 import org.springframework.cli.runtime.engine.model.RootPackageModelPopulator;
@@ -36,7 +35,9 @@ import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.rewrite.boot.autoconfigure.RewriteLauncherConfiguration;
 import org.springframework.rewrite.boot.autoconfigure.SpringRewriteCommonsConfiguration;
+import org.springframework.rewrite.execution.RewriteRecipeLauncher;
 import org.springframework.rewrite.execution.RewriteRecipeLauncher;
 import org.springframework.rewrite.parsers.RewriteProjectParser;
 import org.springframework.rewrite.project.resource.ProjectResourceSetFactory;
@@ -52,7 +53,7 @@ import java.util.function.Function;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@Import(SpringRewriteCommonsConfiguration.class)
+@Import(RewriteLauncherConfiguration.class) // required for boot upgrade command
 public class MockConfigurations {
 
 	@Configuration
@@ -79,11 +80,6 @@ public class MockConfigurations {
 		@Bean
 		SpecialCommands specialCommands() {
 			return new SpecialCommands(TerminalMessage.noop());
-		}
-
-		@Bean
-        RewriteRecipeLauncher rewriteRecipeRunner(RewriteProjectParser parser, RewriteRecipeDiscovery discovery, ProjectResourceSetFactory resourceSetFactory, ProjectResourceSetSerializer serilizer){
-			return new RewriteRecipeLauncher(parser, discovery, resourceSetFactory, serilizer);
 		}
 
 		@Bean
