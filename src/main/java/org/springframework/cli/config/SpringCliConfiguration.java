@@ -24,7 +24,10 @@ import org.jline.terminal.Terminal;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactorNettyHttpClientMapper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cli.command.OrRecipeCommands;
+import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.initializr.InitializrClientCache;
+import org.springframework.cli.merger.RecipeRunHandler;
 import org.springframework.cli.runtime.command.DynamicMethodCommandResolver;
 import org.springframework.cli.runtime.engine.model.MavenModelPopulator;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
@@ -35,6 +38,9 @@ import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorResourceFactory;
+import org.springframework.rewrite.parsers.RewriteProjectParser;
+import org.springframework.rewrite.project.resource.ProjectResourceSetFactory;
+import org.springframework.rewrite.project.resource.ProjectResourceSetSerializer;
 import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.result.CommandNotFoundMessageProvider;
@@ -116,4 +122,15 @@ public class SpringCliConfiguration {
 			SpringCliProjectCatalogProperties springCliProjectCatalogProperties) {
 		return new ProjectCatalogInitializer(springCliUserConfig, springCliProjectCatalogProperties);
 	}
+
+	@Bean
+	RecipeRunHandler recipeRunHandler(SpringCliUserConfig springCliUserConfig, SourceRepositoryService sourceRepositoryService, TerminalMessage terminalMessage, RewriteProjectParser parser, ProjectResourceSetFactory resourceSetFactory, ProjectResourceSetSerializer serializer) {
+		return new RecipeRunHandler(springCliUserConfig, sourceRepositoryService, terminalMessage, parser, resourceSetFactory, serializer);
+	}
+
+	@Bean
+	OrRecipeCommands orRecipeCommands(TerminalMessage terminalMessage, RecipeRunHandler recipeRunHandler) {
+		return new OrRecipeCommands(recipeRunHandler, terminalMessage);
+	}
+
 }

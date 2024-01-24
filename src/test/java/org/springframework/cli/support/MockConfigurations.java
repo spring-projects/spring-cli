@@ -19,10 +19,7 @@ package org.springframework.cli.support;
 
 import com.google.common.jimfs.Jimfs;
 import org.jline.terminal.Terminal;
-import org.springframework.cli.command.BootCommands;
-import org.springframework.cli.command.CommandCommands;
-import org.springframework.cli.command.RoleCommands;
-import org.springframework.cli.command.SpecialCommands;
+import org.springframework.cli.command.*;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
@@ -30,6 +27,7 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
 import org.springframework.cli.git.GitSourceRepositoryService;
 import org.springframework.cli.git.SourceRepositoryService;
+import org.springframework.cli.merger.RecipeRunHandler;
 import org.springframework.cli.recipe.RewriteRecipeRunner;
 import org.springframework.cli.runtime.engine.model.MavenModelPopulator;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
@@ -98,6 +96,16 @@ public class MockConfigurations {
 		@Bean
 		CommandCommands commandCommands(SourceRepositoryService sourceRepositoryService) {
 			return new CommandCommands(sourceRepositoryService, TerminalMessage.noop());
+		}
+
+		@Bean
+		RecipeRunHandler recipeRunHandler(SpringCliUserConfig springCliUserConfig, SourceRepositoryService sourceRepositoryService, TerminalMessage terminalMessage, RewriteProjectParser parser, ProjectResourceSetFactory resourceSetFactory, ProjectResourceSetSerializer serializer) {
+			return new RecipeRunHandler(springCliUserConfig, sourceRepositoryService, terminalMessage, parser, resourceSetFactory, serializer);
+		}
+
+		@Bean
+		OrRecipeCommands orRecipeCommands(TerminalMessage terminalMessage, RecipeRunHandler recipeRunHandler) {
+			return new OrRecipeCommands(recipeRunHandler, terminalMessage);
 		}
 
 		@Bean
