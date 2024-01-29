@@ -39,7 +39,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.rewrite.boot.autoconfigure.RewriteLauncherConfiguration;
-import org.springframework.rewrite.execution.RewriteRecipeLauncher;
+import org.springframework.rewrite.RewriteRecipeLauncher;
 import org.springframework.shell.style.ThemeResolver;
 
 import java.nio.file.FileSystem;

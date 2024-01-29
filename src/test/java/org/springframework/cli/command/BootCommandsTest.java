@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.util.TerminalMessage;
-import org.springframework.rewrite.execution.RewriteRecipeLauncher;
+import org.springframework.rewrite.RewriteRecipeLauncher;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
