@@ -209,7 +209,7 @@ The Maven model also exposes several variables:
 * `{{artifact-version}}`
 * `{{artifact-path}}`
 * `{{project-name}}`
-* `{{project-descriptoin}}`
+* `{{project-description}}`
 * `{{maven-model}` - This is the https://maven.apache.org/ref/3.9.0/maven-model/apidocs/org/apache/maven/model/Model.html[org.apache.maven.model.Model] class.
 * `{{maven-properties}}` - This is a Java properties object that has, as keys, the values of each entry in the POM's `<properties>` section.
 * `{{java-version}}` - This looks for a Maven Property named `java.version` in the POM. If the value is `1.8`, it is converted to a value of `8`.
