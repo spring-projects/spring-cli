@@ -14,7 +14,20 @@
  * limitations under the License.
  */
 
+
 package org.springframework.cli.runtime.engine.actions.handlers;
+
+import org.jetbrains.annotations.NotNull;
+import org.openrewrite.*;
+import org.openrewrite.config.DeclarativeRecipe;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
+import org.openrewrite.maven.MavenParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cli.SpringCliException;
+import org.springframework.cli.runtime.engine.templating.TemplateEngine;
+import org.springframework.cli.util.TerminalMessage;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -22,28 +35,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import org.jetbrains.annotations.NotNull;
-import org.openrewrite.ExecutionContext;
-import org.openrewrite.InMemoryExecutionContext;
-import org.openrewrite.Recipe;
-import org.openrewrite.Result;
-import org.openrewrite.SourceFile;
-import org.openrewrite.internal.InMemoryLargeSourceSet;
-import org.openrewrite.maven.MavenParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.cli.SpringCliException;
-import org.springframework.cli.runtime.engine.templating.TemplateEngine;
-import org.springframework.cli.util.TerminalMessage;
-import org.springframework.util.StringUtils;
-
 public abstract class AbstractInjectMavenActionHandler {
-
 	private static final Logger logger = LoggerFactory.getLogger(InjectMavenDependencyActionHandler.class);
 
 	protected final TemplateEngine templateEngine;
@@ -54,15 +51,14 @@ public abstract class AbstractInjectMavenActionHandler {
 
 	protected final TerminalMessage terminalMessage;
 
-	public AbstractInjectMavenActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd,
-			TerminalMessage terminalMessage) {
+	public AbstractInjectMavenActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, TerminalMessage terminalMessage) {
 		this.templateEngine = templateEngine;
 		this.model = model;
 		this.cwd = cwd;
 		this.terminalMessage = terminalMessage;
 	}
 
-	protected ExecutionContext getExecutionContext() {
+	static protected ExecutionContext getExecutionContext() {
 		Consumer<Throwable> onError = e -> {
 			logger.error("error in javaParser execution", e);
 		};
@@ -83,20 +79,13 @@ public abstract class AbstractInjectMavenActionHandler {
 	protected Path getPomPath() {
 		Path pomPath = cwd.resolve("pom.xml");
 		if (Files.notExists(pomPath)) {
-			throw new SpringCliException("Could not find pom.xml in " + this.cwd
-					+ ".  Make sure you are running the command in the directory that contains a pom.xml file");
+			throw new SpringCliException("Could not find pom.xml in " + this.cwd + ".  Make sure you are running the command in the directory that contains a pom.xml file");
 		}
 		return pomPath;
 	}
 
-	protected void runRecipe(Path pomPath, Recipe recipe) {
-		List<Path> paths = new ArrayList<>();
-		paths.add(pomPath);
-		MavenParser mavenParser = MavenParser.builder().build();
-		List<SourceFile> parsedPomFiles = mavenParser.parse(paths, cwd, getExecutionContext()).toList();
-		List<Result> resultList = recipe.run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext())
-			.getChangeset()
-			.getAllResults();
+	protected void execRecipe(Path pomPath, Recipe recipe) {
+		List<Result> resultList = runRecipe(pomPath, List.of(recipe), cwd).getChangeset().getAllResults();
 		try {
 			for (Result result : resultList) {
 				// write updated file.
@@ -108,6 +97,15 @@ public abstract class AbstractInjectMavenActionHandler {
 		catch (IOException ex) {
 			throw new SpringCliException("Error writing to " + pomPath.toAbsolutePath(), ex);
 		}
+	}
+
+	static public RecipeRun runRecipe(Path pomPath, List<Recipe> recipe, Path cwd) {
+		List<Path> paths = new ArrayList<>();
+		paths.add(pomPath);
+		DeclarativeRecipe aggregateRecipe = new DeclarativeRecipe("spring.cli.ai.AddDependencies", "Add Pom changes from AI", "", Collections.emptySet(), null, null, false, Collections.emptyList());		MavenParser mavenParser = MavenParser.builder().build();
+		aggregateRecipe.getRecipeList().addAll(recipe);
+		List<SourceFile> parsedPomFiles = mavenParser.parse(paths, cwd, getExecutionContext()).toList();
+		return aggregateRecipe.run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext());
 	}
 
 }

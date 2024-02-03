@@ -14,24 +14,30 @@
  * limitations under the License.
  */
 
+
 package org.springframework.cli.runtime.engine.actions.handlers;
 
-import java.nio.file.Path;
-import java.util.Map;
-
+import org.openrewrite.Recipe;
 import org.springframework.cli.SpringCliException;
+import org.springframework.cli.recipe.AddDependencyRecipeFactory;
 import org.springframework.cli.recipe.AddManagedDependencyRecipe;
 import org.springframework.cli.recipe.AddManagedDependencyRecipeFactory;
+import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependencyManagement;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
 import org.springframework.cli.util.MavenDependencyReader;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.util.StringUtils;
 
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class InjectMavenDependencyManagementActionHandler extends AbstractInjectMavenActionHandler {
 
-	public InjectMavenDependencyManagementActionHandler(TemplateEngine templateEngine, Map<String, Object> model,
-			Path cwd, TerminalMessage terminalMessage) {
+	public InjectMavenDependencyManagementActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, TerminalMessage terminalMessage) {
 		super(templateEngine, model, cwd, terminalMessage);
 	}
 
@@ -39,8 +45,7 @@ public class InjectMavenDependencyManagementActionHandler extends AbstractInject
 		Path pomPath = getPomPath();
 		String text = getTextToUse(injectMavenDependencyManagement.getText(), "Inject Maven Dependency Management");
 		if (!StringUtils.hasText(text)) {
-			throw new SpringCliException(
-					"Inject Maven Dependency Management action does not have a value in the 'text:' field.");
+			throw new SpringCliException("Inject Maven Dependency Management action does not have a value in the 'text:' field.");
 		}
 
 		MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
@@ -48,8 +53,15 @@ public class InjectMavenDependencyManagementActionHandler extends AbstractInject
 		for (String mavenDependency : mavenDependencies) {
 			AddManagedDependencyRecipeFactory recipeFactory = new AddManagedDependencyRecipeFactory();
 			AddManagedDependencyRecipe addManagedDependency = recipeFactory.create(mavenDependency);
-			runRecipe(pomPath, addManagedDependency);
+  			execRecipe(pomPath, addManagedDependency);
 		}
+	}
+
+	public List<Recipe> getRecipe(InjectMavenDependencyManagement injectMavenDependencyManagement) {
+		String text = getTextToUse(injectMavenDependencyManagement.getText(), "Inject Maven Dependency Management");
+		MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
+		String[] mavenDependencies = mavenDependencyReader.parseMavenSection(text);
+		return Arrays.stream(mavenDependencies).map(mavenDependency -> new AddManagedDependencyRecipeFactory().create(mavenDependency)).collect(Collectors.toList());
 	}
 
 }

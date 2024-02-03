@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
+
 package org.springframework.cli.runtime.engine.actions.handlers;
 
-import java.nio.file.Path;
-import java.util.Map;
-
+import org.openrewrite.Recipe;
 import org.openrewrite.maven.AddPlugin;
-
 import org.springframework.cli.recipe.AddPluginRecipeFactory;
 import org.springframework.cli.runtime.engine.actions.InjectMavenBuildPlugin;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
 import org.springframework.cli.util.MavenBuildPluginReader;
 import org.springframework.cli.util.TerminalMessage;
 
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class InjectMavenBuildPluginActionHandler extends AbstractInjectMavenActionHandler {
 
-	public InjectMavenBuildPluginActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd,
-			TerminalMessage terminalMessage) {
+	public InjectMavenBuildPluginActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, TerminalMessage terminalMessage) {
 		super(templateEngine, model, cwd, terminalMessage);
 	}
 
@@ -42,8 +45,15 @@ public class InjectMavenBuildPluginActionHandler extends AbstractInjectMavenActi
 		for (String buildPlugin : buildPlugins) {
 			AddPluginRecipeFactory recipeFactory = new AddPluginRecipeFactory();
 			AddPlugin addPlugin = recipeFactory.create(buildPlugin);
-			runRecipe(pomPath, addPlugin);
+			execRecipe(pomPath, addPlugin);
 		}
+	}
+
+	public List<Recipe> getRecipe(InjectMavenBuildPlugin injectMavenBuildPlugin) {
+		String text = getTextToUse(injectMavenBuildPlugin.getText(), "Inject Maven Build Plugin");
+		MavenBuildPluginReader mavenBuildPluginReader = new MavenBuildPluginReader();
+		String[] buildPlugins = mavenBuildPluginReader.parseMavenSection(text);
+		return Arrays.stream(buildPlugins).map(buildPlugin -> new AddPluginRecipeFactory().create(buildPlugin)).collect(Collectors.toList());
 	}
 
 }

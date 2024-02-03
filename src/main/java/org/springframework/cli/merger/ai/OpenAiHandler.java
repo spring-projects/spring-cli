@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 package org.springframework.cli.merger.ai;
 
 import java.io.BufferedWriter;
@@ -21,7 +22,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -36,10 +36,13 @@ import org.springframework.cli.SpringCliException;
 import org.springframework.cli.merger.ai.service.DescriptionRewriteAiService;
 import org.springframework.cli.merger.ai.service.GenerateCodeAiService;
 import org.springframework.cli.merger.ai.service.ProjectNameHeuristicAiService;
+import org.springframework.cli.runtime.engine.actions.handlers.json.Lsp;
 import org.springframework.cli.util.IoUtils;
 import org.springframework.cli.util.RootPackageFinder;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.util.StreamUtils;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class OpenAiHandler {
 
@@ -51,8 +54,7 @@ public class OpenAiHandler {
 		this.generateCodeAiService = generateCodeAiService;
 	}
 
-	public void add(String description, String path, boolean preview, boolean rewrite,
-			TerminalMessage terminalMessage) {
+	public void add(String description, String path, boolean preview, boolean rewrite, TerminalMessage terminalMessage) {
 		Path projectPath = getProjectPath(path);
 
 		ProjectNameHeuristicAiService projectNameHeuristic = new ProjectNameHeuristicAiService(terminalMessage);
@@ -73,15 +75,22 @@ public class OpenAiHandler {
 
 		writeReadMe(projectName, readmeResponse, projectPath, terminalMessage);
 		if (!preview) {
-			List<ProjectArtifact> projectArtifacts = createProjectArtifacts(readmeResponse);
-			ProjectArtifactProcessor projectArtifactProcessor = new ProjectArtifactProcessor(projectArtifacts,
-					projectPath, terminalMessage);
+			List<ProjectArtifact> projectArtifacts = computeProjectArtifacts(readmeResponse);
+			ProjectArtifactProcessor projectArtifactProcessor = new ProjectArtifactProcessor(projectArtifacts,  projectPath, terminalMessage);
 			ProcessArtifactResult processArtifactResult = projectArtifactProcessor.process();
-			// TODO mention artifacts not processed
+			//TODO mention artifacts not processed
 		}
 	}
 
+
+
 	public void apply(String file, String path, TerminalMessage terminalMessage) {
+		List<ProjectArtifact> projectArtifacts = computeProjectArtifacts(file, path, terminalMessage);
+		ProjectArtifactProcessor projectArtifactProcessor = new ProjectArtifactProcessor(projectArtifacts, getProjectPath(path), terminalMessage);
+		projectArtifactProcessor.process();
+	}
+
+	private List<ProjectArtifact> computeProjectArtifacts(String file, String path, TerminalMessage terminalMessage) {
 		Path projectPath = getProjectPath(path);
 		Path readmePath = projectPath.resolve(file);
 		if (Files.notExists(readmePath)) {
@@ -91,16 +100,17 @@ public class OpenAiHandler {
 			throw new SpringCliException("The Path " + readmePath + " is not a regular file, can't read");
 		}
 		try (InputStream stream = Files.newInputStream(readmePath)) {
-			String response = StreamUtils.copyToString(stream, StandardCharsets.UTF_8);
-			List<ProjectArtifact> projectArtifacts = createProjectArtifacts(response);
-			ProjectArtifactProcessor projectArtifactProcessor = new ProjectArtifactProcessor(projectArtifacts,
-					projectPath, terminalMessage);
-			projectArtifactProcessor.process();
-		}
-		catch (IOException ex) {
+			String response = StreamUtils.copyToString(stream, UTF_8);
+			return computeProjectArtifacts(response);
+		} catch (IOException ex) {
 			throw new SpringCliException("Could not read file " + readmePath.toAbsolutePath(), ex);
 		}
+	}
 
+	public Lsp.WorkspaceEdit createEdit(String file, String path, TerminalMessage terminalMessage) throws IOException {
+		List<ProjectArtifact> projectArtifacts = computeProjectArtifacts(file, path, terminalMessage);
+		ProjectArtifactEditGenerator editGenerator = new ProjectArtifactEditGenerator(projectArtifacts, getProjectPath(path), file, terminalMessage);
+		return editGenerator.process().getResult();
 	}
 
 	private void writeReadMe(ProjectName projectName, String text, Path projectPath, TerminalMessage terminalMessage) {
@@ -119,8 +129,8 @@ public class OpenAiHandler {
 		catch (IOException ex) {
 			throw new SpringCliException("Could not write readme file: " + output.toAbsolutePath(), ex);
 		}
-		terminalMessage.print("Read the file " + "README-ai-" + projectName.getShortPackageName()
-				+ ".md for a description of the code.");
+		terminalMessage.print("Read the file " + "README-ai-" +
+				projectName.getShortPackageName() + ".md for a description of the code.");
 	}
 
 	private static Path getProjectPath(String path) {
@@ -134,7 +144,7 @@ public class OpenAiHandler {
 		return projectPath;
 	}
 
-	private Map<String, String> createContext(String description, ProjectName projectName, Path path) {
+	private Map<String, String> createContext(String description, ProjectName projectName,  Path path) {
 		Map<String, String> context = new HashMap<>();
 		context.put("build-tool", "maven");
 		context.put("package-name", calculatePackage(projectName.getShortPackageName(), path));
@@ -142,6 +152,7 @@ public class OpenAiHandler {
 		context.put("description", description);
 		return context;
 	}
+
 
 	private String calculatePackage(String shortPackageName, Path path) {
 		Optional<String> rootPackage = RootPackageFinder.findRootPackage(path.toFile());
@@ -151,7 +162,8 @@ public class OpenAiHandler {
 		return rootPackage.get() + ".ai." + shortPackageName;
 	}
 
-	List<ProjectArtifact> createProjectArtifacts(String response) {
+
+	List<ProjectArtifact> computeProjectArtifacts(String response) {
 		ProjectArtifactCreator projectArtifactCreator = new ProjectArtifactCreator();
 		List<ProjectArtifact> projectArtifacts = projectArtifactCreator.create(response);
 		return projectArtifacts;
