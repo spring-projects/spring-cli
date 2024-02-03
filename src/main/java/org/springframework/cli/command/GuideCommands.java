@@ -16,12 +16,17 @@
 
 package org.springframework.cli.command;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cli.SpringCliException;
 import org.springframework.cli.merger.ai.OpenAiHandler;
 import org.springframework.cli.merger.ai.service.GenerateCodeAiService;
+import org.springframework.cli.runtime.engine.actions.handlers.json.Lsp;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
+
+import java.io.IOException;
 
 @Command(command = "guide", group = "Guide")
 public class GuideCommands {
@@ -30,23 +35,37 @@ public class GuideCommands {
 
 	private final OpenAiHandler openAiHandler;
 
+	private final ObjectMapper objectMapper;
+
 	@Autowired
-	public GuideCommands(TerminalMessage terminalMessage) {
+	public GuideCommands(TerminalMessage terminalMessage, ObjectMapper objectMapper) {
 		this.terminalMessage = terminalMessage;
+		this.objectMapper = objectMapper;
 		this.openAiHandler = new OpenAiHandler(new GenerateCodeAiService(this.terminalMessage));
 	}
 
-	public GuideCommands(OpenAiHandler openAiHandler, TerminalMessage terminalMessage) {
+	public GuideCommands(OpenAiHandler openAiHandler, TerminalMessage terminalMessage, ObjectMapper objectMapper) {
 		this.terminalMessage = terminalMessage;
 		this.openAiHandler = openAiHandler;
+		this.objectMapper = objectMapper;
 	}
 
 	@Command(command = "apply", description = "Apply the instructions in the readme to the code base.")
-	public void readmeApply(@Option(
+	public String readmeApply(@Option(
 			description = "The readme file that contains the instructions for how to modify the code base, such as README-ai-jpa.md") String file,
-			@Option(description = "Path on which to run the command. Most of the time, you can not specify the path and use the default value, which is the current working directory.") String path) {
+			@Option(description = "Path on which to run the command. Most of the time, you can not specify the path and use the default value, which is the current working directory.") String path,
+			@Option(description = "LSP Edit Json is produced to be applied by an IDE or Language Server.",
+					defaultValue = "false", longNames = "lsp-edit") boolean lspEdit)
+			throws IOException {
 
-		this.openAiHandler.apply(file, path, terminalMessage);
+		if (lspEdit) {
+			Lsp.WorkspaceEdit edit = this.openAiHandler.createEdit(file, path, terminalMessage);
+			return objectMapper.writeValueAsString(edit);
+		}
+		else {
+			this.openAiHandler.apply(file, path, terminalMessage);
+		}
+		return "";
 	}
 
 }

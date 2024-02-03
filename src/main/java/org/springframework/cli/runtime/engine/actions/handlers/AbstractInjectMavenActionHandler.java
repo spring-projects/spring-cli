@@ -16,6 +16,17 @@
 
 package org.springframework.cli.runtime.engine.actions.handlers;
 
+import org.jetbrains.annotations.NotNull;
+import org.openrewrite.*;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
+import org.openrewrite.maven.MavenParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cli.SpringCliException;
+import org.springframework.cli.runtime.engine.templating.TemplateEngine;
+import org.springframework.cli.util.TerminalMessage;
+import org.springframework.util.StringUtils;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -26,25 +37,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import org.jetbrains.annotations.NotNull;
-import org.openrewrite.ExecutionContext;
-import org.openrewrite.InMemoryExecutionContext;
-import org.openrewrite.Recipe;
-import org.openrewrite.Result;
-import org.openrewrite.SourceFile;
-import org.openrewrite.internal.InMemoryLargeSourceSet;
-import org.openrewrite.maven.MavenParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.cli.SpringCliException;
-import org.springframework.cli.runtime.engine.templating.TemplateEngine;
-import org.springframework.cli.util.TerminalMessage;
-import org.springframework.util.StringUtils;
-
 public abstract class AbstractInjectMavenActionHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(InjectMavenDependencyActionHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(AbstractInjectMavenActionHandler.class);
 
 	protected final TemplateEngine templateEngine;
 
@@ -62,7 +57,7 @@ public abstract class AbstractInjectMavenActionHandler {
 		this.terminalMessage = terminalMessage;
 	}
 
-	protected ExecutionContext getExecutionContext() {
+	static protected ExecutionContext getExecutionContext() {
 		Consumer<Throwable> onError = e -> {
 			logger.error("error in javaParser execution", e);
 		};
@@ -89,14 +84,9 @@ public abstract class AbstractInjectMavenActionHandler {
 		return pomPath;
 	}
 
-	protected void runRecipe(Path pomPath, Recipe recipe) {
-		List<Path> paths = new ArrayList<>();
-		paths.add(pomPath);
-		MavenParser mavenParser = MavenParser.builder().build();
-		List<SourceFile> parsedPomFiles = mavenParser.parse(paths, cwd, getExecutionContext()).toList();
-		List<Result> resultList = recipe.run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext())
-			.getChangeset()
-			.getAllResults();
+	public void exec() {
+		Path pomPath = getPomPath();
+		List<Result> resultList = run().getChangeset().getAllResults();
 		try {
 			for (Result result : resultList) {
 				// write updated file.
@@ -109,5 +99,15 @@ public abstract class AbstractInjectMavenActionHandler {
 			throw new SpringCliException("Error writing to " + pomPath.toAbsolutePath(), ex);
 		}
 	}
+
+	public RecipeRun run() {
+		List<Path> paths = new ArrayList<>();
+		paths.add(getPomPath());
+		MavenParser mavenParser = MavenParser.builder().build();
+		List<SourceFile> parsedPomFiles = mavenParser.parse(paths, cwd, getExecutionContext()).toList();
+		return createRecipe().run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext());
+	}
+
+	abstract protected Recipe createRecipe();
 
 }

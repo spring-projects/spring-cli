@@ -52,17 +52,10 @@ import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependencyManagement;
 import org.springframework.cli.runtime.engine.actions.InjectMavenRepository;
 import org.springframework.cli.runtime.engine.actions.Vars;
-import org.springframework.cli.runtime.engine.actions.handlers.ExecActionHandler;
-import org.springframework.cli.runtime.engine.actions.handlers.GenerateActionHandler;
-import org.springframework.cli.runtime.engine.actions.handlers.InjectActionHandler;
-import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenBuildPluginActionHandler;
-import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenDependencyActionHandler;
-import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenDependencyManagementActionHandler;
-import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenRepositoryActionHandler;
-import org.springframework.cli.runtime.engine.actions.handlers.VarsActionHandler;
+import org.springframework.cli.runtime.engine.actions.handlers.*;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
-import org.springframework.cli.runtime.engine.spel.SpELCondition;
 import org.springframework.cli.runtime.engine.spel.SpelFunctions;
+import org.springframework.cli.runtime.engine.spel.SpELCondition;
 import org.springframework.cli.runtime.engine.templating.HandlebarsTemplateEngine;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
 import org.springframework.cli.util.IoUtils;
@@ -225,10 +218,10 @@ public class DynamicCommand {
 		try {
 			processCommandActionFiles(commandActionFiles, workingDirectory, dynamicSubCommandPath, model);
 		}
-		catch (SpringCliException ex) {
+		catch (SpringCliException e) {
 			AttributedStringBuilder sb = new AttributedStringBuilder();
 			sb.style(sb.style().foreground(AttributedStyle.RED));
-			sb.append(ex.getMessage());
+			sb.append(e.getMessage());
 			terminalMessage.print(sb.toAttributedString());
 		}
 
@@ -288,31 +281,35 @@ public class DynamicCommand {
 
 				InjectMavenDependency injectMavenDependency = action.getInjectMavenDependency();
 				if (injectMavenDependency != null) {
-					InjectMavenDependencyActionHandler injectMavenDependencyActionHandler = new InjectMavenDependencyActionHandler(
-							templateEngine, model, cwd, terminalMessage);
-					injectMavenDependencyActionHandler.execute(injectMavenDependency);
+					InjectMavenActionHandler injectMavenActionHandler = new InjectMavenActionHandler(templateEngine,
+							model, cwd, terminalMessage);
+					injectMavenActionHandler.injectDependency(injectMavenDependency);
+					injectMavenActionHandler.exec();
 				}
 
 				InjectMavenBuildPlugin injectMavenBuildPlugin = action.getInjectMavenBuildPlugin();
 				if (injectMavenBuildPlugin != null) {
-					InjectMavenBuildPluginActionHandler injectMavenBuildPluginActionHandler = new InjectMavenBuildPluginActionHandler(
-							templateEngine, model, cwd, terminalMessage);
-					injectMavenBuildPluginActionHandler.execute(injectMavenBuildPlugin);
+					InjectMavenActionHandler injectMavenActionHandler = new InjectMavenActionHandler(templateEngine,
+							model, cwd, terminalMessage);
+					injectMavenActionHandler.injectBuildPlugin(injectMavenBuildPlugin);
+					injectMavenActionHandler.exec();
 				}
 
 				InjectMavenDependencyManagement injectMavenDependencyManagement = action
 					.getInjectMavenDependencyManagement();
 				if (injectMavenDependencyManagement != null) {
-					InjectMavenDependencyManagementActionHandler injectMavenDependencyDependnecyActionHandler = new InjectMavenDependencyManagementActionHandler(
-							templateEngine, model, cwd, terminalMessage);
-					injectMavenDependencyDependnecyActionHandler.execute(injectMavenDependencyManagement);
+					InjectMavenActionHandler injectMavenActionHandler = new InjectMavenActionHandler(templateEngine,
+							model, cwd, terminalMessage);
+					injectMavenActionHandler.injectDependencyManagement(injectMavenDependencyManagement);
+					injectMavenActionHandler.exec();
 				}
 
 				InjectMavenRepository injectMavenRepository = action.getInjectMavenRepository();
 				if (injectMavenRepository != null) {
-					InjectMavenRepositoryActionHandler injectMavenRepositoryActionHandler = new InjectMavenRepositoryActionHandler(
-							templateEngine, model, cwd, terminalMessage);
-					injectMavenRepositoryActionHandler.execute(injectMavenRepository);
+					InjectMavenActionHandler injectMavenActionHandler = new InjectMavenActionHandler(templateEngine,
+							model, cwd, terminalMessage);
+					injectMavenActionHandler.injectRepository(injectMavenRepository);
+					injectMavenActionHandler.exec();
 				}
 
 				Exec exec = action.getExec();
@@ -340,8 +337,8 @@ public class DynamicCommand {
 		try {
 			Files.walkFileTree(dynamicSubCommandPath, visitor);
 		}
-		catch (IOException ex) {
-			throw new SpringCliException("Error trying to detect action files. " + ex.getMessage(), ex);
+		catch (IOException e) {
+			throw new SpringCliException("Error trying to detect action files. " + e.getMessage(), e);
 		}
 
 		// Then actually parse, retaining only those paths that yielded a result
