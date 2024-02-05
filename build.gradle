@@ -30,9 +30,9 @@ ext {
 	set('kohsukeVersion', '1.301')
 	set('gitlab4jVersion', '4.19.0')
 	set('openrewriteVersion', '8.13.4')
-	set('springRewriteCommonsVersion', '0.1.0-SNAPSHOT')
+	set('springRewriteCommonsBootUpgradeVersion', '0.1.0-SNAPSHOT')
 	set('antVersion', '1.10.9')
-	set('mavenModelVersion', '3.5.4')
+	set('mavenModelVersion', '3.9.3')
 	set('tikaVersion', '1.18')
 	set('jimfsVersion', '1.2')
 	set('diffUtilsVersion', '4.12')
@@ -44,6 +44,7 @@ ext {
 	set('jacksonVersion', '2.15.0')
 	set('openaiVersion', '0.12.0')
 	set('commonmarkVersion', '0.21.0')
+	set('shrinkwrapResolversVersion', '3.3.0')
 }
 
 configurations.all {
@@ -51,6 +52,13 @@ configurations.all {
 }
 
 dependencies {
+	implementation 'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api'
+	implementation 'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-spi'
+	implementation 'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api-maven'
+	implementation 'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-spi-maven'
+	implementation 'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-impl-maven'
+	implementation 'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-impl-maven-archive'
+
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation "org.springframework.shell:spring-shell-starter-jna"
 	implementation 'io.spring.initializr:initializr-generator'
@@ -74,8 +82,6 @@ dependencies {
 	implementation 'com.theokanning.openai-gpt3-java:service'
 	implementation 'org.commonmark:commonmark'
 	implementation 'org.springframework.rewrite:spring-rewrite-commons-starter-boot-upgrade'
-	implementation 'org.springframework.rewrite:spring-rewrite-commons-launcher'
-
 	testImplementation 'org.openrewrite:rewrite-test'
 	testImplementation 'uk.org.webcompere:system-stubs-jupiter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -86,11 +92,17 @@ dependencies {
 
 dependencyManagement {
 	dependencies {
+		dependency "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api:${shrinkwrapResolversVersion}"
+		dependency "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-spi:${shrinkwrapResolversVersion}"
+		dependency "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api-maven:${shrinkwrapResolversVersion}"
+		dependency "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-spi-maven:${shrinkwrapResolversVersion}"
+		dependency "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-impl-maven:${shrinkwrapResolversVersion}"
+		dependency "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-impl-maven-archive:${shrinkwrapResolversVersion}"
 		dependency "org.springframework.shell:spring-shell-starter-jna:${springShellVersion}"
 		dependency "org.rauschig:jarchivelib:${jarchivelibVersion}"
 		dependency "org.kohsuke:github-api:${kohsukeVersion}"
 		dependency "org.gitlab4j:gitlab4j-api:${gitlab4jVersion}"
-		dependency "org.springframework.rewrite:spring-rewrite-commons-starter-boot-upgrade:${springRewriteCommonsVersion}"
+		dependency "org.springframework.rewrite:spring-rewrite-commons-starter-boot-upgrade:${springRewriteCommonsBootUpgradeVersion}"
 		dependency "org.openrewrite:rewrite-test:${openrewriteVersion}"
 		dependency "org.openrewrite:rewrite-java-17:${openrewriteVersion}"
 		dependency "org.openrewrite:rewrite-xml:${openrewriteVersion}"

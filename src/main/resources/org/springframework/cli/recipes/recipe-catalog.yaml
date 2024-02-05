@@ -1,0 +1,10 @@
+recipeCatalog:
+  - recipeId: AddLicenseHeader
+    artifactGav: org.openrewrite:rewrite-java:8.13.4
+    recipeName: org.openrewrite.java.AddLicenseHeader
+    description: Adds the provided licenseText as license header to all Java files.
+    repositoryUrl: https://github.com/openrewrite/rewrite
+    parameters:
+      - name: licenseText
+        type: String
+        required: true
