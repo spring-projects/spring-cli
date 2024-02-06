@@ -15,10 +15,6 @@
  */
 package org.springframework.cli.command.recipe;
 
-import org.jetbrains.annotations.NotNull;
-import org.openrewrite.Recipe;
-import org.springframework.util.Assert;
-
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -57,7 +53,6 @@ public class RecipeClassLoader {
         }
     }
 
-    @NotNull
     private static Function<URI, URL> toUrl() {
         return uri -> {
             try {

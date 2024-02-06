@@ -18,10 +18,7 @@ package org.springframework.cli.recipe;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.maven.model.Dependency;
-import org.jetbrains.annotations.NotNull;
-import org.openrewrite.Recipe;
 import org.openrewrite.internal.lang.Nullable;
-import org.openrewrite.maven.AddManagedDependencyVisitor;
 
 /**
  * @author Fabian Krüger

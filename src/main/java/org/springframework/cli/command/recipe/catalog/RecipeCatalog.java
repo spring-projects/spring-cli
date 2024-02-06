@@ -15,7 +15,6 @@
  */
 package org.springframework.cli.command.recipe.catalog;
 
-import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Recipe;
 import org.springframework.cli.command.recipe.RecipeClassLoader;
 import org.springframework.cli.command.recipe.RecipeLoadingException;
@@ -68,7 +67,6 @@ public class RecipeCatalog {
         return Optional.ofNullable(catalogEntry);
     }
 
-    @NotNull
     private static InputStream getRecipeInputStream() {
         try {
             return new ClassPathResource("org/springframework/cli/recipes/recipe-catalog.yaml").getInputStream();
@@ -98,7 +96,6 @@ public class RecipeCatalog {
         return recipe;
     }
 
-    @NotNull
     private static Object createNewInstance(Constructor<?> recipeConstructor, Object[] params) throws RecipeLoadingException {
         try {
             return recipeConstructor.newInstance(params);

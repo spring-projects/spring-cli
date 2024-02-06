@@ -16,7 +16,7 @@
 package org.springframework.cli.command.recipe.catalog;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import net.minidev.json.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
