@@ -2,10 +2,16 @@ plugins {
 	id 'org.springframework.boot' version '3.2.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'org.graalvm.buildtools.native' version '0.9.19'
+	id 'org.graalvm.buildtools.native' version '0.9.19' apply false
 	id 'io.spring.antora.generate-antora-yml' version '0.0.1'
 	id 'org.antora' version '1.0.0'
 	id 'org.jreleaser.jdks' version '1.7.0'
+}
+
+def useNative = project.hasProperty('springCliNative') && springCliNative.toBoolean()
+
+if (useNative) {
+	apply plugin: 'org.graalvm.buildtools.native'
 }
 
 description = 'Spring Cli'
@@ -186,14 +192,16 @@ springBoot {
 	buildInfo()
 }
 
-graalvmNative {
-	binaries {
-		main {
-			imageName = 'spring'
+if (useNative) {
+	graalvmNative {
+		binaries {
+			main {
+				imageName = 'spring'
+			}
 		}
-	}
-	metadataRepository {
-		enabled = true
+		metadataRepository {
+			enabled = true
+		}
 	}
 }
 

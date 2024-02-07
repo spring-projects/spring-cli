@@ -20,7 +20,7 @@ java -jar build/libs/spring-cli-0.0.1-SNAPSHOT.jar
 
 For native build:
 ```
-./gradlew clean build nativeCompile
+./gradlew clean build nativeCompile -PspringCliNative=true
 ```
 
 NOTE: You need to have `GRAALVM_HOME` pointing to your _graal_ installation
