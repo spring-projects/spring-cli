@@ -1,3 +1,18 @@
+/*
+ * Copyright 2024 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.cli.runtime.engine.actions.handlers.json;
 
 import org.openrewrite.shaded.jgit.diff.*;
@@ -40,21 +55,21 @@ public class ConversionUtils {
 					switch(e.getType()) {
 						case DELETE:
 							start = lines.getLineOffset(e.getBeginA());
-							end = getStartOfLine(lines, e.getEndA());
+							end = getStartOfLineOrEndOfPreviousLine(lines, e.getEndA());
 							range = new Lsp.Range(toPosition(lines, start), toPosition(lines, end));
 							textEdits.add(new Lsp.TextEdit(range, "", changeAnnotationId));
 							break;
 						case INSERT:
 							Lsp.Position position = toPosition(lines, lines.getLineOffset(e.getBeginA()));
 							range = new Lsp.Range(position, position);
-							newText = after.substring(newLines.getLineOffset(e.getBeginB()), getStartOfLine(newLines, e.getEndB()));
+							newText = after.substring(newLines.getLineOffset(e.getBeginB()), getStartOfLineOrEndOfPreviousLine(newLines, e.getEndB()));
 							textEdits.add(new Lsp.TextEdit(range, newText, changeAnnotationId));
 							break;
 						case REPLACE:
 							start = lines.getLineOffset(e.getBeginA());
-							end = getStartOfLine(lines, e.getEndA());
+							end = getStartOfLineOrEndOfPreviousLine(lines, e.getEndA());
 							range = new Lsp.Range(toPosition(lines, start), toPosition(lines, end));
-							newText = after.substring(newLines.getLineOffset(e.getBeginB()), getStartOfLine(newLines, e.getEndB()));
+							newText = after.substring(newLines.getLineOffset(e.getBeginB()), getStartOfLineOrEndOfPreviousLine(newLines, e.getEndB()));
 							textEdits.add(new Lsp.TextEdit(range, newText, changeAnnotationId));
 							break;
 						case EMPTY:
@@ -69,7 +84,7 @@ public class ConversionUtils {
 		return Optional.empty();
 	}
 
-	private static int getStartOfLine(ListLineTracker lines, int lineNumber) throws BadLocationException {
+	private static int getStartOfLineOrEndOfPreviousLine(ListLineTracker lines, int lineNumber) throws BadLocationException {
 		IRegion lineInformation = lines.getLineInformation(lineNumber);
 		if (lineInformation != null) {
 			return lineInformation.getOffset();
@@ -81,7 +96,7 @@ public class ConversionUtils {
 		return 0;
 	}
 
-	public static Lsp.Position toPosition(ListLineTracker lines, int offset) throws BadLocationException {
+	private static Lsp.Position toPosition(ListLineTracker lines, int offset) throws BadLocationException {
 		int line = lines.getLineNumberOfOffset(offset);
 		int startOfLine = lines.getLineInformation(line).getOffset();
 		int column = offset - startOfLine;

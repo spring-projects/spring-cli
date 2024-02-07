@@ -17,13 +17,18 @@
 
 package org.springframework.cli.merger.ai;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.Writer;
+import org.apache.commons.io.IOUtils;
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
+import org.springframework.cli.SpringCliException;
+import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
+import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenActionHandler;
+import org.springframework.cli.util.ClassNameExtractor;
+import org.springframework.cli.util.MavenDependencyReader;
+import org.springframework.cli.util.PomReader;
+import org.springframework.cli.util.TerminalMessage;
+
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,18 +38,6 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Model;
-
-import org.springframework.cli.SpringCliException;
-import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
-import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenDependencyActionHandler;
-import org.springframework.cli.util.ClassNameExtractor;
-import org.springframework.cli.util.MavenDependencyReader;
-import org.springframework.cli.util.PomReader;
-import org.springframework.cli.util.TerminalMessage;
 
 import static org.springframework.cli.util.PropertyFileUtils.mergeProperties;
 
@@ -147,18 +140,19 @@ public class ProjectArtifactProcessor {
 		//projectArtifact.getText() contains a list of <dependency> elements
 		String[] mavenDependencies = mavenDependencyReader.parseMavenSection(projectArtifact.getText());
 
+		InjectMavenActionHandler injectMavenActionHandler = new InjectMavenActionHandler(null, new HashMap<>(), projectPath, terminalMessage);
+
 		for (String candidateDependencyText : mavenDependencies) {
 			if (!candidateDependencyAlreadyPresent(getProjectDependency(candidateDependencyText), currentDependencies)) {
-				InjectMavenDependencyActionHandler injectMavenDependencyActionHandler =
-						new InjectMavenDependencyActionHandler(null, new HashMap<>(), projectPath, terminalMessage);
-				InjectMavenDependency injectMavenDependency = new InjectMavenDependency(candidateDependencyText);
-				try {
-					injectMavenDependencyActionHandler.execute(injectMavenDependency);
-				}
-				catch (Exception ex) {
-					terminalMessage.print("Could not inject Maven dependencies.  Look at pom.xml contents for messages on what went wrong, e.g. 'No version provided'\n" + ex.getMessage());
-				}
+				injectMavenActionHandler.injectDependency(new InjectMavenDependency(candidateDependencyText));
 			}
+		}
+
+		try {
+			injectMavenActionHandler.exec();
+		}
+		catch (Exception ex) {
+			terminalMessage.print("Could not inject Maven dependencies.  Look at pom.xml contents for messages on what went wrong, e.g. 'No version provided'\n" + ex.getMessage());
 		}
 	}
 

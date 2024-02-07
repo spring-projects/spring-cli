@@ -1,19 +1,12 @@
 package org.springframework.cli.merger.ai;
 
-import io.netty.handler.codec.http2.HttpConversionUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.openrewrite.Recipe;
-import org.openrewrite.RecipeRun;
 import org.openrewrite.Result;
-import org.openrewrite.SourceFile;
-import org.openrewrite.internal.InMemoryLargeSourceSet;
-import org.openrewrite.maven.MavenParser;
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
-import org.springframework.cli.runtime.engine.actions.handlers.AbstractInjectMavenActionHandler;
-import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenDependencyActionHandler;
+import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenActionHandler;
 import org.springframework.cli.runtime.engine.actions.handlers.json.ConversionUtils;
 import org.springframework.cli.runtime.engine.actions.handlers.json.Lsp;
 import org.springframework.cli.util.ClassNameExtractor;
@@ -28,7 +21,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static org.springframework.cli.util.PropertyFileUtils.mergeProperties;
 
@@ -135,21 +127,16 @@ public class ProjectArtifactEditGenerator {
         //projectArtifact.getText() contains a list of <dependency> elements
         String[] mavenDependencies = mavenDependencyReader.parseMavenSection(projectArtifact.getText());
 
-        List<Recipe> recipes = Arrays.stream(mavenDependencies)
-                .filter(candidateDependencyText -> !candidateDependencyAlreadyPresent(getProjectDependency(candidateDependencyText), currentDependencies))
-                .flatMap(candidateDependencyText -> {
-                    InjectMavenDependencyActionHandler injectMavenDependencyActionHandler =
-                            new InjectMavenDependencyActionHandler(null, new HashMap<>(), projectPath, terminalMessage);
-                    InjectMavenDependency injectMavenDependency = new InjectMavenDependency(candidateDependencyText);
-                    return injectMavenDependencyActionHandler.getRecipe(injectMavenDependency).stream();
-                }).collect(Collectors.toList());
+        InjectMavenActionHandler injectMavenActionHandler = new InjectMavenActionHandler(null, new HashMap<>(), projectPath, terminalMessage);
 
-        if (!recipes.isEmpty()) {
-            List<Result> res = AbstractInjectMavenActionHandler.runRecipe(currentProjectPomPath, recipes, projectPath).getChangeset().getAllResults();
-            return convertToEdits(res, changeAnnotationId);
+        for (String candidateDependencyText : mavenDependencies) {
+            if (!candidateDependencyAlreadyPresent(getProjectDependency(candidateDependencyText), currentDependencies)) {
+                injectMavenActionHandler.injectDependency(new InjectMavenDependency(candidateDependencyText));
+            }
         }
 
-        return Collections.emptyList();
+        List<Result> res = injectMavenActionHandler.run().getChangeset().getAllResults();
+        return res.isEmpty() ? Collections.emptyList() : convertToEdits(res, changeAnnotationId);
     }
 
     private List<Lsp.ChangeOperation> convertToEdits(List<Result> allResults, String changeAnnotationId) {
@@ -177,14 +164,6 @@ public class ProjectArtifactEditGenerator {
         }
         return candidateDependencyAlreadyPresent;
 
-    }
-
-    private String massageText(String text) {
-        if (text.contains("<dependencies>")) {
-            return text;
-        } else {
-            return "<dependencies>" + text + "</dependencies>";
-        }
     }
 
     private ProjectDependency getProjectDependency(String xml) {
@@ -310,41 +289,4 @@ public class ProjectArtifactEditGenerator {
         return directory.resolve(packageName.replace('.', '/'));
     }
 
-
-//    private Path createSourceFile(Path projectPath, String packageName, String fileName) throws IOException {
-//        Path sourceFile = resolveSourceFile(projectPath, packageName, fileName);
-//        createFile(sourceFile);
-//        return sourceFile;
-//    }
-//
-//    private Path createTestFile(Path projectPath, String packageName, String fileName) throws IOException {
-//        Path sourceFile = resolveTestFile(projectPath, packageName, fileName);
-//        createFile(sourceFile);
-//        return sourceFile;
-//    }
-//
-//    public Path resolveSourceFile(Path projectPath, String packageName, String fileName) {
-//        Path sourceDirectory = projectPath.resolve("src").resolve("main").resolve("java");
-//        return resolvePackage(sourceDirectory, packageName).resolve(fileName);
-//    }
-//
-//    public Path resolveTestFile(Path projectPath, String packageName, String fileName) {
-//        Path sourceDirectory = projectPath.resolve("src").resolve("test").resolve("java");
-//        return resolvePackage(sourceDirectory, packageName).resolve(fileName);
-//    }
-//
-//    private static Path resolvePackage(Path directory, String packageName) {
-//        return directory.resolve(packageName.replace('.', '/'));
-//    }
-//
-//    private void createFile(Path file) throws IOException {
-//        if (Files.exists(file)) {
-//            //System.out.println("deleting file " + file.toAbsolutePath());
-//            Files.delete(file);
-//        }
-//        Files.createDirectories(file.getParent());
-//        if (Files.notExists(file)) {
-//            Files.createFile(file);
-//        }
-//    }
 }

@@ -19,7 +19,6 @@ package org.springframework.cli.runtime.engine.actions.handlers;
 
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.*;
-import org.openrewrite.config.DeclarativeRecipe;
 import org.openrewrite.internal.InMemoryLargeSourceSet;
 import org.openrewrite.maven.MavenParser;
 import org.slf4j.Logger;
@@ -35,13 +34,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class AbstractInjectMavenActionHandler {
-	private static final Logger logger = LoggerFactory.getLogger(InjectMavenDependencyActionHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(AbstractInjectMavenActionHandler.class);
 
 	protected final TemplateEngine templateEngine;
 
@@ -84,8 +82,9 @@ public abstract class AbstractInjectMavenActionHandler {
 		return pomPath;
 	}
 
-	protected void execRecipe(Path pomPath, Recipe recipe) {
-		List<Result> resultList = runRecipe(pomPath, List.of(recipe), cwd).getChangeset().getAllResults();
+	public void exec() {
+		Path pomPath = getPomPath();
+		List<Result> resultList = run().getChangeset().getAllResults();
 		try {
 			for (Result result : resultList) {
 				// write updated file.
@@ -99,13 +98,14 @@ public abstract class AbstractInjectMavenActionHandler {
 		}
 	}
 
-	static public RecipeRun runRecipe(Path pomPath, List<Recipe> recipe, Path cwd) {
+	public RecipeRun run() {
 		List<Path> paths = new ArrayList<>();
-		paths.add(pomPath);
-		DeclarativeRecipe aggregateRecipe = new DeclarativeRecipe("spring.cli.ai.AddDependencies", "Add Pom changes from AI", "", Collections.emptySet(), null, null, false, Collections.emptyList());		MavenParser mavenParser = MavenParser.builder().build();
-		aggregateRecipe.getRecipeList().addAll(recipe);
+		paths.add(getPomPath());
+		MavenParser mavenParser = MavenParser.builder().build();
 		List<SourceFile> parsedPomFiles = mavenParser.parse(paths, cwd, getExecutionContext()).toList();
-		return aggregateRecipe.run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext());
+		return createRecipe().run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext());
 	}
+
+	abstract protected Recipe createRecipe();
 
 }
