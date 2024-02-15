@@ -33,12 +33,14 @@ class ProjectNameHeuristicAiServiceTest {
 
 		assertThat(projectName.getSpringProjectName()).isEqualTo("Spring Data JPA");
 
-//		projectName = projectNameHeuristic.deriveProjectName("JpA");
-//		assertThat(projectName.getShortPackageName()).isEqualTo("jpa");
-//		assertThat(projectName.getSpringProjectName()).isEqualTo("Spring Data JPA");
-//		assertThatThrownBy(() -> {
-//			projectNameHeuristic.deriveProjectName("foo");
-//		}).isInstanceOf(SpringCliException.class)
-//				.hasMessageContaining("Can't derive a Spring Project Name from the provided string " + "foo");
+		// projectName = projectNameHeuristic.deriveProjectName("JpA");
+		// assertThat(projectName.getShortPackageName()).isEqualTo("jpa");
+		// assertThat(projectName.getSpringProjectName()).isEqualTo("Spring Data JPA");
+		// assertThatThrownBy(() -> {
+		// projectNameHeuristic.deriveProjectName("foo");
+		// }).isInstanceOf(SpringCliException.class)
+		// .hasMessageContaining("Can't derive a Spring Project Name from the provided
+		// string " + "foo");
 	}
+
 }
