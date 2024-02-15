@@ -53,3 +53,5 @@ e2e/.vscode/*
 cached-antora-playbook.yml
 docs/build/
 docs/node_modules/
+
+.DS_Store

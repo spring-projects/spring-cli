@@ -19,10 +19,10 @@ package org.springframework.cli.support;
 
 import com.google.common.jimfs.Jimfs;
 import org.jline.terminal.Terminal;
-import org.springframework.cli.command.BootCommands;
-import org.springframework.cli.command.CommandCommands;
-import org.springframework.cli.command.RoleCommands;
-import org.springframework.cli.command.SpecialCommands;
+import org.springframework.cli.command.*;
+import org.springframework.cli.command.recipe.RecipeParameterParser;
+import org.springframework.cli.command.recipe.catalog.RecipeCatalog;
+import org.springframework.cli.command.recipe.resolver.MavenArtifactDownloader;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
@@ -38,8 +38,8 @@ import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.rewrite.boot.autoconfigure.RewriteLauncherConfiguration;
 import org.springframework.rewrite.RewriteRecipeLauncher;
+import org.springframework.rewrite.boot.autoconfigure.RewriteLauncherConfiguration;
 import org.springframework.shell.style.ThemeResolver;
 
 import java.nio.file.FileSystem;
@@ -83,6 +83,13 @@ public class MockConfigurations {
 				SourceRepositoryService sourceRepositoryService, RewriteRecipeLauncher rewriteRecipeLauncher) {;
 			BootCommands bootCommands = new BootCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), rewriteRecipeLauncher);
 			return bootCommands;
+		}
+
+		@Bean
+		RewriteRecipeCommands rewriteRecipeCommands(RewriteRecipeLauncher recipeLauncher) {
+			RecipeCatalog recipeCatalog = new RecipeCatalog(new MavenArtifactDownloader());
+			RecipeParameterParser recipePrameterParser = new RecipeParameterParser();
+			return new RewriteRecipeCommands(recipeLauncher, recipeCatalog, recipePrameterParser);
 		}
 
 		@Bean
