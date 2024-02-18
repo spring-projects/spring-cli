@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.util.PomReader;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class MergerPreCheckTests {
 
@@ -35,7 +35,9 @@ public class MergerPreCheckTests {
 			.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-8.xml").toFile());
 		Model toMergeModel = pomReader
 			.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-17.xml").toFile());
-		assertThrows(SpringCliException.class, () -> MergerPreCheck.canMergeProject(currentModel, toMergeModel, null));
+		assertThatThrownBy(() -> {
+			MergerPreCheck.canMergeProject(currentModel, toMergeModel, null);
+		}).isInstanceOf(SpringCliException.class);
 	}
 
 	@Test

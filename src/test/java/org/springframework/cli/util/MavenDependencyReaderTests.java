@@ -1,8 +1,3 @@
-package org.springframework.cli.util;
-
-import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 /*
  * Copyright 2021 the original author or authors.
  *
@@ -19,7 +14,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * limitations under the License.
  */
 
-class MavenDependencyReaderTest {
+package org.springframework.cli.util;
+
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class MavenDependencyReaderTests {
 
 	private String dependencyText = "<dependency>\n" + "  <groupId>org.springframework.boot</groupId>\n"
 			+ "  <artifactId>spring-boot-starter-data-jpa</artifactId>\n" + "</dependency>\n" + "\n" + "<dependency>\n"

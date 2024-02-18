@@ -27,11 +27,11 @@ import org.springframework.cli.roles.RoleService;
 import org.springframework.cli.support.CommandRunner;
 import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
 import org.springframework.cli.support.MockConfigurations.MockUserConfig;
+import org.springframework.cli.testutil.TableAssertions;
 import org.springframework.cli.util.StubTerminalMessage;
 import org.springframework.shell.table.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.cli.testutil.TableAssertions.verifyTableValue;
 
 public class RoleCommandTests {
 
@@ -105,7 +105,7 @@ public class RoleCommandTests {
 			assertRoleContents(roleCommands, role, varsFilePath);
 
 			Table table = roleCommands.roleList();
-			verifyTableValue(table, 1, 0, "qa");
+			TableAssertions.verifyTableValue(table, 1, 0, "qa");
 
 			// remove role
 			roleCommands.roleRemove(role);

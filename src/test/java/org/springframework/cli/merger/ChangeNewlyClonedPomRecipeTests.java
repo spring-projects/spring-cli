@@ -18,10 +18,9 @@ package org.springframework.cli.merger;
 
 import org.junit.jupiter.api.Test;
 import org.openrewrite.test.RewriteTest;
+import org.openrewrite.xml.Assertions;
 
 import org.springframework.cli.util.ProjectInfo;
-
-import static org.openrewrite.xml.Assertions.xml;
 
 public class ChangeNewlyClonedPomRecipeTests implements RewriteTest {
 
@@ -29,7 +28,7 @@ public class ChangeNewlyClonedPomRecipeTests implements RewriteTest {
 	void updateAllFields() {
 		rewriteRun(spec -> spec.recipe(new ChangeNewlyClonedPomRecipe(
 				new ProjectInfo("groupId", "artifactId", "version", "projectName", "projectDescription", null))),
-				xml("""
+				Assertions.xml("""
 						<project>
 							<modelVersion>4.0.0</modelVersion>
 
@@ -70,7 +69,7 @@ public class ChangeNewlyClonedPomRecipeTests implements RewriteTest {
 	void updateWhenNoNameInOriginalPom() {
 		rewriteRun(spec -> spec.recipe(new ChangeNewlyClonedPomRecipe(
 				new ProjectInfo("groupId", "artifactId", "version", "projectName", "projectDescription", null))),
-				xml("""
+				Assertions.xml("""
 						<project>
 							<modelVersion>4.0.0</modelVersion>
 							<groupId>com.xkcd</groupId>

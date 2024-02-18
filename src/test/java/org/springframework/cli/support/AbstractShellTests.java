@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.support;
 
 import java.io.ByteArrayOutputStream;
@@ -38,8 +39,6 @@ import org.springframework.shell.style.Theme;
 import org.springframework.shell.style.ThemeRegistry;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.shell.style.ThemeSettings;
-
-import static org.jline.keymap.KeyMap.del;
 
 public abstract class AbstractShellTests {
 
@@ -95,7 +94,7 @@ public abstract class AbstractShellTests {
 					pipedOutputStream.flush();
 				}
 			}
-			catch (Exception e) {
+			catch (Exception ex) {
 			}
 		});
 	}
@@ -145,8 +144,8 @@ public abstract class AbstractShellTests {
 			try {
 				return out.toString(StandardCharsets.UTF_8.name());
 			}
-			catch (UnsupportedEncodingException e) {
-				throw new RuntimeException(e);
+			catch (UnsupportedEncodingException ex) {
+				throw new RuntimeException(ex);
 			}
 		}
 
@@ -155,7 +154,7 @@ public abstract class AbstractShellTests {
 		}
 
 		public TestBuffer backspace() {
-			return append(del());
+			return append(KeyMap.del());
 		}
 
 		public TestBuffer backspace(int count) {

@@ -17,6 +17,7 @@
 package org.springframework.cli.command;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.springframework.cli.merger.ai.service.GenerateCodeAiService;
@@ -25,7 +26,6 @@ import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class StubGenerateCodeAiService extends GenerateCodeAiService {
 
@@ -38,7 +38,7 @@ public class StubGenerateCodeAiService extends GenerateCodeAiService {
 		try {
 			ClassPathResource classPathResource = TestResourceUtils.qualifiedResource(StubGenerateCodeAiService.class,
 					"response.md");
-			String response = StreamUtils.copyToString(classPathResource.getInputStream(), UTF_8);
+			String response = StreamUtils.copyToString(classPathResource.getInputStream(), StandardCharsets.UTF_8);
 			return response;
 		}
 		catch (IOException ex) {

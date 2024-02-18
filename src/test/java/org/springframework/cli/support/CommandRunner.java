@@ -126,7 +126,7 @@ public class CommandRunner {
 				assertThat(resource.getFile()).exists();
 				this.projectPath = Path.of(resource.getFile().getAbsolutePath());
 			}
-			catch (IOException e) {
+			catch (IOException ex) {
 				fail("Project name " + projectName + " could not resolved to the directory "
 						+ resource.getDescription());
 			}
@@ -141,7 +141,7 @@ public class CommandRunner {
 				assertThat(resource.getFile()).exists();
 				this.commandGroupPath = Path.of(resource.getFile().getAbsolutePath());
 			}
-			catch (IOException e) {
+			catch (IOException ex) {
 				fail("Command group name " + commandGroup + " could not resolved to the directory "
 						+ resource.getDescription());
 			}

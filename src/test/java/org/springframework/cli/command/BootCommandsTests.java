@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.command;
 
 import java.nio.file.Path;
@@ -30,7 +31,6 @@ import org.springframework.cli.support.MockConfigurations.MockUserConfig;
 import org.springframework.cli.util.PomReader;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 public class BootCommandsTests {
 

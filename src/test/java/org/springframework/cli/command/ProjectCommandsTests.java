@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.command;
 
 import java.nio.file.FileSystem;
@@ -26,16 +27,16 @@ import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.git.GitSourceRepositoryService;
 import org.springframework.cli.git.SourceRepositoryService;
-import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.testutil.TableAssertions;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.table.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.cli.testutil.TableAssertions.verifyTableValue;
 
 public class ProjectCommandsTests {
 
@@ -62,11 +63,11 @@ public class ProjectCommandsTests {
 			table = (Table) projectCommands.projectList(false);
 			System.out.println("SHould have 1 entry");
 			System.out.println(table.render(100));
-			verifyTableValue(table, 1, 0, "jpa");
-			verifyTableValue(table, 1, 1, "Learn JPA");
-			verifyTableValue(table, 1, 2, "https://github.com/rd-1-2022/rpt-spring-data-jpa");
-			verifyTableValue(table, 1, 3, ""); // This project is part of a catalog
-			verifyTableValue(table, 1, 4, "[data, jpa]");
+			TableAssertions.verifyTableValue(table, 1, 0, "jpa");
+			TableAssertions.verifyTableValue(table, 1, 1, "Learn JPA");
+			TableAssertions.verifyTableValue(table, 1, 2, "https://github.com/rd-1-2022/rpt-spring-data-jpa");
+			TableAssertions.verifyTableValue(table, 1, 3, ""); // This project is part of a catalog
+			TableAssertions.verifyTableValue(table, 1, 4, "[data, jpa]");
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 
 			// Remove project
@@ -82,11 +83,11 @@ public class ProjectCommandsTests {
 	public static void assertEmptyProjectListTable(Table table) {
 		assertThat(table.getModel().getColumnCount()).isEqualTo(5);
 		assertThat(table.getModel().getRowCount()).isEqualTo(1);
-		verifyTableValue(table, 0, 0, "Name");
-		verifyTableValue(table, 0, 1, "Description");
-		verifyTableValue(table, 0, 2, "URL");
-		verifyTableValue(table, 0, 3, "Catalog");
-		verifyTableValue(table, 0, 4, "Tags");
+		TableAssertions.verifyTableValue(table, 0, 0, "Name");
+		TableAssertions.verifyTableValue(table, 0, 1, "Description");
+		TableAssertions.verifyTableValue(table, 0, 2, "URL");
+		TableAssertions.verifyTableValue(table, 0, 3, "Catalog");
+		TableAssertions.verifyTableValue(table, 0, 4, "Tags");
 	}
 
 	@Configuration

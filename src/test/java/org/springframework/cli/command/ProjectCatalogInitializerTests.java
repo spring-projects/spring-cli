@@ -36,13 +36,13 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
 import org.springframework.cli.git.GitSourceRepositoryService;
 import org.springframework.cli.git.SourceRepositoryService;
+import org.springframework.cli.testutil.TableAssertions;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.table.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.cli.testutil.TableAssertions.verifyTableValue;
 
 public class ProjectCatalogInitializerTests {
 
@@ -55,10 +55,10 @@ public class ProjectCatalogInitializerTests {
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
 			Table table = (Table) projectCatalogCommands.catalogList(false);
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
-			verifyTableValue(table, 1, 0, "gs");
-			verifyTableValue(table, 1, 1, "Getting Started Catalog");
-			verifyTableValue(table, 1, 2, "https://github.com/rd-1-2022/spring-gs-catalog");
-			verifyTableValue(table, 1, 3, "[java-17, boot-3.1]");
+			TableAssertions.verifyTableValue(table, 1, 0, "gs");
+			TableAssertions.verifyTableValue(table, 1, 1, "Getting Started Catalog");
+			TableAssertions.verifyTableValue(table, 1, 2, "https://github.com/rd-1-2022/spring-gs-catalog");
+			TableAssertions.verifyTableValue(table, 1, 3, "[java-17, boot-3.1]");
 		});
 	}
 
@@ -77,10 +77,10 @@ public class ProjectCatalogInitializerTests {
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
 			Table table = (Table) projectCatalogCommands.catalogList(false);
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
-			verifyTableValue(table, 1, 0, "myname");
-			verifyTableValue(table, 1, 1, "mydescription");
-			verifyTableValue(table, 1, 2, "myurl");
-			verifyTableValue(table, 1, 3, "[tag1, tag2]");
+			TableAssertions.verifyTableValue(table, 1, 0, "myname");
+			TableAssertions.verifyTableValue(table, 1, 1, "mydescription");
+			TableAssertions.verifyTableValue(table, 1, 2, "myurl");
+			TableAssertions.verifyTableValue(table, 1, 3, "[tag1, tag2]");
 		});
 	}
 
@@ -129,10 +129,10 @@ public class ProjectCatalogInitializerTests {
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
 			Table table = (Table) projectCatalogCommands.catalogList(false);
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
-			verifyTableValue(table, 1, 0, "fooname");
-			verifyTableValue(table, 1, 1, "foodescription");
-			verifyTableValue(table, 1, 2, "foourl");
-			verifyTableValue(table, 1, 3, "[footag1, footag2]");
+			TableAssertions.verifyTableValue(table, 1, 0, "fooname");
+			TableAssertions.verifyTableValue(table, 1, 1, "foodescription");
+			TableAssertions.verifyTableValue(table, 1, 2, "foourl");
+			TableAssertions.verifyTableValue(table, 1, 3, "[footag1, footag2]");
 		});
 	}
 

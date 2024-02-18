@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.support.configfile;
 
 import java.nio.file.Path;
@@ -36,7 +37,7 @@ public class YamlConfigFileTests {
 		assertThat(bean.getValues()).containsEntry("key2", "value2");
 	}
 
-	private static class Bean1 {
+	public static class Bean1 {
 
 		private String value;
 

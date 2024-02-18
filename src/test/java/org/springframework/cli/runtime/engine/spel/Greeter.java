@@ -42,7 +42,9 @@ public class Greeter {
 
 	private int calls;
 
-	private String prefix, suffix;
+	private String prefix;
+
+	private String suffix;
 
 	public Greeter(String prefix, String suffix) {
 		this.prefix = prefix;

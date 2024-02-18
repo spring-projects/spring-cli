@@ -1,19 +1,3 @@
-package org.springframework.cli.runtime.engine.actions.handlers;
-
-import java.nio.file.Path;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
-import org.junit.jupiter.api.io.CleanupMode;
-import org.junit.jupiter.api.io.TempDir;
-
-import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.cli.support.CommandRunner;
-import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
-import org.springframework.cli.support.MockConfigurations.MockUserConfig;
-
-import static org.assertj.core.api.Assertions.assertThat;
 /*
  * Copyright 2021 the original author or authors.
  *
@@ -30,7 +14,22 @@ import static org.assertj.core.api.Assertions.assertThat;
  * limitations under the License.
  */
 
-class InjectMavenDependencyActionHandlerTest {
+package org.springframework.cli.runtime.engine.actions.handlers;
+
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.CleanupMode;
+import org.junit.jupiter.api.io.TempDir;
+
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.cli.support.CommandRunner;
+import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
+import org.springframework.cli.support.MockConfigurations.MockUserConfig;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class InjectMavenDependencyActionHandlerTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 		.withUserConfiguration(MockBaseConfig.class);

@@ -16,16 +16,11 @@
 
 package org.springframework.cli.runtime.command;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class InjectTests extends AbstractCommandTests {
 

@@ -26,11 +26,10 @@ import uk.org.webcompere.systemstubs.jupiter.SystemStub;
 import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
 import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.testutil.TableAssertions;
 import org.springframework.shell.table.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.cli.config.SpringCliUserConfig.SPRING_CLI_CONFIG_DIR;
-import static org.springframework.cli.testutil.TableAssertions.verifyTableValue;
 
 @ExtendWith(SystemStubsExtension.class)
 public class ConfigCommandsTests {
@@ -41,23 +40,23 @@ public class ConfigCommandsTests {
 	@Test
 	void testConfigCommands(final @TempDir Path tempDir) {
 
-		environmentVariables.set(SPRING_CLI_CONFIG_DIR, tempDir.toAbsolutePath().toString());
+		environmentVariables.set(SpringCliUserConfig.SPRING_CLI_CONFIG_DIR, tempDir.toAbsolutePath().toString());
 		ConfigCommands configCommands = new ConfigCommands(new SpringCliUserConfig());
 
 		Table table = configCommands.configList();
 		// System.out.println(table.render(80));
 		assertThat(table.getModel().getColumnCount()).isEqualTo(3);
 		assertThat(table.getModel().getRowCount()).isEqualTo(1);
-		verifyTableValue(table, 0, 0, "Command");
-		verifyTableValue(table, 0, 1, "Sub Command");
-		verifyTableValue(table, 0, 2, "Option Name/Values");
+		TableAssertions.verifyTableValue(table, 0, 0, "Command");
+		TableAssertions.verifyTableValue(table, 0, 1, "Sub Command");
+		TableAssertions.verifyTableValue(table, 0, 2, "Option Name/Values");
 
 		configCommands.configSet("boot", "new", "package-name", "com.xkcd");
 		table = configCommands.configList();
 		// System.out.println(table.render(80));
-		verifyTableValue(table, 1, 0, "boot");
-		verifyTableValue(table, 1, 1, "new");
-		verifyTableValue(table, 1, 2, "['package-name' = 'com.xkcd']");
+		TableAssertions.verifyTableValue(table, 1, 0, "boot");
+		TableAssertions.verifyTableValue(table, 1, 1, "new");
+		TableAssertions.verifyTableValue(table, 1, 2, "['package-name' = 'com.xkcd']");
 		assertThat(table.getModel().getRowCount()).isEqualTo(2);
 
 		configCommands.configUnSet("boot", "new", "package-name");

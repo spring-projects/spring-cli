@@ -48,8 +48,8 @@ public abstract class TestResourceUtils {
 			return StreamUtils.copyToString(TestResourceUtils.qualifiedResource(clazz, resourceName).getInputStream(),
 					Charset.defaultCharset());
 		}
-		catch (IOException e) {
-			throw new RuntimeException(e);
+		catch (IOException ex) {
+			throw new RuntimeException(ex);
 		}
 	}
 

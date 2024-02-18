@@ -33,6 +33,7 @@ import org.springframework.cli.config.SpringCliProjectCatalogProperties;
 import org.springframework.cli.config.SpringCliUserConfig;
 import org.springframework.cli.git.GitSourceRepositoryService;
 import org.springframework.cli.git.SourceRepositoryService;
+import org.springframework.cli.testutil.TableAssertions;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +41,6 @@ import org.springframework.shell.table.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.springframework.cli.testutil.TableAssertions.verifyTableValue;
 
 public class ProjectCatalogCommandsTests {
 
@@ -65,10 +65,10 @@ public class ProjectCatalogCommandsTests {
 					"Spring Getting Started Projects", tags);
 			table = (Table) projectCatalogCommands.catalogList(false);
 			System.out.println(table.render(100));
-			verifyTableValue(table, 1, 0, "getting-started");
-			verifyTableValue(table, 1, 1, "Spring Getting Started Projects");
-			verifyTableValue(table, 1, 2, "https://github.com/rd-1-2022/spring-gs-catalog/");
-			verifyTableValue(table, 1, 3, "[spring, guide]");
+			TableAssertions.verifyTableValue(table, 1, 0, "getting-started");
+			TableAssertions.verifyTableValue(table, 1, 1, "Spring Getting Started Projects");
+			TableAssertions.verifyTableValue(table, 1, 2, "https://github.com/rd-1-2022/spring-gs-catalog/");
+			TableAssertions.verifyTableValue(table, 1, 3, "[spring, guide]");
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 
 			assertThatThrownBy(() -> {
@@ -89,10 +89,10 @@ public class ProjectCatalogCommandsTests {
 		System.out.println(table.render(100));
 		assertThat(table.getModel().getColumnCount()).isEqualTo(4);
 		assertThat(table.getModel().getRowCount()).isEqualTo(1);
-		verifyTableValue(table, 0, 0, "Name");
-		verifyTableValue(table, 0, 1, "Description");
-		verifyTableValue(table, 0, 2, "URL");
-		verifyTableValue(table, 0, 3, "Tags");
+		TableAssertions.verifyTableValue(table, 0, 0, "Name");
+		TableAssertions.verifyTableValue(table, 0, 1, "Description");
+		TableAssertions.verifyTableValue(table, 0, 2, "URL");
+		TableAssertions.verifyTableValue(table, 0, 3, "Tags");
 	}
 
 	@Configuration

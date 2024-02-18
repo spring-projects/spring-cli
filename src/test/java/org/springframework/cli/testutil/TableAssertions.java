@@ -20,7 +20,10 @@ import org.springframework.shell.table.Table;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TableAssertions {
+public final class TableAssertions {
+
+	private TableAssertions() {
+	}
 
 	public static void verifyTableValue(Table table, int row, int col, Object expected) {
 		assertThat(table.getModel().getValue(row, col))

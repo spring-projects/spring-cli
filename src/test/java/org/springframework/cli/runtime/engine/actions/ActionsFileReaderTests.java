@@ -20,12 +20,11 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import org.springframework.cli.SpringCliException;
 import org.springframework.cli.testutil.TestResourceUtils;
 import org.springframework.core.io.ClassPathResource;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ActionsFileReaderTests {
 
@@ -43,12 +42,9 @@ class ActionsFileReaderTests {
 		ClassPathResource classPathResource = TestResourceUtils.qualifiedResource(getClass(), "bad-vars.yaml");
 		ActionFileReader actionFileReader = new ActionFileReader();
 
-		Exception exception = assertThrows(SpringCliException.class, () -> {
-			ActionsFile actionsFile = actionFileReader.read(classPathResource);
-		});
-
-		assertThat(exception.getMessage()).contains(
-				"You may have forgot to define 'name' or 'label' as fields directly under the '-question:' field");
+		assertThatThrownBy(() -> {
+			actionFileReader.read(classPathResource);
+		}).hasMessageContaining("You may have forgot to define 'name' or 'label' as fields directly under the '-question:' field");
 	}
 
 	@Test

@@ -26,7 +26,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-public class IntegrationTestSupport {
+public final class IntegrationTestSupport {
+
+	private IntegrationTestSupport() {
+	}
 
 	private static final Logger logger = LoggerFactory.getLogger(IntegrationTestSupport.class);
 

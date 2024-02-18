@@ -16,6 +16,14 @@
 
 package org.springframework.cli.merger;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
@@ -29,15 +37,8 @@ import org.openrewrite.maven.AddManagedDependency;
 import org.openrewrite.maven.MavenParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cli.util.PomReader;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+import org.springframework.cli.util.PomReader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -17,7 +17,6 @@
 package org.springframework.cli.command;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,12 +26,11 @@ import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
-import org.springframework.cli.support.MockConfigurations.MockUserConfig;
 import org.springframework.cli.runtime.command.AbstractCommandTests;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
-import org.springframework.cli.support.CommandRunner;
 import org.springframework.cli.support.IntegrationTestSupport;
+import org.springframework.cli.support.MockConfigurations.MockBaseConfig;
+import org.springframework.cli.support.MockConfigurations.MockUserConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
