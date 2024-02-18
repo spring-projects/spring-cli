@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import org.openrewrite.Recipe;
@@ -29,20 +28,21 @@ import java.util.Map;
 
 public class InjectMavenDependencyActionHandler extends AbstractInjectMavenActionHandler {
 
-    public InjectMavenDependencyActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, TerminalMessage terminalMessage) {
-        super(templateEngine, model, cwd, terminalMessage);
-    }
+	public InjectMavenDependencyActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd,
+			TerminalMessage terminalMessage) {
+		super(templateEngine, model, cwd, terminalMessage);
+	}
 
-    public void execute(InjectMavenDependency injectMavenDependency) {
-        String text = getTextToUse(injectMavenDependency.getText(), "Inject Maven Dependency");
-        MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
-        String[] mavenDependencies = mavenDependencyReader.parseMavenSection(text);
-        for (String mavenDependency : mavenDependencies) {
-            AddDependencyRecipeFactory recipeFactory = new AddDependencyRecipeFactory();
-            Recipe addDependency = recipeFactory.create(mavenDependency);
-            Path pomPath = getPomPath();
-            runRecipe(pomPath, addDependency);
-        }
-    }
+	public void execute(InjectMavenDependency injectMavenDependency) {
+		String text = getTextToUse(injectMavenDependency.getText(), "Inject Maven Dependency");
+		MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
+		String[] mavenDependencies = mavenDependencyReader.parseMavenSection(text);
+		for (String mavenDependency : mavenDependencies) {
+			AddDependencyRecipeFactory recipeFactory = new AddDependencyRecipeFactory();
+			Recipe addDependency = recipeFactory.create(mavenDependency);
+			Path pomPath = getPomPath();
+			runRecipe(pomPath, addDependency);
+		}
+	}
 
 }

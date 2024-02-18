@@ -42,19 +42,15 @@ class DynamicMethodCommandResolverTests {
 		// Create first command/subcommand
 		Command k8sSimple = new Command("k8s-simple", "command description", null);
 		Command k8sSimpleNew = new Command("new", "subcommand description", null);
-		CommandOption option1 = new CommandOption.Builder()
-				.withName("with-gusto")
-				.withDataType("boolean")
-				.withDescription("what a nice simple option")
-				.withDefaultValue("true")
-				.withRequired(true)
-				.build();
+		CommandOption option1 = new CommandOption.Builder().withName("with-gusto")
+			.withDataType("boolean")
+			.withDescription("what a nice simple option")
+			.withDefaultValue("true")
+			.withRequired(true)
+			.build();
 		k8sSimpleNew.getOptions().add(option1);
 
-		CommandOption option2 = new CommandOption.Builder()
-				.withName("with-greeting")
-				.withDataType("string")
-				.build();
+		CommandOption option2 = new CommandOption.Builder().withName("with-greeting").withDataType("string").build();
 		k8sSimpleNew.getOptions().add(option2);
 
 		// Create second command/subcommand
@@ -81,26 +77,24 @@ class DynamicMethodCommandResolverTests {
 		List<CommandRegistration> resolved = spy.resolve();
 
 		assertThat(resolved).hasSize(2);
-		assertThat(resolved).satisfiesExactly(
-			registration -> {
-				assertThat(registration.getCommand()).isEqualTo("k8s-simple new");
-				assertThat(registration.getDescription()).isEqualTo("subcommand description");
-				assertThat(registration.getOptions()).hasSize(2);
-				assertThat(registration.getOptions().get(0)).satisfies(option -> {
-					assertThat(option.getLongNames()).contains("with-gusto");
-					assertThat(option.getType().getType()).isEqualTo(Boolean.class);
-					assertThat(option.getDescription()).isEqualTo("what a nice simple option");
-					assertThat(option.getDefaultValue()).isEqualTo("true");
-					assertThat(option.isRequired()).isTrue();
-				});
-				assertThat(registration.getOptions().get(1)).satisfies(option -> {
-					assertThat(option.getLongNames()).contains("with-greeting");
-					assertThat(option.getType().getType()).isEqualTo(String.class);
-				});
-			},
-			registration -> {
-				assertThat(registration.getCommand()).isEqualTo("k8s-simple new-services");
-			}
-		);
+		assertThat(resolved).satisfiesExactly(registration -> {
+			assertThat(registration.getCommand()).isEqualTo("k8s-simple new");
+			assertThat(registration.getDescription()).isEqualTo("subcommand description");
+			assertThat(registration.getOptions()).hasSize(2);
+			assertThat(registration.getOptions().get(0)).satisfies(option -> {
+				assertThat(option.getLongNames()).contains("with-gusto");
+				assertThat(option.getType().getType()).isEqualTo(Boolean.class);
+				assertThat(option.getDescription()).isEqualTo("what a nice simple option");
+				assertThat(option.getDefaultValue()).isEqualTo("true");
+				assertThat(option.isRequired()).isTrue();
+			});
+			assertThat(registration.getOptions().get(1)).satisfies(option -> {
+				assertThat(option.getLongNames()).contains("with-greeting");
+				assertThat(option.getType().getType()).isEqualTo(String.class);
+			});
+		}, registration -> {
+			assertThat(registration.getCommand()).isEqualTo("k8s-simple new-services");
+		});
 	}
+
 }

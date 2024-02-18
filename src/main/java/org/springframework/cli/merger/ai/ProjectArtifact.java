@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger.ai;
 
 import java.util.Objects;
@@ -40,8 +39,10 @@ public class ProjectArtifact {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 		ProjectArtifact that = (ProjectArtifact) o;
 		return artifactType == that.artifactType && Objects.equals(text, that.text);
 	}
@@ -50,4 +51,5 @@ public class ProjectArtifact {
 	public int hashCode() {
 		return Objects.hash(artifactType, text);
 	}
+
 }

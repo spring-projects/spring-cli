@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.command;
 
 import java.io.File;
@@ -74,8 +73,7 @@ import org.springframework.shell.command.CommandParser.CommandParserResult;
 import org.springframework.util.StringUtils;
 
 /**
- * Object that is registered and executed for all dynamic commands discovered
- * at runtime.
+ * Object that is registered and executed for all dynamic commands discovered at runtime.
  */
 public class DynamicCommand {
 
@@ -93,10 +91,8 @@ public class DynamicCommand {
 
 	private final Optional<Terminal> terminalOptional;
 
-	public DynamicCommand(String commandName, String subCommandName,
-			Iterable<ModelPopulator> modelPopulators,
-			TerminalMessage terminalMessage,
-			Optional<Terminal> terminalOptional) {
+	public DynamicCommand(String commandName, String subCommandName, Iterable<ModelPopulator> modelPopulators,
+			TerminalMessage terminalMessage, Optional<Terminal> terminalOptional) {
 		this.commandName = commandName;
 		this.subCommandName = subCommandName;
 		this.modelPopulators = modelPopulators;
@@ -106,7 +102,7 @@ public class DynamicCommand {
 	}
 
 	/**
-	 * The main method called by spring-shell.  It is *not* an unused method, see
+	 * The main method called by spring-shell. It is *not* an unused method, see
 	 * DynamicMethodCommandResolver for usage.
 	 * @param commandContext the command context for the dynamic command.
 	 */
@@ -116,6 +112,7 @@ public class DynamicCommand {
 		addRoleVariables(model, commandContext);
 		runCommand(IoUtils.getWorkingDirectory(), ".spring", "commands", model);
 	}
+
 	private void addMatchedOptions(Map<String, Object> model, CommandContext commandContext) {
 		List<CommandParserResult> commandParserResults = commandContext.getParserResults().results();
 		for (CommandParserResult commandParserResult : commandParserResults) {
@@ -127,13 +124,13 @@ public class DynamicCommand {
 	}
 
 	/**
-	 * Adds to the model, values from the vars-{role}.yml file.
-	 * If any command line argument values were not explicitly passed in but are present
-	 * in the vars-{role}.yml file, the key-value pair will be present in the model available to actions.
-	 * If the command line argument was explicitly passed in and also present in the
-	 * vars-{role}.yml file, the key-value pair that was explicitly passed in is used and not
-	 * the key-value pair from the vars-{role}.yml file.
-	 * @param model  The model available to actions
+	 * Adds to the model, values from the vars-{role}.yml file. If any command line
+	 * argument values were not explicitly passed in but are present in the
+	 * vars-{role}.yml file, the key-value pair will be present in the model available to
+	 * actions. If the command line argument was explicitly passed in and also present in
+	 * the vars-{role}.yml file, the key-value pair that was explicitly passed in is used
+	 * and not the key-value pair from the vars-{role}.yml file.
+	 * @param model The model available to actions
 	 * @param commandContext The context of what CLI arguments were passed in.
 	 */
 	private void addRoleVariables(Map<String, Object> model, CommandContext commandContext) {
@@ -149,12 +146,16 @@ public class DynamicCommand {
 				String roleKey = roleMapEntry.getKey();
 				Object roleValue = roleMapEntry.getValue();
 				boolean usedDefaultValue = usedDefaultValue(roleKey, commandContext);
-				// Do not add if the option name is already there due to passing from the command line options
+				// Do not add if the option name is already there due to passing from the
+				// command line options
 				if (usedDefaultValue) {
-					// Override the default roleValue with the roleValue from the Role Variable.
+					// Override the default roleValue with the roleValue from the Role
+					// Variable.
 					model.put(roleKey, roleValue);
 					String message = StringUtils.hasText(role) ? " role " + role : "the default role ";
-					this.terminalMessage.print("Using Role variable instead of default command line option for roleKey = " + roleKey + " , roleValue = " + roleValue + " from " + message);
+					this.terminalMessage
+						.print("Using Role variable instead of default command line option for roleKey = " + roleKey
+								+ " , roleValue = " + roleValue + " from " + message);
 				}
 			}
 			// Insert map variables that are independent of the command line option names
@@ -163,9 +164,11 @@ public class DynamicCommand {
 				Object roleValue = roleMapEntry.getValue();
 				model.putIfAbsent(roleKey, roleValue);
 			}
-		} else {
+		}
+		else {
 			if (StringUtils.hasText(role)) {
-				this.terminalMessage.print("File for role '" + role + "' does not exist.  Create role using 'role add'");
+				this.terminalMessage
+					.print("File for role '" + role + "' does not exist.  Create role using 'role add'");
 			}
 		}
 
@@ -173,34 +176,40 @@ public class DynamicCommand {
 
 	private boolean usedDefaultValue(String variableName, CommandContext commandContext) {
 		boolean usedDefaultValue = false;
-		// Look for matching option of the provided variable name and determine if a default value was used.
+		// Look for matching option of the provided variable name and determine if a
+		// default value was used.
 		List<CommandParserResult> commandParserResults = commandContext.getParserResults().results();
 		for (CommandParserResult commandParserResult : commandParserResults) {
 			String optionName = NamingUtils.toKebab(commandParserResult.option().getLongNames()[0]);
 			if (variableName.equals(optionName)) {
 				Object defaultOptionValue = commandParserResult.option().getDefaultValue();
 				Object optionValue = commandParserResult.value();
-				if (defaultOptionValue != null && optionValue != null && defaultOptionValue.equals(optionValue) ) {
-						usedDefaultValue = true;
+				if (defaultOptionValue != null && optionValue != null && defaultOptionValue.equals(optionValue)) {
+					usedDefaultValue = true;
 				}
 			}
 		}
 		return usedDefaultValue;
 	}
 
-	public void runCommand(Path workingDirectory, String springDir, String commandsDir,
-			Map<String, Object> model)  {
+	public void runCommand(Path workingDirectory, String springDir, String commandsDir, Map<String, Object> model) {
 		Path dynamicSubCommandPath;
 		if (StringUtils.hasText(springDir) && StringUtils.hasText(commandsDir)) {
 			dynamicSubCommandPath = Paths.get(workingDirectory.toString(), springDir, commandsDir)
-					.resolve(this.commandName).resolve(this.subCommandName).toAbsolutePath();
-		} else {
+				.resolve(this.commandName)
+				.resolve(this.subCommandName)
+				.toAbsolutePath();
+		}
+		else {
 			// Used in testing w/o .spring/commands subdirectories
 			dynamicSubCommandPath = Paths.get(workingDirectory.toString())
-					.resolve(this.commandName).resolve(this.subCommandName).toAbsolutePath();
+				.resolve(this.commandName)
+				.resolve(this.subCommandName)
+				.toAbsolutePath();
 		}
 
-		// Enrich the model with detected features of the project, e.g. maven artifact name
+		// Enrich the model with detected features of the project, e.g. maven artifact
+		// name
 		if (this.modelPopulators != null) {
 			for (ModelPopulator modelPopulator : modelPopulators) {
 				modelPopulator.contributeToModel(workingDirectory, model);
@@ -209,12 +218,14 @@ public class DynamicCommand {
 
 		final Map<Path, ActionsFile> commandActionFiles = findCommandActionFiles(dynamicSubCommandPath);
 		if (commandActionFiles.size() == 0) {
-			throw new SpringCliException("No command action files found to process in directory " + dynamicSubCommandPath.toAbsolutePath());
+			throw new SpringCliException(
+					"No command action files found to process in directory " + dynamicSubCommandPath.toAbsolutePath());
 		}
 
 		try {
 			processCommandActionFiles(commandActionFiles, workingDirectory, dynamicSubCommandPath, model);
-		} catch (SpringCliException e) {
+		}
+		catch (SpringCliException e) {
 			AttributedStringBuilder sb = new AttributedStringBuilder();
 			sb.style(sb.style().foreground(AttributedStyle.RED));
 			sb.append(e.getMessage());
@@ -223,7 +234,8 @@ public class DynamicCommand {
 
 	}
 
-	private void processCommandActionFiles(Map<Path, ActionsFile> commandActionFiles, Path cwd, Path dynamicSubCommandPath, Map<String, Object> model) {
+	private void processCommandActionFiles(Map<Path, ActionsFile> commandActionFiles, Path cwd,
+			Path dynamicSubCommandPath, Map<String, Object> model) {
 
 		for (Entry<Path, ActionsFile> kv : commandActionFiles.entrySet()) {
 			Path path = kv.getKey();
@@ -246,7 +258,8 @@ public class DynamicCommand {
 				if (StringUtils.hasText(ifExpression)) {
 					// Prepare to execute expression evaluation
 					String ifExpressionToUse = this.templateEngine.process(ifExpression, model);
-					ExecActionHandler execActionHandler = new ExecActionHandler(templateEngine, model, dynamicSubCommandPath, this.terminalMessage);
+					ExecActionHandler execActionHandler = new ExecActionHandler(templateEngine, model,
+							dynamicSubCommandPath, this.terminalMessage);
 					model.put("functions", new SpelFunctions(execActionHandler, cwd));
 
 					SpELCondition condition = new SpELCondition(ifExpressionToUse);
@@ -261,59 +274,66 @@ public class DynamicCommand {
 
 				Generate generate = action.getGenerate();
 				if (generate != null) {
-					GenerateActionHandler generateActionHandler = new GenerateActionHandler(templateEngine, model, cwd, dynamicSubCommandPath, terminalMessage);
+					GenerateActionHandler generateActionHandler = new GenerateActionHandler(templateEngine, model, cwd,
+							dynamicSubCommandPath, terminalMessage);
 					generateActionHandler.execute(generate);
 				}
 
 				Inject inject = action.getInject();
 				if (inject != null) {
-					InjectActionHandler injectActionHandler = new InjectActionHandler(templateEngine, model, cwd, terminalMessage);
+					InjectActionHandler injectActionHandler = new InjectActionHandler(templateEngine, model, cwd,
+							terminalMessage);
 					injectActionHandler.execute(inject);
 				}
 
 				InjectMavenDependency injectMavenDependency = action.getInjectMavenDependency();
 				if (injectMavenDependency != null) {
-					InjectMavenDependencyActionHandler injectMavenDependencyActionHandler = new InjectMavenDependencyActionHandler(templateEngine, model, cwd, terminalMessage);
+					InjectMavenDependencyActionHandler injectMavenDependencyActionHandler = new InjectMavenDependencyActionHandler(
+							templateEngine, model, cwd, terminalMessage);
 					injectMavenDependencyActionHandler.execute(injectMavenDependency);
 				}
 
 				InjectMavenBuildPlugin injectMavenBuildPlugin = action.getInjectMavenBuildPlugin();
 				if (injectMavenBuildPlugin != null) {
-					InjectMavenBuildPluginActionHandler injectMavenBuildPluginActionHandler = new InjectMavenBuildPluginActionHandler(templateEngine, model, cwd, terminalMessage);
+					InjectMavenBuildPluginActionHandler injectMavenBuildPluginActionHandler = new InjectMavenBuildPluginActionHandler(
+							templateEngine, model, cwd, terminalMessage);
 					injectMavenBuildPluginActionHandler.execute(injectMavenBuildPlugin);
 				}
 
-				InjectMavenDependencyManagement injectMavenDependencyManagement = action.getInjectMavenDependencyManagement();
+				InjectMavenDependencyManagement injectMavenDependencyManagement = action
+					.getInjectMavenDependencyManagement();
 				if (injectMavenDependencyManagement != null) {
-					InjectMavenDependencyManagementActionHandler injectMavenDependencyDependnecyActionHandler
-							= new InjectMavenDependencyManagementActionHandler(templateEngine, model, cwd, terminalMessage);
+					InjectMavenDependencyManagementActionHandler injectMavenDependencyDependnecyActionHandler = new InjectMavenDependencyManagementActionHandler(
+							templateEngine, model, cwd, terminalMessage);
 					injectMavenDependencyDependnecyActionHandler.execute(injectMavenDependencyManagement);
 				}
 
 				InjectMavenRepository injectMavenRepository = action.getInjectMavenRepository();
 				if (injectMavenRepository != null) {
-					InjectMavenRepositoryActionHandler injectMavenRepositoryActionHandler =
-							new InjectMavenRepositoryActionHandler(templateEngine, model, cwd, terminalMessage);
+					InjectMavenRepositoryActionHandler injectMavenRepositoryActionHandler = new InjectMavenRepositoryActionHandler(
+							templateEngine, model, cwd, terminalMessage);
 					injectMavenRepositoryActionHandler.execute(injectMavenRepository);
 				}
 
 				Exec exec = action.getExec();
 				if (exec != null) {
-					ExecActionHandler execActionHandler = new ExecActionHandler(templateEngine, model, dynamicSubCommandPath, terminalMessage);
+					ExecActionHandler execActionHandler = new ExecActionHandler(templateEngine, model,
+							dynamicSubCommandPath, terminalMessage);
 					Map<String, Object> outputs = new HashMap<>();
 					execActionHandler.executeShellCommand(exec, outputs);
 				}
 
 				Vars vars = action.getVars();
 				if (vars != null) {
-					VarsActionHandler varsActionHandler = new VarsActionHandler(templateEngine, model, cwd, dynamicSubCommandPath, terminalMessage, terminalOptional.get());
+					VarsActionHandler varsActionHandler = new VarsActionHandler(templateEngine, model, cwd,
+							dynamicSubCommandPath, terminalMessage, terminalOptional.get());
 					varsActionHandler.execute(vars);
 				}
 			}
 		}
 
-
 	}
+
 	private Map<Path, ActionsFile> findCommandActionFiles(Path dynamicSubCommandPath) {
 		// Do a first pass to find only text files
 		final ActionFileVisitor visitor = new ActionFileVisitor();
@@ -326,10 +346,11 @@ public class DynamicCommand {
 
 		// Then actually parse, retaining only those paths that yielded a result
 		ActionFileReader actionFileReader = new ActionFileReader();
-		return visitor.getMatches().stream() //
-				.map(p -> new SimpleImmutableEntry<>(p, actionFileReader.read(p))) //
-				.filter(kv -> kv.getValue().isPresent()) //
-				.collect(toSortedMap(Entry::getKey, (e) -> e.getValue().get()));
+		return visitor.getMatches()
+			.stream() //
+			.map(p -> new SimpleImmutableEntry<>(p, actionFileReader.read(p))) //
+			.filter(kv -> kv.getValue().isPresent()) //
+			.collect(toSortedMap(Entry::getKey, (e) -> e.getValue().get()));
 	}
 
 	private static <T, K, U> Collector<T, ?, Map<K, U>> toSortedMap(Function<? super T, ? extends K> keyMapper,

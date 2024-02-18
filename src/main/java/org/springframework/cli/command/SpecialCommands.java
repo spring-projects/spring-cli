@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.command;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,8 @@ public class SpecialCommands {
 		this.terminalMessage = terminalMessage;
 	}
 
-	@Command(command = "!", description = "run OS-specific shell command.", interactionMode = InteractionMode.INTERACTIVE)
+	@Command(command = "!", description = "run OS-specific shell command.",
+			interactionMode = InteractionMode.INTERACTIVE)
 	public void dotExec(@Option(description = "command") String command) {
 		// Hack to try and avoid having to use quotes in the CLI to surround the command
 		String[] stringArray = StringUtils.commaDelimitedListToStringArray(command);
@@ -45,9 +45,10 @@ public class SpecialCommands {
 		processBuilder.inheritIO();
 		try {
 			processBuilder.start().waitFor();
-		} catch (Exception ex) {
-			throw new SpringCliException("Exception running OS command: " + command +
-					" Error message: " + ex.getMessage(), ex);
+		}
+		catch (Exception ex) {
+			throw new SpringCliException(
+					"Exception running OS command: " + command + " Error message: " + ex.getMessage(), ex);
 		}
 		this.terminalMessage.print("");
 	}
@@ -55,9 +56,11 @@ public class SpecialCommands {
 	private String[] getCommands(String command) {
 		String os = System.getProperty("os.name");
 		if (os.toLowerCase().contains("win")) {
-			return new String[]{"cmd", "/c", command};
-		} else {
-			return new String[]{"bash", "-c", command};
+			return new String[] { "cmd", "/c", command };
+		}
+		else {
+			return new String[] { "bash", "-c", command };
 		}
 	}
+
 }

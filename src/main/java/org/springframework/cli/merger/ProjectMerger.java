@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger;
 
 import org.apache.commons.io.FilenameUtils;
@@ -80,13 +79,13 @@ public class ProjectMerger {
 
 	/**
 	 * Create a new instance
-	 *
 	 * @param toMergeProjectPath The Path where the new project to merge is located
 	 * @param currentProjectPath The Path where the current project is located
 	 * @param projectName used to change the name of README files
 	 * @param terminalMessage terminal to write user messages to
 	 */
-	public ProjectMerger(Path toMergeProjectPath, Path currentProjectPath, String projectName, TerminalMessage terminalMessage) {
+	public ProjectMerger(Path toMergeProjectPath, Path currentProjectPath, String projectName,
+			TerminalMessage terminalMessage) {
 		this.toMergeProjectPath = toMergeProjectPath;
 		this.currentProjectPath = currentProjectPath;
 		this.projectName = projectName;
@@ -101,13 +100,16 @@ public class ProjectMerger {
 			try {
 				copyToMergeCodebase();
 				return;
-			} catch (IOException e) {
-				throw new SpringCliException("Error copying files from to be merged project.  Error Message = " +e.getMessage(), e);
+			}
+			catch (IOException e) {
+				throw new SpringCliException(
+						"Error copying files from to be merged project.  Error Message = " + e.getMessage(), e);
 			}
 		}
 		Path currentProjectPomPath = this.currentProjectPath.resolve("pom.xml");
 		if (Files.notExists(currentProjectPomPath)) {
-			throw new SpringCliException("Could not find pom.xml in " + this.currentProjectPath + ".  Make sure you are running the command in the project's root directory or specify the --path option.");
+			throw new SpringCliException("Could not find pom.xml in " + this.currentProjectPath
+					+ ".  Make sure you are running the command in the project's root directory or specify the --path option.");
 		}
 		Model currentModel = pomReader.readPom(currentProjectPomPath.toFile());
 		Model toMergeModel = pomReader.readPom(toMergeProjectPomPath.toFile());
@@ -132,17 +134,17 @@ public class ProjectMerger {
 			copyToMergeCodebase();
 
 			mergeSpringBootApplicationClassAnnotations();
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			throw new SpringCliException("Error merging projects.", ex);
 		}
 	}
 
-
-
 	private void mergeSpringBootApplicationClassAnnotations() throws IOException {
 
 		logger.debug("Looking for @SpringBootApplication in directory " + this.toMergeProjectPath.toFile());
-		Optional<File> springBootApplicationFile = RootPackageFinder.findSpringBootApplicationFile(this.toMergeProjectPath.toFile());
+		Optional<File> springBootApplicationFile = RootPackageFinder
+			.findSpringBootApplicationFile(this.toMergeProjectPath.toFile());
 
 		if (springBootApplicationFile.isPresent()) {
 			CollectAnnotationAndImportInformationRecipe collectAnnotationAndImportInformationRecipe = new CollectAnnotationAndImportInformationRecipe();
@@ -154,11 +156,11 @@ public class ProjectMerger {
 			paths.add(springBootApplicationFile.get().toPath());
 			JavaParser javaParser = new Java17Parser.Builder().build();
 			List<SourceFile> compilationUnits = javaParser.parse(paths, null, executionContext).toList();
-			collectAnnotationAndImportInformationRecipe.run(new InMemoryLargeSourceSet(compilationUnits), executionContext);
+			collectAnnotationAndImportInformationRecipe.run(new InMemoryLargeSourceSet(compilationUnits),
+					executionContext);
 
 			List<Annotation> declaredAnnotations = collectAnnotationAndImportInformationRecipe.getDeclaredAnnotations();
 			List<String> declaredImports = collectAnnotationAndImportInformationRecipe.getDeclaredImports();
-
 
 			Map<String, String> annotationImportMap = new HashMap<>();
 			for (Annotation declaredAnnotation : declaredAnnotations) {
@@ -166,7 +168,7 @@ public class ProjectMerger {
 					continue;
 				}
 				for (String declaredImport : declaredImports) {
-					//get the import statement that matches the annotation
+					// get the import statement that matches the annotation
 					if (declaredImport.contains(declaredAnnotation.getSimpleName())) {
 						annotationImportMap.put(declaredAnnotation.toString(), declaredImport);
 					}
@@ -174,7 +176,8 @@ public class ProjectMerger {
 			}
 
 			logger.debug("Looking for @SpringBootApplication in directory " + this.currentProjectPath.toFile());
-			Optional<File> currentSpringBootApplicationFile = RootPackageFinder.findSpringBootApplicationFile(this.currentProjectPath.toFile());
+			Optional<File> currentSpringBootApplicationFile = RootPackageFinder
+				.findSpringBootApplicationFile(this.currentProjectPath.toFile());
 			if (currentSpringBootApplicationFile.isPresent()) {
 				executionContext = new InMemoryExecutionContext(onError);
 				paths = new ArrayList<>();
@@ -186,7 +189,10 @@ public class ProjectMerger {
 					String importStatement = annotationImportEntry.getValue();
 					AddImport addImport = new AddImport(importStatement, null, false);
 					AddImportRecipe addImportRecipe = new AddImportRecipe(addImport);
-					List<Result> results = addImportRecipe.run(new InMemoryLargeSourceSet(compilationUnits), executionContext).getChangeset().getAllResults();
+					List<Result> results = addImportRecipe
+						.run(new InMemoryLargeSourceSet(compilationUnits), executionContext)
+						.getChangeset()
+						.getAllResults();
 					updateSpringApplicationClass(currentSpringBootApplicationFile.get().toPath(), results);
 
 					AttributedStringBuilder sb = new AttributedStringBuilder();
@@ -194,15 +200,15 @@ public class ProjectMerger {
 					sb.append("Merging Main Spring Boot Application class annotation: " + annotation);
 					terminalMessage.print(sb.toAttributedString());
 
-					injectAnnotation(currentSpringBootApplicationFile.get().toPath() ,annotation);
-					//AddAnnotationToClassRecipe addAnnotationToClassRecipe = new AddAnnotationToClassRecipe(annotation);
-					//results = addAnnotationToClassRecipe.run(compilationUnits);
-					//updateSpringApplicationClass(currentSpringBootApplicationFile.get().toPath(), results);
+					injectAnnotation(currentSpringBootApplicationFile.get().toPath(), annotation);
+					// AddAnnotationToClassRecipe addAnnotationToClassRecipe = new
+					// AddAnnotationToClassRecipe(annotation);
+					// results = addAnnotationToClassRecipe.run(compilationUnits);
+					// updateSpringApplicationClass(currentSpringBootApplicationFile.get().toPath(),
+					// results);
 				}
 			}
 		}
-
-
 
 	}
 
@@ -213,10 +219,12 @@ public class ProjectMerger {
 			if (injectIndex != -1) {
 				lines.add(injectIndex + 1, annotation);
 				Files.write(pathToFile, lines, Charset.defaultCharset());
-			} else {
+			}
+			else {
 				logger.debug("Did not add annotation" + annotation + " to file " + pathToFile);
 			}
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			throw new SpringCliException("Could not add annotation " + annotation + " to file " + pathToFile, ex);
 		}
 	}
@@ -248,26 +256,28 @@ public class ProjectMerger {
 		DirectoryScanner ds = new DirectoryScanner();
 		ds.setBasedir(fromDir);
 		// TODO /** prob doesn't work on windows
-		ds.setExcludes(new String[]{ ".mvn/**", ".idea"});
+		ds.setExcludes(new String[] { ".mvn/**", ".idea" });
 		ds.scan();
 		String[] fileNames = ds.getIncludedFiles();
-		Optional<File> springBootApplicationFile = RootPackageFinder.findSpringBootApplicationFile(this.toMergeProjectPath.toFile());
+		Optional<File> springBootApplicationFile = RootPackageFinder
+			.findSpringBootApplicationFile(this.toMergeProjectPath.toFile());
 		for (String fileName : fileNames) {
 			File srcFile = new File(fromDir, fileName);
 			File destFile = new File(toDir, fileName);
-			if (srcFile.getName().equals("pom.xml")  || srcFile.getName().equals("LICENSE")) {
+			if (srcFile.getName().equals("pom.xml") || srcFile.getName().equals("LICENSE")) {
 				continue;
 			}
-			// hack to avoid bringing over any gradle files for now as this POC is maven only.
+			// hack to avoid bringing over any gradle files for now as this POC is maven
+			// only.
 			if (srcFile.getName().contains("gradle")) {
 				continue;
 			}
-			// Change readme file name have the project name that is being merged into the code base
+			// Change readme file name have the project name that is being merged into the
+			// code base
 			if (FilenameUtils.getBaseName(srcFile.getName()).equalsIgnoreCase("README")) {
 				Path newFile = Paths.get(FilenameUtils.getPath(destFile.getName()),
-						FilenameUtils.getBaseName(destFile.getName())
-								+ "-" + projectName +
-								"." + FilenameUtils.getExtension(destFile.getName()));
+						FilenameUtils.getBaseName(destFile.getName()) + "-" + projectName + "."
+								+ FilenameUtils.getExtension(destFile.getName()));
 				destFile = new File(toDir, newFile.toFile().getName());
 			}
 			if (springBootApplicationFile.isPresent()) {
@@ -279,12 +289,15 @@ public class ProjectMerger {
 				Optional<String> extension = getExtension(srcFile.getName());
 				if (extension.isPresent() && extension.get().equals("properties")) {
 					mergeAndWriteProperties(srcFile, destFile);
-				} else if (extension.isPresent() && (extension.get().equals("yaml") || extension.get().equals("yml")) ) {
+				}
+				else if (extension.isPresent() && (extension.get().equals("yaml") || extension.get().equals("yml"))) {
 					mergeAndWriteYaml(srcFile, destFile);
-				} else {
+				}
+				else {
 					logger.debug("WARNING: Not copying file as it already exists: " + srcFile);
 				}
-			} else {
+			}
+			else {
 				logger.debug("Copying srcFile = " + srcFile + " to destFile = " + destFile);
 				FileUtils.getFileUtils().copyFile(srcFile, destFile);
 			}
@@ -299,7 +312,6 @@ public class ProjectMerger {
 		sb.append(System.lineSeparator());
 		sb.append("Merging Spring Boot application.yaml file...");
 		terminalMessage.print(sb.toAttributedString());
-
 
 		YamlMapFactoryBean factory = new YamlMapFactoryBean();
 		factory.setResolutionMethod(ResolutionMethod.OVERRIDE_AND_IGNORE);
@@ -318,13 +330,13 @@ public class ProjectMerger {
 
 	private void mergeAndWriteProperties(File srcFile, File destFile) throws IOException {
 
-
 		Properties srcProperties = new Properties();
 		Properties destProperties = new Properties();
 		srcProperties.load(new FileInputStream(srcFile));
 		destProperties.load(new FileInputStream(destFile));
 		Properties mergedProperties = mergeProperties(srcProperties, destProperties);
-		// look into handling a merge of maven-wrapper.properties - should only merge using latest versions.
+		// look into handling a merge of maven-wrapper.properties - should only merge
+		// using latest versions.
 		if (!mergedProperties.equals(srcProperties)) {
 
 			AttributedStringBuilder sb = new AttributedStringBuilder();
@@ -338,8 +350,8 @@ public class ProjectMerger {
 
 	public Optional<String> getExtension(String filename) {
 		return Optional.ofNullable(filename)
-				.filter(f -> f.contains("."))
-				.map(f -> f.substring(filename.lastIndexOf(".") + 1));
+			.filter(f -> f.contains("."))
+			.map(f -> f.substring(filename.lastIndexOf(".") + 1));
 	}
 
 	private void refactorToMergeCodebase() {
@@ -363,13 +375,18 @@ public class ProjectMerger {
 			sb.append("Refactoring code base that is to be merged to package name " + currentRootPackageName.get());
 			terminalMessage.print(sb.toAttributedString());
 			refactorPackage(currentRootPackageName.get(), toMergeRootPackageName.get(), this.toMergeProjectPath);
-			logger.debug("look in " + this.toMergeProjectPath + " to see if refactoring of 'to merge code base' was done correctly");
-		} else {
-			terminalMessage.print("WARNING: Could not find root package containing class with @SpringBootApplication in " + this.currentProjectPath.toFile());
+			logger.debug("look in " + this.toMergeProjectPath
+					+ " to see if refactoring of 'to merge code base' was done correctly");
+		}
+		else {
+			terminalMessage
+				.print("WARNING: Could not find root package containing class with @SpringBootApplication in "
+						+ this.currentProjectPath.toFile());
 		}
 	}
 
-	private void mergeMavenDependencies(Path currentProjectPomPath, Model currentModel, Model toMergeModel, List<Path> paths, MavenParser mavenParser) throws IOException {
+	private void mergeMavenDependencies(Path currentProjectPomPath, Model currentModel, Model toMergeModel,
+			List<Path> paths, MavenParser mavenParser) throws IOException {
 		logger.debug("mergeMavenDependencies: Merging Maven Dependencies...");
 		List<Dependency> toMergeModelDependencies = toMergeModel.getDependencies();
 		List<Dependency> currentDependencies = currentModel.getDependencies();
@@ -377,26 +394,42 @@ public class ProjectMerger {
 		for (Dependency candidateDependency : toMergeModelDependencies) {
 			if (candidateDependencyAlreadyPresent(candidateDependency, currentDependencies)) {
 				logger.debug("mergeMavenDependencies: Not merging dependency " + candidateDependency);
-			} else {
-				List<SourceFile> parsedPomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext()).toList();
+			}
+			else {
+				List<SourceFile> parsedPomFiles = mavenParser
+					.parse(paths, this.currentProjectPath, getExecutionContext())
+					.toList();
 				String scope = candidateDependency.getScope();
 				if (scope == null) {
 					scope = "compile";
 				}
 				String version = candidateDependency.getVersion() == null ? "latest" : candidateDependency.getVersion();
-				@Nullable String versionPattern = ".*";
-				@Nullable String type = null;
-				@Nullable Boolean optional = null;
-				@Nullable String classifier = null;
-				@Nullable Pattern familyRegex = null;
-				@Nullable Boolean acceptTransitive = false;
-				Recipe addDependency = getRecipeAddDependency(candidateDependency.getGroupId(), candidateDependency.getArtifactId(), version, scope, "org.springframework.boot.SpringApplication", versionPattern, type, classifier, optional, familyRegex, acceptTransitive);
+				@Nullable
+				String versionPattern = ".*";
+				@Nullable
+				String type = null;
+				@Nullable
+				Boolean optional = null;
+				@Nullable
+				String classifier = null;
+				@Nullable
+				Pattern familyRegex = null;
+				@Nullable
+				Boolean acceptTransitive = false;
+				Recipe addDependency = getRecipeAddDependency(candidateDependency.getGroupId(),
+						candidateDependency.getArtifactId(), version, scope,
+						"org.springframework.boot.SpringApplication", versionPattern, type, classifier, optional,
+						familyRegex, acceptTransitive);
 
-				List<Result> resultList = addDependency.run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext()).getChangeset().getAllResults();
+				List<Result> resultList = addDependency
+					.run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext())
+					.getChangeset()
+					.getAllResults();
 				if (!resultList.isEmpty()) {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
-					sb.append("Merging dependency " + candidateDependency.getGroupId() + ":" + candidateDependency.getArtifactId());
+					sb.append("Merging dependency " + candidateDependency.getGroupId() + ":"
+							+ candidateDependency.getArtifactId());
 					terminalMessage.print(sb.toAttributedString());
 				}
 				updatePomFile(currentProjectPomPath, resultList);
@@ -404,7 +437,8 @@ public class ProjectMerger {
 		}
 	}
 
-	private boolean candidateDependencyAlreadyPresent(Dependency candidateDependency, List<Dependency> currentDependencies) {
+	private boolean candidateDependencyAlreadyPresent(Dependency candidateDependency,
+			List<Dependency> currentDependencies) {
 		String candidateGroupId = candidateDependency.getGroupId();
 		String candidateArtifactId = candidateDependency.getArtifactId();
 		boolean candidateDependencyAlreadyPresent = false;
@@ -419,7 +453,8 @@ public class ProjectMerger {
 		return candidateDependencyAlreadyPresent;
 	}
 
-	private boolean candidateRepositoryAlreadyPresent(Repository candidateRepository, List<Repository> currentRepositories) {
+	private boolean candidateRepositoryAlreadyPresent(Repository candidateRepository,
+			List<Repository> currentRepositories) {
 		String candidateRepositoryId = candidateRepository.getId();
 		boolean candidateRepositoryIdAlreadyPresent = false;
 		for (Repository currentRepository : currentRepositories) {
@@ -432,19 +467,25 @@ public class ProjectMerger {
 		return candidateRepositoryIdAlreadyPresent;
 	}
 
-	private void mergeMavenDependencyManagement(Path currentProjectPomPath, Model modelToMerge, List<Path> paths, MavenParser mavenParser) throws IOException {
+	private void mergeMavenDependencyManagement(Path currentProjectPomPath, Model modelToMerge, List<Path> paths,
+			MavenParser mavenParser) throws IOException {
 		DependencyManagement dependencyManagement = modelToMerge.getDependencyManagement();
 		if (dependencyManagement != null) {
 			List<Dependency> dependencies = dependencyManagement.getDependencies();
 
 			for (Dependency dependency : dependencies) {
-				List<SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext()).toList();
+				List<SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext())
+					.toList();
 				Recipe addManagedDependency = new AddManagedDependencyRecipeFactory().create(dependency);
-				List<Result> resultList = addManagedDependency.run(new InMemoryLargeSourceSet(pomFiles), getExecutionContext()).getChangeset().getAllResults();
+				List<Result> resultList = addManagedDependency
+					.run(new InMemoryLargeSourceSet(pomFiles), getExecutionContext())
+					.getChangeset()
+					.getAllResults();
 				if (!resultList.isEmpty()) {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
-					sb.append("Merging dependency management section " + dependency.getGroupId() + ":" + dependency.getArtifactId());
+					sb.append("Merging dependency management section " + dependency.getGroupId() + ":"
+							+ dependency.getArtifactId());
 					terminalMessage.print(sb.toAttributedString());
 				}
 				updatePomFile(currentProjectPomPath, resultList);
@@ -461,10 +502,13 @@ public class ProjectMerger {
 		Set<String> keysToMerge = propertiesToMerge.stringPropertyNames();
 
 		for (String keyToMerge : keysToMerge) {
-			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge, propertiesToMerge.getProperty(keyToMerge), true, false);
+			ChangePropertyValue changePropertyValueRecipe = new ChangePropertyValue(keyToMerge,
+					propertiesToMerge.getProperty(keyToMerge), true, false);
 			// TODO - parse is expensive call, move out of loop?
-			List<SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext()).toList();
-			RecipeRun recipeRun = changePropertyValueRecipe.run(new InMemoryLargeSourceSet(pomFiles), getExecutionContext());
+			List<SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext())
+				.toList();
+			RecipeRun recipeRun = changePropertyValueRecipe.run(new InMemoryLargeSourceSet(pomFiles),
+					getExecutionContext());
 			List<Result> resultList = recipeRun.getChangeset().getAllResults();
 			if (!resultList.isEmpty()) {
 				AttributedStringBuilder sb = new AttributedStringBuilder();
@@ -477,21 +521,29 @@ public class ProjectMerger {
 		}
 	}
 
-	private void mergeMavenRepositories(Path currentProjectPomPath, Model currentModel, Model toMergeModel, List<Path> paths, MavenParser mavenParser) throws IOException {
+	private void mergeMavenRepositories(Path currentProjectPomPath, Model currentModel, Model toMergeModel,
+			List<Path> paths, MavenParser mavenParser) throws IOException {
 		logger.debug("mergeMavenRepositories: Merging Maven Repositories...");
 		List<Repository> toMergeRepositories = toMergeModel.getRepositories();
 		List<Repository> currentRepositories = currentModel.getRepositories();
 		for (Repository candidateRepository : toMergeRepositories) {
 			if (candidateRepositoryAlreadyPresent(candidateRepository, currentRepositories)) {
 				logger.debug("mergeMavenDependencies: Not merging repository " + candidateRepository);
-			} else {
-				AddRepository recipeAddRepository = getRecipeAddRepository(candidateRepository.getId(), candidateRepository.getUrl(), candidateRepository.getName(), false, false);
-				List<SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext()).toList();
-				List<Result> resultList = recipeAddRepository.run(new InMemoryLargeSourceSet(pomFiles), getExecutionContext()).getChangeset().getAllResults();
+			}
+			else {
+				AddRepository recipeAddRepository = getRecipeAddRepository(candidateRepository.getId(),
+						candidateRepository.getUrl(), candidateRepository.getName(), false, false);
+				List<SourceFile> pomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext())
+					.toList();
+				List<Result> resultList = recipeAddRepository
+					.run(new InMemoryLargeSourceSet(pomFiles), getExecutionContext())
+					.getChangeset()
+					.getAllResults();
 				if (!resultList.isEmpty()) {
 					AttributedStringBuilder sb = new AttributedStringBuilder();
 					sb.style(sb.style().foreground(AttributedStyle.WHITE));
-					sb.append("Merging repository section " + candidateRepository.getId() + ", " + candidateRepository.getUrl());
+					sb.append("Merging repository section " + candidateRepository.getId() + ", "
+							+ candidateRepository.getUrl());
 					terminalMessage.print(sb.toAttributedString());
 				}
 				updatePomFile(currentProjectPomPath, resultList);
@@ -499,7 +551,8 @@ public class ProjectMerger {
 		}
 	}
 
-	private void updateSpringApplicationClass(Path pathToCurrentSpringApplicationClass, List<Result> resultList) throws IOException {
+	private void updateSpringApplicationClass(Path pathToCurrentSpringApplicationClass, List<Result> resultList)
+			throws IOException {
 		if (resultList.isEmpty()) {
 			logger.debug("No update of SpringApplication class in " + pathToCurrentSpringApplicationClass);
 		}
@@ -523,7 +576,8 @@ public class ProjectMerger {
 		}
 		for (Result result : resultList) {
 			// write updated file.
-			try (BufferedWriter sourceFileWriter = Files.newBufferedWriter(currentProjectPomPath, StandardCharsets.UTF_8)) {
+			try (BufferedWriter sourceFileWriter = Files.newBufferedWriter(currentProjectPomPath,
+					StandardCharsets.UTF_8)) {
 				sourceFileWriter.write(result.getAfter().printAllTrimmed());
 			}
 		}
@@ -536,12 +590,15 @@ public class ProjectMerger {
 		return new InMemoryExecutionContext(onError);
 	}
 
-	public static AddManagedDependency getRecipeAddManagedDependency(String groupId, String artifactId, String version, String scope, String type, String classifier) {
+	public static AddManagedDependency getRecipeAddManagedDependency(String groupId, String artifactId, String version,
+			String scope, String type, String classifier) {
 		return new AddManagedDependency(groupId, artifactId, version, scope, type, classifier, null, null, null, true);
 	}
 
-	public static Recipe getRecipeAddDependency(String groupId, String artifactId, String version, String scope, String onlyIfUsing, @Nullable String versionPattern, @Nullable String type, @Nullable String classifier, @Nullable Boolean optional, @Nullable Pattern familyRegex, @Nullable Boolean acceptTransitive) {
-		return new Recipe(){
+	public static Recipe getRecipeAddDependency(String groupId, String artifactId, String version, String scope,
+			String onlyIfUsing, @Nullable String versionPattern, @Nullable String type, @Nullable String classifier,
+			@Nullable Boolean optional, @Nullable Pattern familyRegex, @Nullable Boolean acceptTransitive) {
+		return new Recipe() {
 			@Override
 			public String getDisplayName() {
 				return "Add dependency";
@@ -554,13 +611,16 @@ public class ProjectMerger {
 
 			@Override
 			public TreeVisitor<?, ExecutionContext> getVisitor() {
-				return new AddDependencyVisitor(groupId, artifactId, version, versionPattern, scope, false, type, classifier, optional, familyRegex);
+				return new AddDependencyVisitor(groupId, artifactId, version, versionPattern, scope, false, type,
+						classifier, optional, familyRegex);
 			}
 		};
 
 	}
 
-	public static AddRepository getRecipeAddRepository(String id, String url,  String name, boolean snapshotsEnabled, boolean releasesEnabled) {
-		return new AddRepository(id, url, name, null, snapshotsEnabled, null, null, releasesEnabled, null, null );
+	public static AddRepository getRecipeAddRepository(String id, String url, String name, boolean snapshotsEnabled,
+			boolean releasesEnabled) {
+		return new AddRepository(id, url, name, null, snapshotsEnabled, null, null, releasesEnabled, null, null);
 	}
+
 }

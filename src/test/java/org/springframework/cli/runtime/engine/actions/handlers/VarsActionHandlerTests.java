@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import java.nio.file.Path;
@@ -37,33 +36,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class VarsActionHandlerTests extends AbstractShellTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withUserConfiguration(MockBaseConfig.class);
+		.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
 	void testExpressionDefineVarWithHandlebars(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("vars")
-					.executeCommand("vars/data-handlebars")
-					.withArguments("name-to-use", "Mary") // TODO consider name collisions. ('name' or 'user-name') won't work
-					.withArguments("age", "20") //TODO change value to type Object
-					.withArguments("height-unit", "feet")
-					.withArguments("height", "6")
-					.withArguments("is-person", "true")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("vars")
+				.executeCommand("vars/data-handlebars")
+				.withArguments("name-to-use", "Mary") // TODO consider name collisions.
+														// ('name' or 'user-name') won't
+														// work
+				.withArguments("age", "20") // TODO change value to type Object
+				.withArguments("height-unit", "feet")
+				.withArguments("height", "6")
+				.withArguments("is-person", "true")
+				.build();
 			commandRunner.run();
-
 
 			RoleService roleService = new RoleService(workingDir);
 			Map<String, Object> map = roleService.loadAsMap("");
-			assertThat(map)
-					.containsEntry("name", "Mary")
-					.containsEntry("age", 20)
-					.containsEntry("height-in-feet", 6)
-					.containsEntry("person", true);
+			assertThat(map).containsEntry("name", "Mary")
+				.containsEntry("age", 20)
+				.containsEntry("height-in-feet", 6)
+				.containsEntry("person", true);
 		});
 	}
 
@@ -71,21 +68,15 @@ public class VarsActionHandlerTests extends AbstractShellTests {
 	void testTrueIfExpressionDefineVarWithData(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("vars")
-					.executeCommand("vars/iftrue")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("vars")
+				.executeCommand("vars/iftrue")
+				.build();
 			commandRunner.run();
-
 
 			RoleService roleService = new RoleService(workingDir);
 			Map<String, Object> map = roleService.loadAsMap("");
-			assertThat(map)
-					.containsEntry("name", "John")
-					.containsEntry("age", 30)
-					.containsEntry("person", true);
+			assertThat(map).containsEntry("name", "John").containsEntry("age", 30).containsEntry("person", true);
 
 		});
 	}
@@ -94,14 +85,11 @@ public class VarsActionHandlerTests extends AbstractShellTests {
 	void testFalseIfExpressionDefineVarWithData(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("vars")
-					.executeCommand("vars/iffalse")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("vars")
+				.executeCommand("vars/iffalse")
+				.build();
 			commandRunner.run();
-
 
 			RoleService roleService = new RoleService(workingDir);
 			Map<String, Object> map = roleService.loadAsMap("");
@@ -115,20 +103,16 @@ public class VarsActionHandlerTests extends AbstractShellTests {
 	void testDefineVarWithData(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("vars")
-					.executeCommand("vars/data")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("vars")
+				.executeCommand("vars/data")
+				.build();
 			commandRunner.run();
 
 			RoleService roleService = new RoleService(workingDir);
 			Map<String, Object> map = roleService.loadAsMap("");
 
-			assertThat(map)
-					.containsEntry("name", "John")
-					.containsEntry("age", 30)
-					.containsEntry("person", true);
+			assertThat(map).containsEntry("name", "John").containsEntry("age", 30).containsEntry("person", true);
 		});
 
 	}
@@ -138,13 +122,11 @@ public class VarsActionHandlerTests extends AbstractShellTests {
 	void testDefineVarWithExec(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("vars")
-					.executeCommand("vars/define")
-					.withTerminal(getTerminal())
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("vars")
+				.executeCommand("vars/define")
+				.withTerminal(getTerminal())
+				.build();
 			commandRunner.run();
 
 			Thread.sleep(4000);
@@ -158,4 +140,5 @@ public class VarsActionHandlerTests extends AbstractShellTests {
 		});
 
 	}
+
 }

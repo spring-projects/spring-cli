@@ -18,10 +18,9 @@ package org.springframework.cli.support.configfile;
 import java.nio.file.Path;
 
 /**
- * Contract to read and write a config file. This contract doesn't care how
- * things are stored as it's a decision for implementation but generally
- * speaking interface expects one file per type which makes it easier to
- * store complex types if/when needed.
+ * Contract to read and write a config file. This contract doesn't care how things are
+ * stored as it's a decision for implementation but generally speaking interface expects
+ * one file per type which makes it easier to store complex types if/when needed.
  *
  * @author Janne Valkealahti
  */
@@ -29,7 +28,6 @@ public interface ConfigFile {
 
 	/**
 	 * Read typed mapped class from a config.
-	 *
 	 * @param <T> the type of a class to map
 	 * @param path the path to config file
 	 * @param type type of a class
@@ -39,9 +37,9 @@ public interface ConfigFile {
 
 	/**
 	 * Write new content into a config file
-	 *
 	 * @param path the path to config file
 	 * @param value the value to write
 	 */
 	void write(Path path, Object value);
+
 }

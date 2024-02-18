@@ -25,6 +25,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 /**
  * Deserializes the command object from a file
+ *
  * @author Mark Pollack
  */
 public final class CommandFileReader {
@@ -35,7 +36,7 @@ public final class CommandFileReader {
 
 	public static CommandFileContents read(Path commandFile) throws IOException {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
-				.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		return mapper.readValue(commandFile.toFile(), CommandFileContents.class);
 	}
 

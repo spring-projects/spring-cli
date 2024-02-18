@@ -15,7 +15,6 @@
  */
 package org.springframework.cli.command;
 
-
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -66,7 +65,7 @@ public class ProjectCommandsTests {
 			verifyTableValue(table, 1, 0, "jpa");
 			verifyTableValue(table, 1, 1, "Learn JPA");
 			verifyTableValue(table, 1, 2, "https://github.com/rd-1-2022/rpt-spring-data-jpa");
-			verifyTableValue(table, 1, 3, "");  // This project is part of a catalog
+			verifyTableValue(table, 1, 3, ""); // This project is part of a catalog
 			verifyTableValue(table, 1, 4, "[data, jpa]");
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 
@@ -112,9 +111,12 @@ public class ProjectCommandsTests {
 
 		@Bean
 		ProjectCommands projectCommands(SpringCliUserConfig springCliUserConfig,
-										SourceRepositoryService sourceRepositoryService, ObjectMapper objectMapper) {
-			ProjectCommands projectCommands = new ProjectCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), objectMapper);
+				SourceRepositoryService sourceRepositoryService, ObjectMapper objectMapper) {
+			ProjectCommands projectCommands = new ProjectCommands(springCliUserConfig, sourceRepositoryService,
+					TerminalMessage.noop(), objectMapper);
 			return projectCommands;
 		}
+
 	}
+
 }

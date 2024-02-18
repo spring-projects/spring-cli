@@ -24,7 +24,9 @@ public class Language {
 
 	@JsonProperty("default")
 	private String defaultType;
+
 	private String type;
+
 	List<LanguageValues> values = new ArrayList<>();
 
 	public Language() {
@@ -58,5 +60,7 @@ public class Language {
 
 		public LanguageValues() {
 		}
+
 	}
+
 }

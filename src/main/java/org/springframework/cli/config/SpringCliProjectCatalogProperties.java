@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.config;
 
 import java.util.Arrays;
@@ -64,7 +63,5 @@ public class SpringCliProjectCatalogProperties {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
-
 
 }

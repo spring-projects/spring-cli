@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +38,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class AbstractInjectMavenActionHandler {
+
 	private static final Logger logger = LoggerFactory.getLogger(InjectMavenDependencyActionHandler.class);
 
 	protected final TemplateEngine templateEngine;
@@ -49,7 +49,8 @@ public abstract class AbstractInjectMavenActionHandler {
 
 	protected final TerminalMessage terminalMessage;
 
-	public AbstractInjectMavenActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, TerminalMessage terminalMessage) {
+	public AbstractInjectMavenActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd,
+			TerminalMessage terminalMessage) {
 		this.templateEngine = templateEngine;
 		this.model = model;
 		this.cwd = cwd;
@@ -77,7 +78,8 @@ public abstract class AbstractInjectMavenActionHandler {
 	protected Path getPomPath() {
 		Path pomPath = cwd.resolve("pom.xml");
 		if (Files.notExists(pomPath)) {
-			throw new SpringCliException("Could not find pom.xml in " + this.cwd + ".  Make sure you are running the command in the directory that contains a pom.xml file");
+			throw new SpringCliException("Could not find pom.xml in " + this.cwd
+					+ ".  Make sure you are running the command in the directory that contains a pom.xml file");
 		}
 		return pomPath;
 	}
@@ -87,7 +89,9 @@ public abstract class AbstractInjectMavenActionHandler {
 		paths.add(pomPath);
 		MavenParser mavenParser = MavenParser.builder().build();
 		List<SourceFile> parsedPomFiles = mavenParser.parse(paths, cwd, getExecutionContext()).toList();
-		List<Result> resultList = recipe.run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext()).getChangeset().getAllResults();
+		List<Result> resultList = recipe.run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext())
+			.getChangeset()
+			.getAllResults();
 		try {
 			for (Result result : resultList) {
 				// write updated file.
@@ -100,4 +104,5 @@ public abstract class AbstractInjectMavenActionHandler {
 			throw new SpringCliException("Error writing to " + pomPath.toAbsolutePath(), ex);
 		}
 	}
+
 }

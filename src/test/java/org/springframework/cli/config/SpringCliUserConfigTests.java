@@ -38,6 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SpringCliUserConfigTests {
 
 	private FileSystem fileSystem;
+
 	private Function<String, Path> pathProvider;
 
 	@BeforeEach
@@ -107,7 +108,7 @@ public class SpringCliUserConfigTests {
 
 		SpringCliUserConfig.CommandDefaults commandDefaults = new SpringCliUserConfig.CommandDefaults();
 		List<SpringCliUserConfig.CommandDefault> commandDefaultList = new ArrayList<>();
-		SpringCliUserConfig.CommandDefault commandDefault1 = new SpringCliUserConfig.CommandDefault("boot" ,"new");
+		SpringCliUserConfig.CommandDefault commandDefault1 = new SpringCliUserConfig.CommandDefault("boot", "new");
 		List<SpringCliUserConfig.Option> optionList = new ArrayList<>();
 		optionList.add(new SpringCliUserConfig.Option("package-name", "com.xkcd"));
 		commandDefault1.setOptions(optionList);
@@ -116,7 +117,7 @@ public class SpringCliUserConfigTests {
 		springCliUserConfig.setCommandDefaults(commandDefaults);
 		assertThat(springCliUserConfig.getCommandDefaults().getCommandDefaults()).hasSize(1);
 
-		//List<CommandDefault> commandDefaults1 = /commandDefaults.getCommandDefaults();
+		// List<CommandDefault> commandDefaults1 = /commandDefaults.getCommandDefaults();
 		Optional<String> defaultValue = commandDefaults.findDefaultOptionValue("boot", "new", "package-name");
 		assertThat(defaultValue.get()).isEqualTo("com.xkcd");
 	}
@@ -137,4 +138,5 @@ public class SpringCliUserConfigTests {
 		assertThat(config.getInitializrs().get("local")).isNotNull();
 		assertThat(config.getInitializrs().get("local").getUrl()).isEqualTo("http://localhost:8080");
 	}
+
 }

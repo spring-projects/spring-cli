@@ -36,4 +36,5 @@ public abstract class InitializrUtils {
 		VersionRange parsedRange = VERSION_PARSER_INSTANCE.parseRange(dependency.getVersionRange());
 		return parsedRange.match(parsedVersion);
 	}
+
 }

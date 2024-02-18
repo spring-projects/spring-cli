@@ -39,8 +39,7 @@ public class InjectMavenDependencyManagement {
 
 	@Override
 	public String toString() {
-		return "InjectMavenDependency{" +
-				"text='" + text + '\'' +
-				'}';
+		return "InjectMavenDependency{" + "text='" + text + '\'' + '}';
 	}
+
 }

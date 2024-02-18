@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import java.nio.file.Path;
@@ -35,16 +34,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 class IfExpressionTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withUserConfiguration(MockBaseConfig.class);
+		.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
 	void testIfExpressionWithRunFile(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("if")
-					.executeCommand("run/define")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("if")
+				.executeCommand("run/define")
+				.build();
 			commandRunner.run();
 		});
 
@@ -53,16 +51,14 @@ class IfExpressionTests {
 		assertThat(map).containsEntry("name", "John is present in the output");
 	}
 
-
 	@Test
 	void testIfExpressionsWithSpel(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("if")
-					.executeCommand("vars/notdefined")
-					.withArguments("name", "mark")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("if")
+				.executeCommand("vars/notdefined")
+				.withArguments("name", "mark")
+				.build();
 			commandRunner.run();
 
 			RoleService roleService = new RoleService(workingDir);
@@ -71,26 +67,24 @@ class IfExpressionTests {
 		});
 	}
 
-
 	@Test
 	void testIfExpressions(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("if")
-					.executeCommand("vars/define")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("if")
+				.executeCommand("vars/define")
+				.build();
 			commandRunner.run();
 
 			RoleService roleService = new RoleService(workingDir);
 			Map<String, Object> map = roleService.loadAsMap("");
 
-			//map.forEach((key, value) -> System.out.println(key + " " + value));
-			assertThat(map)
-					.containsEntry("name", "John")
-					.containsEntry("middle-name", "Sam")
-					.doesNotContainKey("last-name");
+			// map.forEach((key, value) -> System.out.println(key + " " + value));
+			assertThat(map).containsEntry("name", "John")
+				.containsEntry("middle-name", "Sam")
+				.doesNotContainKey("last-name");
 		});
 
 	}
+
 }

@@ -18,6 +18,7 @@ package org.springframework.cli.initializr.model;
 public class IdName {
 
 	private String id;
+
 	private String name;
 
 	public IdName() {
@@ -38,4 +39,5 @@ public class IdName {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 }

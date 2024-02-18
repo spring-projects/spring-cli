@@ -18,16 +18,27 @@ package org.springframework.cli.initializr.model;
 public class Metadata {
 
 	private ProjectType type = new ProjectType();
+
 	private Language language = new Language();
+
 	private BootVersion bootVersion = new BootVersion();
+
 	private Dependencies dependencies = new Dependencies();
+
 	private GroupId groupId = new GroupId();
+
 	private ArtifactId artifactId = new ArtifactId();
+
 	private Version version = new Version();
+
 	private Name name = new Name();
+
 	private Description description = new Description();
+
 	private PackageName packageName = new PackageName();
+
 	private Packaging packaging = new Packaging();
+
 	private JavaVersion javaVersion = new JavaVersion();
 
 	public Metadata() {
@@ -128,4 +139,5 @@ public class Metadata {
 	public void setJavaVersion(JavaVersion javaVersion) {
 		this.javaVersion = javaVersion;
 	}
+
 }

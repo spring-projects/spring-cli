@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import org.springframework.cli.SpringCliException;
@@ -31,7 +30,8 @@ import java.util.Map;
 
 public class InjectMavenDependencyManagementActionHandler extends AbstractInjectMavenActionHandler {
 
-	public InjectMavenDependencyManagementActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, TerminalMessage terminalMessage) {
+	public InjectMavenDependencyManagementActionHandler(TemplateEngine templateEngine, Map<String, Object> model,
+			Path cwd, TerminalMessage terminalMessage) {
 		super(templateEngine, model, cwd, terminalMessage);
 	}
 
@@ -39,7 +39,8 @@ public class InjectMavenDependencyManagementActionHandler extends AbstractInject
 		Path pomPath = getPomPath();
 		String text = getTextToUse(injectMavenDependencyManagement.getText(), "Inject Maven Dependency Management");
 		if (!StringUtils.hasText(text)) {
-			throw new SpringCliException("Inject Maven Dependency Management action does not have a value in the 'text:' field.");
+			throw new SpringCliException(
+					"Inject Maven Dependency Management action does not have a value in the 'text:' field.");
 		}
 
 		MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
@@ -47,7 +48,8 @@ public class InjectMavenDependencyManagementActionHandler extends AbstractInject
 		for (String mavenDependency : mavenDependencies) {
 			AddManagedDependencyRecipeFactory recipeFactory = new AddManagedDependencyRecipeFactory();
 			AddManagedDependencyRecipe addManagedDependency = recipeFactory.create(mavenDependency);
-  			runRecipe(pomPath, addManagedDependency);
+			runRecipe(pomPath, addManagedDependency);
 		}
 	}
+
 }

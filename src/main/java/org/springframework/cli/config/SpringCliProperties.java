@@ -49,6 +49,7 @@ public class SpringCliProperties {
 	 * Settings for spring initializr.
 	 */
 	public static class Initializr {
+
 		private String baseUrl = "https://start.spring.io";
 
 		public String getBaseUrl() {
@@ -61,17 +62,16 @@ public class SpringCliProperties {
 
 		@Override
 		public String toString() {
-			return "Initializr{" +
-					"baseUrl='" + baseUrl + '\'' +
-					'}';
+			return "Initializr{" + "baseUrl='" + baseUrl + '\'' + '}';
 		}
+
 	}
 
 	public static class Github {
 
 		/**
-		 * OAuth client id for github oauth app which user is seeing when doing auth
-		 * flow. This is public so safe to expose.
+		 * OAuth client id for github oauth app which user is seeing when doing auth flow.
+		 * This is public so safe to expose.
 		 */
 		private String clientId;
 
@@ -98,18 +98,14 @@ public class SpringCliProperties {
 
 		@Override
 		public String toString() {
-			return "Github{" +
-					"clientId='" + clientId + '\'' +
-					", defaultScopes='" + defaultScopes + '\'' +
-					'}';
+			return "Github{" + "clientId='" + clientId + '\'' + ", defaultScopes='" + defaultScopes + '\'' + '}';
 		}
+
 	}
 
 	@Override
 	public String toString() {
-		return "SpringCliProperties{" +
-				"initializr=" + initializr +
-				", github=" + github +
-				'}';
+		return "SpringCliProperties{" + "initializr=" + initializr + ", github=" + github + '}';
 	}
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.recipe;
 
 import java.io.BufferedWriter;
@@ -39,8 +38,10 @@ public class RecipeUtils {
 					sourceFileWriter.write(result.getAfter().printAllTrimmed());
 				}
 			}
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			throw new SpringCliException("Could not write recipe results to path = " + path, ex);
 		}
 	}
+
 }

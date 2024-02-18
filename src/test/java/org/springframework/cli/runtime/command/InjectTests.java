@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.command;
 
 import java.io.File;
@@ -33,12 +32,15 @@ public class InjectTests extends AbstractCommandTests {
 	@Test
 	void injectBefore() throws IOException {
 		Map<String, Object> model = new HashMap<>();
-		runInjectAction("before", "text", model, "myfile-before", "src/test/resources/org/springframework/cli/runtime/command/inject");
+		runInjectAction("before", "text", model, "myfile-before",
+				"src/test/resources/org/springframework/cli/runtime/command/inject");
 	}
 
 	@Test
 	void injectAfter() throws IOException {
 		Map<String, Object> model = new HashMap<>();
-		runInjectAction("after", "text", model, "myfile-after", "src/test/resources/org/springframework/cli/runtime/command/inject");
+		runInjectAction("after", "text", model, "myfile-after",
+				"src/test/resources/org/springframework/cli/runtime/command/inject");
 	}
+
 }

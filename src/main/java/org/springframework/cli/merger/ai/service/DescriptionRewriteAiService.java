@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger.ai.service;
 
 import java.util.Map;
@@ -24,7 +23,7 @@ import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import org.springframework.cli.merger.ai.PromptRequest;
 import org.springframework.cli.util.TerminalMessage;
 
-public class DescriptionRewriteAiService extends AbstractOpenAiService  {
+public class DescriptionRewriteAiService extends AbstractOpenAiService {
 
 	public DescriptionRewriteAiService(TerminalMessage terminalMessage) {
 		super(terminalMessage);
@@ -41,4 +40,5 @@ public class DescriptionRewriteAiService extends AbstractOpenAiService  {
 		ChatCompletionRequest chatCompletionRequest = getChatCompletionRequest(promptRequest);
 		return getResponse(chatCompletionRequest);
 	}
+
 }

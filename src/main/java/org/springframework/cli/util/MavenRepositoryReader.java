@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.util;
 
 public class MavenRepositoryReader extends AbstractMavenReader {
@@ -26,8 +25,10 @@ public class MavenRepositoryReader extends AbstractMavenReader {
 	protected String massageText(String text) {
 		if (text.contains("<repositories>")) {
 			return text;
-		} else {
+		}
+		else {
 			return "<repositories>" + text + "</repositories>";
 		}
 	}
+
 }

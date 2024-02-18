@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.command;
 
 import java.nio.file.FileSystem;
@@ -62,7 +61,8 @@ public class ProjectCatalogCommandsTests {
 			List<String> tags = new ArrayList<>();
 			tags.add("spring");
 			tags.add("guide");
-			projectCatalogCommands.catalogAdd("getting-started", "https://github.com/rd-1-2022/spring-gs-catalog/", "Spring Getting Started Projects", tags);
+			projectCatalogCommands.catalogAdd("getting-started", "https://github.com/rd-1-2022/spring-gs-catalog/",
+					"Spring Getting Started Projects", tags);
 			table = (Table) projectCatalogCommands.catalogList(false);
 			System.out.println(table.render(100));
 			verifyTableValue(table, 1, 0, "getting-started");
@@ -72,9 +72,10 @@ public class ProjectCatalogCommandsTests {
 			assertThat(table.getModel().getRowCount()).isEqualTo(2);
 
 			assertThatThrownBy(() -> {
-				projectCatalogCommands.catalogAdd("getting-started", "https://github.com/rd-1-2022/spring-gs-catalog/", "Spring Getting Started Projects", tags);
+				projectCatalogCommands.catalogAdd("getting-started", "https://github.com/rd-1-2022/spring-gs-catalog/",
+						"Spring Getting Started Projects", tags);
 			}).isInstanceOf(SpringCliException.class)
-					.hasMessageContaining("Catalog named getting-started already exists.  Choose another name.");
+				.hasMessageContaining("Catalog named getting-started already exists.  Choose another name.");
 
 			// Remove added catalog
 			projectCatalogCommands.catalogRemove("getting-started");
@@ -82,7 +83,8 @@ public class ProjectCatalogCommandsTests {
 		});
 	}
 
-	private static void verifyEmptyCatalog(ProjectCatalogCommands projectCatalogCommands) throws JsonProcessingException {
+	private static void verifyEmptyCatalog(ProjectCatalogCommands projectCatalogCommands)
+			throws JsonProcessingException {
 		Table table = (Table) projectCatalogCommands.catalogList(false);
 		System.out.println(table.render(100));
 		assertThat(table.getModel().getColumnCount()).isEqualTo(4);
@@ -120,9 +122,12 @@ public class ProjectCatalogCommandsTests {
 
 		@Bean
 		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
-													  SourceRepositoryService sourceRepositoryService, ObjectMapper objectMapper) {
-			ProjectCatalogCommands projectCatalogCommands = new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), objectMapper);
+				SourceRepositoryService sourceRepositoryService, ObjectMapper objectMapper) {
+			ProjectCatalogCommands projectCatalogCommands = new ProjectCatalogCommands(springCliUserConfig,
+					sourceRepositoryService, TerminalMessage.noop(), objectMapper);
 			return projectCatalogCommands;
 		}
+
 	}
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger;
 
 import org.junit.jupiter.api.Test;
@@ -28,102 +27,81 @@ public class ChangeNewlyClonedPomRecipeTests implements RewriteTest {
 
 	@Test
 	void updateAllFields() {
-		rewriteRun(
-				spec -> spec.recipe(new ChangeNewlyClonedPomRecipe(
-						new ProjectInfo("groupId",
-						"artifactId",
-						"version",
-						"projectName",
-						"projectDescription",
-								null))
-				),
-				xml(
-						"""
-								<project>
-									<modelVersion>4.0.0</modelVersion>
-									
-									<groupId>com.example</groupId>
-									<artifactId>rest-service-complete</artifactId>
-									<version>0.0.1-SNAPSHOT</version>
-									<name>rest-service</name>
-									<description>Demo Rest Service project for Spring Boot</description>
-																							
-									<dependencies>
-										<dependency>
-											<groupId>org.springframework.boot</groupId>
-											<artifactId>spring-boot-starter-web</artifactId>
-										</dependency>
-									</dependencies>
-								</project>
-								""",
-						"""
-								<project>
-									<modelVersion>4.0.0</modelVersion>
-																
-									<groupId>groupId</groupId>
-									<artifactId>artifactId</artifactId>
-									<version>version</version>
-									<name>projectName</name>
-									<description>projectDescription</description>
-																
-									<dependencies>
-										<dependency>
-											<groupId>org.springframework.boot</groupId>
-											<artifactId>spring-boot-starter-web</artifactId>
-										</dependency>
-									</dependencies>
-								</project>
-								"""
-				)
-		);
+		rewriteRun(spec -> spec.recipe(new ChangeNewlyClonedPomRecipe(
+				new ProjectInfo("groupId", "artifactId", "version", "projectName", "projectDescription", null))),
+				xml("""
+						<project>
+							<modelVersion>4.0.0</modelVersion>
+
+							<groupId>com.example</groupId>
+							<artifactId>rest-service-complete</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<name>rest-service</name>
+							<description>Demo Rest Service project for Spring Boot</description>
+
+							<dependencies>
+								<dependency>
+									<groupId>org.springframework.boot</groupId>
+									<artifactId>spring-boot-starter-web</artifactId>
+								</dependency>
+							</dependencies>
+						</project>
+						""", """
+						<project>
+							<modelVersion>4.0.0</modelVersion>
+
+							<groupId>groupId</groupId>
+							<artifactId>artifactId</artifactId>
+							<version>version</version>
+							<name>projectName</name>
+							<description>projectDescription</description>
+
+							<dependencies>
+								<dependency>
+									<groupId>org.springframework.boot</groupId>
+									<artifactId>spring-boot-starter-web</artifactId>
+								</dependency>
+							</dependencies>
+						</project>
+						"""));
 	}
+
 	@Test
 	void updateWhenNoNameInOriginalPom() {
-		rewriteRun(
-				spec -> spec.recipe(new ChangeNewlyClonedPomRecipe(
-								new ProjectInfo("groupId",
-										"artifactId",
-										"version",
-										"projectName",
-										"projectDescription",
-										null))
-				),
-				xml(
-						"""
-								<project>
-									<modelVersion>4.0.0</modelVersion>
-									<groupId>com.xkcd</groupId>
-									<artifactId>rest-service-complete</artifactId>
-									<version>0.0.1-SNAPSHOT</version>
-									<description>Demo Rest Service project for Spring Boot</description>
-																							
-									<dependencies>
-										<dependency>
-											<groupId>org.springframework.boot</groupId>
-											<artifactId>spring-boot-starter-web</artifactId>
-										</dependency>
-									</dependencies>
-								</project>
-								""",
-						"""
-								<project>
-									<modelVersion>4.0.0</modelVersion>							
-									<groupId>groupId</groupId>
-									<artifactId>artifactId</artifactId>
-									<version>version</version>
-									<name>projectName</name>
-									<description>projectDescription</description>
-																
-									<dependencies>
-										<dependency>
-											<groupId>org.springframework.boot</groupId>
-											<artifactId>spring-boot-starter-web</artifactId>
-										</dependency>
-									</dependencies>
-								</project>
-								"""
-				)
-		);
+		rewriteRun(spec -> spec.recipe(new ChangeNewlyClonedPomRecipe(
+				new ProjectInfo("groupId", "artifactId", "version", "projectName", "projectDescription", null))),
+				xml("""
+						<project>
+							<modelVersion>4.0.0</modelVersion>
+							<groupId>com.xkcd</groupId>
+							<artifactId>rest-service-complete</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<description>Demo Rest Service project for Spring Boot</description>
+
+							<dependencies>
+								<dependency>
+									<groupId>org.springframework.boot</groupId>
+									<artifactId>spring-boot-starter-web</artifactId>
+								</dependency>
+							</dependencies>
+						</project>
+						""", """
+						<project>
+							<modelVersion>4.0.0</modelVersion>
+							<groupId>groupId</groupId>
+							<artifactId>artifactId</artifactId>
+							<version>version</version>
+							<name>projectName</name>
+							<description>projectDescription</description>
+
+							<dependencies>
+								<dependency>
+									<groupId>org.springframework.boot</groupId>
+									<artifactId>spring-boot-starter-web</artifactId>
+								</dependency>
+							</dependencies>
+						</project>
+						"""));
 	}
 
 }

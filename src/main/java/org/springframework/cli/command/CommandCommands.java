@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.command;
 
 import java.io.File;
@@ -43,11 +42,11 @@ import org.springframework.util.FileSystemUtils;
  *
  * User defined commands can be added and removed using `command add` and `command delete`
  *
- * A simple command that creates a directory structure, aciton file, and command
- * metadata file is available using `command new`
+ * A simple command that creates a directory structure, aciton file, and command metadata
+ * file is available using `command new`
  */
 @Command(command = "command", group = "Command")
-public class CommandCommands extends AbstractSpringCliCommands  {
+public class CommandCommands extends AbstractSpringCliCommands {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommandCommands.class);
 
@@ -61,14 +60,19 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 		this.terminalMessage = terminalMessage;
 	}
 
-	@Command(command = "new", description="Create a new user-defined command.")
+	@Command(command = "new", description = "Create a new user-defined command.")
 	public void commandNew(
-			@Option(description = "The name of the user-defined command to create.", defaultValue = "hello", longNames = "command-name") String commandName,
-			@Option(description = "The name of the user-defined sub-command to create.", defaultValue = "new", longNames = "sub-command-name") String subCommandName,
+			@Option(description = "The name of the user-defined command to create.", defaultValue = "hello",
+					longNames = "command-name") String commandName,
+			@Option(description = "The name of the user-defined sub-command to create.", defaultValue = "new",
+					longNames = "sub-command-name") String subCommandName,
 			@Option(description = "Path on which to run the command.") String path) {
 		Path projectPath = path != null ? IoUtils.getProjectPath(path) : IoUtils.getWorkingDirectory();
-		//TODO check validity of passed in names as directory names.
-		Path commandPath = projectPath.resolve(".spring").resolve("commands").resolve(commandName).resolve(subCommandName);
+		// TODO check validity of passed in names as directory names.
+		Path commandPath = projectPath.resolve(".spring")
+			.resolve("commands")
+			.resolve(commandName)
+			.resolve(subCommandName);
 		IoUtils.createDirectory(commandPath);
 		ClassPathResource classPathResource = new ClassPathResource("/org/springframework/cli/commands/hello.yml");
 		IoUtils.writeToDir(commandPath.toFile(), "hello.yaml", classPathResource);
@@ -78,8 +82,7 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 	}
 
 	@Command(command = "add", description = "Add a user-defined command")
-	public void commandAdd(
-			@Option(description = "Add user-defined command from a URL.") String from) {
+	public void commandAdd(@Option(description = "Add user-defined command from a URL.") String from) {
 		Path downloadedCommandPath = sourceRepositoryService.retrieveRepositoryContents(from);
 		logger.debug("downloaded command path ", downloadedCommandPath);
 		Path cwd = IoUtils.getWorkingDirectory().toAbsolutePath();
@@ -108,7 +111,7 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 			for (File file : files) {
 				String readmeName = "README-" + file.getName() + ".md";
 				Path readmePath = Paths.get(cwd.toString(), readmeName);
-				logger.debug("README PATH = "+ readmePath);
+				logger.debug("README PATH = " + readmePath);
 				if (Files.exists(readmePath)) {
 					sb.append("See " + readmeName + " for more information.");
 					sb.append(System.lineSeparator());
@@ -119,19 +122,21 @@ public class CommandCommands extends AbstractSpringCliCommands  {
 
 			try {
 				FileSystemUtils.deleteRecursively(downloadedCommandPath);
-			} catch (IOException ex) {
+			}
+			catch (IOException ex) {
 				logger.warn("Could not delete path: " + downloadedCommandPath, ex);
 			}
 		}
 	}
 
 	@Command(command = "remove", description = "Delete a user-defined command")
-	public void commandDelete(
-			@Option(description = "Command name") String commandName,
+	public void commandDelete(@Option(description = "Command name") String commandName,
 			@Option(description = "SubCommand name") String subCommandName) {
 		Path cwd = IoUtils.getWorkingDirectory();
 		Path dynamicSubCommandPath = Paths.get(cwd.toString(), ".spring", "commands")
-				.resolve(commandName).resolve(subCommandName).toAbsolutePath();
+			.resolve(commandName)
+			.resolve(subCommandName)
+			.toAbsolutePath();
 		try {
 			FileSystemUtils.deleteRecursively(dynamicSubCommandPath);
 			logger.debug("Deleted " + dynamicSubCommandPath);

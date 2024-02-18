@@ -20,25 +20,31 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class BootCommandsTest {
 
-    private BootCommands sut;
-    @Mock
-    private SourceRepositoryService repoService;
-    @Mock
-    private RewriteRecipeLauncher recipeRunner;
-    @Mock
-    private TerminalMessage terminalMessage;
-    @Mock
-    private SpringCliUserConfig userConfig;
+	private BootCommands sut;
 
-    @BeforeEach
-    void beforeEach() {
-        sut = new BootCommands(userConfig, repoService, terminalMessage, recipeRunner);
-    }
+	@Mock
+	private SourceRepositoryService repoService;
 
-    @Test
-    void bootUpgrade() {
-        String path = "";
-        sut.bootUpgrade(path);
-        verify(recipeRunner).run(eq("org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_1"), eq(path), ArgumentMatchers.isA(RewriteRecipeLauncher.RewriteRecipeRunnerProgressListener.class));
-    }
+	@Mock
+	private RewriteRecipeLauncher recipeRunner;
+
+	@Mock
+	private TerminalMessage terminalMessage;
+
+	@Mock
+	private SpringCliUserConfig userConfig;
+
+	@BeforeEach
+	void beforeEach() {
+		sut = new BootCommands(userConfig, repoService, terminalMessage, recipeRunner);
+	}
+
+	@Test
+	void bootUpgrade() {
+		String path = "";
+		sut.bootUpgrade(path);
+		verify(recipeRunner).run(eq("org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_1"), eq(path),
+				ArgumentMatchers.isA(RewriteRecipeLauncher.RewriteRecipeRunnerProgressListener.class));
+	}
+
 }

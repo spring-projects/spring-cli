@@ -34,4 +34,5 @@ public class SpringCliApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringCliApplication.class, args);
 	}
+
 }

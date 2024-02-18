@@ -40,40 +40,43 @@ package org.springframework.cli.runtime.engine.spel;
 
 public class Person {
 
-    private String name;
-    private int age;
-    private boolean isAdult;
+	private String name;
 
-    public Person(String name, int age) {
-        this.name = name;
-        this.age = age;
-    }
+	private int age;
 
-    public String getName() {
-        return name;
-    }
+	private boolean isAdult;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public Person(String name, int age) {
+		this.name = name;
+		this.age = age;
+	}
 
-    public int getAge() {
-        return age;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public boolean isAdult() {
-        return isAdult;
-    }
+	public int getAge() {
+		return age;
+	}
 
-    public void setAdult(boolean adult) {
-        isAdult = adult;
-    }
+	public void setAge(int age) {
+		this.age = age;
+	}
 
-    public static void sayHello() {
-        System.out.println("hello");
-    }
+	public boolean isAdult() {
+		return isAdult;
+	}
+
+	public void setAdult(boolean adult) {
+		isAdult = adult;
+	}
+
+	public static void sayHello() {
+		System.out.println("hello");
+	}
+
 }

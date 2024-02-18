@@ -21,6 +21,7 @@ public class Description {
 
 	@JsonProperty("default")
 	private String defaultId;
+
 	private String type;
 
 	public Description() {
@@ -41,4 +42,5 @@ public class Description {
 	public void setType(String type) {
 		this.type = type;
 	}
+
 }

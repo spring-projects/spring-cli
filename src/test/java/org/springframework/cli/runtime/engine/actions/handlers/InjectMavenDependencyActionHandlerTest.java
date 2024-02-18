@@ -33,17 +33,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 class InjectMavenDependencyActionHandlerTest {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withUserConfiguration(MockBaseConfig.class);
+		.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
 	void injectMavenDependency(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("inject-maven")
-					.executeCommand("dependency/add")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("inject-maven")
+				.executeCommand("dependency/add")
+				.build();
 			commandRunner.run();
 
 			Path pomPath = workingDir.resolve("pom.xml");
@@ -56,12 +55,11 @@ class InjectMavenDependencyActionHandlerTest {
 	void injectMavenDependencyUsingVariables(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("inject-maven")
-					.executeCommand("dependency/add-using-var")
-					.withArguments("runtime-scope", "runtime")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("inject-maven")
+				.executeCommand("dependency/add-using-var")
+				.withArguments("runtime-scope", "runtime")
+				.build();
 			commandRunner.run();
 
 			Path pomPath = workingDir.resolve("pom.xml");

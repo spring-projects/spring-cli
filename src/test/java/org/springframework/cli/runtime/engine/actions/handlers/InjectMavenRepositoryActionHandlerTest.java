@@ -33,17 +33,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 class InjectMavenRepositoryActionHandlerTest {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withUserConfiguration(MockBaseConfig.class);
+		.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
 	void injectMavenDependency(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("inject-maven-repository")
-					.executeCommand("repository/add")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("inject-maven-repository")
+				.executeCommand("repository/add")
+				.build();
 			commandRunner.run();
 
 			Path pomPath = workingDir.resolve("pom.xml");
@@ -55,12 +54,11 @@ class InjectMavenRepositoryActionHandlerTest {
 	void injectMavenDependencyUsingVar(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("inject-maven-repository")
-					.executeCommand("repository/add-using-var")
-					.withArguments("repository-id", "the snapshot repo")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("inject-maven-repository")
+				.executeCommand("repository/add-using-var")
+				.withArguments("repository-id", "the snapshot repo")
+				.build();
 			commandRunner.run();
 
 			Path pomPath = workingDir.resolve("pom.xml");

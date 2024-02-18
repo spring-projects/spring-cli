@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger.ai;
 
 import java.time.LocalDateTime;
@@ -67,22 +66,22 @@ public class ResponseModifier {
 		}
 		return updatedContent.toString();
 	}
-	private static String extractPackageName(String importStatement) {
-		return importStatement
-				.replace("import", "")
-				.replace(";", "")
-				.trim();
-	}
 
+	private static String extractPackageName(String importStatement) {
+		return importStatement.replace("import", "").replace(";", "").trim();
+	}
 
 	private String modifyMsyqlDependency(String response) {
 		if (!response.contains("<artifactId>mysql-connector-java</artifactId>")) {
 			return response;
-		} else {
+		}
+		else {
 			String s1 = response.replace("<groupId>mysql</groupId>", "<groupId>com.mysql</groupId>");
-			String s2 = s1.replace("<artifactId>mysql-connector-java</artifactId>", "<artifactId>mysql-connector-j</artifactId>");
+			String s2 = s1.replace("<artifactId>mysql-connector-java</artifactId>",
+					"<artifactId>mysql-connector-j</artifactId>");
 			return s2;
 		}
 
 	}
+
 }

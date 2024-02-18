@@ -51,19 +51,11 @@ public class SpringCliRuntimeHints implements RuntimeHintsRegistrar {
 
 	@Override
 	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
-		registerForMostReflection(hints.reflection(),
-				"org.kohsuke.github.GHCommit",
-				"org.kohsuke.github.GitHubInteractiveObject",
-				"org.kohsuke.github.GHLicense",
-				"org.kohsuke.github.GHMyself",
-				"org.kohsuke.github.GHObject",
-				"org.kohsuke.github.GHPerson",
-				"org.kohsuke.github.GHRepository",
-				"org.kohsuke.github.GHRepository$GHRepoPermission",
-				"org.kohsuke.github.GHUser",
-				"org.kohsuke.github.GHVerification",
-				"org.kohsuke.github.GitUser"
-		);
+		registerForMostReflection(hints.reflection(), "org.kohsuke.github.GHCommit",
+				"org.kohsuke.github.GitHubInteractiveObject", "org.kohsuke.github.GHLicense",
+				"org.kohsuke.github.GHMyself", "org.kohsuke.github.GHObject", "org.kohsuke.github.GHPerson",
+				"org.kohsuke.github.GHRepository", "org.kohsuke.github.GHRepository$GHRepoPermission",
+				"org.kohsuke.github.GHUser", "org.kohsuke.github.GHVerification", "org.kohsuke.github.GitUser");
 		registerForMostReflection(hints.reflection(), ArtifactId.class, BootVersion.class, Dependencies.class,
 				Dependency.class, DependencyCategory.class, Description.class, GroupId.class, IdName.class,
 				JavaVersion.class, JavaVersionValues.class, Language.class, LanguageValues.class, Metadata.class,
@@ -71,15 +63,14 @@ public class SpringCliRuntimeHints implements RuntimeHintsRegistrar {
 				ProjectTypeValue.class, Version.class);
 		registerForMostReflection(hints.reflection(), EncodingDetectingInputStream.class);
 
-        // DefaultHelperRegistry in handlebars
-        hints.resources().registerPattern("helpers.nashorn.js");
+		// DefaultHelperRegistry in handlebars
+		hints.resources().registerPattern("helpers.nashorn.js");
 	}
 
 	private void registerForMostReflection(ReflectionHints reflectionHints, Class<?>... classes) {
 		for (Class<?> clazz : classes) {
 			reflectionHints.registerType(clazz, hint -> {
-				hint.withMembers(
-						MemberCategory.DECLARED_CLASSES, MemberCategory.DECLARED_FIELDS,
+				hint.withMembers(MemberCategory.DECLARED_CLASSES, MemberCategory.DECLARED_FIELDS,
 						MemberCategory.PUBLIC_CLASSES, MemberCategory.PUBLIC_FIELDS,
 						MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS,
 						MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INTROSPECT_DECLARED_METHODS,
@@ -89,15 +80,13 @@ public class SpringCliRuntimeHints implements RuntimeHintsRegistrar {
 	}
 
 	private void registerForMostReflection(ReflectionHints reflectionHints, String... classNames) {
-		reflectionHints.registerTypes(typeReferences(classNames),
-				hint -> {
-					hint.withMembers(
-							MemberCategory.DECLARED_CLASSES, MemberCategory.DECLARED_FIELDS,
-							MemberCategory.PUBLIC_CLASSES, MemberCategory.PUBLIC_FIELDS,
-							MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS,
-							MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INTROSPECT_DECLARED_METHODS,
-							MemberCategory.INVOKE_DECLARED_METHODS);
-				});
+		reflectionHints.registerTypes(typeReferences(classNames), hint -> {
+			hint.withMembers(MemberCategory.DECLARED_CLASSES, MemberCategory.DECLARED_FIELDS,
+					MemberCategory.PUBLIC_CLASSES, MemberCategory.PUBLIC_FIELDS,
+					MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_METHODS,
+					MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INTROSPECT_DECLARED_METHODS,
+					MemberCategory.INVOKE_DECLARED_METHODS);
+		});
 	}
 
 	private List<TypeReference> typeReferences(String... classNames) {

@@ -31,28 +31,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 class InjectMavenBuildPluginActionHandlerTest {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withUserConfiguration(MockBaseConfig.class);
+		.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
 	void injectMavenBuildPlugin(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("inject-maven-build-plugin")
-					.executeCommand("buildplugin/add")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("inject-maven-build-plugin")
+				.executeCommand("buildplugin/add")
+				.build();
 			commandRunner.run();
 
 			Path pomPath = workingDir.resolve("pom.xml");
 			assertThat(pomPath).content()
-					.contains("<plugins>")
-					.contains("<plugin>")
-					.contains("<groupId>net.bytebuddy</groupId>")
-					.contains("<artifactId>byte-buddy-maven-plugin</artifactId>");
+				.contains("<plugins>")
+				.contains("<plugin>")
+				.contains("<groupId>net.bytebuddy</groupId>")
+				.contains("<artifactId>byte-buddy-maven-plugin</artifactId>");
 		});
 	}
-
-
 
 }

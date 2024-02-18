@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import java.io.IOException;
@@ -32,6 +31,7 @@ import org.springframework.cli.util.TerminalMessage;
 import org.springframework.util.StringUtils;
 
 public class GenerateActionHandler {
+
 	private final TemplateEngine templateEngine;
 
 	private final Map<String, Object> model;
@@ -42,7 +42,8 @@ public class GenerateActionHandler {
 
 	private final Path dynamicSubCommandPath;
 
-	public GenerateActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, Path dynamicSubCommandPath, TerminalMessage terminalMessage) {
+	public GenerateActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd,
+			Path dynamicSubCommandPath, TerminalMessage terminalMessage) {
 		this.templateEngine = templateEngine;
 		this.model = model;
 		this.cwd = cwd;
@@ -66,24 +67,26 @@ public class GenerateActionHandler {
 		}
 	}
 
-	private void generateFile(Generate generate, TemplateEngine templateEngine, String toFileName, Map<String, Object> model, Path cwd) throws IOException {
+	private void generateFile(Generate generate, TemplateEngine templateEngine, String toFileName,
+			Map<String, Object> model, Path cwd) throws IOException {
 		Path pathToFile = cwd.resolve(toFileName).toAbsolutePath();
 		if ((pathToFile.toFile().exists() && generate.isOverwrite()) || (!pathToFile.toFile().exists())) {
 			writeFile(generate, templateEngine, model, pathToFile);
 		}
 		else {
-			terminalMessage.print("Skipping generation of " + pathToFile + ".  File exists and overwrite option not specified.");
+			terminalMessage
+				.print("Skipping generation of " + pathToFile + ".  File exists and overwrite option not specified.");
 		}
 	}
 
-
-	private void writeFile(Generate generate, TemplateEngine templateEngine,
-			Map<String, Object> model, Path pathToFile) throws IOException {
+	private void writeFile(Generate generate, TemplateEngine templateEngine, Map<String, Object> model, Path pathToFile)
+			throws IOException {
 		Files.createDirectories(pathToFile.getParent());
 		String result = null;
 		if (StringUtils.hasText(generate.getText())) {
 			result = templateEngine.process(generate.getText(), model);
-		} else {
+		}
+		else {
 			if (StringUtils.hasText(generate.getFrom())) {
 				Path templateFilePath = Paths.get(String.valueOf(dynamicSubCommandPath), generate.getFrom());
 				if (Files.exists(templateFilePath) && Files.isRegularFile(templateFilePath)) {
@@ -95,7 +98,8 @@ public class GenerateActionHandler {
 					catch (IOException e) {
 						throw new SpringCliException("Can not read from file " + templateFilePath.toAbsolutePath(), e);
 					}
-				} else {
+				}
+				else {
 					throw new SpringCliException("Can not read from file: " + templateFilePath.toAbsolutePath());
 				}
 			}
@@ -104,7 +108,7 @@ public class GenerateActionHandler {
 			Files.write(pathToFile, result.getBytes());
 		}
 		// TODO: keep log of action taken so can report later.
-		terminalMessage.print("Generated "+ pathToFile);
+		terminalMessage.print("Generated " + pathToFile);
 	}
 
 }

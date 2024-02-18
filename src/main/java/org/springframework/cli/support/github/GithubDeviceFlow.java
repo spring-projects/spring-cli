@@ -35,13 +35,13 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 public class GithubDeviceFlow {
 
-	private final static ParameterizedTypeReference<Map<String, String>> RESPONSE_TYPE_REFERENCE =
-			new ParameterizedTypeReference<Map<String, String>>() {};
+	private final static ParameterizedTypeReference<Map<String, String>> RESPONSE_TYPE_REFERENCE = new ParameterizedTypeReference<Map<String, String>>() {
+	};
+
 	private String baseUrl;
 
 	/**
 	 * Constructs a new github device flow.
-	 *
 	 * @param baseUrl the base url
 	 */
 	public GithubDeviceFlow(String baseUrl) {
@@ -50,51 +50,45 @@ public class GithubDeviceFlow {
 	}
 
 	/**
-	 * Starts a device flow. Makes a simple request to github api to request new
-	 * device code which user can use to complete authentication process.
-	 *
+	 * Starts a device flow. Makes a simple request to github api to request new device
+	 * code which user can use to complete authentication process.
 	 * @param webClientBuilder the web client builder
 	 * @param clientId the client id
 	 * @param scope the scopes
 	 * @return Map of response values
 	 */
 	public Map<String, String> requestDeviceFlow(WebClient.Builder webClientBuilder, String clientId, String scope) {
-		WebClient client = webClientBuilder
-			.baseUrl(baseUrl)
-			.build();
+		WebClient client = webClientBuilder.baseUrl(baseUrl).build();
 		Mono<Map<String, String>> response = client.post()
-			.uri(uriBuilder -> uriBuilder
-					.path("login/device/code")
-					.queryParam("client_id", clientId)
-					.queryParam("scope", scope)
-					.build())
+			.uri(uriBuilder -> uriBuilder.path("login/device/code")
+				.queryParam("client_id", clientId)
+				.queryParam("scope", scope)
+				.build())
 			.accept(MediaType.APPLICATION_JSON)
-			.retrieve().bodyToMono(RESPONSE_TYPE_REFERENCE);
+			.retrieve()
+			.bodyToMono(RESPONSE_TYPE_REFERENCE);
 		Map<String, String> values = response.block();
 		return values;
 	}
 
 	/**
-	 * Waits user to enter code based on info api gave us from initial device flow request.
-	 *
+	 * Waits user to enter code based on info api gave us from initial device flow
+	 * request.
 	 * @param clientId the client id
 	 * @param deviceCode the device code
 	 * @param timeout the timeout
 	 * @param interval the interval
 	 * @return a token
 	 */
-	public Optional<String> waitTokenFromDeviceFlow(WebClient.Builder webClientBuilder, String clientId, String deviceCode,
-			int timeout, int interval) {
-		WebClient client = webClientBuilder
-			.baseUrl(baseUrl)
-			.build();
+	public Optional<String> waitTokenFromDeviceFlow(WebClient.Builder webClientBuilder, String clientId,
+			String deviceCode, int timeout, int interval) {
+		WebClient client = webClientBuilder.baseUrl(baseUrl).build();
 		Mono<String> accessToken = client.post()
-			.uri(uriBuilder -> uriBuilder
-					.path("login/oauth/access_token")
-					.queryParam("client_id", clientId)
-					.queryParam("device_code", deviceCode)
-					.queryParam("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
-					.build())
+			.uri(uriBuilder -> uriBuilder.path("login/oauth/access_token")
+				.queryParam("client_id", clientId)
+				.queryParam("device_code", deviceCode)
+				.queryParam("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
+				.build())
 			.accept(MediaType.APPLICATION_JSON)
 			.exchangeToMono(response -> {
 				return response.bodyToMono(RESPONSE_TYPE_REFERENCE);
@@ -111,13 +105,14 @@ public class GithubDeviceFlow {
 			.retryWhen(Retry.fixedDelay(timeout / interval, Duration.ofSeconds(interval))
 				.filter(t -> t instanceof NoAccessTokenException))
 			.onErrorResume(e -> Mono.empty());
-			return accessToken.blockOptional();
+		return accessToken.blockOptional();
 	}
 
 	/**
-	 * Used in a reactor chain to retry when poll/retry request don't
-	 * yet have a token.
+	 * Used in a reactor chain to retry when poll/retry request don't yet have a token.
 	 */
 	private static class NoAccessTokenException extends RuntimeException {
+
 	}
+
 }

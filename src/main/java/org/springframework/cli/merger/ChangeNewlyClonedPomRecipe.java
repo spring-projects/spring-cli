@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger;
 
 import java.util.Optional;
@@ -37,6 +36,7 @@ import org.springframework.util.StringUtils;
  * Update GAV, descriptions and name if they are specified.
  */
 public class ChangeNewlyClonedPomRecipe extends Recipe {
+
 	static final XPathMatcher PROJECT_MATCHER = new XPathMatcher("/project");
 
 	private ProjectInfo projectInfo;
@@ -84,13 +84,14 @@ public class ChangeNewlyClonedPomRecipe extends Recipe {
 					if (!tagValueToReplaceOrAdd.equals(tagToReplaceOrAdd.get().getValue().orElse(null))) {
 						doAfterVisit(new ChangeTagValueVisitor<>(tagToReplaceOrAdd.get(), tagValueToReplaceOrAdd));
 					}
-				} else {
+				}
+				else {
 					doAfterVisit(new AddToTagVisitor<>(rootTag,
 							Tag.build("<" + tagName + ">" + tagValueToReplaceOrAdd + "</" + tagName + ">"),
-							new MavenTagInsertionComparator(rootTag.getChildren()))
-					);
+							new MavenTagInsertionComparator(rootTag.getChildren())));
 				}
 			}
 		};
 	}
+
 }

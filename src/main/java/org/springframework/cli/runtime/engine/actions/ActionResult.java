@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions;
 
 import java.util.Map;
@@ -26,18 +25,17 @@ public class ActionResult {
 	private Throwable error;
 
 	/**
-	 * The result of a completed step after continue-on-error is applied.
-	 * Possible values are success, failure, or skipped.
-	 * When a continue-on-error action fails, the outcome is failure,
-	 * but the final conclusion is success.
+	 * The result of a completed step after continue-on-error is applied. Possible values
+	 * are success, failure, or skipped. When a continue-on-error action fails, the
+	 * outcome is failure, but the final conclusion is success.
 	 */
 	private ActionStatus conclusion;
 
 	/**
-	 * The result of a completed step before continue-on-error is applied.
-	 * Possible values are success, failure, or skipped.
-	 * When a continue-on-error action fails, the outcome is failure,
-	 * but the final conclusion is success.
+	 * The result of a completed step before continue-on-error is applied. Possible values
+	 * are success, failure, or skipped. When a continue-on-error action fails, the
+	 * outcome is failure, but the final conclusion is success.
 	 */
 	private ActionStatus outcome;
+
 }

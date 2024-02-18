@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -36,8 +35,7 @@ public class Attributes {
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 	public Attributes(@JsonProperty("default-value") String defaultValue,
-			@JsonProperty("mask-character") String maskCharacter,
-			@JsonProperty("multiple") boolean multiple,
+			@JsonProperty("mask-character") String maskCharacter, @JsonProperty("multiple") boolean multiple,
 			@JsonProperty("confirmation") boolean confirmation) {
 		this.defaultValue = defaultValue;
 		this.maskCharacter = maskCharacter;
@@ -65,11 +63,8 @@ public class Attributes {
 
 	@Override
 	public String toString() {
-		return "Attributes{" +
-				"defaultValue='" + defaultValue + '\'' +
-				", maskCharacter='" + maskCharacter + '\'' +
-				", multiple=" + multiple +
-				", confirmation=" + confirmation +
-				'}';
+		return "Attributes{" + "defaultValue='" + defaultValue + '\'' + ", maskCharacter='" + maskCharacter + '\''
+				+ ", multiple=" + multiple + ", confirmation=" + confirmation + '}';
 	}
+
 }

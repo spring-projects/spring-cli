@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.util;
 
 public class NamingUtils {
+
 	public static String toKebab(CharSequence original) {
 		StringBuilder result = new StringBuilder(original.length());
 		boolean wasLowercase = false;
@@ -31,4 +31,5 @@ public class NamingUtils {
 		}
 		return result.toString();
 	}
+
 }

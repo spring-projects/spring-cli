@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions;
 
 import java.util.List;
@@ -48,9 +47,7 @@ public class Vars {
 
 	@Override
 	public String toString() {
-		return "Vars{" +
-				"questions=" + questions +
-				", data=" + data +
-				'}';
+		return "Vars{" + "questions=" + questions + ", data=" + data + '}';
 	}
+
 }

@@ -54,6 +54,7 @@ import org.springframework.util.StringUtils;
 public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectCatalogCommands.class);
+
 	private static final String PROJECT_CATALOG = "Project Catalog '";
 
 	private final SpringCliUserConfig springCliUserConfig;
@@ -61,13 +62,13 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 	private final SourceRepositoryService sourceRepositoryService;
 
 	private final TerminalMessage terminalMessage;
-	private final ObjectMapper objectMapper;
 
+	private final ObjectMapper objectMapper;
 
 	@Autowired
 	public ProjectCatalogCommands(SpringCliUserConfig springCliUserConfig,
-								  SourceRepositoryService sourceRepositoryService, TerminalMessage terminalMessage,
-								  ObjectMapper objectMapper) {
+			SourceRepositoryService sourceRepositoryService, TerminalMessage terminalMessage,
+			ObjectMapper objectMapper) {
 		this.springCliUserConfig = springCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
 		this.terminalMessage = terminalMessage;
@@ -76,27 +77,24 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 	@Command(command = "list-available", description = "List available catalogs")
 	public Object catalogListAvailable(
-			@Option(description = "JSON format output", required = false, defaultValue = "false") boolean json
-	) throws JsonProcessingException {
+			@Option(description = "JSON format output", required = false, defaultValue = "false") boolean json)
+			throws JsonProcessingException {
 		Collection<CatalogRepository> catalogRepositories = getCatalogRepositories();
 		if (json) {
 			return objectMapper.writeValueAsString(catalogRepositories);
 		}
 
-		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description", "URL", "Tags"});
+		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description", "URL", "Tags" });
 		List<String[]> allRows = new ArrayList<>();
 
 		// TODO enforce all entries have name and Url
 		Stream<String[]> fromCatalogRows;
 		if (catalogRepositories != null) {
 			fromCatalogRows = catalogRepositories.stream()
-					.map(tr -> new String[] {
-							tr.getName(),
-							Objects.requireNonNullElse(tr.getDescription(), ""),
-							tr.getUrl(),
-							(Objects.requireNonNullElse(tr.getTags(), "")).toString()
-					});
-		} else {
+				.map(tr -> new String[] { tr.getName(), Objects.requireNonNullElse(tr.getDescription(), ""),
+						tr.getUrl(), (Objects.requireNonNullElse(tr.getTags(), "")).toString() });
+		}
+		else {
 			fromCatalogRows = Stream.empty();
 		}
 		List<String[]> catalogRepositoryRows = fromCatalogRows.toList();
@@ -109,40 +107,37 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 	}
 
 	private Collection<CatalogRepository> getCatalogRepositories() {
-		Path path = sourceRepositoryService.retrieveRepositoryContents("https://github.com/rd-1-2022/available-catalog-repositories");
+		Path path = sourceRepositoryService
+			.retrieveRepositoryContents("https://github.com/rd-1-2022/available-catalog-repositories");
 		YamlConfigFile yamlConfigFile = new YamlConfigFile();
-		Collection<CatalogRepository> catalogRepositories =
-				yamlConfigFile.read(Paths.get(path.toString(),"catalog-repositories.yml"),
-				CatalogRepositories.class).getCatalogRepositories();
+		Collection<CatalogRepository> catalogRepositories = yamlConfigFile
+			.read(Paths.get(path.toString(), "catalog-repositories.yml"), CatalogRepositories.class)
+			.getCatalogRepositories();
 
 		// clean up temp files
 		try {
 			FileSystemUtils.deleteRecursively(path);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			logger.warn("Could not delete path " + path, ex);
 		}
 		return catalogRepositories;
 	}
 
-
 	@Command(command = "list", description = "List installed catalogs")
 	public Object catalogList(
-			@Option(description = "JSON format output", required = false, defaultValue = "false") boolean json
-	) throws JsonProcessingException {
+			@Option(description = "JSON format output", required = false, defaultValue = "false") boolean json)
+			throws JsonProcessingException {
 		Collection<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 		if (json) {
 			return objectMapper.writeValueAsString(projectCatalogs);
 		}
-		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description" , "URL", "Tags" });
+		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description", "URL", "Tags" });
 		Stream<String[]> rows = null;
 		if (projectCatalogs != null) {
 			rows = projectCatalogs.stream()
-				.map(tr -> new String[] {
-						tr.getName(),
-						Objects.requireNonNullElse(tr.getDescription(), ""),
-						tr.getUrl(),
-						(Objects.requireNonNullElse(tr.getTags(), "")).toString()
-				});
+				.map(tr -> new String[] { tr.getName(), Objects.requireNonNullElse(tr.getDescription(), ""),
+						tr.getUrl(), (Objects.requireNonNullElse(tr.getTags(), "")).toString() });
 		}
 		else {
 			rows = Stream.empty();
@@ -154,37 +149,34 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 	}
 
 	@Command(command = "add", description = "Add a project to a project catalog")
-	public void catalogAdd(
-			@Option(description = "Catalog name", required = true) String name,
+	public void catalogAdd(@Option(description = "Catalog name", required = true) String name,
 			@Option(description = "Catalog url", required = true) String url,
 			@Option(description = "Catalog description") String description,
-			@Option(description = "Project tags") List<String> tags
-	) {
+			@Option(description = "Project tags") List<String> tags) {
 		if (url == null) {
 			// look for name in available catalogs
 			Collection<CatalogRepository> catalogRepositories = getCatalogRepositories();
 			Optional<CatalogRepository> optionalCatalogRepository = catalogRepositories.stream()
-					.filter(t -> ObjectUtils.nullSafeEquals(t.getName(), name))
-					.findFirst();
+				.filter(t -> ObjectUtils.nullSafeEquals(t.getName(), name))
+				.findFirst();
 			if (optionalCatalogRepository.isPresent()) {
 				CatalogRepository catalogRepository = optionalCatalogRepository.get();
 				// Currently installed project catalogs
 				List<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 				checkIfCatalogNameExists(catalogRepository.getName(), projectCatalogs);
 				// Add to currently installed project catalogs
-				projectCatalogs.add(ProjectCatalog.of(
-						catalogRepository.getName(),
-						catalogRepository.getDescription(),
-						catalogRepository.getUrl(),
-						catalogRepository.getTags()));
+				projectCatalogs.add(ProjectCatalog.of(catalogRepository.getName(), catalogRepository.getDescription(),
+						catalogRepository.getUrl(), catalogRepository.getTags()));
 				ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
 				projectCatalogsConfig.setProjectCatalogs(projectCatalogs);
 				springCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
 				this.terminalMessage.print(PROJECT_CATALOG + name + "' added.");
-			} else {
+			}
+			else {
 				this.terminalMessage.print(PROJECT_CATALOG + name + "' not found.");
 			}
-		} else {
+		}
+		else {
 			// Add using URL
 			List<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 			checkIfCatalogNameExists(name, projectCatalogs);
@@ -197,18 +189,18 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 	}
 
 	@Command(command = "remove", description = "Remove a project from a project catalog")
-	public void catalogRemove(
-		@Option(description = "Catalog name", required = true) String name
-	) {
+	public void catalogRemove(@Option(description = "Catalog name", required = true) String name) {
 		List<ProjectCatalog> originalProjectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 		List<ProjectCatalog> updatedProjectCatalogs = originalProjectCatalogs.stream()
-			.filter(tc -> !ObjectUtils.nullSafeEquals(tc.getName(), name)).toList();
+			.filter(tc -> !ObjectUtils.nullSafeEquals(tc.getName(), name))
+			.toList();
 		if (updatedProjectCatalogs.size() < originalProjectCatalogs.size()) {
 			ProjectCatalogs projectCatalogsConfig = new ProjectCatalogs();
 			projectCatalogsConfig.setProjectCatalogs(updatedProjectCatalogs);
 			springCliUserConfig.setProjectCatalogs(projectCatalogsConfig);
 			this.terminalMessage.print("Catalog '" + name + "' removed");
-		} else {
+		}
+		else {
 			this.terminalMessage.print("Catalog '" + name + "' not found");
 		}
 
@@ -217,8 +209,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 	private void checkIfCatalogNameExists(String catalogName, List<ProjectCatalog> projectCatalogs) {
 		for (ProjectCatalog projectCatalog : projectCatalogs) {
 			if (StringUtils.hasText(catalogName) && projectCatalog.getName().equalsIgnoreCase(catalogName)) {
-				throw new SpringCliException(
-						"Catalog named " + catalogName + " already exists.  Choose another name.");
+				throw new SpringCliException("Catalog named " + catalogName + " already exists.  Choose another name.");
 			}
 		}
 	}

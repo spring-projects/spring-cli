@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cli.util.PathGatheringFileVisitor;
 
 /**
- * A {@link FileVisitor} that walks a directory structure looking for text files
- * to processes as determined by the Tika
+ * A {@link FileVisitor} that walks a directory structure looking for text files to
+ * processes as determined by the Tika
  *
  * @author Eric Bottard
  * @author Mark Pollack

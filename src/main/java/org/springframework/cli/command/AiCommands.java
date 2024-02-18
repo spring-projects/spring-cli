@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.command;
 
 import org.jline.utils.AttributedStringBuilder;
@@ -53,8 +52,9 @@ public class AiCommands implements ApplicationContextAware {
 	}
 
 	@Command(command = "add", description = "Add code to the project from AI for a Spring project.")
-	public void aiAdd(
-			@Option(description = "The description of the code to create. This can be as short as a well known Spring project name, such as 'JPA'.", required = true) String description,
+	public void aiAdd(@Option(
+			description = "The description of the code to create. This can be as short as a well known Spring project name, such as 'JPA'.",
+			required = true) String description,
 			@Option(description = "Path on which to run the command. Most of the time, you can not specify the path and use the default value, which is the current working directory.") String path,
 			@Option(description = "Create the README.md file but do not apply the changes to the code base.") boolean preview,
 			@Option(description = "Rewrite the 'description' option of the README.md file but do not apply the changes to the code base.") boolean rewrite) {
@@ -72,7 +72,8 @@ public class AiCommands implements ApplicationContextAware {
 				String[] command = new String[] { "ai add" };
 				this.terminalMessage.print(sb.toAttributedString());
 				this.terminalMessage.print(help.help(command));
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				// do nothing
 			}
 		}
@@ -82,4 +83,5 @@ public class AiCommands implements ApplicationContextAware {
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
+
 }

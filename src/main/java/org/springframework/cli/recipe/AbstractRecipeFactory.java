@@ -24,30 +24,32 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
  */
 public class AbstractRecipeFactory {
 
-    private static XmlMapper mapper = new XmlMapper();
+	private static XmlMapper mapper = new XmlMapper();
 
-    @org.jetbrains.annotations.Nullable
-    protected static String getNullOrTextValue(JsonNode jsonNode, String field) {
-        return jsonNode.get(field) != null ? AbstractRecipeFactory.getTextValue(jsonNode, field) : null;
-    }
+	@org.jetbrains.annotations.Nullable
+	protected static String getNullOrTextValue(JsonNode jsonNode, String field) {
+		return jsonNode.get(field) != null ? AbstractRecipeFactory.getTextValue(jsonNode, field) : null;
+	}
 
-    protected static String getTextValue(JsonNode jsonNode, String field) {
-        try {
-            JsonNode xmlNode = jsonNode.get(field);
-            return xmlNode.textValue();
-        } catch(NullPointerException npe) {
-            throw new RecipeCreationException("Could not get text value for field '%s' from: \n%s".formatted(field, jsonNode.toPrettyString()));
-        }
-    }
+	protected static String getTextValue(JsonNode jsonNode, String field) {
+		try {
+			JsonNode xmlNode = jsonNode.get(field);
+			return xmlNode.textValue();
+		}
+		catch (NullPointerException npe) {
+			throw new RecipeCreationException(
+					"Could not get text value for field '%s' from: \n%s".formatted(field, jsonNode.toPrettyString()));
+		}
+	}
 
-    protected static JsonNode getJsonNode(String mavenDependencySnippet) throws JsonProcessingException {
-        JsonNode jsonNode = mapper.readTree(mavenDependencySnippet);
-        return jsonNode;
-    }
+	protected static JsonNode getJsonNode(String mavenDependencySnippet) throws JsonProcessingException {
+		JsonNode jsonNode = mapper.readTree(mavenDependencySnippet);
+		return jsonNode;
+	}
 
-    protected String getTextOrDefaultValue(JsonNode jsonNode, String version, String defaultValue) {
-        String nullOrTextValue = getNullOrTextValue(jsonNode, version);
-        return nullOrTextValue == null ? defaultValue : nullOrTextValue;
-    }
+	protected String getTextOrDefaultValue(JsonNode jsonNode, String version, String defaultValue) {
+		String nullOrTextValue = getNullOrTextValue(jsonNode, version);
+		return nullOrTextValue == null ? defaultValue : nullOrTextValue;
+	}
 
 }

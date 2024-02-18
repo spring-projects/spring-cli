@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.git;
 
 import java.io.IOException;
@@ -31,7 +30,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class GitSourceRepositoryServiceTests {
 
-
 	/**
 	 * Simple sanity test
 	 * @param tempDir location to put contents of git repository
@@ -41,8 +39,8 @@ public class GitSourceRepositoryServiceTests {
 		GitSourceRepositoryService urlRepositoryService = new GitSourceRepositoryService(new SpringCliUserConfig());
 		Path contentPath = urlRepositoryService.retrieveRepositoryContents("https://github.com/rd-1-2022/rest-service");
 		assertThat(PathUtils.isEmpty(contentPath)).isFalse();
-		String[] pathToFile = new String[] { "src", "main", "java", "com", "example", "restservice",
-				"greeting", "GreetingController.java"};
+		String[] pathToFile = new String[] { "src", "main", "java", "com", "example", "restservice", "greeting",
+				"GreetingController.java" };
 		Path greetingControllerPath = Paths.get(contentPath.toString(), pathToFile);
 		assertThat(PathUtils.isEmpty(greetingControllerPath)).isFalse();
 	}

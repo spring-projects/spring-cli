@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.command;
 
 import java.nio.file.Path;
@@ -35,9 +34,9 @@ import static org.springframework.cli.testutil.TableAssertions.verifyTableValue;
 
 @ExtendWith(SystemStubsExtension.class)
 public class ConfigCommandsTests {
+
 	@SystemStub
 	private EnvironmentVariables environmentVariables;
-
 
 	@Test
 	void testConfigCommands(final @TempDir Path tempDir) {
@@ -46,7 +45,7 @@ public class ConfigCommandsTests {
 		ConfigCommands configCommands = new ConfigCommands(new SpringCliUserConfig());
 
 		Table table = configCommands.configList();
-		//System.out.println(table.render(80));
+		// System.out.println(table.render(80));
 		assertThat(table.getModel().getColumnCount()).isEqualTo(3);
 		assertThat(table.getModel().getRowCount()).isEqualTo(1);
 		verifyTableValue(table, 0, 0, "Command");
@@ -55,7 +54,7 @@ public class ConfigCommandsTests {
 
 		configCommands.configSet("boot", "new", "package-name", "com.xkcd");
 		table = configCommands.configList();
-		//System.out.println(table.render(80));
+		// System.out.println(table.render(80));
 		verifyTableValue(table, 1, 0, "boot");
 		verifyTableValue(table, 1, 1, "new");
 		verifyTableValue(table, 1, 2, "['package-name' = 'com.xkcd']");

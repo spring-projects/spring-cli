@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.command;
 
 import org.springframework.shell.command.annotation.Command;
@@ -38,12 +37,15 @@ public class VarsCommands extends AbstractShellComponent {
 	@Command(command = "new", description = "create a new var")
 	public String init() {
 		String resultValue = "";
+		// @formatter:off
 		ComponentFlow wizard = ComponentFlow.builder().reset()
 				.withStringInput("language_id") //this is the variable name
-				.name("language_name") // This is the text string the user sees.
-				.resultValue(resultValue)
-				.resultMode(ResultMode.ACCEPT)
-				.and().build();
+					.name("language_name") // This is the text string the user sees.
+					.resultValue(resultValue)
+					.resultMode(ResultMode.ACCEPT)
+					.and()
+				.build();
+		// @formatter:on
 		ComponentFlowResult componentFlowResult = wizard.run();
 		ComponentContext<?> resultContext = componentFlowResult.getContext();
 
@@ -51,4 +53,5 @@ public class VarsCommands extends AbstractShellComponent {
 		System.out.println("Collected " + obj + " as value.  Inferred type " + inferType(obj).getClass());
 		return "Flow completed";
 	}
+
 }

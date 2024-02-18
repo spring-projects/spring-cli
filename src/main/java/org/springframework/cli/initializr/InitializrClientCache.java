@@ -29,6 +29,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class InitializrClientCache {
 
 	private final WebClient.Builder webClientBuilder;
+
 	private final Map<String, InitializrClient> cache = new HashMap<>();
 
 	public InitializrClientCache(WebClient.Builder webClientBuilder) {
@@ -38,15 +39,13 @@ public class InitializrClientCache {
 
 	/**
 	 * Get {@link InitializrClient} with a given url and cache it for next use.
-	 *
 	 * @param url the initializr url
 	 * @return initializr client
 	 */
 	public InitializrClient get(String url) {
 		return cache.computeIfAbsent(url, baseUrl -> {
-			return InitializrClient.builder(webClientBuilder)
-				.target(baseUrl)
-				.build();
+			return InitializrClient.builder(webClientBuilder).target(baseUrl).build();
 		});
 	}
+
 }

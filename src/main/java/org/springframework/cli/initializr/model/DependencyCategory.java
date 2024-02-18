@@ -21,6 +21,7 @@ import java.util.List;
 public class DependencyCategory {
 
 	private String name;
+
 	private List<Dependency> values = new ArrayList<>();
 
 	public DependencyCategory() {
@@ -41,4 +42,5 @@ public class DependencyCategory {
 	public void setValues(List<Dependency> values) {
 		this.values = values;
 	}
+
 }

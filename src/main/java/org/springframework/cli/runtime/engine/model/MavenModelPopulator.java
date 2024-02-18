@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.model;
 
 import java.nio.file.Files;
@@ -62,7 +61,8 @@ public class MavenModelPopulator implements ModelPopulator {
 			Properties mavenProperties = new Properties();
 			// This will take care of properties such as 'java-version'
 			for (Entry<Object, Object> kv : mavenModel.getProperties().entrySet()) {
-				// can't use 'dots' in template language replacement expressions, change to underscore
+				// can't use 'dots' in template language replacement expressions, change
+				// to underscore
 				mavenProperties.put(kv.getKey().toString().replace('.', '-'), kv.getValue());
 			}
 			model.putIfAbsent(MAVEN_PROPERTIES, mavenProperties);
@@ -75,7 +75,8 @@ public class MavenModelPopulator implements ModelPopulator {
 	}
 
 	private String getArtifactPath(Path pomFile, Model mavenModel) {
-		Path artifactPath = Paths.get(pomFile.getParent().toString(), "target", mavenModel.getArtifactId() + "-" + mavenModel.getVersion() + "." + mavenModel.getPackaging());
+		Path artifactPath = Paths.get(pomFile.getParent().toString(), "target",
+				mavenModel.getArtifactId() + "-" + mavenModel.getVersion() + "." + mavenModel.getPackaging());
 		return artifactPath.toAbsolutePath().toString();
 
 	}

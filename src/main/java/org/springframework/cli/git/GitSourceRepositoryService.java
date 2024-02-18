@@ -125,7 +125,8 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 				if (StringUtils.hasText(System.getenv("GITHUB_OAUTH"))) {
 					try {
 						github = GitHubBuilder.fromEnvironment().build();
-					} catch (IOException e) {
+					}
+					catch (IOException e) {
 						logger.trace("No environment variable GITHUB_AUTH found.", e.getMessage());
 						// do nothing
 					}
@@ -134,14 +135,15 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 				if (github == null) {
 					try {
 						github = GitHubBuilder.fromPropertyFile().build();
-					} catch (IOException e) {
+					}
+					catch (IOException e) {
 						logger.trace("No .github directory found under the base user.dir.", e.getMessage());
 						// ignore as there is not a .github directory under the user.dir
 					}
 				}
 				// connect anonymously
 				if (github == null) {
-					//TODO terminal warning about rate limiting
+					// TODO terminal warning about rate limiting
 					github = GitHub.connectAnonymously();
 				}
 			}
@@ -155,13 +157,14 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 			String ref = url.getRef();
 			GHRepository ghRepository = github.getRepository(repo);
 			InputStream inputStream = ghRepository
-					.readTar((inputstream) -> new ByteArrayInputStream(StreamUtils.copyToByteArray(inputstream)), ref);
+				.readTar((inputstream) -> new ByteArrayInputStream(StreamUtils.copyToByteArray(inputstream)), ref);
 
 			File targetFile = targetPath.toFile();
 			Archiver archiver = ArchiverFactory.createArchiver("tar", "gz");
 			try {
 				archiver.extract(inputStream, targetPath.toFile());
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				throw new SpringCliException(String.format("Extraction error to %s", targetFile.getAbsolutePath()), e);
 			}
 
@@ -226,15 +229,16 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 					}
 				}
 			}
-			File tarfile = gitLabApi.getRepositoryApi().getRepositoryArchive(repo, refSha, targetPath.toFile(),
-					ArchiveFormat.TAR_GZ);
+			File tarfile = gitLabApi.getRepositoryApi()
+				.getRepositoryArchive(repo, refSha, targetPath.toFile(), ArchiveFormat.TAR_GZ);
 			logger.debug("Wrote GitLab Repo " + repo + " to " + tarfile.getAbsolutePath());
 
 			File targetFile = targetPath.toFile();
 			Archiver archiver = ArchiverFactory.createArchiver("tar", "gz");
 			try {
 				archiver.extract(tarfile, targetPath.toFile());
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				throw new SpringCliException(String.format("Extraction error to %s", targetFile.getAbsolutePath()), e);
 			}
 
@@ -266,4 +270,5 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 		}
 		return null;
 	}
+
 }

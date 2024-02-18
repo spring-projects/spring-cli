@@ -64,7 +64,8 @@ public class GithubCommands extends AbstractSpringCliCommands {
 	private SpringCliTerminal terminal;
 
 	@Autowired
-	public GithubCommands(Builder webClientBuilder, ComponentFlow.Builder componentFlowBuilder, SpringCliUserConfig userConfig, SpringCliTerminal springCliTerminal) {
+	public GithubCommands(Builder webClientBuilder, ComponentFlow.Builder componentFlowBuilder,
+			SpringCliUserConfig userConfig, SpringCliTerminal springCliTerminal) {
 		this.webClientBuilder = webClientBuilder;
 		this.componentFlowBuilder = componentFlowBuilder;
 		this.userConfig = userConfig;
@@ -72,8 +73,8 @@ public class GithubCommands extends AbstractSpringCliCommands {
 	}
 
 	/**
-	 * Login command for github. Makes user to choose either starting a device flow
-	 * via browser or pasting a token created manually.
+	 * Login command for github. Makes user to choose either starting a device flow via
+	 * browser or pasting a token created manually.
 	 */
 	@Command(command = "login", description = "Authenticate with GitHub.")
 	public void login() {
@@ -86,14 +87,14 @@ public class GithubCommands extends AbstractSpringCliCommands {
 			Map<String, String> response = githubDeviceFlow.requestDeviceFlow(webClientBuilder, clientId, scopes);
 
 			AttributedString styledStr = terminal.styledString("!", StyleSettings.TAG_LEVEL_WARN);
+			styledStr = terminal.join(styledStr, terminal.styledString(
+					" Open your browser with https://github.com/login/device and paste the device code ", null));
 			styledStr = terminal.join(styledStr,
-					terminal.styledString(" Open your browser with https://github.com/login/device and paste the device code ", null));
-			styledStr = terminal.join(styledStr, terminal.styledString(response.get("user_code"), StyleSettings.TAG_HIGHLIGHT));
+					terminal.styledString(response.get("user_code"), StyleSettings.TAG_HIGHLIGHT));
 			terminal.print(styledStr);
 
 			Optional<String> token = githubDeviceFlow.waitTokenFromDeviceFlow(webClientBuilder, clientId,
-					response.get("device_code"),
-					Integer.parseInt(response.get("expires_in")),
+					response.get("device_code"), Integer.parseInt(response.get("expires_in")),
 					Integer.parseInt(response.get("interval")));
 			if (token.isPresent()) {
 				userConfig.updateHost("github.com", new Host(token.get(), null));
@@ -139,14 +140,12 @@ public class GithubCommands extends AbstractSpringCliCommands {
 
 	/**
 	 * Shows current authentication status for a github.
-	 *
 	 * @param showToken flag if actual token should be shown.
 	 * @return the content
 	 */
 	@Command(command = "status", description = "View authentication status.")
 	public AttributedString status(
-			@Option(longNames = "show-token", description = "Display the auth token.") boolean showToken
-		) {
+			@Option(longNames = "show-token", description = "Display the auth token.") boolean showToken) {
 		Host host = null;
 		Map<String, Host> hosts = userConfig.getHosts();
 		if (hosts != null) {
@@ -158,13 +157,13 @@ public class GithubCommands extends AbstractSpringCliCommands {
 		else {
 			String loginName = null;
 			try {
-				GitHub gh = new GitHubBuilder()
-						.withOAuthToken(host.getOauthToken())
-						.withRateLimitChecker(RATE_LIMIT_CHECKER)
-						.build();
+				GitHub gh = new GitHubBuilder().withOAuthToken(host.getOauthToken())
+					.withRateLimitChecker(RATE_LIMIT_CHECKER)
+					.build();
 				loginName = gh.getMyself().getLogin();
 				log.debug("Got loginName {}", loginName);
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				log.error("Error getting GitHub login.", e);
 			}
 			AttributedString ret = terminal.styledString("You are logged into GitHub as ", null);
@@ -179,13 +178,13 @@ public class GithubCommands extends AbstractSpringCliCommands {
 
 	/**
 	 * Asks if user wants to auth by giving a token or going through web flow.
-	 *
 	 * @return either web or paste
 	 */
 	private String askAuthType() {
 		Map<String, String> authType = new HashMap<>();
 		authType.put("Login with a web browser", "web");
 		authType.put("Paste an authentication token", "paste");
+		// @formatter:off
 		ComponentFlow wizard = componentFlowBuilder.clone().reset()
 				.withSingleItemSelector("authType")
 					.name("How would you like to authenticate GitHub CLI?")
@@ -193,16 +192,17 @@ public class GithubCommands extends AbstractSpringCliCommands {
 					.selectItems(authType)
 					.and()
 				.build();
+		// @formatter:on
 		ComponentFlowResult run = wizard.run();
 		return run.getContext().get("authType");
 	}
 
 	/**
 	 * Asks user to paste a token.
-	 *
 	 * @return token user gave
 	 */
 	private String askToken() {
+		// @formatter:off
 		ComponentFlow wizard = componentFlowBuilder.clone().reset()
 				.resourceLoader(getResourceLoader())
 				.templateExecutor(getTemplateExecutor())
@@ -211,7 +211,9 @@ public class GithubCommands extends AbstractSpringCliCommands {
 					.maskCharacter('*')
 					.and()
 				.build();
+		// @formatter:on
 		ComponentFlowResult run = wizard.run();
 		return run.getContext().get("token");
 	}
+
 }

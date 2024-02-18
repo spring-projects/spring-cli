@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions;
 
 import java.util.List;
@@ -40,8 +39,7 @@ public class ActionsFile {
 
 	@Override
 	public String toString() {
-		return "ActionsFile{" +
-				"actions=" + actions +
-				'}';
+		return "ActionsFile{" + "actions=" + actions + '}';
 	}
+
 }

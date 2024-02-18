@@ -21,6 +21,7 @@ public class PackageName {
 
 	@JsonProperty("default")
 	private String defaultId;
+
 	private String type;
 
 	public PackageName() {
@@ -41,4 +42,5 @@ public class PackageName {
 	public void setType(String type) {
 		this.type = type;
 	}
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.util;
 
 import org.springframework.util.StringUtils;
@@ -33,7 +32,8 @@ public class ProjectInfo {
 
 	private String packageName;
 
-	public ProjectInfo(String groupId, String artifactId, String version, String name, String description, String packageName) {
+	public ProjectInfo(String groupId, String artifactId, String version, String name, String description,
+			String packageName) {
 		this.groupId = groupId;
 		this.artifactId = artifactId;
 		this.version = version;
@@ -54,8 +54,6 @@ public class ProjectInfo {
 		return groupId;
 	}
 
-
-
 	public String getArtifactId() {
 		return artifactId;
 	}
@@ -74,14 +72,9 @@ public class ProjectInfo {
 
 	@Override
 	public String toString() {
-		return "ProjectInfo{" +
-				"name='" + name + '\'' +
-				", description='" + description + '\'' +
-				", groupId='" + groupId + '\'' +
-				", artifactId='" + artifactId + '\'' +
-				", version='" + version + '\'' +
-				", packageName='" + packageName + '\'' +
-				'}';
+		return "ProjectInfo{" + "name='" + name + '\'' + ", description='" + description + '\'' + ", groupId='"
+				+ groupId + '\'' + ", artifactId='" + artifactId + '\'' + ", version='" + version + '\''
+				+ ", packageName='" + packageName + '\'' + '}';
 	}
 
 	public ProjectInfo getDefaults() {
@@ -93,13 +86,14 @@ public class ProjectInfo {
 		String packageNameToUse;
 		if (StringUtils.hasText(packageName)) {
 			packageNameToUse = packageName;
-		} else if (StringUtils.hasText(groupId) && StringUtils.hasText(artifactIdToUse)) {
+		}
+		else if (StringUtils.hasText(groupId) && StringUtils.hasText(artifactIdToUse)) {
 			packageNameToUse = groupId + "." + artifactIdToUse;
-		} else {
+		}
+		else {
 			packageNameToUse = null;
 		}
 		return new ProjectInfo(groupId, artifactIdToUse, version, name, description, packageNameToUse);
 	}
-
 
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.recipe;
 
 import org.openrewrite.ExecutionContext;
@@ -51,7 +50,8 @@ public class InjectTextMavenRepositoryRecipe extends Recipe {
 			public Xml.Document visitDocument(Xml.Document document, ExecutionContext ctx) {
 				Xml.Tag root = document.getRoot();
 				if (!root.getChild("repositories").isPresent()) {
-					document = (Xml.Document) (new AddToTagVisitor(root, Tag.build("<repositories/>"))).visitNonNull(document, ctx, this.getCursor().getParentOrThrow());
+					document = (Xml.Document) (new AddToTagVisitor(root, Tag.build("<repositories/>")))
+						.visitNonNull(document, ctx, this.getCursor().getParentOrThrow());
 				}
 
 				return super.visitDocument(document, ctx);
@@ -61,11 +61,13 @@ public class InjectTextMavenRepositoryRecipe extends Recipe {
 				Xml.Tag repositories = super.visitTag(tag, ctx);
 				if (REPOS_MATCHER.matches(this.getCursor())) {
 					Xml.Tag repositoryTag = Tag.build(text);
-					repositories = (Xml.Tag) (new AddToTagVisitor(repositories, repositoryTag)).visitNonNull(repositories, ctx, this.getCursor().getParentOrThrow());
+					repositories = (Xml.Tag) (new AddToTagVisitor(repositories, repositoryTag))
+						.visitNonNull(repositories, ctx, this.getCursor().getParentOrThrow());
 					this.maybeUpdateModel();
 				}
 				return repositories;
 			}
 		};
 	}
+
 }

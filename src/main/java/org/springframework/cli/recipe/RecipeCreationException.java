@@ -19,7 +19,9 @@ package org.springframework.cli.recipe;
  * @author Fabian Krüger
  */
 public class RecipeCreationException extends RuntimeException {
-    public RecipeCreationException(String message) {
-        super(message);
-    }
+
+	public RecipeCreationException(String message) {
+		super(message);
+	}
+
 }

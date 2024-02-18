@@ -22,4 +22,5 @@ public class UserConfigTests {
 	@Test
 	public void test() {
 	}
+
 }

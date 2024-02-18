@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions;
 
 import java.util.Map;
@@ -25,19 +24,19 @@ import org.springframework.cli.SpringCliException;
 import org.springframework.cli.testutil.TestResourceUtils;
 import org.springframework.core.io.ClassPathResource;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ActionsFileReaderTests {
 
-//	@Test
-//	void readWithName() {
-//		ClassPathResource classPathResource = TestResourceUtils.qualifiedResource(getClass(), "actions-with-name.yaml");
-//		ActionFileReader actionFileReader = new ActionFileReader();
-//		ActionsFile actionsFile = actionFileReader.read(classPathResource);
-//		System.out.println(actionsFile.getActions());
-//	}
+	// @Test
+	// void readWithName() {
+	// ClassPathResource classPathResource =
+	// TestResourceUtils.qualifiedResource(getClass(), "actions-with-name.yaml");
+	// ActionFileReader actionFileReader = new ActionFileReader();
+	// ActionsFile actionsFile = actionFileReader.read(classPathResource);
+	// System.out.println(actionsFile.getActions());
+	// }
 
 	@Test
 	void readBadVars() {
@@ -48,7 +47,8 @@ class ActionsFileReaderTests {
 			ActionsFile actionsFile = actionFileReader.read(classPathResource);
 		});
 
-		assertThat(exception.getMessage()).contains("You may have forgot to define 'name' or 'label' as fields directly under the '-question:' field");
+		assertThat(exception.getMessage()).contains(
+				"You may have forgot to define 'name' or 'label' as fields directly under the '-question:' field");
 	}
 
 	@Test
@@ -60,10 +60,7 @@ class ActionsFileReaderTests {
 		Action action = actionsFile.getActions().get(0);
 		Vars vars = action.getVars();
 		Map<String, Object> data = vars.getData();
-		assertThat(data)
-				.containsEntry("name", "John")
-				.containsEntry("age", 30)
-				.containsEntry("person", true);
+		assertThat(data).containsEntry("name", "John").containsEntry("age", 30).containsEntry("person", true);
 
 	}
 
@@ -95,16 +92,16 @@ class ActionsFileReaderTests {
 		assertThat(actionsFile.getActions()).hasSize(1);
 		String text = actionsFile.getActions().get(0).getInjectMavenDependency().getText();
 		assertThat(text).contains("spring-boot-starter-data-jpa")
-				.contains("com.h2database")
-				.contains("spring-boot-starter-test");
+			.contains("com.h2database")
+			.contains("spring-boot-starter-test");
 	}
 
+	// public static String asString(Resource resource) {
+	// try (Reader reader = new InputStreamReader(resource.getInputStream(), UTF_8)) {
+	// return FileCopyUtils.copyToString(reader);
+	// } catch (IOException e) {
+	// throw new UncheckedIOException(e);
+	// }
+	// }
 
-//	public static String asString(Resource resource) {
-//		try (Reader reader = new InputStreamReader(resource.getInputStream(), UTF_8)) {
-//			return FileCopyUtils.copyToString(reader);
-//		} catch (IOException e) {
-//			throw new UncheckedIOException(e);
-//		}
-//	}
 }

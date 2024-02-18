@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.command;
 
 import java.io.File;
@@ -61,7 +60,6 @@ public class RoleCommands extends AbstractSpringCliCommands {
 		this.roleService = new RoleService(workingDir);
 	}
 
-
 	@Command(command = "add", description = "Add a role")
 	public void roleAdd(@Option(description = "Role name", required = true) String name) {
 		File roleFile = this.roleService.getFile(name);
@@ -70,11 +68,13 @@ public class RoleCommands extends AbstractSpringCliCommands {
 				this.roleService.createRolesDirectoryIfNecessary();
 				roleFile.createNewFile();
 				this.terminalMessage.print("Role '" + name + "' created.");
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				String message = StringUtils.hasText(name) ? "role " + name : "the default role ";
 				throw new SpringCliException("Error adding '" + message + ".  " + e.getMessage());
 			}
-		} else {
+		}
+		else {
 			this.terminalMessage.print("Role '" + name + "' already exists.");
 		}
 	}
@@ -87,14 +87,14 @@ public class RoleCommands extends AbstractSpringCliCommands {
 				String message = StringUtils.hasText(name) ? "Role '" + name + "'" : "The default role file was ";
 				this.terminalMessage.print(message + " deleted.");
 			}
-		} else {
+		}
+		else {
 			this.terminalMessage.print("Role " + name + "' does not exist.");
 		}
 	}
 
 	@Command(command = "set", description = "Set a key value pair for a role")
-	public void roleSet(
-			@Option(description = "A key", required = true) String key,
+	public void roleSet(@Option(description = "A key", required = true) String key,
 			@Option(description = "A value", required = true) Object value,
 			@Option(description = "Role name") String name) {
 		if (!StringUtils.hasText(name)) {
@@ -106,19 +106,20 @@ public class RoleCommands extends AbstractSpringCliCommands {
 	}
 
 	@Command(command = "get", description = "Get the value of a key for a role")
-	public void roleGet(
-			@Option(description = "Property key", required = true) String key,
+	public void roleGet(@Option(description = "Property key", required = true) String key,
 			@Option(description = "Role name") String name) {
 		Map<String, Object> map = this.roleService.loadAsMap(name);
-		if (! map.isEmpty()) {
+		if (!map.isEmpty()) {
 			Object value = map.get(key);
 			if (value != null) {
 				this.terminalMessage.print(value.toString());
-			} else {
+			}
+			else {
 				String message = StringUtils.hasText(name) ? " role " + name : "the default role";
 				this.terminalMessage.print("Key '" + key + "' not found in " + message);
 			}
-		} else {
+		}
+		else {
 			String message = StringUtils.hasText(name) ? " role " + name : "the default role ";
 			this.terminalMessage.print("Value for key " + key + " does not exist in " + message);
 		}
@@ -131,10 +132,9 @@ public class RoleCommands extends AbstractSpringCliCommands {
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name" });
 		Stream<String[]> rows;
 		if (rolesNames != null) {
-			rows = rolesNames.stream()
-					.map(tr -> new String[] { tr }
-					);
-		} else {
+			rows = rolesNames.stream().map(tr -> new String[] { tr });
+		}
+		else {
 			rows = Stream.empty();
 		}
 		List<String[]> allRows = rows.collect(Collectors.toList());
@@ -147,4 +147,5 @@ public class RoleCommands extends AbstractSpringCliCommands {
 	public RoleService getRoleService() {
 		return roleService;
 	}
+
 }

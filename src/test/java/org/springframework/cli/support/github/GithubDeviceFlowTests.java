@@ -37,7 +37,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class GithubDeviceFlowTests {
 
 	private MockWebServer server;
+
 	private WebClient.Builder webClientBuilder;
+
 	private String baseUri;
 
 	@BeforeEach
@@ -51,7 +53,7 @@ class GithubDeviceFlowTests {
 	@AfterEach
 	void cleanup() throws Exception {
 		if (this.server != null) {
-				this.server.shutdown();
+			this.server.shutdown();
 		}
 	}
 
@@ -83,8 +85,7 @@ class GithubDeviceFlowTests {
 
 		GithubDeviceFlow githubDeviceFlow = new GithubDeviceFlow(baseUri);
 		Optional<String> waitTokenFromDeviceFlow = githubDeviceFlow.waitTokenFromDeviceFlow(webClientBuilder,
-				"clientId",
-				"deviceCode", 6, 1);
+				"clientId", "deviceCode", 6, 1);
 		assertThat(waitTokenFromDeviceFlow).hasValue("gho_16C7e42F292c6912E7710c838347Ae178B4a");
 	}
 
@@ -103,8 +104,7 @@ class GithubDeviceFlowTests {
 
 		GithubDeviceFlow githubDeviceFlow = new GithubDeviceFlow(baseUri);
 		Optional<String> waitTokenFromDeviceFlow = githubDeviceFlow.waitTokenFromDeviceFlow(webClientBuilder,
-				"clientId",
-				"deviceCode", 2, 1);
+				"clientId", "deviceCode", 2, 1);
 		assertThat(waitTokenFromDeviceFlow).isEmpty();
 	}
 
@@ -127,4 +127,5 @@ class GithubDeviceFlowTests {
 		}
 		return response;
 	}
+
 }

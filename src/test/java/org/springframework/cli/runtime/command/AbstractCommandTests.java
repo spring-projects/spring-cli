@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.command;
 
 import java.io.File;
@@ -40,17 +39,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbstractCommandTests {
 
-	public void runCommand(String noun, String verb, Map<String, Object> model, String commandLocation) throws IOException {
-		DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, Collections.emptyList(), TerminalMessage.noop(), Optional.empty());
+	public void runCommand(String noun, String verb, Map<String, Object> model, String commandLocation)
+			throws IOException {
+		DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, Collections.emptyList(), TerminalMessage.noop(),
+				Optional.empty());
 		dynamicCommand.runCommand(Paths.get(commandLocation), ".spring", "commands", model);
 	}
 
-	public void runCommand(String noun, String verb, Map<String, Object> model, List<ModelPopulator> modelPopulators, String commandLocation) throws IOException {
-		DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, modelPopulators, TerminalMessage.noop(), Optional.empty());
+	public void runCommand(String noun, String verb, Map<String, Object> model, List<ModelPopulator> modelPopulators,
+			String commandLocation) throws IOException {
+		DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, modelPopulators, TerminalMessage.noop(),
+				Optional.empty());
 		dynamicCommand.runCommand(Paths.get(commandLocation), ".spring", "commands", model);
 	}
 
-	public void runInjectAction(String noun, String verb, Map<String, Object> model, String fileName, String commandLocation) throws IOException {
+	public void runInjectAction(String noun, String verb, Map<String, Object> model, String fileName,
+			String commandLocation) throws IOException {
 		Path workingDirectory = new File(commandLocation).toPath();
 		assertThat(Files.exists(workingDirectory)).isTrue();
 
@@ -71,7 +75,8 @@ public class AbstractCommandTests {
 		Files.copy(fileToInject, backupFile, StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 
 		try {
-			DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, Collections.emptyList(), TerminalMessage.noop(), Optional.empty());
+			DynamicCommand dynamicCommand = new DynamicCommand(noun, verb, Collections.emptyList(),
+					TerminalMessage.noop(), Optional.empty());
 			dynamicCommand.runCommand(Paths.get(commandLocation), null, null, model);
 			List<String> expectedLines = Files.readAllLines(expectedFile);
 			List<String> actualLines = Files.readAllLines(fileToInject);
@@ -115,13 +120,11 @@ public class AbstractCommandTests {
 
 	}
 
-
-
-
 	public void deleteIfExists(Path dir) throws IOException {
 		if (Files.exists(dir)) {
 			// Delete from previous run
 			Files.delete(dir);
 		}
 	}
+
 }

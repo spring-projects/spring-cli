@@ -30,12 +30,12 @@ public class GitRepoUrlRefTests {
 	void testIllegalArgs() {
 		assertThatIllegalArgumentException().isThrownBy(() -> GitRepoUrlRef.fromUriString(null));
 		assertThatIllegalArgumentException()
-				.isThrownBy(() -> GitRepoUrlRef.fromUriString("github.com/trisberg/hello-fun"));
+			.isThrownBy(() -> GitRepoUrlRef.fromUriString("github.com/trisberg/hello-fun"));
 		assertThatIllegalArgumentException()
-				.isThrownBy(() -> GitRepoUrlRef.fromUriString("git://github.com/trisberg/hello-fun"));
+			.isThrownBy(() -> GitRepoUrlRef.fromUriString("git://github.com/trisberg/hello-fun"));
 		assertThatIllegalArgumentException().isThrownBy(() -> GitRepoUrlRef.fromUriString("https://"));
 		assertThatIllegalArgumentException()
-				.isThrownBy(() -> GitRepoUrlRef.fromUriString("git://github.com/trisberg/hello-fun?fail=true"));
+			.isThrownBy(() -> GitRepoUrlRef.fromUriString("git://github.com/trisberg/hello-fun?fail=true"));
 	}
 
 	@Test

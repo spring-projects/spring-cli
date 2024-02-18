@@ -45,4 +45,5 @@ public class BootVersion {
 	public void setValues(List<IdName> values) {
 		this.values = values;
 	}
+
 }

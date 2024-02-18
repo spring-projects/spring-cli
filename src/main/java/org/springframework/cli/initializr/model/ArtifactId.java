@@ -21,6 +21,7 @@ public class ArtifactId {
 
 	@JsonProperty("default")
 	private String defaultId;
+
 	private String type;
 
 	public ArtifactId() {
@@ -41,4 +42,5 @@ public class ArtifactId {
 	public void setType(String type) {
 		this.type = type;
 	}
+
 }

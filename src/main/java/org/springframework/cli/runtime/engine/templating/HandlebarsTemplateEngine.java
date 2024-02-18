@@ -36,7 +36,7 @@ public class HandlebarsTemplateEngine implements TemplateEngine {
 	private Handlebars handlebars;
 
 	public HandlebarsTemplateEngine() {
-		this.handlebars =  new Handlebars();
+		this.handlebars = new Handlebars();
 		HumanizeHelper.register(this.handlebars);
 		StringHelpers.register(this.handlebars);
 	}
@@ -51,7 +51,8 @@ public class HandlebarsTemplateEngine implements TemplateEngine {
 			Context handlebarsContext = Context.newBuilder(context).build();
 			if (StringUtils.hasText(templateText)) {
 				return template.apply(handlebarsContext);
-			} else {
+			}
+			else {
 				return "";
 			}
 		}

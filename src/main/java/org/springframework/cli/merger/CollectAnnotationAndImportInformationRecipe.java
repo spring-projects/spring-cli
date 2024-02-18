@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger;
 
 import org.openrewrite.ExecutionContext;
@@ -83,4 +82,5 @@ public class CollectAnnotationAndImportInformationRecipe extends Recipe {
 			}
 		};
 	}
+
 }

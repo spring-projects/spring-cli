@@ -28,13 +28,13 @@ import org.springframework.shell.standard.AbstractShellComponent;
  */
 public abstract class AbstractSpringCliCommands extends AbstractShellComponent {
 
-    private ObjectProvider<SpringCliProperties> cliPropertiesProvider;
+	private ObjectProvider<SpringCliProperties> cliPropertiesProvider;
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		super.setApplicationContext(applicationContext);
 		this.cliPropertiesProvider = applicationContext.getBeanProvider(SpringCliProperties.class);
-    }
+	}
 
 	protected SpringCliProperties getCliProperties() {
 		return this.cliPropertiesProvider.getObject();

@@ -47,17 +47,20 @@ public class CommandScannerTests {
 			assertThat(command.getName()).isEqualTo("k8s-simple");
 			// Get the sub-commands for k8s-simple
 			final List<Command> commandListEntryValue = commandListEntry.getValue();
-			List<String> subCommandNameList = commandListEntryValue.stream().map(Command::getName)
-					.collect(Collectors.toList());
+			List<String> subCommandNameList = commandListEntryValue.stream()
+				.map(Command::getName)
+				.collect(Collectors.toList());
 			System.out.println(subCommandNameList);
 			assertThat(subCommandNameList).containsExactlyInAnyOrder("new", "new-services");
 			for (Command subCommand : commandListEntryValue) {
 				if (subCommand.getName().equals("new")) {
 					assertThat(subCommand.getDescription())
-							.isEqualTo("Create the Kubernetes resource files for the application");
+						.isEqualTo("Create the Kubernetes resource files for the application");
 					List<CommandOption> optionsList = subCommand.getOptions();
 					CommandOption commandOption = optionsList.stream()
-							.filter((option) -> "platform".equals(option.getName())).findAny().orElseThrow();
+						.filter((option) -> "platform".equals(option.getName()))
+						.findAny()
+						.orElseThrow();
 					assertThat(commandOption.getDescription()).isEqualTo("platform to target");
 					assertThat(commandOption.getDataType()).isEqualTo("string");
 					assertThat(commandOption.getDefaultValue()).isEqualTo("azure");

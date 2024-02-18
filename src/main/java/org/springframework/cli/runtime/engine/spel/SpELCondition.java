@@ -62,6 +62,7 @@ public class SpELCondition {
 	public SpELCondition(String expression) {
 		this(expression, ParserContext.TEMPLATE_EXPRESSION);
 	}
+
 	public SpELCondition(String expression, BeanResolver beanResolver) {
 		this(expression, ParserContext.TEMPLATE_EXPRESSION, beanResolver);
 	}
@@ -85,17 +86,20 @@ public class SpELCondition {
 			context.setBeanResolver(beanResolver);
 		}
 		Expression compiledExpression = parser.parseExpression(this.expression, this.parserContext);
-		Object expressionValue =  compiledExpression.getValue(context, Object.class);
+		Object expressionValue = compiledExpression.getValue(context, Object.class);
 		if (Objects.isNull(expressionValue)) {
-			throw new SpringCliException("'if' expression: '" + this.expression + "' should return boolean.  Instead returned null.");
+			throw new SpringCliException(
+					"'if' expression: '" + this.expression + "' should return boolean.  Instead returned null.");
 		}
 		if (expressionValue instanceof Boolean boolValue) {
 			return boolValue;
-		} else {
-			throw new SpringCliException("'if' expression: '" + this.expression
-					+ "' should return boolean.  Instead returned class = "
-					+ expressionValue.getClass() + " with value = " + expressionValue.toString());
+		}
+		else {
+			throw new SpringCliException(
+					"'if' expression: '" + this.expression + "' should return boolean.  Instead returned class = "
+							+ expressionValue.getClass() + " with value = " + expressionValue.toString());
 
 		}
 	}
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -35,9 +34,8 @@ public class Generate {
 	private boolean overwrite;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	Generate(@JsonProperty("to") String to,  @JsonProperty("text") String text,
-			@JsonProperty("from") String from,
-			@JsonProperty("overwrite") boolean overwrite){
+	Generate(@JsonProperty("to") String to, @JsonProperty("text") String text, @JsonProperty("from") String from,
+			@JsonProperty("overwrite") boolean overwrite) {
 		this.to = to;
 		this.text = text;
 		this.from = from;
@@ -62,11 +60,8 @@ public class Generate {
 
 	@Override
 	public String toString() {
-		return "Generate{" +
-				"to='" + to + '\'' +
-				", text='" + text + '\'' +
-				", from='" + from + '\'' +
-				", overwrite=" + overwrite +
-				'}';
+		return "Generate{" + "to='" + to + '\'' + ", text='" + text + '\'' + ", from='" + from + '\'' + ", overwrite="
+				+ overwrite + '}';
 	}
+
 }

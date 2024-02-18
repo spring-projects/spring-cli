@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.testutil;
 
 import org.springframework.shell.table.Table;
@@ -23,10 +22,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TableAssertions {
 
-
 	public static void verifyTableValue(Table table, int row, int col, Object expected) {
 		assertThat(table.getModel().getValue(row, col))
-				.as(String.format("Row %d, Column %d should be: %s", row, col, expected))
-				.isEqualTo(expected);
+			.as(String.format("Row %d, Column %d should be: %s", row, col, expected))
+			.isEqualTo(expected);
 	}
+
 }

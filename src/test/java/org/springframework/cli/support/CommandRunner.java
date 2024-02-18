@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.support;
 
 import java.io.IOException;
@@ -44,12 +43,15 @@ import static org.mockito.Mockito.mock;
 public class CommandRunner {
 
 	private final ApplicationContext context;
+
 	private final String projectName;
+
 	private final Path workingDir;
 
 	private final String commandGroup;
 
 	private final String executeCommand;
+
 	private final List<Map.Entry<String, String>> arguments;
 
 	private final Terminal terminal;
@@ -78,24 +80,27 @@ public class CommandRunner {
 			}
 
 			if (commandGroup != null) {
-				Path commandPath = workingDir.resolve(".spring").resolve("commands")
-						.resolve(commandAndSubCommand[0])
-						.resolve(commandAndSubCommand[1]);
-				assertThat(commandPath).withFailMessage("Directory for command "
-						+ commandAndSubCommand + " could not be found.\n  Looked in directory "
-						+ commandGroup +
-						".\n  Check that 'installCommandGroup' and 'executeCommand' are not mismatched.\n");
+				Path commandPath = workingDir.resolve(".spring")
+					.resolve("commands")
+					.resolve(commandAndSubCommand[0])
+					.resolve(commandAndSubCommand[1]);
+				assertThat(commandPath).withFailMessage("Directory for command " + commandAndSubCommand
+						+ " could not be found.\n  Looked in directory " + commandGroup
+						+ ".\n  Check that 'installCommandGroup' and 'executeCommand' are not mismatched.\n");
 				dynamicCommand.runCommand(workingDir, ".spring", "commands", model);
 			}
 		}
 	}
 
 	public static class Builder {
+
 		// Optional parameters
 		private ApplicationContext context;
+
 		private String projectName;
 
 		private Path projectPath;
+
 		private Path workingDir;
 
 		private String commandGroup;
@@ -122,7 +127,8 @@ public class CommandRunner {
 				this.projectPath = Path.of(resource.getFile().getAbsolutePath());
 			}
 			catch (IOException e) {
-				fail("Project name " + projectName + " could not resolved to the directory " + resource.getDescription());
+				fail("Project name " + projectName + " could not resolved to the directory "
+						+ resource.getDescription());
 			}
 			return this;
 		}
@@ -136,7 +142,8 @@ public class CommandRunner {
 				this.commandGroupPath = Path.of(resource.getFile().getAbsolutePath());
 			}
 			catch (IOException e) {
-				fail("Command group name " + commandGroup + " could not resolved to the directory " + resource.getDescription());
+				fail("Command group name " + commandGroup + " could not resolved to the directory "
+						+ resource.getDescription());
 			}
 			return this;
 		}
@@ -145,8 +152,9 @@ public class CommandRunner {
 			this.executeCommand = Objects.requireNonNull(command);
 			String[] commandAndSubCommand = command.split("\\/");
 			assertThat(commandAndSubCommand)
-					.withFailMessage("The command must be of the form 'command/subcommand'. Actual value = '" + command + "'")
-					.hasSize(2);
+				.withFailMessage(
+						"The command must be of the form 'command/subcommand'. Actual value = '" + command + "'")
+				.hasSize(2);
 			return this;
 		}
 
@@ -163,9 +171,9 @@ public class CommandRunner {
 
 		public CommandRunner build() {
 			this.projectName = Objects.requireNonNull(projectName);
-			assertThat(projectName)
-					.withFailMessage("Please invoke the method 'prepareProject' with the project name and temporary working directory")
-					.isNotNull();
+			assertThat(projectName).withFailMessage(
+					"Please invoke the method 'prepareProject' with the project name and temporary working directory")
+				.isNotNull();
 			IntegrationTestSupport.installInWorkingDirectory(projectPath, workingDir);
 
 			if (commandGroupPath != null) {
@@ -174,6 +182,7 @@ public class CommandRunner {
 			}
 			return new CommandRunner(this);
 		}
-	}
-}
 
+	}
+
+}

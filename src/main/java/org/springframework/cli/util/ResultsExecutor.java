@@ -84,7 +84,7 @@ public class ResultsExecutor {
 
 	public void execute() throws IOException {
 		check();
-		// TODO:  ProjectResourceSet could be used here
+		// TODO: ProjectResourceSet could be used here
 		for (Result result : results) {
 			if (result.getAfter() == null || fileMoved(result)) {
 				Files.delete(result.getBefore().getSourcePath());

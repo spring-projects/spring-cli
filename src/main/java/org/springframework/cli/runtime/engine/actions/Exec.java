@@ -66,12 +66,10 @@ public class Exec {
 	private final String jsonPath;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	public Exec(@JsonProperty("to") String to,
-			@JsonProperty("command") String command,
+	public Exec(@JsonProperty("to") String to, @JsonProperty("command") String command,
 			@JsonProperty("command-file") String commandFile,
-			//TODO change to "error-to"
-			@JsonProperty("errto") String errto,
-			@JsonProperty("dir") String dir,
+			// TODO change to "error-to"
+			@JsonProperty("errto") String errto, @JsonProperty("dir") String dir,
 			@JsonProperty("json-path") String jsonPath) {
 		this.to = to;
 		this.command = command;
@@ -111,14 +109,9 @@ public class Exec {
 
 	@Override
 	public String toString() {
-		return "Exec{" +
-				"to='" + to + '\'' +
-				", errto='" + errto + '\'' +
-				", stdIn='" + stdIn + '\'' +
-				", command='" + command + '\'' +
-				", commandFile='" + commandFile + '\'' +
-				", dir='" + dir + '\'' +
-				", jsonPath='" + jsonPath + '\'' +
-				'}';
+		return "Exec{" + "to='" + to + '\'' + ", errto='" + errto + '\'' + ", stdIn='" + stdIn + '\'' + ", command='"
+				+ command + '\'' + ", commandFile='" + commandFile + '\'' + ", dir='" + dir + '\'' + ", jsonPath='"
+				+ jsonPath + '\'' + '}';
 	}
+
 }

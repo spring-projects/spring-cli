@@ -21,6 +21,7 @@ public class GroupId {
 
 	@JsonProperty("default")
 	private String defaultId;
+
 	private String type;
 
 	public GroupId() {
@@ -41,4 +42,5 @@ public class GroupId {
 	public void setType(String type) {
 		this.type = type;
 	}
+
 }

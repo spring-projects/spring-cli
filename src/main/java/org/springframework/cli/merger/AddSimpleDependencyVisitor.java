@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger;
 
 import java.util.regex.Pattern;
@@ -36,7 +35,9 @@ public class AddSimpleDependencyVisitor extends MavenIsoVisitor<ExecutionContext
 	private static final XPathMatcher DEPENDENCIES_MATCHER = new XPathMatcher("/project/dependencies");
 
 	private final String groupId;
+
 	private final String artifactId;
+
 	private final String version;
 
 	@Nullable
@@ -66,7 +67,10 @@ public class AddSimpleDependencyVisitor extends MavenIsoVisitor<ExecutionContext
 	@Nullable
 	private String resolvedVersion;
 
-	public AddSimpleDependencyVisitor(String groupId, String artifactId, String version, @Nullable String versionPattern, @Nullable String scope, @Nullable Boolean releasesOnly, @Nullable String type, @Nullable String classifier, @Nullable Boolean optional, @Nullable Pattern familyRegex) {
+	public AddSimpleDependencyVisitor(String groupId, String artifactId, String version,
+			@Nullable String versionPattern, @Nullable String scope, @Nullable Boolean releasesOnly,
+			@Nullable String type, @Nullable String classifier, @Nullable Boolean optional,
+			@Nullable Pattern familyRegex) {
 		this.groupId = groupId;
 		this.artifactId = artifactId;
 		this.version = version;
@@ -82,7 +86,6 @@ public class AddSimpleDependencyVisitor extends MavenIsoVisitor<ExecutionContext
 	@Override
 	public Xml.Document visitDocument(Xml.Document document, ExecutionContext executionContext) {
 		Xml.Document maven = super.visitDocument(document, executionContext);
-
 
 		Xml.Tag root = maven.getRoot();
 		if (!root.getChild("dependencies").isPresent()) {
@@ -110,22 +113,15 @@ public class AddSimpleDependencyVisitor extends MavenIsoVisitor<ExecutionContext
 
 				String versionToUse = version;
 
-				Xml.Tag dependencyTag = Xml.Tag.build(
-						"\n<dependency>\n" +
-								"<groupId>" + groupId + "</groupId>\n" +
-								"<artifactId>" + artifactId + "</artifactId>\n" +
-								(versionToUse == null ? "" :
-										"<version>" + versionToUse + "</version>\n") +
-								(classifier == null ? "" :
-										"<classifier>" + classifier + "</classifier>\n") +
-								(scope == null || "compile".equals(scope) ? "" :
-										"<scope>" + scope + "</scope>\n") +
-								(Boolean.TRUE.equals(optional) ? "<optional>true</optional>\n" : "") +
-								"</dependency>"
-				);
+				Xml.Tag dependencyTag = Xml.Tag.build("\n<dependency>\n" + "<groupId>" + groupId + "</groupId>\n"
+						+ "<artifactId>" + artifactId + "</artifactId>\n"
+						+ (versionToUse == null ? "" : "<version>" + versionToUse + "</version>\n")
+						+ (classifier == null ? "" : "<classifier>" + classifier + "</classifier>\n")
+						+ (scope == null || "compile".equals(scope) ? "" : "<scope>" + scope + "</scope>\n")
+						+ (Boolean.TRUE.equals(optional) ? "<optional>true</optional>\n" : "") + "</dependency>");
 
-				doAfterVisit(new AddToTagVisitor<>(tag, dependencyTag,
-						new InsertDependencyComparator(tag.getContent() == null ? emptyList() : tag.getContent(), dependencyTag)));
+				doAfterVisit(new AddToTagVisitor<>(tag, dependencyTag, new InsertDependencyComparator(
+						tag.getContent() == null ? emptyList() : tag.getContent(), dependencyTag)));
 				maybeUpdateModel();
 
 				return tag;

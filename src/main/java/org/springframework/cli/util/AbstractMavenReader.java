@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.util;
 
 import java.io.IOException;
@@ -53,15 +52,15 @@ public abstract class AbstractMavenReader {
 
 	protected String sectionName;
 
-
 	/**
-	 * Reads the Document and populates the provided array with individual dependency
-	 * text values for each dependency element.
+	 * Reads the Document and populates the provided array with individual dependency text
+	 * values for each dependency element.
 	 * @param document The Document to parse
 	 * @param dependencies a list to populate with each dependency text
 	 * @throws TransformerException if the element can't be converted to text
 	 */
-	protected void parseDocument(Document document, List<String> dependencies, String tagName) throws TransformerException {
+	protected void parseDocument(Document document, List<String> dependencies, String tagName)
+			throws TransformerException {
 		Element root = document.getDocumentElement();
 		NodeList nodeList = root.getElementsByTagName(tagName);
 
@@ -101,14 +100,16 @@ public abstract class AbstractMavenReader {
 			InputStream inputStream = IOUtils.toInputStream(textToUse, StandardCharsets.UTF_8);
 			Document document = buildDocument(errorHandler, inputStream);
 			parseDocument(document, dependencies, this.sectionName);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			throw new SpringCliException("Cannot parse maven " + this.sectionName + " from string: " + text, ex);
 		}
 		catch (SAXException ex) {
 			throw new SpringCliException("Invalid XML in maven " + this.sectionName + " from string: " + text, ex);
 		}
 		catch (ParserConfigurationException ex) {
-			throw new SpringCliException("Internal error parsing maven " + this.sectionName + " from string:" + text, ex);
+			throw new SpringCliException("Internal error parsing maven " + this.sectionName + " from string:" + text,
+					ex);
 		}
 		catch (TransformerException ex) {
 			throw new SpringCliException("Internal error transforming Node to text from string:" + text, ex);
@@ -119,6 +120,7 @@ public abstract class AbstractMavenReader {
 	protected class SimpleErrorHandler implements ErrorHandler {
 
 		private final Logger logger;
+
 		public SimpleErrorHandler(Logger logger) {
 			this.logger = logger;
 		}
@@ -137,5 +139,7 @@ public abstract class AbstractMavenReader {
 		public void fatalError(SAXParseException ex) throws SAXException {
 			throw ex;
 		}
+
 	}
+
 }

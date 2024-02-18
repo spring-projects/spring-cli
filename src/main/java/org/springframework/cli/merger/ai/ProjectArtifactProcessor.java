@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger.ai;
 
 import java.io.BufferedReader;
@@ -49,6 +48,7 @@ import org.springframework.cli.util.TerminalMessage;
 import static org.springframework.cli.util.PropertyFileUtils.mergeProperties;
 
 public class ProjectArtifactProcessor {
+
 	private final List<ProjectArtifact> projectArtifacts;
 
 	private final Path projectPath;
@@ -59,7 +59,8 @@ public class ProjectArtifactProcessor {
 
 	private final Pattern compiledArtifactIdPattern;
 
-	public ProjectArtifactProcessor(List<ProjectArtifact> projectArtifacts, Path projectPath, TerminalMessage terminalMessage) {
+	public ProjectArtifactProcessor(List<ProjectArtifact> projectArtifacts, Path projectPath,
+			TerminalMessage terminalMessage) {
 		this.projectArtifacts = projectArtifacts;
 		this.projectPath = projectPath;
 		this.terminalMessage = terminalMessage;
@@ -71,7 +72,8 @@ public class ProjectArtifactProcessor {
 		return processArtifacts(projectArtifacts, projectPath, terminalMessage);
 	}
 
-	private ProcessArtifactResult processArtifacts(List<ProjectArtifact> projectArtifacts, Path projectPath, TerminalMessage terminalMessage) {
+	private ProcessArtifactResult processArtifacts(List<ProjectArtifact> projectArtifacts, Path projectPath,
+			TerminalMessage terminalMessage) {
 		ProcessArtifactResult processArtifactResult = new ProcessArtifactResult();
 		for (ProjectArtifact projectArtifact : projectArtifacts) {
 			try {
@@ -133,36 +135,41 @@ public class ProjectArtifactProcessor {
 		}
 	}
 
-	private void writeMavenDependencies(ProjectArtifact projectArtifact, Path projectPath, TerminalMessage terminalMessage) {
+	private void writeMavenDependencies(ProjectArtifact projectArtifact, Path projectPath,
+			TerminalMessage terminalMessage) {
 		PomReader pomReader = new PomReader();
 		Path currentProjectPomPath = this.projectPath.resolve("pom.xml");
 		if (Files.notExists(currentProjectPomPath)) {
-			throw new SpringCliException("Could not find pom.xml in " + this.projectPath + ".  Make sure you are running the command in the project's root directory.");
+			throw new SpringCliException("Could not find pom.xml in " + this.projectPath
+					+ ".  Make sure you are running the command in the project's root directory.");
 		}
 		Model currentModel = pomReader.readPom(currentProjectPomPath.toFile());
 		List<Dependency> currentDependencies = currentModel.getDependencies();
 
-
 		MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
-		//projectArtifact.getText() contains a list of <dependency> elements
+		// projectArtifact.getText() contains a list of <dependency> elements
 		String[] mavenDependencies = mavenDependencyReader.parseMavenSection(projectArtifact.getText());
 
 		for (String candidateDependencyText : mavenDependencies) {
-			if (!candidateDependencyAlreadyPresent(getProjectDependency(candidateDependencyText), currentDependencies)) {
-				InjectMavenDependencyActionHandler injectMavenDependencyActionHandler =
-						new InjectMavenDependencyActionHandler(null, new HashMap<>(), projectPath, terminalMessage);
+			if (!candidateDependencyAlreadyPresent(getProjectDependency(candidateDependencyText),
+					currentDependencies)) {
+				InjectMavenDependencyActionHandler injectMavenDependencyActionHandler = new InjectMavenDependencyActionHandler(
+						null, new HashMap<>(), projectPath, terminalMessage);
 				InjectMavenDependency injectMavenDependency = new InjectMavenDependency(candidateDependencyText);
 				try {
 					injectMavenDependencyActionHandler.execute(injectMavenDependency);
 				}
 				catch (Exception ex) {
-					terminalMessage.print("Could not inject Maven dependencies.  Look at pom.xml contents for messages on what went wrong, e.g. 'No version provided'\n" + ex.getMessage());
+					terminalMessage.print(
+							"Could not inject Maven dependencies.  Look at pom.xml contents for messages on what went wrong, e.g. 'No version provided'\n"
+									+ ex.getMessage());
 				}
 			}
 		}
 	}
 
-	private boolean candidateDependencyAlreadyPresent(ProjectDependency toMergeDependency, List<Dependency> currentDependencies) {
+	private boolean candidateDependencyAlreadyPresent(ProjectDependency toMergeDependency,
+			List<Dependency> currentDependencies) {
 		String candidateGroupId = toMergeDependency.getGroupId();
 		String candidateArtifactId = toMergeDependency.getArtifactId();
 		boolean candidateDependencyAlreadyPresent = false;
@@ -181,7 +188,8 @@ public class ProjectArtifactProcessor {
 	private String massageText(String text) {
 		if (text.contains("<dependencies>")) {
 			return text;
-		} else {
+		}
+		else {
 			return "<dependencies>" + text + "</dependencies>";
 		}
 	}
@@ -193,7 +201,8 @@ public class ProjectArtifactProcessor {
 			groupId = extractValue(xml, this.compiledGroupIdPattern);
 			artifactId = extractValue(xml, this.compiledArtifactIdPattern);
 
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw new SpringCliException("Exception processing dependency: " + xml, ex);
 		}
 		if (groupId == null || artifactId == null) {
@@ -211,7 +220,10 @@ public class ProjectArtifactProcessor {
 	}
 
 	private void writeApplicationProperties(ProjectArtifact projectArtifact, Path projectPath) throws IOException {
-		Path applicationPropertiesPath =  projectPath.resolve("src").resolve("main").resolve("resources").resolve("application.properties");
+		Path applicationPropertiesPath = projectPath.resolve("src")
+			.resolve("main")
+			.resolve("resources")
+			.resolve("application.properties");
 
 		if (Files.notExists(applicationPropertiesPath)) {
 			createFile(applicationPropertiesPath);
@@ -224,7 +236,8 @@ public class ProjectArtifactProcessor {
 		mergedProperties.store(new FileWriter(applicationPropertiesPath.toFile()), "updated by spring ai add");
 	}
 
-	private void updateMainApplicationClassAnnotations(ProjectArtifact projectArtifact, Path projectPath, TerminalMessage terminalMessage) {
+	private void updateMainApplicationClassAnnotations(ProjectArtifact projectArtifact, Path projectPath,
+			TerminalMessage terminalMessage) {
 		// TODO mer
 	}
 
@@ -240,7 +253,6 @@ public class ProjectArtifactProcessor {
 		}
 	}
 
-
 	private String calculatePackageForArtifact(ProjectArtifact projectArtifact) {
 		String packageToUse = "com.example.ai";
 		try (BufferedReader reader = new BufferedReader(new StringReader(projectArtifact.getText()))) {
@@ -255,9 +267,10 @@ public class ProjectArtifactProcessor {
 					packageToUse = matcher.group(1);
 				}
 			}
-		} catch (IOException e) {
-			throw new SpringCliException("Could not parse package name from Project Artifact: " +
-					projectArtifact.getText());
+		}
+		catch (IOException e) {
+			throw new SpringCliException(
+					"Could not parse package name from Project Artifact: " + projectArtifact.getText());
 		}
 		return packageToUse;
 	}
@@ -271,7 +284,6 @@ public class ProjectArtifactProcessor {
 		}
 		return null;
 	}
-
 
 	private Path createSourceFile(Path projectPath, String packageName, String fileName) throws IOException {
 		Path sourceFile = resolveSourceFile(projectPath, packageName, fileName);
@@ -301,7 +313,7 @@ public class ProjectArtifactProcessor {
 
 	private void createFile(Path file) throws IOException {
 		if (Files.exists(file)) {
-			//System.out.println("deleting file " + file.toAbsolutePath());
+			// System.out.println("deleting file " + file.toAbsolutePath());
 			Files.delete(file);
 		}
 		Files.createDirectories(file.getParent());
@@ -309,4 +321,5 @@ public class ProjectArtifactProcessor {
 			Files.createFile(file);
 		}
 	}
+
 }

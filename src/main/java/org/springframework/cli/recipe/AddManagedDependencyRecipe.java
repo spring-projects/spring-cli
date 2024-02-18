@@ -21,41 +21,49 @@ import org.openrewrite.TreeVisitor;
 import org.openrewrite.maven.AddManagedDependencyVisitor;
 
 /**
- * Alternative to {@link org.openrewrite.maven.AddManagedDependency} that doesn't verify the provided version.
- * It uses the {@link AddManagedDependencyVisitor} and bypasses all checks and other code in {@link org.openrewrite.maven.AddManagedDependency}.
+ * Alternative to {@link org.openrewrite.maven.AddManagedDependency} that doesn't verify
+ * the provided version. It uses the {@link AddManagedDependencyVisitor} and bypasses all
+ * checks and other code in {@link org.openrewrite.maven.AddManagedDependency}.
  *
  * @author Fabian Krüger
  */
 public class AddManagedDependencyRecipe extends Recipe {
 
-    private final String groupId;
-    private final String artifactId;
-    private final String version;
-    private final String scope;
-    private final String type;
-    private final String classifier;
+	private final String groupId;
 
-    public AddManagedDependencyRecipe(String groupId, String artifactId, String version, String scope, String type, String classifier) {
-        this.groupId = groupId;
-        this.artifactId = artifactId;
-        this.version = version;
-        this.scope = scope;
-        this.type = type;
-        this.classifier = classifier;
-    }
+	private final String artifactId;
 
-    @Override
-    public String getDisplayName() {
-        return "Add managed dependency '%s:%s'".formatted(groupId, artifactId);
-    }
+	private final String version;
 
-    @Override
-    public String getDescription() {
-        return getDisplayName();
-    }
+	private final String scope;
 
-    @Override
-    public TreeVisitor<?, ExecutionContext> getVisitor() {
-        return new AddManagedDependencyVisitor(groupId, artifactId, version, scope, type, classifier);
-    }
+	private final String type;
+
+	private final String classifier;
+
+	public AddManagedDependencyRecipe(String groupId, String artifactId, String version, String scope, String type,
+			String classifier) {
+		this.groupId = groupId;
+		this.artifactId = artifactId;
+		this.version = version;
+		this.scope = scope;
+		this.type = type;
+		this.classifier = classifier;
+	}
+
+	@Override
+	public String getDisplayName() {
+		return "Add managed dependency '%s:%s'".formatted(groupId, artifactId);
+	}
+
+	@Override
+	public String getDescription() {
+		return getDisplayName();
+	}
+
+	@Override
+	public TreeVisitor<?, ExecutionContext> getVisitor() {
+		return new AddManagedDependencyVisitor(groupId, artifactId, version, scope, type, classifier);
+	}
+
 }

@@ -32,12 +32,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cli.SpringCliException;
 
 /**
- * Scans a directory, by default .spring/commands in the current working
- * directory, and finds all command and subcommand directories.
+ * Scans a directory, by default .spring/commands in the current working directory, and
+ * finds all command and subcommand directories.
  *
- * For each command/subcommand directory, a Command object is created. The
- * Command objects are then used to create the Spring Shell objects that
- * are registered at runtime.
+ * For each command/subcommand directory, a Command object is created. The Command objects
+ * are then used to create the Spring Shell objects that are registered at runtime.
  *
  * @author Mark Pollack
  */
@@ -46,6 +45,7 @@ public class CommandScanner {
 	private final Logger logger = LoggerFactory.getLogger(CommandScanner.class);
 
 	private Path pathToScan;
+
 	public CommandScanner(Path path) {
 		this.pathToScan = Objects.requireNonNull(path);
 	}
@@ -59,7 +59,7 @@ public class CommandScanner {
 	public CommandScanResults scan() {
 		Map<Command, List<Command>> results = new HashMap<>();
 
-		//TODO remove optional
+		// TODO remove optional
 		final Optional<File> commandsDirectory = Optional.of(this.pathToScan.toAbsolutePath().toFile());
 		if (commandsDirectory.isPresent()) {
 			// Look for command/subcommand structures
@@ -85,18 +85,17 @@ public class CommandScanner {
 	}
 
 	/**
-	 * Creates a {@link Command} object for each command and intermediary
-	 * directory.
+	 * Creates a {@link Command} object for each command and intermediary directory.
 	 *
 	 * <p>
-	 * If a "command.yaml" file is found in the directory, values from that file are
-	 * used to populate the {@link Command} object. The properties "name" and
-	 * "description" will always be set with reasonable defaults if the generator.yaml
-	 * file is not found.
+	 * If a "command.yaml" file is found in the directory, values from that file are used
+	 * to populate the {@link Command} object. The properties "name" and "description"
+	 * will always be set with reasonable defaults if the generator.yaml file is not
+	 * found.
 	 * </p>
 	 */
 	private Command getCommandObject(File directory) {
-		//TODO also look for 'command.yml'
+		// TODO also look for 'command.yml'
 		File manifestFile = new File(directory, "command.yaml");
 		Command command = new Command();
 
@@ -122,7 +121,5 @@ public class CommandScanner {
 		command = new Command(name, description, command.getOptions());
 		return command;
 	}
-
-
 
 }

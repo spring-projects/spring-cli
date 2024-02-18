@@ -36,14 +36,20 @@ public class UserConfig<T> {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserConfig.class);
 
-
 	private final static String XDG_CONFIG_HOME = "XDG_CONFIG_HOME";
+
 	private final static String APP_DATA = "APP_DATA";
+
 	private Function<String, Path> pathProvider = (path) -> Paths.get(path);
+
 	private final String name;
+
 	private final ConfigFile file;
+
 	private final Class<T> type;
+
 	private final String configDirEnv;
+
 	private final String configDirName;
 
 	public UserConfig(String name, Class<T> type, String configDirEnv, String configDirName) {
@@ -65,7 +71,8 @@ public class UserConfig<T> {
 		}
 		try {
 			return file.read(path, type);
-		} catch (RuntimeException ex) {
+		}
+		catch (RuntimeException ex) {
 			System.out.println("warning: " + ex.getMessage());
 			return null;
 		}
@@ -75,7 +82,8 @@ public class UserConfig<T> {
 		Path path = getConfigDir().resolve(name);
 		try {
 			Files.createDirectories(path.getParent());
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 		}
 		logger.debug("Writing config to path " + path);
 		logger.debug("config = " + config);
@@ -84,7 +92,6 @@ public class UserConfig<T> {
 
 	/**
 	 * Sets a path provider.
-	 *
 	 * @param pathProvider the path provider
 	 */
 	public void setPathProvider(Function<String, Path> pathProvider) {
@@ -112,4 +119,5 @@ public class UserConfig<T> {
 		String os = System.getProperty("os.name");
 		return os.startsWith("Windows");
 	}
+
 }

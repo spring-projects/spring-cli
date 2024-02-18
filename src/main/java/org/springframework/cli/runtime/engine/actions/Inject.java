@@ -63,9 +63,8 @@ public class Inject {
 	}
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	Inject(@JsonProperty("text") String text, @JsonProperty("to") String to,
-			@JsonProperty("skip") String skip, @JsonProperty("before") String before,
-			@JsonProperty("after") String after) {
+	Inject(@JsonProperty("text") String text, @JsonProperty("to") String to, @JsonProperty("skip") String skip,
+			@JsonProperty("before") String before, @JsonProperty("after") String after) {
 		this.text = text;
 		this.to = Objects.requireNonNull(to);
 		this.skip = skip;
@@ -75,12 +74,8 @@ public class Inject {
 
 	@Override
 	public String toString() {
-		return "Inject{" +
-				"before='" + before + '\'' +
-				", after='" + after + '\'' +
-				", to='" + to + '\'' +
-				", skip='" + skip + '\'' +
-				", text='" + text + '\'' +
-				'}';
+		return "Inject{" + "before='" + before + '\'' + ", after='" + after + '\'' + ", to='" + to + '\'' + ", skip='"
+				+ skip + '\'' + ", text='" + text + '\'' + '}';
 	}
+
 }

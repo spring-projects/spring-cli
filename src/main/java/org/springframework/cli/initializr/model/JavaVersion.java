@@ -24,7 +24,9 @@ public class JavaVersion {
 
 	@JsonProperty("default")
 	private String defaultType;
+
 	private String type;
+
 	List<JavaVersionValues> values = new ArrayList<>();
 
 	public JavaVersion() {
@@ -58,5 +60,7 @@ public class JavaVersion {
 
 		public JavaVersionValues() {
 		}
+
 	}
+
 }

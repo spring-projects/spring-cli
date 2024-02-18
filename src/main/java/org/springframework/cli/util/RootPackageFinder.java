@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.util;
 
 import java.io.File;
@@ -43,11 +42,12 @@ public class RootPackageFinder {
 			try {
 				File fileToTest = new File(baseDirectory, fileName);
 				List<String> lines = Files.lines(fileToTest.toPath())
-						.filter(line -> line.contains("@SpringBootApplication"))
-						.collect(Collectors.toList());
+					.filter(line -> line.contains("@SpringBootApplication"))
+					.collect(Collectors.toList());
 				if (lines.isEmpty()) {
 					continue;
-				} else {
+				}
+				else {
 					return Optional.of(extractRootPackageName(new File(fileName)));
 				}
 			}
@@ -59,7 +59,6 @@ public class RootPackageFinder {
 		return Optional.empty();
 	}
 
-
 	public static Optional<File> findSpringBootApplicationFile(File baseDirectory) {
 		String[] fileNames = getFileNames(baseDirectory);
 		for (String fileName : fileNames) {
@@ -67,11 +66,12 @@ public class RootPackageFinder {
 			try {
 				File fileToTest = new File(baseDirectory, fileName);
 				List<String> lines = Files.lines(fileToTest.toPath())
-						.filter(line -> line.contains("@SpringBootApplication"))
-						.collect(Collectors.toList());
+					.filter(line -> line.contains("@SpringBootApplication"))
+					.collect(Collectors.toList());
 				if (lines.isEmpty()) {
 					continue;
-				} else {
+				}
+				else {
 					return Optional.of(new File(baseDirectory, fileName));
 				}
 			}
@@ -83,7 +83,6 @@ public class RootPackageFinder {
 		}
 		return Optional.empty();
 	}
-
 
 	private static String[] getFileNames(File baseDirectory) {
 		DirectoryScanner ds = new DirectoryScanner();
@@ -106,11 +105,12 @@ public class RootPackageFinder {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < packagePath.getNameCount(); i++) {
 			sb.append(packagePath.getName(i));
-			if (i < packagePath.getNameCount() - 1 ) {
+			if (i < packagePath.getNameCount() - 1) {
 				sb.append(".");
 			}
 		}
 		String packageName = sb.toString();
 		return packageName;
 	}
+
 }

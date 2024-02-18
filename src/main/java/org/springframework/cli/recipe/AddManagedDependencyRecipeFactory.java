@@ -28,50 +28,56 @@ import org.openrewrite.maven.AddManagedDependencyVisitor;
  */
 public class AddManagedDependencyRecipeFactory extends AbstractRecipeFactory {
 
-    /**
-     * Create a {@link AddManagedDependencyRecipe} from a Maven dependency XML snippet.
-     *
-     * <pre>
-     * {@code
-     * <dependency>
-     *  <groupId>groupId</groupId>
-     *  <artifactId>artifactId</artifactId>
-     *  <version>${some.version}</version>
-     *  <classifier>classifier</classifier>
-     *  <type>pom</type>
-     * </dependency>
-     * }
-     * </pre>
-     */
-    public AddManagedDependencyRecipe create(String mavenDependencySnippet) {
-        try {
-            JsonNode jsonNode = getJsonNode(mavenDependencySnippet);
-            String groupId = getTextValue(jsonNode, "groupId");
-            String artifactId = getTextValue(jsonNode, "artifactId");
-            @Nullable String version = getNullOrTextValue(jsonNode, "version");
-            @Nullable String scope = getNullOrTextValue(jsonNode, "scope");
-            @Nullable String classifier = getNullOrTextValue(jsonNode, "classifier");
-            @Nullable String type = getNullOrTextValue(jsonNode, "type");
-            AddManagedDependencyRecipe addManagedDependency = new AddManagedDependencyRecipe(groupId, artifactId, version, scope, type, classifier);
-            return addManagedDependency;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
+	/**
+	 * Create a {@link AddManagedDependencyRecipe} from a Maven dependency XML snippet.
+	 *
+	 * <pre>
+	 * {@code
+	 * <dependency>
+	 *  <groupId>groupId</groupId>
+	 *  <artifactId>artifactId</artifactId>
+	 *  <version>${some.version}</version>
+	 *  <classifier>classifier</classifier>
+	 *  <type>pom</type>
+	 * </dependency>
+	 * }
+	 * </pre>
+	 */
+	public AddManagedDependencyRecipe create(String mavenDependencySnippet) {
+		try {
+			JsonNode jsonNode = getJsonNode(mavenDependencySnippet);
+			String groupId = getTextValue(jsonNode, "groupId");
+			String artifactId = getTextValue(jsonNode, "artifactId");
+			@Nullable
+			String version = getNullOrTextValue(jsonNode, "version");
+			@Nullable
+			String scope = getNullOrTextValue(jsonNode, "scope");
+			@Nullable
+			String classifier = getNullOrTextValue(jsonNode, "classifier");
+			@Nullable
+			String type = getNullOrTextValue(jsonNode, "type");
+			AddManagedDependencyRecipe addManagedDependency = new AddManagedDependencyRecipe(groupId, artifactId,
+					version, scope, type, classifier);
+			return addManagedDependency;
+		}
+		catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    /**
-     * Create a {@link AddManagedDependencyRecipe} from a {@link Dependency}.
-     */
-    public AddManagedDependencyRecipe create(Dependency dependency) {
-        String groupId = dependency.getGroupId();
-        String artifactId = dependency.getArtifactId();
-        String version = dependency.getVersion();
-        String scope = dependency.getScope();
-        String type = dependency.getType();
-        String classifier = dependency.getClassifier();
-        AddManagedDependencyRecipe addManagedDependency = new AddManagedDependencyRecipe(groupId, artifactId, version, scope, type, classifier);
-        return addManagedDependency;
-    }
-
+	/**
+	 * Create a {@link AddManagedDependencyRecipe} from a {@link Dependency}.
+	 */
+	public AddManagedDependencyRecipe create(Dependency dependency) {
+		String groupId = dependency.getGroupId();
+		String artifactId = dependency.getArtifactId();
+		String version = dependency.getVersion();
+		String scope = dependency.getScope();
+		String type = dependency.getType();
+		String classifier = dependency.getClassifier();
+		AddManagedDependencyRecipe addManagedDependency = new AddManagedDependencyRecipe(groupId, artifactId, version,
+				scope, type, classifier);
+		return addManagedDependency;
+	}
 
 }

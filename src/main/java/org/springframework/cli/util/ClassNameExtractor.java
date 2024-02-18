@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.util;
 
 import java.util.ArrayList;
@@ -27,12 +26,8 @@ import org.springframework.cli.SpringCliException;
 
 public class ClassNameExtractor {
 
-	private String[] patternStrings = {
-			"(?<=\\bclass\\s)\\w+",
-			"(?<=\\binterface\\s)\\w+",
-			"(?<=\\b@interface\\s)\\w+",
-			"(?<=\\benum\\s)\\w+"
-	};
+	private String[] patternStrings = { "(?<=\\bclass\\s)\\w+", "(?<=\\binterface\\s)\\w+", "(?<=\\b@interface\\s)\\w+",
+			"(?<=\\benum\\s)\\w+" };
 
 	private List<Pattern> patterns = new ArrayList<>();
 
@@ -51,4 +46,5 @@ public class ClassNameExtractor {
 		}
 		return Optional.empty();
 	}
+
 }

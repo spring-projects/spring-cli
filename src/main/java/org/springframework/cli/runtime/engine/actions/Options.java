@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -39,9 +38,7 @@ public class Options {
 
 	@Override
 	public String toString() {
-		return "Options{" +
-				"exec=" + exec +
-				'}';
+		return "Options{" + "exec=" + exec + '}';
 	}
-}
 
+}

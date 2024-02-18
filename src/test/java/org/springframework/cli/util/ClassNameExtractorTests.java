@@ -24,24 +24,19 @@ class ClassNameExtractorTests {
 
 	@Test
 	void extractClassName() {
-		String fileContent = "public class MyClass {\n" +
-				"    // Class implementation\n" +
-				"}\n";
+		String fileContent = "public class MyClass {\n" + "    // Class implementation\n" + "}\n";
 
 		ClassNameExtractor classNameExtractor = new ClassNameExtractor();
 		String className = classNameExtractor.extractClassName(fileContent).get();
 
 		assertThat(className).isEqualTo("MyClass");
 
-		fileContent = "package com.example.restservice.ai.jpa;\n"
-				+ "\n"
-				+ "import org.springframework.data.repository.CrudRepository;\n"
-				+ "\n"
-				+ "public interface PersonRepository extends CrudRepository<Person, Long> {\n"
-				+ "\n"
-				+ "}";
+		fileContent = "package com.example.restservice.ai.jpa;\n" + "\n"
+				+ "import org.springframework.data.repository.CrudRepository;\n" + "\n"
+				+ "public interface PersonRepository extends CrudRepository<Person, Long> {\n" + "\n" + "}";
 
 		String interfaceName = classNameExtractor.extractClassName(fileContent).get();
 		assertThat(interfaceName).isEqualTo("PersonRepository");
 	}
+
 }

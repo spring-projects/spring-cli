@@ -53,10 +53,12 @@ public class PathGatheringFileVisitor extends SimpleFileVisitor<Path> {
 	}
 
 	public PathGatheringFileVisitor(Set<String> forbiddenDirectoryPatterns, Set<String> forbiddenFilenamePatterns) {
-		this.forbiddenDirectoryPatterns = forbiddenDirectoryPatterns.stream().map(Pattern::compile)
-				.collect(Collectors.toSet());
-		this.forbiddenFilenamePatterns = forbiddenFilenamePatterns.stream().map(Pattern::compile)
-				.collect(Collectors.toSet());
+		this.forbiddenDirectoryPatterns = forbiddenDirectoryPatterns.stream()
+			.map(Pattern::compile)
+			.collect(Collectors.toSet());
+		this.forbiddenFilenamePatterns = forbiddenFilenamePatterns.stream()
+			.map(Pattern::compile)
+			.collect(Collectors.toSet());
 	}
 
 	public List<Path> getMatches() {

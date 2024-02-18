@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger.ai;
 
 public class ProjectDependency {
+
 	private final String groupId;
 
 	private final String artifactId;
@@ -37,9 +37,7 @@ public class ProjectDependency {
 
 	@Override
 	public String toString() {
-		return "ProjectDependency{" +
-				"groupId='" + groupId + '\'' +
-				", artifactId='" + artifactId + '\'' +
-				'}';
+		return "ProjectDependency{" + "groupId='" + groupId + '\'' + ", artifactId='" + artifactId + '\'' + '}';
 	}
+
 }

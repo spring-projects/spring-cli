@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.util;
 
 import org.openrewrite.InMemoryExecutionContext;
@@ -38,7 +37,6 @@ import java.util.function.Consumer;
 public class RefactorUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(RefactorUtils.class);
-
 
 	public static void refactorPackage(String newPackage, String oldPackage, Path workingPath) {
 		JavaParser javaParser = new Java17Parser.Builder().build();
@@ -68,6 +66,7 @@ public class RefactorUtils {
 			throw new SpringCliException("Error performing refactoring", e);
 		}
 
-		//TODO change groupId and artifactId
+		// TODO change groupId and artifactId
 	}
+
 }

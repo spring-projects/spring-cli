@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.command;
 
 import java.nio.file.FileSystem;
@@ -47,11 +46,10 @@ import static org.springframework.cli.testutil.TableAssertions.verifyTableValue;
 
 public class ProjectCatalogInitializerTests {
 
-
 	@Test
 	void testHasInitializedProjectCatalog() {
 		ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-				.withUserConfiguration(ProjectCatalogInitializerTests.ProjectCatalogInitializerConfig.class);
+			.withUserConfiguration(ProjectCatalogInitializerTests.ProjectCatalogInitializerConfig.class);
 		contextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(ProjectCatalogCommands.class);
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
@@ -67,13 +65,13 @@ public class ProjectCatalogInitializerTests {
 	@Test
 	void testPropertyOverride() {
 		ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-				.withUserConfiguration(ProjectCatalogInitializerTests.ProjectCatalogInitializerConfig.class)
-				.withPropertyValues(
-						"spring.cli.project.catalog.init.name=myname",
-						"spring.cli.project.catalog.init.url=myurl",
-						"spring.cli.project.catalog.init.description=mydescription",
-						"spring.cli.project.catalog.init.tags=tag1,tag2");
-//		//The default values should not be configured, but taken instead from property values
+			.withUserConfiguration(ProjectCatalogInitializerTests.ProjectCatalogInitializerConfig.class)
+			.withPropertyValues("spring.cli.project.catalog.init.name=myname",
+					"spring.cli.project.catalog.init.url=myurl",
+					"spring.cli.project.catalog.init.description=mydescription",
+					"spring.cli.project.catalog.init.tags=tag1,tag2");
+		// //The default values should not be configured, but taken instead from property
+		// values
 		contextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(ProjectCatalogCommands.class);
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
@@ -110,19 +108,22 @@ public class ProjectCatalogInitializerTests {
 		@Bean
 		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
 				SourceRepositoryService sourceRepositoryService, ObjectMapper objectMapper) {
-			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), objectMapper);
+			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(),
+					objectMapper);
 		}
 
 		@Bean
-		ProjectCatalogInitializer projectCatalogInitializer(SpringCliUserConfig springCliUserConfig, SpringCliProjectCatalogProperties springCliProjectCatalogProperties) {
+		ProjectCatalogInitializer projectCatalogInitializer(SpringCliUserConfig springCliUserConfig,
+				SpringCliProjectCatalogProperties springCliProjectCatalogProperties) {
 			return new ProjectCatalogInitializer(springCliUserConfig, springCliProjectCatalogProperties);
 		}
+
 	}
 
 	@Test
 	void testWithExistingProjectCatalog() {
-		ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-				.withUserConfiguration(ProjectCatalogInitializerTests.ProjectCatalogInitializerWithExistingCatalogConfig.class);
+		ApplicationContextRunner contextRunner = new ApplicationContextRunner().withUserConfiguration(
+				ProjectCatalogInitializerTests.ProjectCatalogInitializerWithExistingCatalogConfig.class);
 		contextRunner.run((context) -> {
 			assertThat(context).hasSingleBean(ProjectCatalogCommands.class);
 			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
@@ -134,8 +135,6 @@ public class ProjectCatalogInitializerTests {
 			verifyTableValue(table, 1, 3, "[footag1, footag2]");
 		});
 	}
-
-
 
 	@Configuration
 	@EnableConfigurationProperties(SpringCliProjectCatalogProperties.class)
@@ -162,19 +161,24 @@ public class ProjectCatalogInitializerTests {
 		ProjectCatalogCommands projectCatalogCommands(SpringCliUserConfig springCliUserConfig,
 				SourceRepositoryService sourceRepositoryService, ObjectMapper objectMapper) {
 			List<ProjectCatalog> projectCatalogList = new ArrayList<ProjectCatalog>();
-			projectCatalogList.add(ProjectCatalog.of("fooname", "foodescription", "foourl", Arrays.asList("footag1, footag2")));
+			projectCatalogList
+				.add(ProjectCatalog.of("fooname", "foodescription", "foourl", Arrays.asList("footag1, footag2")));
 
 			// Save to disk
 			ProjectCatalogs projectCatalogs = new ProjectCatalogs();
 			projectCatalogs.setProjectCatalogs(projectCatalogList);
 			springCliUserConfig.setProjectCatalogs(projectCatalogs);
 
-			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), objectMapper);
+			return new ProjectCatalogCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(),
+					objectMapper);
 		}
 
 		@Bean
-		ProjectCatalogInitializer projectCatalogInitializer(SpringCliUserConfig springCliUserConfig, SpringCliProjectCatalogProperties springCliProjectCatalogProperties) {
+		ProjectCatalogInitializer projectCatalogInitializer(SpringCliUserConfig springCliUserConfig,
+				SpringCliProjectCatalogProperties springCliProjectCatalogProperties) {
 			return new ProjectCatalogInitializer(springCliUserConfig, springCliProjectCatalogProperties);
 		}
+
 	}
+
 }

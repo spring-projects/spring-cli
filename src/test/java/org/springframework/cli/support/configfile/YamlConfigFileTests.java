@@ -39,6 +39,7 @@ public class YamlConfigFileTests {
 	private static class Bean1 {
 
 		private String value;
+
 		private Map<String, String> values;
 
 		static Bean1 of(String value, String valuesKey, String valuesValue) {
@@ -65,5 +66,7 @@ public class YamlConfigFileTests {
 		public void setValues(Map<String, String> values) {
 			this.values = values;
 		}
+
 	}
+
 }

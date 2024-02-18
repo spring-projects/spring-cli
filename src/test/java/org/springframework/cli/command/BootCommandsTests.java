@@ -87,7 +87,8 @@ public class BootCommandsTests {
 			BootCommands bootCommands = context.getBean(BootCommands.class);
 			String path = workingDir.toAbsolutePath().toString();
 
-			bootCommands.bootNew("jpa", "https://github.com/rd-1-2022/rpt-spring-data-jpa", null, null, null, null, "com.xkcd", path);
+			bootCommands.bootNew("jpa", "https://github.com/rd-1-2022/rpt-spring-data-jpa", null, null, null, null,
+					"com.xkcd", path);
 			assertThat(workingDir.resolve("jpa")).exists();
 			assertThat(workingDir.resolve("jpa/src/main/java/com/xkcd/customer")).exists();
 			assertThat(workingDir.resolve("jpa/src/test/java/com/xkcd/customer")).exists();
@@ -171,8 +172,10 @@ public class BootCommandsTests {
 			assertThat(model.getProperties()).containsKey("spring-cloud.version");
 			dependencyManagement = model.getDependencyManagement();
 			assertThat(dependencyManagement.getDependencies().size()).isEqualTo(1);
-			assertThat(dependencyManagement.getDependencies().get(0).getGroupId()).isEqualTo("org.springframework.cloud");
-			assertThat(dependencyManagement.getDependencies().get(0).getArtifactId()).isEqualTo("spring-cloud-dependencies");
+			assertThat(dependencyManagement.getDependencies().get(0).getGroupId())
+				.isEqualTo("org.springframework.cloud");
+			assertThat(dependencyManagement.getDependencies().get(0).getArtifactId())
+				.isEqualTo("spring-cloud-dependencies");
 			assertThat(dependencyManagement.getDependencies().get(0).getVersion()).isEqualTo("${spring-cloud.version}");
 			assertThat(dependencyManagement.getDependencies().get(0).getType()).isEqualTo("pom");
 			assertThat(dependencyManagement.getDependencies().get(0).getScope()).isEqualTo("import");
@@ -197,13 +200,15 @@ public class BootCommandsTests {
 			PomReader pomReader = new PomReader();
 			Model model = pomReader.readPom(projectDir.resolve("pom.xml").toFile());
 			assertThat(model.getDependencies())
-					.anyMatch(d -> d.getGroupId().equals("org.springframework.boot") && d.getArtifactId().equals("spring-boot-starter-data-jpa"))
-					.anyMatch(d -> d.getGroupId().equals("com.h2database") && d.getArtifactId().equals("h2") && d.getScope().equals("runtime"));
+				.anyMatch(d -> d.getGroupId().equals("org.springframework.boot")
+						&& d.getArtifactId().equals("spring-boot-starter-data-jpa"))
+				.anyMatch(d -> d.getGroupId().equals("com.h2database") && d.getArtifactId().equals("h2")
+						&& d.getScope().equals("runtime"));
 		});
 	}
 
 	private static void newBoot(Path workingDir, BootCommands bootCommands, String name, String path) {
-		bootCommands.bootNew(name, null,  null, null, null, null, "com.xkcd", path);
+		bootCommands.bootNew(name, null, null, null, null, null, "com.xkcd", path);
 		assertThat(workingDir).exists().isDirectory();
 		assertThat(workingDir.resolve(name)).exists();
 		assertThat(workingDir.resolve("test-add/src/main/java/com/xkcd/greeting")).exists();

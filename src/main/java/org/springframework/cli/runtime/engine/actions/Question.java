@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions;
 
 import java.util.Objects;
@@ -39,11 +38,8 @@ public class Question {
 	private Attributes attributes;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	Question(@JsonProperty("name") String name,
-			 @JsonProperty("label") String label,
-			 @JsonProperty("type") String type,
-			 @JsonProperty("options") Options options,
-			 @JsonProperty("attributes") Attributes attributes) {
+	Question(@JsonProperty("name") String name, @JsonProperty("label") String label, @JsonProperty("type") String type,
+			@JsonProperty("options") Options options, @JsonProperty("attributes") Attributes attributes) {
 		this.name = Objects.requireNonNull(name);
 		this.label = Objects.requireNonNull(label);
 		this.type = Objects.requireNonNullElse(type, "input");
@@ -76,12 +72,8 @@ public class Question {
 
 	@Override
 	public String toString() {
-		return "Question{" +
-				"name='" + name + '\'' +
-				", label='" + label + '\'' +
-				", type='" + type + '\'' +
-				", options=" + options +
-				", attributes=" + attributes +
-				'}';
+		return "Question{" + "name='" + name + '\'' + ", label='" + label + '\'' + ", type='" + type + '\''
+				+ ", options=" + options + ", attributes=" + attributes + '}';
 	}
+
 }

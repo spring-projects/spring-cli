@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger.ai.service;
 
 import java.util.Map;
@@ -54,7 +53,8 @@ public class ProjectNameHeuristicAiService extends AbstractOpenAiService {
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> map = null;
 		try {
-			map = mapper.readValue(response, new TypeReference<Map<String, Object>>() {});
+			map = mapper.readValue(response, new TypeReference<Map<String, Object>>() {
+			});
 		}
 		catch (JsonProcessingException ex) {
 			throw new SpringCliException("Can read JSON response: " + response, ex);
@@ -70,6 +70,5 @@ public class ProjectNameHeuristicAiService extends AbstractOpenAiService {
 		return new ProjectName(shortName.toLowerCase(), springProjectName);
 
 	}
-
 
 }

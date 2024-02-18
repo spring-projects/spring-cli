@@ -28,7 +28,6 @@ import org.springframework.lang.Nullable;
  */
 public class Action {
 
-
 	@Nullable
 	private String ifExpression;
 
@@ -64,10 +63,8 @@ public class Action {
 	private final InjectProperties injectProperties;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	Action(@JsonProperty("if") @Nullable String ifExpression,
-			@JsonProperty("generate") @Nullable Generate generate,
-			@JsonProperty("exec") @Nullable Exec exec,
-			@JsonProperty("vars") @Nullable Vars vars,
+	Action(@JsonProperty("if") @Nullable String ifExpression, @JsonProperty("generate") @Nullable Generate generate,
+			@JsonProperty("exec") @Nullable Exec exec, @JsonProperty("vars") @Nullable Vars vars,
 			@JsonProperty("inject-maven-dependency") @Nullable InjectMavenDependency injectMavenDependency,
 			@JsonProperty("inject-maven-dependency-management") @Nullable InjectMavenDependencyManagement injectMavenDependencyManagement,
 			@JsonProperty("inject-maven-repository") @Nullable InjectMavenRepository injectMavenRepository,
@@ -131,7 +128,6 @@ public class Action {
 		return injectMavenRepository;
 	}
 
-
 	@Nullable
 	public InjectProperties getInjectProperties() {
 		return injectProperties;
@@ -144,17 +140,11 @@ public class Action {
 
 	@Override
 	public String toString() {
-		return "Action{" +
-				"if='" + ifExpression + '\'' +
-				", generate=" + generate +
-				", inject=" + inject +
-				", exec=" + exec +
-				", vars=" + vars +
-				", injectMavenDependency=" + injectMavenDependency +
-				", injectMavenDependencyManagement=" + injectMavenDependencyManagement +
-				", injectMavenRepository=" + injectMavenRepository +
-				", injectMavenBuildPlugin=" + injectMavenBuildPlugin +
-				", injectProperties=" + injectProperties +
-				'}';
+		return "Action{" + "if='" + ifExpression + '\'' + ", generate=" + generate + ", inject=" + inject + ", exec="
+				+ exec + ", vars=" + vars + ", injectMavenDependency=" + injectMavenDependency
+				+ ", injectMavenDependencyManagement=" + injectMavenDependencyManagement + ", injectMavenRepository="
+				+ injectMavenRepository + ", injectMavenBuildPlugin=" + injectMavenBuildPlugin + ", injectProperties="
+				+ injectProperties + '}';
 	}
+
 }

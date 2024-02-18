@@ -48,6 +48,7 @@ import org.springframework.util.ObjectUtils;
 public class ProjectCommands {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectCommands.class);
+
 	private static final String PROJECT = "Project '";
 
 	private final SpringCliUserConfig upCliUserConfig;
@@ -55,12 +56,12 @@ public class ProjectCommands {
 	private final SourceRepositoryService sourceRepositoryService;
 
 	private final TerminalMessage terminalMessage;
+
 	private final ObjectMapper objectMapper;
 
 	@Autowired
-	public ProjectCommands(SpringCliUserConfig upCliUserConfig,
-						   SourceRepositoryService sourceRepositoryService,
-						   TerminalMessage terminalMessage, ObjectMapper objectMapper) {
+	public ProjectCommands(SpringCliUserConfig upCliUserConfig, SourceRepositoryService sourceRepositoryService,
+			TerminalMessage terminalMessage, ObjectMapper objectMapper) {
 		this.upCliUserConfig = upCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
 		this.terminalMessage = terminalMessage;
@@ -68,12 +69,10 @@ public class ProjectCommands {
 	}
 
 	@Command(command = "add", description = "Add a project to use with the 'boot new' and 'boot add' commands")
-	public void projectAdd(
-		@Option(description = "Project name", required = true) String name,
-		@Option(description = "Project url", required = true) String url,
-		@Option(description = "Project description") String description,
-		@Option(description = "Project tags") List<String> tags
-	) {
+	public void projectAdd(@Option(description = "Project name", required = true) String name,
+			@Option(description = "Project url", required = true) String url,
+			@Option(description = "Project description") String description,
+			@Option(description = "Project tags") List<String> tags) {
 		List<ProjectRepository> projectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
 		projectRepositories.add(ProjectRepository.of(name, description, url, tags));
 		ProjectRepositories projectRepositoriesConfig = new ProjectRepositories();
@@ -82,31 +81,41 @@ public class ProjectCommands {
 		this.terminalMessage.print(PROJECT + name + "' added from URL = " + url);
 	}
 
-	private record ProjectRepositoryData(String name, String url, String description, List<String> tags, String catalog) {}
+	private record ProjectRepositoryData(String name, String url, String description, List<String> tags,
+			String catalog) {
+	}
 
-	@Command(command = "list", description = "List projects available for use with the 'boot new' and 'boot add' commands")
+	@Command(command = "list",
+			description = "List projects available for use with the 'boot new' and 'boot add' commands")
 	public Object projectList(
-			@Option(description = "JSON format output", required = false, defaultValue = "false") boolean json
-	) throws JsonProcessingException {
-		// Retrieve project that were registered using the `project add` command and stored locally
+			@Option(description = "JSON format output", required = false, defaultValue = "false") boolean json)
+			throws JsonProcessingException {
+		// Retrieve project that were registered using the `project add` command and
+		// stored locally
 		List<ProjectRepository> repos = upCliUserConfig.getProjectRepositories().getProjectRepositories();
-		List<ProjectRepositoryData> projectRepositories = (repos == null ? Stream.<ProjectRepository>empty() : repos.stream())
-				.map(pr -> new ProjectRepositoryData(pr.getName(), pr.getUrl(), pr.getDescription(), pr.getTags(), null))
-				.collect(Collectors.toList());
+		List<ProjectRepositoryData> projectRepositories = (repos == null ? Stream.<ProjectRepository>empty()
+				: repos.stream())
+			.map(pr -> new ProjectRepositoryData(pr.getName(), pr.getUrl(), pr.getDescription(), pr.getTags(), null))
+			.collect(Collectors.toList());
 
-		// List projects that are contained in catalogs that the user had added using the `project-catalog add` command
+		// List projects that are contained in catalogs that the user had added using the
+		// `project-catalog add` command
 		List<ProjectCatalog> projectCatalogs = upCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 		for (ProjectCatalog projectCatalog : projectCatalogs) {
 			String url = projectCatalog.getUrl();
 			Path path = sourceRepositoryService.retrieveRepositoryContents(url);
 			YamlConfigFile yamlConfigFile = new YamlConfigFile();
-			for (ProjectRepository pr : yamlConfigFile.read(Paths.get(path.toString(),"project-catalog.yml"), ProjectRepositories.class).getProjectRepositories()) {
-				projectRepositories.add(new ProjectRepositoryData(pr.getName(), pr.getUrl(), pr.getDescription(), pr.getTags(), projectCatalog.getName()));
+			for (ProjectRepository pr : yamlConfigFile
+				.read(Paths.get(path.toString(), "project-catalog.yml"), ProjectRepositories.class)
+				.getProjectRepositories()) {
+				projectRepositories.add(new ProjectRepositoryData(pr.getName(), pr.getUrl(), pr.getDescription(),
+						pr.getTags(), projectCatalog.getName()));
 			}
 			// clean up temp files
 			try {
 				FileSystemUtils.deleteRecursively(path);
-			} catch (IOException ex) {
+			}
+			catch (IOException ex) {
 				logger.warn("Could not delete path " + path, ex);
 			}
 		}
@@ -115,16 +124,14 @@ public class ProjectCommands {
 			return objectMapper.writeValueAsString(projectRepositories);
 		}
 
-		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description",  "URL", "Catalog", "Tags" });
+		Stream<String[]> header = Stream.<String[]>of(new String[] { "Name", "Description", "URL", "Catalog", "Tags" });
 
-		// Retrieve project that were registered using the `project add` command and stored locally
+		// Retrieve project that were registered using the `project add` command and
+		// stored locally
 		Stream<String[]> rows = projectRepositories.stream()
-			.map(tr -> new String[] { tr.name(),
-					Objects.requireNonNullElse(tr.description, ""),
-					tr.url(),
+			.map(tr -> new String[] { tr.name(), Objects.requireNonNullElse(tr.description, ""), tr.url(),
 					Objects.requireNonNullElse(tr.catalog, ""),
-					(Objects.requireNonNullElse(tr.tags(), "")).toString() }
-		);
+					(Objects.requireNonNullElse(tr.tags(), "")).toString() });
 
 		String[][] data = Stream.concat(header, rows).toArray(String[][]::new);
 		TableModel model = new ArrayTableModel(data);
@@ -133,18 +140,19 @@ public class ProjectCommands {
 	}
 
 	@Command(command = "remove", description = "Remove project")
-	public void projectRemove(
-		@Option(description = "Project name", required = true) String name
-	) {
-		List<ProjectRepository> origininalProjectRepositories = upCliUserConfig.getProjectRepositories().getProjectRepositories();
+	public void projectRemove(@Option(description = "Project name", required = true) String name) {
+		List<ProjectRepository> origininalProjectRepositories = upCliUserConfig.getProjectRepositories()
+			.getProjectRepositories();
 		List<ProjectRepository> updatedProjectRepositories = origininalProjectRepositories.stream()
-			.filter(tc -> !ObjectUtils.nullSafeEquals(tc.getName(), name)).toList();
+			.filter(tc -> !ObjectUtils.nullSafeEquals(tc.getName(), name))
+			.toList();
 		if (updatedProjectRepositories.size() < origininalProjectRepositories.size()) {
 			ProjectRepositories projectRepositoriesConfig = new ProjectRepositories();
 			projectRepositoriesConfig.setProjectRepositories(updatedProjectRepositories);
 			upCliUserConfig.setProjectRepositories(projectRepositoriesConfig);
 			this.terminalMessage.print(PROJECT + name + "' removed");
-		} else {
+		}
+		else {
 			this.terminalMessage.print(PROJECT + name + "' removed");
 		}
 	}

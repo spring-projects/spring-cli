@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.util;
 
 public class MavenDependencyReader extends AbstractMavenReader {
@@ -26,7 +25,8 @@ public class MavenDependencyReader extends AbstractMavenReader {
 	protected String massageText(String text) {
 		if (text.contains("<dependencies>")) {
 			return text;
-		} else {
+		}
+		else {
 			return "<dependencies>" + text + "</dependencies>";
 		}
 	}

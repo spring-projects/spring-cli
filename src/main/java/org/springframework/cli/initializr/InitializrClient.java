@@ -43,21 +43,18 @@ public interface InitializrClient {
 
 	/**
 	 * Get initializr metadata.
-	 *
 	 * @return the metadata
 	 */
 	Metadata getMetadata();
 
 	/**
 	 * Get info about a system.
-
 	 * @return info about a system
 	 */
 	String info();
 
 	/**
 	 * Generate a project as a tgz file and return a path to it.
-	 *
 	 * @return the path to generated tgz project file
 	 */
 	Path generate(String projectType, String languageType, String bootVersion, List<String> dependencies,
@@ -71,7 +68,6 @@ public interface InitializrClient {
 
 		/**
 		 * Sets a target system, i.e. 'https://start.spring.io'.
-		 *
 		 * @param baseUrl the base url
 		 * @return the builder
 		 */
@@ -79,15 +75,14 @@ public interface InitializrClient {
 
 		/**
 		 * Builds an initializr client.
-		 *
 		 * @return the initializr client
 		 */
 		InitializrClient build();
+
 	}
 
 	/**
 	 * Gets a new builder instance for initializr client.
-	 *
 	 * @param webClientBuilder the webclient builder
 	 * @return the builder for initializr client
 	 */
@@ -98,6 +93,7 @@ public interface InitializrClient {
 	public static class DefaultBuilder implements Builder {
 
 		private String baseUrl;
+
 		private WebClient.Builder webClientBuilder;
 
 		DefaultBuilder(WebClient.Builder webClientBuilder) {
@@ -110,19 +106,23 @@ public interface InitializrClient {
 		}
 
 		public InitializrClient build() {
-			WebClient client = webClientBuilder
-					.baseUrl(this.baseUrl)
-					.build();
+			WebClient client = webClientBuilder.baseUrl(this.baseUrl).build();
 			return new DefaultInitializrClient(client, this.baseUrl);
 		}
+
 	}
 
 	public static class DefaultInitializrClient implements InitializrClient {
 
-		private final static MediaType INITIALIZER_MEDIA_TYPE = new MediaType("application", "vnd.initializr.v2.2+json");
+		private final static MediaType INITIALIZER_MEDIA_TYPE = new MediaType("application",
+				"vnd.initializr.v2.2+json");
+
 		private WebClient client;
+
 		private Metadata metadata;
+
 		private AtomicBoolean connected = new AtomicBoolean(false);
+
 		private String baseUrl;
 
 		public DefaultInitializrClient(WebClient client, String baseUrl) {
@@ -152,30 +152,32 @@ public interface InitializrClient {
 
 		@Override
 		public Path generate(String projectType, String languageType, String bootVersion, List<String> dependencies,
-				String version, String groupId, String artifact, String name, String description, String packageName, String packaging,
-				String javaVersion) {
+				String version, String groupId, String artifact, String name, String description, String packageName,
+				String packaging, String javaVersion) {
 			try {
 				Path tmp = Files.createTempFile("initializrcli", null);
 				Flux<DataBuffer> dataBuffer = client.get()
-						.uri(uriBuilder -> uriBuilder.path("starter.tgz")
-								.queryParam("type", projectType)
-								.queryParam("dependencies", StringUtils.collectionToCommaDelimitedString(dependencies))
-								.queryParam("packaging", packaging)
-								.queryParam("javaVersion", javaVersion)
-								.queryParam("language", languageType)
-								.queryParam("bootVersion", bootVersion)
-								.queryParam("version", version)
-								.queryParam("groupId", groupId)
-								.queryParam("artifactId", artifact)
-								.queryParam("name", name)
-								.queryParam("description", description)
-								.queryParam("packageName", packageName)
-								.build())
-						.accept(MediaType.ALL)
-						.retrieve().bodyToFlux(DataBuffer.class);
+					.uri(uriBuilder -> uriBuilder.path("starter.tgz")
+						.queryParam("type", projectType)
+						.queryParam("dependencies", StringUtils.collectionToCommaDelimitedString(dependencies))
+						.queryParam("packaging", packaging)
+						.queryParam("javaVersion", javaVersion)
+						.queryParam("language", languageType)
+						.queryParam("bootVersion", bootVersion)
+						.queryParam("version", version)
+						.queryParam("groupId", groupId)
+						.queryParam("artifactId", artifact)
+						.queryParam("name", name)
+						.queryParam("description", description)
+						.queryParam("packageName", packageName)
+						.build())
+					.accept(MediaType.ALL)
+					.retrieve()
+					.bodyToFlux(DataBuffer.class);
 				DataBufferUtils.write(dataBuffer, tmp).block();
 				return tmp;
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -184,7 +186,11 @@ public interface InitializrClient {
 			this.metadata = client.get()
 				.accept(INITIALIZER_MEDIA_TYPE)
 				.retrieve()
-				.toEntity(Metadata.class).block().getBody();
+				.toEntity(Metadata.class)
+				.block()
+				.getBody();
 		}
+
 	}
+
 }

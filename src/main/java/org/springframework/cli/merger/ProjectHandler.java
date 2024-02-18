@@ -41,8 +41,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
- * Contain features to create and modify projects. This is kept outside
- * of terminal classes to make things easier to test.
+ * Contain features to create and modify projects. This is kept outside of terminal
+ * classes to make things easier to test.
  *
  * @author Mark Pollack
  * @author Janne Valkealahti
@@ -50,17 +50,19 @@ import java.util.function.Consumer;
 public class ProjectHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectHandler.class);
+
 	private static final String FALLBACK_DEFAULT_REPO_URL = "https://github.com/rd-1-2022/rest-service";
+
 	private static final String FALLBACK_DEFAULT_PROJECT_NAME = "demo";
 
 	private final SpringCliUserConfig springCliUserConfig;
+
 	private final SourceRepositoryService sourceRepositoryService;
 
 	private final TerminalMessage terminalMessage;
 
 	/**
 	 * Creates a project handler.
-	 *
 	 * @param springCliUserConfig the user config
 	 * @param sourceRepositoryService the repo service
 	 * @param terminalMessage the terminal to write user messages to
@@ -72,7 +74,8 @@ public class ProjectHandler {
 		Assert.notNull(terminalMessage, "terminalMessage must be set");
 		this.springCliUserConfig = springCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
-		this.terminalMessage = terminalMessage;;
+		this.terminalMessage = terminalMessage;
+		;
 	}
 
 	/**
@@ -90,7 +93,8 @@ public class ProjectHandler {
 		// and the name is derived from the URL
 		if (!StringUtils.hasText(from)) {
 			urlToUse = FALLBACK_DEFAULT_REPO_URL;
-		} else {
+		}
+		else {
 			// if from is not empty, then get a URL,
 			// possibly translating from a project name that is already registered
 			urlToUse = getProjectRepositoryUrl(from);
@@ -101,15 +105,17 @@ public class ProjectHandler {
 
 		String projectNameToUse;
 		boolean createSubDirectoryForProject = true;
-		if (! projectInfo.getName().equalsIgnoreCase(".")) {
+		if (!projectInfo.getName().equalsIgnoreCase(".")) {
 			projectNameToUse = projectInfo.getName();
-			if (! JavaUtils.isValidDirectoryName(projectNameToUse)) {
+			if (!JavaUtils.isValidDirectoryName(projectNameToUse)) {
 				throw new SpringCliException("Invalid project name used, can't create a directory with that name");
 			}
-		} else {
-			// Passed in "." as project name signifying to use the current directory as project name
+		}
+		else {
+			// Passed in "." as project name signifying to use the current directory as
+			// project name
 			projectNameToUse = IoUtils.getWorkingDirectory().getFileName().toString();
-			if (! JavaUtils.isValidDirectoryName(projectNameToUse)) {
+			if (!JavaUtils.isValidDirectoryName(projectNameToUse)) {
 				throw new SpringCliException("Invalid project name used, can't create a directory with that name");
 			}
 			projectInfo.setName(projectNameToUse);
@@ -125,13 +131,12 @@ public class ProjectHandler {
 
 		// Create the application
 
-		createFromUrl(IoUtils.getProjectPath(path), projectNameToUse, urlToUse,
-				projectInfo.getDefaults(), createSubDirectoryForProject);
+		createFromUrl(IoUtils.getProjectPath(path), projectNameToUse, urlToUse, projectInfo.getDefaults(),
+				createSubDirectoryForProject);
 	}
 
 	/**
 	 * Adds and merges a project.
-	 *
 	 * @param from the from
 	 * @param path the project path
 	 */
@@ -146,16 +151,17 @@ public class ProjectHandler {
 		sb.append("Getting project with URL " + urlToUse);
 		this.terminalMessage.print(sb.toAttributedString());
 
-
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(urlToUse);
 		Path projectDir = IoUtils.getProjectPath(path);
 		Path workingPath = projectDir != null ? projectDir : IoUtils.getWorkingDirectory();
 
-		ProjectMerger projectMerger = new ProjectMerger(repositoryContentsPath, workingPath, projectName, this.terminalMessage);
+		ProjectMerger projectMerger = new ProjectMerger(repositoryContentsPath, workingPath, projectName,
+				this.terminalMessage);
 		projectMerger.merge();
 		try {
 			FileSystemUtils.deleteRecursively(repositoryContentsPath);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			logger.warn("Could not delete path " + repositoryContentsPath, ex);
 		}
 		sb = new AttributedStringBuilder();
@@ -166,13 +172,15 @@ public class ProjectHandler {
 	}
 
 	private String getProjectNameUsingFrom(String from) {
-		// Check it if is a URL, then use just the last part of the name as the 'project name'
+		// Check it if is a URL, then use just the last part of the name as the 'project
+		// name'
 		try {
 			if (from.startsWith("https:")) {
 				URL url = new URL(from);
 				return new File(url.getPath()).getName();
 			}
-		} catch (MalformedURLException ex) {
+		}
+		catch (MalformedURLException ex) {
 			throw new SpringCliException("Malformed URL " + from, ex);
 		}
 
@@ -207,7 +215,8 @@ public class ProjectHandler {
 		if (rootPackage.isEmpty()) {
 			AttributedStringBuilder sb = new AttributedStringBuilder();
 			sb.style(sb.style().foreground(AttributedStyle.YELLOW));
-			sb.append("Could find root package containing class with @SpringBootApplication.  No Java Package refactoring on the project will occur.");
+			sb.append(
+					"Could find root package containing class with @SpringBootApplication.  No Java Package refactoring on the project will occur.");
 			terminalMessage.print(sb.toAttributedString());
 			return Optional.empty();
 		}
@@ -219,8 +228,7 @@ public class ProjectHandler {
 		Path workingPath = projectDir != null ? projectDir : IoUtils.getWorkingDirectory();
 		Path projectDirectoryPath = Paths.get(workingPath.toString(), projectName);
 		if (Files.exists(projectDirectoryPath) && Files.isDirectory(projectDirectoryPath)) {
-			throw new SpringCliException(
-					"Directory named " + projectName + " already exists.  Choose another name.");
+			throw new SpringCliException("Directory named " + projectName + " already exists.  Choose another name.");
 		}
 		return projectDirectoryPath;
 	}
@@ -232,13 +240,14 @@ public class ProjectHandler {
 		return projectDirectory;
 	}
 
-	private void createFromUrl(Path projectDir, String directoryName, String url,
-			ProjectInfo projectInfo, boolean createSubDirectoryForProject) {
+	private void createFromUrl(Path projectDir, String directoryName, String url, ProjectInfo projectInfo,
+			boolean createSubDirectoryForProject) {
 		logger.debug("Generating project from url {} with ProjectInfo {} ", url, projectInfo);
 		File toDir;
 		if (createSubDirectoryForProject) {
 			toDir = createProjectDirectory(projectDir, directoryName).toFile();
-		} else {
+		}
+		else {
 			toDir = IoUtils.getWorkingDirectory().toFile();
 		}
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(url);
@@ -246,7 +255,8 @@ public class ProjectHandler {
 		// Get existing package name
 		Optional<String> existingPackageName = this.getRootPackageName(repositoryContentsPath);
 
-		// Refactor package name if have both a new package name and can identify the package name in newly cloned project
+		// Refactor package name if have both a new package name and can identify the
+		// package name in newly cloned project
 		if (StringUtils.hasText(projectInfo.getPackageName()) && existingPackageName.isPresent()) {
 			AttributedStringBuilder sb = new AttributedStringBuilder();
 			sb.style(sb.style().foreground(AttributedStyle.GREEN));
@@ -254,13 +264,12 @@ public class ProjectHandler {
 			sb.style(sb.style().foreground(AttributedStyle.WHITE));
 			sb.append("package to " + projectInfo.getPackageName());
 			terminalMessage.print(sb.toAttributedString());
-			RefactorUtils.refactorPackage(projectInfo.getPackageName(), existingPackageName.get(), repositoryContentsPath);
+			RefactorUtils.refactorPackage(projectInfo.getPackageName(), existingPackageName.get(),
+					repositoryContentsPath);
 		}
-
 
 		// Update GroupId, ArtfiactId, Version, name, Description as needed.
 		updatePom(repositoryContentsPath, projectInfo);
-
 
 		// Copy files
 		File fromDir = repositoryContentsPath.toFile();
@@ -280,14 +289,16 @@ public class ProjectHandler {
 				if (srcFile.canExecute()) {
 					destFile.setExecutable(true);
 				}
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				throw new SpringCliException(
 						"Could not copy files from " + fromDir.getAbsolutePath() + " to " + toDir.getAbsolutePath());
 			}
 		}
 		try {
 			FileSystemUtils.deleteRecursively(repositoryContentsPath);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			logger.warn("Could not delete path " + repositoryContentsPath, ex);
 		}
 
@@ -309,12 +320,17 @@ public class ProjectHandler {
 		Consumer<Throwable> onError = e -> {
 			logger.error("error in xml parser execution", e);
 		};
-		List<SourceFile> documentList = xmlParser.parse(paths, repositoryContentsPath, new InMemoryExecutionContext(onError)).toList();
+		List<SourceFile> documentList = xmlParser
+			.parse(paths, repositoryContentsPath, new InMemoryExecutionContext(onError))
+			.toList();
 
 		// Execute Recipe
 		ChangeNewlyClonedPomRecipe changeNewlyClonedPomRecipe = new ChangeNewlyClonedPomRecipe(projectInfo);
 		ExecutionContext executionContext = new InMemoryExecutionContext();
-		List<Result> resultList = changeNewlyClonedPomRecipe.run( new InMemoryLargeSourceSet(documentList), executionContext).getChangeset().getAllResults();
+		List<Result> resultList = changeNewlyClonedPomRecipe
+			.run(new InMemoryLargeSourceSet(documentList), executionContext)
+			.getChangeset()
+			.getAllResults();
 
 		// Write Results
 		RecipeUtils.writeResults("ChangeNewlyClonedPomRecipe", pomPath, resultList);
@@ -329,7 +345,8 @@ public class ProjectHandler {
 		Optional<String> newProjectName = commandDefaults.findDefaultOptionValue(commandName, subCommandName, "name");
 		if (newProjectName.isPresent()) {
 			return newProjectName.get().replaceAll(" ", "_");
-		} else {
+		}
+		else {
 			return FALLBACK_DEFAULT_PROJECT_NAME;
 		}
 	}
@@ -339,7 +356,8 @@ public class ProjectHandler {
 		if (StringUtils.hasText(packageName)) {
 			return Optional.of(PackageNameUtils.getTargetPackageName(packageName, packageName));
 		}
-		// Check for the default value of package-name that was set using "config set boot new"
+		// Check for the default value of package-name that was set using "config set boot
+		// new"
 		CommandDefaults commandDefaults = this.springCliUserConfig.getCommandDefaults();
 		return commandDefaults.findDefaultOptionValue(commandName, subCommandName, "package-name");
 	}
@@ -363,10 +381,11 @@ public class ProjectHandler {
 	@Nullable
 	private String findUrlFromProjectName(String projectName) {
 		Collection<ProjectRepository> projectRepositories = springCliUserConfig.getProjectRepositories()
-				.getProjectRepositories();
+			.getProjectRepositories();
 		if (projectRepositories != null && projectRepositories.size() > 0) {
 			String url = findUrlFromProjectRepositories(projectName, projectRepositories);
-			if (url != null) return url;
+			if (url != null)
+				return url;
 		}
 
 		List<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
@@ -375,15 +394,18 @@ public class ProjectHandler {
 				String url = projectCatalog.getUrl();
 				Path path = sourceRepositoryService.retrieveRepositoryContents(url);
 				YamlConfigFile yamlConfigFile = new YamlConfigFile();
-				projectRepositories = yamlConfigFile.read(Paths.get(path.toString(), "project-catalog.yml"),
-						ProjectRepositories.class).getProjectRepositories();
+				projectRepositories = yamlConfigFile
+					.read(Paths.get(path.toString(), "project-catalog.yml"), ProjectRepositories.class)
+					.getProjectRepositories();
 				try {
 					FileSystemUtils.deleteRecursively(path);
-				} catch (IOException ex) {
+				}
+				catch (IOException ex) {
 					logger.warn("Could not delete path " + path, ex);
 				}
 				url = findUrlFromProjectRepositories(projectName, projectRepositories);
-				if (url != null) return url;
+				if (url != null)
+					return url;
 			}
 		}
 
@@ -396,7 +418,8 @@ public class ProjectHandler {
 		// Check it if is a URL
 		if (from.startsWith("https:")) {
 			return from;
-		} else {
+		}
+		else {
 			// look up url based on name
 			return findUrlFromProjectName(from);
 		}

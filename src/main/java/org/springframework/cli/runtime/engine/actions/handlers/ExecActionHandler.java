@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import java.io.BufferedReader;
@@ -70,7 +69,8 @@ public class ExecActionHandler {
 
 	private final TerminalMessage terminalMessage;
 
-	public ExecActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path dynamicSubCommandPath, TerminalMessage terminalMessage) {
+	public ExecActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path dynamicSubCommandPath,
+			TerminalMessage terminalMessage) {
 		this.templateEngine = templateEngine;
 		this.model = model;
 		this.dynamicSubCommandPath = dynamicSubCommandPath;
@@ -85,7 +85,8 @@ public class ExecActionHandler {
 		String commandToUse;
 		if (StringUtils.hasText(exec.getCommand())) {
 			commandToUse = templateEngine.process(exec.getCommand(), model);
-		} else {
+		}
+		else {
 			String commandFileAsString = exec.getCommandFile();
 			Path commandFilePath = Paths.get(String.valueOf(dynamicSubCommandPath), commandFileAsString);
 			if (Files.exists(commandFilePath) && Files.isRegularFile(commandFilePath)) {
@@ -96,12 +97,13 @@ public class ExecActionHandler {
 				catch (IOException e) {
 					throw new SpringCliException("Can not read from file " + commandFilePath.toAbsolutePath(), e);
 				}
-			} else {
+			}
+			else {
 				throw new SpringCliException("Can not read from file: " + commandFilePath.toAbsolutePath());
 			}
 		}
 
-		String[] commands = {"bash", "-c", commandToUse};
+		String[] commands = { "bash", "-c", commandToUse };
 
 		ProcessBuilder processBuilder = new ProcessBuilder(commands);
 		try {
@@ -112,19 +114,20 @@ public class ExecActionHandler {
 			throw new SpringCliException("Error evaluating exec working directory. Expression: " + exec.getDir(), e);
 		}
 
-		// If exec.getTo is set, it is the relative path to which to redirect stdout of the running process.
+		// If exec.getTo is set, it is the relative path to which to redirect stdout of
+		// the running process.
 		if (exec.getTo() != null) {
 			try {
 				String execGetTo = templateEngine.process(exec.getTo(), model);
 				processBuilder.redirectOutput(new File(execGetTo));
 			}
 			catch (Exception e) {
-				throw new SpringCliException("Error evaluating exec destination file. Expression: " + exec.getTo(),
-						e);
+				throw new SpringCliException("Error evaluating exec destination file. Expression: " + exec.getTo(), e);
 			}
 		}
 
-		// If exec.getErrto() is set, the relative path to which to redirect stderr of the running process.
+		// If exec.getErrto() is set, the relative path to which to redirect stderr of the
+		// running process.
 		if (exec.getErrto() != null) {
 			try {
 				String execErroTo = templateEngine.process(exec.getErrto(), model);
@@ -136,7 +139,7 @@ public class ExecActionHandler {
 		}
 
 		try {
-			terminalMessage.print("Executing: " + StringUtils.arrayToDelimitedString(commands, " ") );
+			terminalMessage.print("Executing: " + StringUtils.arrayToDelimitedString(commands, " "));
 			Process process = processBuilder.start();
 			// capture the output.
 			Optional<String> stderr = Optional.empty();
@@ -158,7 +161,8 @@ public class ExecActionHandler {
 				outputs.put(OUTPUT_STDERR, stderr.get());
 			}
 
-			// Logging success or failure to terminal and optionally process stdout with JSON Path
+			// Logging success or failure to terminal and optionally process stdout with
+			// JSON Path
 			if (exited) {
 				if (process.exitValue() == 0) {
 					terminalMessage.print("Command executed successfully");
@@ -170,7 +174,8 @@ public class ExecActionHandler {
 					}
 				}
 				else {
-					terminalMessage.print("Command '" + StringUtils.arrayToDelimitedString(commands, " ") + "' exited with value " + process.exitValue());
+					terminalMessage.print("Command '" + StringUtils.arrayToDelimitedString(commands, " ")
+							+ "' exited with value " + process.exitValue());
 					if (stderr.isPresent()) {
 						terminalMessage.print("stderr = " + stderr.get());
 					}
@@ -179,13 +184,13 @@ public class ExecActionHandler {
 		}
 		catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
-			throw new SpringCliException("Execution of command '"
-					+ StringUtils.arrayToDelimitedString(commands, " ") + "' failed", e);
+			throw new SpringCliException(
+					"Execution of command '" + StringUtils.arrayToDelimitedString(commands, " ") + "' failed", e);
 
 		}
 		catch (IOException e) {
-			throw new SpringCliException("Execution of command '"
-					+ StringUtils.arrayToDelimitedString(commands, " ") + "' failed", e);
+			throw new SpringCliException(
+					"Execution of command '" + StringUtils.arrayToDelimitedString(commands, " ") + "' failed", e);
 		}
 	}
 
@@ -194,12 +199,13 @@ public class ExecActionHandler {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
 			mapper.registerModule(new JavaTimeModule());
-			Object data = JsonPath.using(
-					Configuration.builder()
-							.jsonProvider(new JacksonJsonProvider(mapper))
-							.mappingProvider(new JacksonMappingProvider(mapper))
-							.build()
-			).parse(stdout.get()).read(exec.getJsonPath());
+			Object data = JsonPath
+				.using(Configuration.builder()
+					.jsonProvider(new JacksonJsonProvider(mapper))
+					.mappingProvider(new JacksonMappingProvider(mapper))
+					.build())
+				.parse(stdout.get())
+				.read(exec.getJsonPath());
 			if (data != null) {
 				return Optional.of(data);
 			}

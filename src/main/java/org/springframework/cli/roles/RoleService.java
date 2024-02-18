@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.roles;
 
 import java.io.File;
@@ -65,13 +64,15 @@ public class RoleService {
 		createRolesDirectoryIfNecessary();
 
 		// The default role is always updatable, create on demand.
-		if (! StringUtils.hasText(roleName)) {
+		if (!StringUtils.hasText(roleName)) {
 			File roleFile = getFile(roleName);
 			if (!roleFile.exists()) {
 				try {
 					roleFile.createNewFile();
-				} catch (IOException ex) {
-					throw new SpringCliException("Can not create role file for default role.  Message = " + ex.getMessage(), ex);
+				}
+				catch (IOException ex) {
+					throw new SpringCliException(
+							"Can not create role file for default role.  Message = " + ex.getMessage(), ex);
 				}
 			}
 
@@ -90,8 +91,8 @@ public class RoleService {
 			yaml.dump(map, new PrintWriter(getRoleFile));
 		}
 		catch (FileNotFoundException e) {
-			throw new SpringCliException("The file for the role '" + roleName
-					+ "' was not found.  Error = " + e.getMessage());
+			throw new SpringCliException(
+					"The file for the role '" + roleName + "' was not found.  Error = " + e.getMessage());
 		}
 
 	}
@@ -118,7 +119,7 @@ public class RoleService {
 	}
 
 	public void createRolesDirectoryIfNecessary() {
-		if (! IoUtils.inProjectRootDirectory(this.workingDirectory) ) {
+		if (!IoUtils.inProjectRootDirectory(this.workingDirectory)) {
 			throw new SpringCliException("You need to be in the root project directory to run 'role' commands.");
 		}
 		File directory = getRolesVarPath();
@@ -128,10 +129,10 @@ public class RoleService {
 	}
 
 	/**
-	 * Given the role name, return the file that contains the role variables.
-	 * If the name is null or empty, the default file "vars.yml" is used.
-	 * Otherwise, the file name is vars-{role}.yml
-	 * @param name The name of the role.  Empty string implies the default role
+	 * Given the role name, return the file that contains the role variables. If the name
+	 * is null or empty, the default file "vars.yml" is used. Otherwise, the file name is
+	 * vars-{role}.yml
+	 * @param name The name of the role. Empty string implies the default role
 	 * @return the File with role variables.
 	 */
 	public File getFile(String name) {
@@ -139,7 +140,8 @@ public class RoleService {
 		String fileName;
 		if (StringUtils.hasText(name)) {
 			fileName = "vars-" + name + ".yml";
-		} else {
+		}
+		else {
 			fileName = "vars.yml";
 		}
 		String filePath = getRolesVarPath() + File.separator + fileName;
@@ -150,4 +152,5 @@ public class RoleService {
 	public File getRolesVarPath() {
 		return this.workingDirectory.resolve(".spring/roles/vars").toFile();
 	}
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.config;
 
 import java.io.IOException;
@@ -36,13 +35,14 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.result.CommandNotFoundMessageProvider;
 import org.springframework.shell.standard.commands.Help;
 
-public class SpringCliCommandNotFoundMessageProvider implements CommandNotFoundMessageProvider, ApplicationContextAware {
+public class SpringCliCommandNotFoundMessageProvider
+		implements CommandNotFoundMessageProvider, ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
 
 	@Override
 	public String apply(ProviderContext providerContext) {
-		String commands =  String.join(" ", providerContext.commands());
+		String commands = String.join(" ", providerContext.commands());
 		Help help = this.applicationContext.getBean(Help.class);
 		CommandCatalog commandCatalog = this.applicationContext.getBean(CommandCatalog.class);
 		Optional<String> group = isLikePartialCommand(commands, commandCatalog);
@@ -58,7 +58,8 @@ public class SpringCliCommandNotFoundMessageProvider implements CommandNotFoundM
 			try {
 				AttributedStringBuilder sb = new AttributedStringBuilder();
 				String message = new AttributedString(providerContext.error().getMessage(),
-						AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi();
+						AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+					.toAnsi();
 				sb.append(message);
 				sb.append(System.lineSeparator());
 				sb.append(help.help(null));
@@ -72,12 +73,13 @@ public class SpringCliCommandNotFoundMessageProvider implements CommandNotFoundM
 		return defaultHelpMessage(providerContext);
 	}
 
-	private String commandHelpMessage(String commands, CommandCatalog commandCatalog, ProviderContext providerContext, String matchedGroupName, Help help) throws IOException {
+	private String commandHelpMessage(String commands, CommandCatalog commandCatalog, ProviderContext providerContext,
+			String matchedGroupName, Help help) throws IOException {
 		StringBuilder result = new StringBuilder();
 		result.append(defaultHelpMessage(providerContext));
 		result.append("\n");
 		String defaultMessage = help.help(null).toAnsi();
-		String [] lines = defaultMessage.split("\n");
+		String[] lines = defaultMessage.split("\n");
 		for (String ansiLine : lines) {
 			String line = AttributedString.stripAnsi(ansiLine);
 			if (line.trim().split("\\s+")[0].equalsIgnoreCase(matchedGroupName)) {
@@ -91,8 +93,7 @@ public class SpringCliCommandNotFoundMessageProvider implements CommandNotFoundM
 
 	private Optional<String> isLikePartialCommand(String commands, CommandCatalog commandCatalog) {
 		String possibleGroupName = commands.split("\\s+")[0];
-		Map<String, CommandRegistration> registrations = Utils
-				.removeHiddenCommands(commandCatalog.getRegistrations());
+		Map<String, CommandRegistration> registrations = Utils.removeHiddenCommands(commandCatalog.getRegistrations());
 		for (CommandRegistration commandRegistration : registrations.values()) {
 			if (possibleGroupName.equalsIgnoreCase(commandRegistration.getGroup())) {
 				return Optional.of(commandRegistration.getGroup());
@@ -102,18 +103,14 @@ public class SpringCliCommandNotFoundMessageProvider implements CommandNotFoundM
 	}
 
 	private static String defaultHelpMessage(ProviderContext providerContext) {
-		return new AttributedString(providerContext.error().getMessage()
-				+ "  Use 'spring help' to get help.",
-				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi();
+		return new AttributedString(providerContext.error().getMessage() + "  Use 'spring help' to get help.",
+				AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+			.toAnsi();
 	}
 
 	private boolean isLikeHelp(String command) {
-		List<String> wordList = Arrays.asList(
-				"-h", "-help",
-				"--h", "--help",
-				 "-hlep",  "-hep", "-hel",   "-hlpe", "-elp",
-				"--hlep", "--hep", "--hel", "--hlep", "--elp",
-				"hlep", "hep", "hel", "hlpe");
+		List<String> wordList = Arrays.asList("-h", "-help", "--h", "--help", "-hlep", "-hep", "-hel", "-hlpe", "-elp",
+				"--hlep", "--hep", "--hel", "--hlep", "--elp", "hlep", "hep", "hel", "hlpe");
 		return wordList.stream().anyMatch(command::contains);
 	}
 
@@ -121,4 +118,5 @@ public class SpringCliCommandNotFoundMessageProvider implements CommandNotFoundM
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
+
 }

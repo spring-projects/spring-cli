@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.support;
 
 import java.io.IOException;
@@ -28,15 +27,16 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 public class IntegrationTestSupport {
-	private static final Logger logger = LoggerFactory.getLogger(IntegrationTestSupport.class);
 
+	private static final Logger logger = LoggerFactory.getLogger(IntegrationTestSupport.class);
 
 	public static void installInWorkingDirectory(Path projectPath, Path workingDirectory) {
 		try {
 			Resource projectResource = new FileSystemResource(projectPath.toString());
 			FileUtils.copyDirectory(projectResource.getFile(), workingDirectory.toFile());
 			logger.info("Project initialized at: " + workingDirectory);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			throw new RuntimeException(ex);
 		}
 	}

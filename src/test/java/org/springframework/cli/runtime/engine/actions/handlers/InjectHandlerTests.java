@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import java.nio.file.Files;
@@ -36,30 +35,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class InjectHandlerTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withUserConfiguration(MockBaseConfig.class);
+		.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
 	void injectBefore(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-			Path sampleFile = Path.of("test-data").resolve("commands")
-					.resolve("inject").resolve("before").resolve("inject").resolve("sample.txt");
+			Path sampleFile = Path.of("test-data")
+				.resolve("commands")
+				.resolve("inject")
+				.resolve("before")
+				.resolve("inject")
+				.resolve("sample.txt");
 			Path destinationPath = workingDir.resolve("sample.txt");
 
 			Files.copy(sampleFile, destinationPath);
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("inject")
-					.executeCommand("before/inject")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("inject")
+				.executeCommand("before/inject")
+				.build();
 			commandRunner.run();
 
 			assertThat(destinationPath).exists();
-			String expectedContents = "hello there\n"
-					+ "this is a test file\n"
-					+ "INJECTED BEFORE\n"
-					+ "we are going to insert before the line that has the word marker1\n"
-					+ "marker2";
+			String expectedContents = "hello there\n" + "this is a test file\n" + "INJECTED BEFORE\n"
+					+ "we are going to insert before the line that has the word marker1\n" + "marker2";
 			assertThat(destinationPath.toFile()).hasContent(expectedContents);
 
 		});
@@ -69,23 +68,24 @@ public class InjectHandlerTests {
 	void injectAfter(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-			Path sampleFile = Path.of("test-data").resolve("commands")
-					.resolve("inject").resolve("after").resolve("inject").resolve("sample.txt");
+			Path sampleFile = Path.of("test-data")
+				.resolve("commands")
+				.resolve("inject")
+				.resolve("after")
+				.resolve("inject")
+				.resolve("sample.txt");
 			Path destinationPath = workingDir.resolve("sample.txt");
 
 			Files.copy(sampleFile, destinationPath);
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("inject")
-					.executeCommand("after/inject")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("inject")
+				.executeCommand("after/inject")
+				.build();
 			commandRunner.run();
 
 			assertThat(destinationPath).exists();
-			String expectedContents = "hello there\n"
-					+ "this is a test file\n"
-					+ "we are going to insert before the line that has the word marker1\n"
-					+ "marker2\n"
+			String expectedContents = "hello there\n" + "this is a test file\n"
+					+ "we are going to insert before the line that has the word marker1\n" + "marker2\n"
 					+ "INJECTED AFTER";
 			assertThat(destinationPath.toFile()).hasContent(expectedContents);
 
@@ -96,25 +96,27 @@ public class InjectHandlerTests {
 	void injectSkip(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-			Path sampleFile = Path.of("test-data").resolve("commands")
-					.resolve("inject").resolve("skip").resolve("inject").resolve("sample.txt");
+			Path sampleFile = Path.of("test-data")
+				.resolve("commands")
+				.resolve("inject")
+				.resolve("skip")
+				.resolve("inject")
+				.resolve("sample.txt");
 			Path destinationPath = workingDir.resolve("sample.txt");
 
 			Files.copy(sampleFile, destinationPath);
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("inject")
-					.executeCommand("skip/inject")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("inject")
+				.executeCommand("skip/inject")
+				.build();
 			commandRunner.run();
 
 			assertThat(destinationPath).exists();
-			String expectedContents = "hello there\n"
-					+ "this is a test file\n"
-					+ "we are going to insert before the line that has the word marker1\n"
-					+ "marker2";
+			String expectedContents = "hello there\n" + "this is a test file\n"
+					+ "we are going to insert before the line that has the word marker1\n" + "marker2";
 			assertThat(destinationPath.toFile()).hasContent(expectedContents);
 
 		});
 	}
+
 }

@@ -32,17 +32,11 @@ import org.springframework.util.ObjectUtils;
  *
  * @author Janne Valkealahti
  */
-@RegisterReflectionForBinding({SpringCliUserConfig.ProjectCatalogs.class,
-		SpringCliUserConfig.ProjectCatalog.class,
-		SpringCliUserConfig.ProjectRepositories.class,
-		SpringCliUserConfig.ProjectRepository.class,
-		SpringCliUserConfig.CommandDefaults.class,
-		SpringCliUserConfig.CommandDefault.class,
-		SpringCliUserConfig.Option.class,
-		SpringCliUserConfig.Initializrs.class,
-		SpringCliUserConfig.Initializr.class,
-		SpringCliUserConfig.Hosts.class,
-		SpringCliUserConfig.Host.class})
+@RegisterReflectionForBinding({ SpringCliUserConfig.ProjectCatalogs.class, SpringCliUserConfig.ProjectCatalog.class,
+		SpringCliUserConfig.ProjectRepositories.class, SpringCliUserConfig.ProjectRepository.class,
+		SpringCliUserConfig.CommandDefaults.class, SpringCliUserConfig.CommandDefault.class,
+		SpringCliUserConfig.Option.class, SpringCliUserConfig.Initializrs.class, SpringCliUserConfig.Initializr.class,
+		SpringCliUserConfig.Hosts.class, SpringCliUserConfig.Host.class })
 public class SpringCliUserConfig {
 
 	/**
@@ -68,7 +62,7 @@ public class SpringCliUserConfig {
 	/**
 	 * {@code command-defaults.yml} store default option values for commands.
 	 */
-	public final static String 	COMMAND_DEFAULTS_FILE_NAME = "command-defaults.yml";
+	public final static String COMMAND_DEFAULTS_FILE_NAME = "command-defaults.yml";
 
 	/**
 	 * {@code initializr.yml} stores initializr specific info.
@@ -99,22 +93,21 @@ public class SpringCliUserConfig {
 
 	private final UserConfig<Initializrs> initializrsUserConfig;
 
-
 	public SpringCliUserConfig() {
 		this(null);
 	}
 
 	public SpringCliUserConfig(Function<String, Path> pathProvider) {
-		this.hostsUserConfig = new UserConfig<>(HOSTS_FILE_NAME, Hosts.class,
-				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
+		this.hostsUserConfig = new UserConfig<>(HOSTS_FILE_NAME, Hosts.class, SPRING_CLI_CONFIG_DIR,
+				SPRING_CLI_CONFIG_DIR_NAME);
 		this.projectCatalogsUserConfig = new UserConfig<>(PROJECT_CATALOGS_FILE_NAME, ProjectCatalogs.class,
 				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
 		this.projectRepositoriesUserConfig = new UserConfig<>(PROJECT_REPOSITORIES_FILE_NAME, ProjectRepositories.class,
 				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
 		this.commandDefaultsUserConfig = new UserConfig<>(COMMAND_DEFAULTS_FILE_NAME, CommandDefaults.class,
 				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
-		this.initializrsUserConfig = new UserConfig<>(INITIALIZR_FILE_NAME, Initializrs.class,
-				SPRING_CLI_CONFIG_DIR, SPRING_CLI_CONFIG_DIR_NAME);
+		this.initializrsUserConfig = new UserConfig<>(INITIALIZR_FILE_NAME, Initializrs.class, SPRING_CLI_CONFIG_DIR,
+				SPRING_CLI_CONFIG_DIR_NAME);
 		if (pathProvider != null) {
 			this.hostsUserConfig.setPathProvider(pathProvider);
 			this.projectCatalogsUserConfig.setPathProvider(pathProvider);
@@ -126,7 +119,6 @@ public class SpringCliUserConfig {
 
 	/**
 	 * Gets hosts.
-	 *
 	 * @return mappings for hosts
 	 */
 	public Map<String, Host> getHosts() {
@@ -136,7 +128,6 @@ public class SpringCliUserConfig {
 
 	/**
 	 * Sets hosts.
-	 *
 	 * @param hosts
 	 */
 	public void setHosts(Hosts hosts) {
@@ -145,7 +136,6 @@ public class SpringCliUserConfig {
 
 	/**
 	 * Update a single host.
-	 *
 	 * @param key the host key
 	 * @param host the host
 	 */
@@ -168,7 +158,6 @@ public class SpringCliUserConfig {
 
 	/**
 	 * Get project catalogs.
-	 *
 	 * @return project catalogs
 	 */
 	public ProjectCatalogs getProjectCatalogs() {
@@ -178,7 +167,6 @@ public class SpringCliUserConfig {
 
 	/**
 	 * Sets project catalogs
-	 *
 	 * @param projectCatalogs the project catalogs
 	 */
 	public void setProjectCatalogs(ProjectCatalogs projectCatalogs) {
@@ -187,7 +175,6 @@ public class SpringCliUserConfig {
 
 	/**
 	 * Get project repositories.
-	 *
 	 * @return project repositories
 	 */
 	public ProjectRepositories getProjectRepositories() {
@@ -197,7 +184,6 @@ public class SpringCliUserConfig {
 
 	/**
 	 * Sets project repositories.
-	 *
 	 * @param projectRepositories
 	 */
 	public void setProjectRepositories(ProjectRepositories projectRepositories) {
@@ -215,12 +201,12 @@ public class SpringCliUserConfig {
 
 	/**
 	 * Sets command defaults
-	 *
 	 * @param commandDefaults
 	 */
 	public void setCommandDefaults(CommandDefaults commandDefaults) {
 		this.commandDefaultsUserConfig.setConfig(commandDefaults);
 	}
+
 	public static class Hosts {
 
 		private Map<String, Host> hosts = new HashMap<>();
@@ -232,11 +218,13 @@ public class SpringCliUserConfig {
 		public void setHosts(Map<String, Host> hosts) {
 			this.hosts = hosts;
 		}
+
 	}
 
 	public static class Host {
 
 		private String oauthToken;
+
 		private String user;
 
 		public Host() {
@@ -266,6 +254,7 @@ public class SpringCliUserConfig {
 		public void setUser(String user) {
 			this.user = user;
 		}
+
 	}
 
 	public Map<String, Initializr> getInitializrs() {
@@ -316,6 +305,7 @@ public class SpringCliUserConfig {
 		public void setInitializrs(Map<String, Initializr> initializrs) {
 			this.initializrs = initializrs;
 		}
+
 	}
 
 	public static class Initializr {
@@ -340,12 +330,15 @@ public class SpringCliUserConfig {
 		public void setUrl(String url) {
 			this.url = url;
 		}
+
 	}
 
 	public abstract static class BaseProjectCommon {
 
 		private String name;
+
 		private String description;
+
 		private String url;
 
 		BaseProjectCommon() {
@@ -380,6 +373,7 @@ public class SpringCliUserConfig {
 		public void setUrl(String url) {
 			this.url = url;
 		}
+
 	}
 
 	public static class ProjectCatalogs {
@@ -396,10 +390,9 @@ public class SpringCliUserConfig {
 
 		@Override
 		public String toString() {
-			return "ProjectCatalogs{" +
-					"projectCatalogs=" + projectCatalogs +
-					'}';
+			return "ProjectCatalogs{" + "projectCatalogs=" + projectCatalogs + '}';
 		}
+
 	}
 
 	public static class ProjectRepositories {
@@ -423,10 +416,9 @@ public class SpringCliUserConfig {
 
 		@Override
 		public String toString() {
-			return "ProjectRepositories{" +
-					"projectRepositories=" + projectRepositories +
-					'}';
+			return "ProjectRepositories{" + "projectRepositories=" + projectRepositories + '}';
 		}
+
 	}
 
 	public static class ProjectCatalog extends BaseProjectCommon {
@@ -455,13 +447,10 @@ public class SpringCliUserConfig {
 
 		@Override
 		public String toString() {
-			return "ProjectCatalog{" +
-					"tags=" + tags +
-					", name='" + getName() + '\'' +
-					", description='" + getDescription() + '\'' +
-					", url='" + getUrl() + '\'' +
-					'}';
+			return "ProjectCatalog{" + "tags=" + tags + ", name='" + getName() + '\'' + ", description='"
+					+ getDescription() + '\'' + ", url='" + getUrl() + '\'' + '}';
 		}
+
 	}
 
 	public static class CatalogRepository extends BaseProjectCommon {
@@ -485,13 +474,10 @@ public class SpringCliUserConfig {
 
 		@Override
 		public String toString() {
-			return "CatalogRepository{" +
-					"tags=" + tags +
-					", name='" + getName() + '\'' +
-					", description='" + getDescription() + '\'' +
-					", url='" + getUrl() + '\'' +
-					'}';
+			return "CatalogRepository{" + "tags=" + tags + ", name='" + getName() + '\'' + ", description='"
+					+ getDescription() + '\'' + ", url='" + getUrl() + '\'' + '}';
 		}
+
 	}
 
 	public static class CatalogRepositories {
@@ -500,8 +486,8 @@ public class SpringCliUserConfig {
 
 		public Optional<CatalogRepository> findByName(String name) {
 			return this.catalogRepositories.stream()
-					.filter(t -> ObjectUtils.nullSafeEquals(t.getName(), name))
-					.findFirst();
+				.filter(t -> ObjectUtils.nullSafeEquals(t.getName(), name))
+				.findFirst();
 		}
 
 		public List<CatalogRepository> getCatalogRepositories() {
@@ -514,10 +500,9 @@ public class SpringCliUserConfig {
 
 		@Override
 		public String toString() {
-			return "CatalogRepositories{" +
-					"catalogRepositories=" + catalogRepositories +
-					'}';
+			return "CatalogRepositories{" + "catalogRepositories=" + catalogRepositories + '}';
 		}
+
 	}
 
 	public static class ProjectRepository extends BaseProjectCommon {
@@ -532,7 +517,7 @@ public class SpringCliUserConfig {
 			this.tags = tags;
 		}
 
-		public static ProjectRepository of (String name, String description, String url, List<String> tags) {
+		public static ProjectRepository of(String name, String description, String url, List<String> tags) {
 			return new ProjectRepository(name, description, url, tags);
 		}
 
@@ -546,13 +531,10 @@ public class SpringCliUserConfig {
 
 		@Override
 		public String toString() {
-			return "ProjectRepository{" +
-					"tags=" + tags +
-					", name='" + getName() + '\'' +
-					", description='" + getDescription() + '\'' +
-					", url='" + getUrl() + '\'' +
-					'}';
+			return "ProjectRepository{" + "tags=" + tags + ", name='" + getName() + '\'' + ", description='"
+					+ getDescription() + '\'' + ", url='" + getUrl() + '\'' + '}';
 		}
+
 	}
 
 	public static class CommandDefaults {
@@ -569,8 +551,8 @@ public class SpringCliUserConfig {
 
 		public Optional<String> findDefaultOptionValue(String commandName, String subCommandName, String optionName) {
 			for (CommandDefault commandDefault : commandDefaults) {
-				if (commandDefault.getCommandName().equals(commandName) &&
-					commandDefault.getSubCommandName().equals(subCommandName)) {
+				if (commandDefault.getCommandName().equals(commandName)
+						&& commandDefault.getSubCommandName().equals(subCommandName)) {
 					for (Option option : commandDefault.getOptions()) {
 						if (option.getName().equals(optionName)) {
 							return Optional.of(option.getValue());
@@ -580,6 +562,7 @@ public class SpringCliUserConfig {
 			}
 			return Optional.empty();
 		}
+
 	}
 
 	public static class CommandDefault {
@@ -593,6 +576,7 @@ public class SpringCliUserConfig {
 		public CommandDefault() {
 
 		}
+
 		public CommandDefault(String commandName, String subCommandName) {
 			this.commandName = commandName;
 			this.subCommandName = subCommandName;
@@ -621,6 +605,7 @@ public class SpringCliUserConfig {
 		public void setOptions(List<Option> options) {
 			this.options = options;
 		}
+
 	}
 
 	public static class Option {
@@ -656,9 +641,9 @@ public class SpringCliUserConfig {
 
 		@Override
 		public String toString() {
-			return
-					"'" + name + '\'' +
-					" = '" + value + '\'';
+			return "'" + name + '\'' + " = '" + value + '\'';
 		}
+
 	}
+
 }

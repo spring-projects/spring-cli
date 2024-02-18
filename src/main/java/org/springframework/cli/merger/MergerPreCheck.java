@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger;
 
 import java.nio.file.Path;
@@ -25,11 +24,11 @@ import org.springframework.cli.SpringCliException;
 import org.springframework.cli.util.JavaUtils;
 
 /**
- * When using the spring boot add command, this class is invoked to check if the
- * project to be merged is compatible with the current project.
+ * When using the spring boot add command, this class is invoked to check if the project
+ * to be merged is compatible with the current project.
  *
- * Reasons why the pre-check would fail are incompatible versions of Java or
- * the to be merged project is using gradle and the current project is using maven.
+ * Reasons why the pre-check would fail are incompatible versions of Java or the to be
+ * merged project is using gradle and the current project is using maven.
  *
  * Note, currently only checks Java version compatibility for Maven projects
  */
@@ -37,7 +36,6 @@ public class MergerPreCheck {
 
 	/**
 	 * Checks if the two projects can be merged, if not an exception is thrown.
-	 *
 	 * @param currentModel the Maven Model of the current project
 	 * @param modelToMerge the Maven Model of the project to merge
 	 * @param toMergeProjectPath the location of the code base for the project to merge
@@ -52,19 +50,21 @@ public class MergerPreCheck {
 			throw new SpringCliException("Working directory does not contain pom.xml");
 		}
 		if (!currentModel.getProperties().containsKey("java.version")) {
-			throw new SpringCliException("Can not determine the Java project version of the current project." +
-					"  Check that maven property 'java.version' is present in pom.xml");
+			throw new SpringCliException("Can not determine the Java project version of the current project."
+					+ "  Check that maven property 'java.version' is present in pom.xml");
 		}
 		if (!modelToMerge.getProperties().containsKey("java.version")) {
-			throw new SpringCliException("Can not determine the Java project version of the project to add to the current project." +
-					"  Check that maven property 'java.version' is present in pom.xml in the Path = " + toMergeProjectPath.toAbsolutePath());
+			throw new SpringCliException(
+					"Can not determine the Java project version of the project to add to the current project."
+							+ "  Check that maven property 'java.version' is present in pom.xml in the Path = "
+							+ toMergeProjectPath.toAbsolutePath());
 		}
 		int javaVersion = JavaUtils.getJavaVersion(currentModel.getProperties().getProperty("java.version"));
 		int javaVersionToMerge = JavaUtils.getJavaVersion(modelToMerge.getProperties().getProperty("java.version"));
 		if (javaVersionToMerge > javaVersion) {
-			throw new SpringCliException("Current project is a Java " + javaVersion +
-					" project.  The project to be added is a Java " + javaVersionToMerge +
-					" project.  Stopping merge as the code bases are potentially incompatible.");
+			throw new SpringCliException("Current project is a Java " + javaVersion
+					+ " project.  The project to be added is a Java " + javaVersionToMerge
+					+ " project.  Stopping merge as the code bases are potentially incompatible.");
 		}
 	}
 

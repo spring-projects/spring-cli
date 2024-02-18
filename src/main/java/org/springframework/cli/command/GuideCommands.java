@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.command;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +42,11 @@ public class GuideCommands {
 	}
 
 	@Command(command = "apply", description = "Apply the instructions in the readme to the code base.")
-	public void readmeApply(
-			@Option(description = "The readme file that contains the instructions for how to modify the code base, such as README-ai-jpa.md") String file,
+	public void readmeApply(@Option(
+			description = "The readme file that contains the instructions for how to modify the code base, such as README-ai-jpa.md") String file,
 			@Option(description = "Path on which to run the command. Most of the time, you can not specify the path and use the default value, which is the current working directory.") String path) {
 
 		this.openAiHandler.apply(file, path, terminalMessage);
 	}
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.support;
 
 import com.google.common.jimfs.Jimfs;
@@ -80,8 +79,10 @@ public class MockConfigurations {
 
 		@Bean
 		BootCommands bootCommands(SpringCliUserConfig springCliUserConfig,
-				SourceRepositoryService sourceRepositoryService, RewriteRecipeLauncher rewriteRecipeLauncher) {;
-			BootCommands bootCommands = new BootCommands(springCliUserConfig, sourceRepositoryService, TerminalMessage.noop(), rewriteRecipeLauncher);
+				SourceRepositoryService sourceRepositoryService, RewriteRecipeLauncher rewriteRecipeLauncher) {
+			;
+			BootCommands bootCommands = new BootCommands(springCliUserConfig, sourceRepositoryService,
+					TerminalMessage.noop(), rewriteRecipeLauncher);
 			return bootCommands;
 		}
 
@@ -104,10 +105,12 @@ public class MockConfigurations {
 		ModelPopulator mavenModelPopulator() {
 			return new MavenModelPopulator();
 		}
+
 		@Bean
 		ModelPopulator rootPackageModelPopulator() {
 			return new RootPackageModelPopulator();
 		}
+
 	}
 
 	@Configuration
@@ -119,6 +122,7 @@ public class MockConfigurations {
 			Function<String, Path> pathProvider = (path) -> fileSystem.getPath(path);
 			return new SpringCliUserConfig(pathProvider);
 		}
+
 	}
 
 	@Configuration
@@ -141,5 +145,7 @@ public class MockConfigurations {
 			when(mock.getProjectCatalogs()).thenReturn(pcs);
 			return mock;
 		}
+
 	}
+
 }

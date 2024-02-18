@@ -26,21 +26,18 @@ public interface TerminalMessage {
 
 	/**
 	 * Print a text.
-	 *
 	 * @param text a text
 	 */
 	void print(String... text);
 
 	/**
 	 * Print an attributed text
-	 *
 	 * @param text a text
 	 */
 	void print(AttributedString... text);
 
 	/**
 	 * Gets an implementation which does nothing.
-	 *
 	 * @return a noop implementation
 	 */
 	static TerminalMessage noop() {
@@ -55,4 +52,5 @@ public interface TerminalMessage {
 			}
 		};
 	}
+
 }

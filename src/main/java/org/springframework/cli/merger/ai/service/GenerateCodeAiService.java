@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger.ai.service;
 
 import java.time.LocalTime;
@@ -38,8 +37,8 @@ public class GenerateCodeAiService extends AbstractOpenAiService {
 	public String generate(Map<String, String> context) {
 		PromptRequest promptRequest = createPromptRequest(context, "ai-add");
 		String completionEstimate = getCompletionEstimate();
-		getTerminalMessage().print("Generating code.  This will take a few minutes ..." +
-				" Check back around " + completionEstimate);
+		getTerminalMessage()
+			.print("Generating code.  This will take a few minutes ..." + " Check back around " + completionEstimate);
 		ChatCompletionRequest chatCompletionRequest = getChatCompletionRequest(promptRequest);
 		String response = getResponse(chatCompletionRequest);
 		ResponseModifier responseModifier = new ResponseModifier();
@@ -51,12 +50,15 @@ public class GenerateCodeAiService extends AbstractOpenAiService {
 		LocalTime estimatedTime = LocalTime.now().plusMinutes(3);
 		DateTimeFormatter formatter;
 		if (userTimeZone.inDaylightTime(new java.util.Date())) {
-			// If the user's time zone is in daylight saving time, use 12-hour format with AM/PM
+			// If the user's time zone is in daylight saving time, use 12-hour format with
+			// AM/PM
 			formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.US);
-		} else {
+		}
+		else {
 			// Otherwise, use 24-hour format
 			formatter = DateTimeFormatter.ofPattern("HH:mm");
 		}
 		return estimatedTime.format(formatter);
 	}
+
 }

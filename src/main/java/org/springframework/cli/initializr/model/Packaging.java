@@ -24,7 +24,9 @@ public class Packaging {
 
 	@JsonProperty("default")
 	private String defaultType;
+
 	private String type;
+
 	List<PackagingValues> values = new ArrayList<>();
 
 	public Packaging() {
@@ -58,5 +60,7 @@ public class Packaging {
 
 		public PackagingValues() {
 		}
+
 	}
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger.ai;
 
 public class PromptRequest {
@@ -38,9 +37,7 @@ public class PromptRequest {
 
 	@Override
 	public String toString() {
-		return "PromptRequest{" +
-				"systemPrompt='" + systemPrompt + '\'' +
-				", userPrompt='" + userPrompt + '\'' +
-				'}';
+		return "PromptRequest{" + "systemPrompt='" + systemPrompt + '\'' + ", userPrompt='" + userPrompt + '\'' + '}';
 	}
+
 }

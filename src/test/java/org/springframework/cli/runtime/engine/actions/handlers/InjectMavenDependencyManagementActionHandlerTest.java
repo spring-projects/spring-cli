@@ -30,17 +30,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 class InjectMavenDependencyManagementActionHandlerTest {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withUserConfiguration(MockBaseConfig.class);
+		.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
 	void injectMavenDependency(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("inject-maven-dependency-mgmt")
-					.executeCommand("dependency/add")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("inject-maven-dependency-mgmt")
+				.executeCommand("dependency/add")
+				.build();
 			commandRunner.run();
 
 			Path pomPath = workingDir.resolve("pom.xml");
@@ -54,30 +53,28 @@ class InjectMavenDependencyManagementActionHandlerTest {
 	void injectMavenDependencyUsingVar(@TempDir(cleanup = CleanupMode.ON_SUCCESS) Path workingDir) {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("inject-maven-dependency-mgmt")
-					.executeCommand("dependency/add-using-var")
-					.withArguments("release", "1.1.1")
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("inject-maven-dependency-mgmt")
+				.executeCommand("dependency/add-using-var")
+				.withArguments("release", "1.1.1")
+				.build();
 			commandRunner.run();
 
 			Path pomPath = workingDir.resolve("pom.xml");
 
-			assertThat(pomPath).content().containsIgnoringWhitespaces(
-											"""
-											<dependencyManagement>
-												<dependencies>
-													<dependency>
-													  <groupId>org.springframework.modulith</groupId>
-													  <artifactId>spring-modulith-bom</artifactId>
-													  <version>1.1.1</version>
-													  <type>pom</type>
-													  <scope>import</scope>
-													</dependency>
-												</dependencies>
-											</dependencyManagement>
-											""");
+			assertThat(pomPath).content().containsIgnoringWhitespaces("""
+					<dependencyManagement>
+						<dependencies>
+							<dependency>
+							  <groupId>org.springframework.modulith</groupId>
+							  <artifactId>spring-modulith-bom</artifactId>
+							  <version>1.1.1</version>
+							  <type>pom</type>
+							  <scope>import</scope>
+							</dependency>
+						</dependencies>
+					</dependencyManagement>
+					""");
 
 		});
 	}

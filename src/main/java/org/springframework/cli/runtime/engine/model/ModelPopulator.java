@@ -20,14 +20,13 @@ import java.nio.file.Path;
 import java.util.Map;
 
 /**
- * Implemented by components that may contribute values to the
- * Model used by the template engine
+ * Implemented by components that may contribute values to the Model used by the template
+ * engine
  *
  * @author Mark Pollack
  * @author Eric Bottard
  */
 public interface ModelPopulator {
-
 
 	void contributeToModel(Path rootDirectory, Map<String, Object> model);
 

@@ -26,7 +26,9 @@ public class ProjectType {
 
 	@JsonProperty("default")
 	private String defaultType;
+
 	private String action;
+
 	private List<ProjectTypeValue> values = new ArrayList<>();
 
 	public ProjectType() {
@@ -100,5 +102,7 @@ public class ProjectType {
 		public String toString() {
 			return "ProjectTypeValue [action=" + action + ", description=" + description + ", tags=" + tags + "]";
 		}
+
 	}
+
 }

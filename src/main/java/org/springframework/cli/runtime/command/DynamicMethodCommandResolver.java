@@ -39,12 +39,11 @@ import org.springframework.shell.command.CommandRegistration.OptionSpec;
 import org.springframework.util.StringUtils;
 
 /**
- * It takes the results of scanning the `.spring/commands` directory and returns
- * command registrations.
+ * It takes the results of scanning the `.spring/commands` directory and returns command
+ * registrations.
  *
- * All commands execute the same code, an instance of
- * SpringShellGeneratorCommand. The argument GeneratorResolver is passed into
- * SpringShellGeneratorCommand.
+ * All commands execute the same code, an instance of SpringShellGeneratorCommand. The
+ * argument GeneratorResolver is passed into SpringShellGeneratorCommand.
  *
  * @author Mark Pollack
  * @author Janne Valkealahti
@@ -52,15 +51,16 @@ import org.springframework.util.StringUtils;
 public class DynamicMethodCommandResolver implements CommandResolver {
 
 	private final static Logger log = LoggerFactory.getLogger(DynamicMethodCommandResolver.class);
+
 	private final Collection<ModelPopulator> modelPopulators;
+
 	private final CommandRegistration.BuilderSupplier builder;
 
 	private final TerminalMessage terminalMessage;
 
 	private final ObjectProvider<Terminal> terminalProvider;
 
-	public DynamicMethodCommandResolver(Collection<ModelPopulator> modelPopulators,
-			BuilderSupplier builder,
+	public DynamicMethodCommandResolver(Collection<ModelPopulator> modelPopulators, BuilderSupplier builder,
 			TerminalMessage terminalMessage, ObjectProvider<Terminal> terminalProvider) {
 		this.modelPopulators = modelPopulators;
 		this.builder = builder;
@@ -100,20 +100,22 @@ public class DynamicMethodCommandResolver implements CommandResolver {
 				Optional<Terminal> terminalOptional;
 				if (terminalProvider != null) {
 					terminalOptional = Optional.of(terminalProvider.getObject());
-				} else {
+				}
+				else {
 					terminalOptional = Optional.empty();
 				}
-				DynamicCommand dynamicCommand = new DynamicCommand(commandName, subCommandName, modelPopulators, terminalMessage, terminalOptional);
+				DynamicCommand dynamicCommand = new DynamicCommand(commandName, subCommandName, modelPopulators,
+						terminalMessage, terminalOptional);
 
 				CommandRegistration.Builder builder = builderSupplier.get()
 					.command(commandName + " " + subCommandName)
 					.group("User-defined Commands")
 					.description(subCommand.getDescription())
 					.withTarget()
-						.method(dynamicCommand, "execute")
-						.and()
+					.method(dynamicCommand, "execute")
+					.and()
 					.withErrorHandling()
-						.and();
+					.and();
 
 				List<CommandOption> commandOptions = subCommand.getOptions();
 				for (CommandOption commandOption : commandOptions) {
@@ -138,7 +140,7 @@ public class DynamicMethodCommandResolver implements CommandResolver {
 			optionSpec.longNames(commandOption.getName());
 		}
 		if (StringUtils.hasText(commandOption.getParamLabel())) {
-			//TODO - there is no paramLabel in Spring Shell
+			// TODO - there is no paramLabel in Spring Shell
 		}
 		if (StringUtils.hasText(commandOption.getDescription())) {
 			optionSpec.description(commandOption.getDescription());

@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger;
 
 import java.nio.file.Paths;
 
 import org.apache.maven.model.Model;
 import org.junit.jupiter.api.Test;
-
 
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.util.PomReader;
@@ -33,8 +31,10 @@ public class MergerPreCheckTests {
 	@Test
 	void notCompatible() {
 		PomReader pomReader = new PomReader();
-		Model currentModel = pomReader.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-8.xml").toFile());
-		Model toMergeModel = pomReader.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-17.xml").toFile());
+		Model currentModel = pomReader
+			.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-8.xml").toFile());
+		Model toMergeModel = pomReader
+			.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-17.xml").toFile());
 		MergerPreCheck mergerPreCheck = new MergerPreCheck();
 		assertThrows(SpringCliException.class, () -> mergerPreCheck.canMergeProject(currentModel, toMergeModel, null));
 	}
@@ -42,9 +42,12 @@ public class MergerPreCheckTests {
 	@Test
 	void compatible() {
 		PomReader pomReader = new PomReader();
-		Model currentModel = pomReader.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-8.xml").toFile());
-		Model toMergeModel = pomReader.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-8.xml").toFile());
+		Model currentModel = pomReader
+			.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-8.xml").toFile());
+		Model toMergeModel = pomReader
+			.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-8.xml").toFile());
 		MergerPreCheck mergerPreCheck = new MergerPreCheck();
 		mergerPreCheck.canMergeProject(currentModel, toMergeModel, null);
 	}
+
 }

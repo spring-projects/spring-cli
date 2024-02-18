@@ -39,8 +39,7 @@ public class InjectMavenRepository {
 
 	@Override
 	public String toString() {
-		return "InjectMavenRepository{" +
-				"text='" + text + '\'' +
-				'}';
+		return "InjectMavenRepository{" + "text='" + text + '\'' + '}';
 	}
+
 }

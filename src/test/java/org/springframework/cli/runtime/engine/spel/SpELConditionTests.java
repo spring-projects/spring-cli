@@ -81,7 +81,8 @@ class SpELConditionTests {
 	@Test
 	void testSpELConditionWithExpressionAndParserContext() {
 		// given
-		ParserContext context = new TemplateParserContext("%{", "}"); // custom parser context
+		ParserContext context = new TemplateParserContext("%{", "}"); // custom parser
+																		// context
 		SpELCondition condition = new SpELCondition("%{ T(java.lang.Integer).MAX_VALUE > 1 }", context);
 		Map<String, Object> map = new HashMap<>();
 
@@ -103,7 +104,7 @@ class SpELConditionTests {
 		Map<String, Object> map = new HashMap<>();
 		map.put("person", new Person("foo", 20));
 
-		Greeter greeter = (Greeter)applicationContext.getBean("myGreeter");
+		Greeter greeter = (Greeter) applicationContext.getBean("myGreeter");
 
 		int numCalls = greeter.getCalls();
 		assertThat(numCalls).isEqualTo(0);

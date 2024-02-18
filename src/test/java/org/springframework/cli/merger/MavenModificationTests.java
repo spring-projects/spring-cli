@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger;
 
 import org.apache.maven.model.Dependency;
@@ -60,7 +59,6 @@ public class MavenModificationTests {
 		List<String> pomContents = Files.readAllLines(pomExisting);
 		Files.write(mergedPomPath, pomContents);
 
-
 		PomReader pomReader = new PomReader();
 		Path pomToMerge = Paths.get("src/test/resources/pom-project-to-add.xml");
 		Model modelToMerge = pomReader.readPom(pomToMerge.toFile());
@@ -76,11 +74,14 @@ public class MavenModificationTests {
 		paths.add(mergedPomPath);
 
 		for (Dependency dependency : toMergeDependencyManagementDependencies) {
-			AddManagedDependency addManagedDependency = ProjectMerger.getRecipeAddManagedDependency(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
+			AddManagedDependency addManagedDependency = ProjectMerger.getRecipeAddManagedDependency(
+					dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), dependency.getScope(),
 					dependency.getType(), dependency.getClassifier());
 
 			List<SourceFile> pomFiles = mavenParser.parse(paths, tempDir, executionContext).toList();
-			List<Result> resultList = addManagedDependency.run(new InMemoryLargeSourceSet(pomFiles), executionContext).getChangeset().getAllResults();
+			List<Result> resultList = addManagedDependency.run(new InMemoryLargeSourceSet(pomFiles), executionContext)
+				.getChangeset()
+				.getAllResults();
 
 			assertThat(resultList.size()).isEqualTo(1);
 			for (Result result : resultList) {
@@ -93,17 +94,20 @@ public class MavenModificationTests {
 				DependencyManagement mergedDependencyManagement = mergedModel.getDependencyManagement();
 				List<Dependency> mergedDependencyManagementDependencies = mergedDependencyManagement.getDependencies();
 				assertThat(mergedDependencyManagementDependencies.size()).isEqualTo(1);
-				assertThat(mergedDependencyManagementDependencies.get(0).getGroupId()).isEqualTo("org.springframework.cloud");
-				assertThat(mergedDependencyManagementDependencies.get(0).getArtifactId()).isEqualTo("spring-cloud-dependencies");
+				assertThat(mergedDependencyManagementDependencies.get(0).getGroupId())
+					.isEqualTo("org.springframework.cloud");
+				assertThat(mergedDependencyManagementDependencies.get(0).getArtifactId())
+					.isEqualTo("spring-cloud-dependencies");
 				assertThat(mergedDependencyManagementDependencies.get(0).getVersion()).isEqualTo("2021.0.0");
 			}
 		}
 	}
 
-
-//	private AddManagedDependency getRecipeAddManagedDependency(String groupId, String artifactId, String version, String scope, String type, String classifier) {
-//		return new AddManagedDependency(groupId, artifactId, version, scope, type, classifier,
-//				null, null, null, true);
-//	}
+	// private AddManagedDependency getRecipeAddManagedDependency(String groupId, String
+	// artifactId, String version, String scope, String type, String classifier) {
+	// return new AddManagedDependency(groupId, artifactId, version, scope, type,
+	// classifier,
+	// null, null, null, true);
+	// }
 
 }

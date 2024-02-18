@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions;
 
 public enum ActionStatus {
@@ -43,4 +42,5 @@ public enum ActionStatus {
 		}
 		throw new IllegalArgumentException("Invalid action status: " + value);
 	}
+
 }

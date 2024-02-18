@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.command;
 
 import java.nio.file.Path;
@@ -35,7 +34,7 @@ import org.springframework.cli.util.TerminalMessage;
 public class AiCommandsTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withUserConfiguration(MockBaseConfig.class);
+		.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
 	@DisabledOnOs(OS.WINDOWS)
@@ -43,17 +42,17 @@ public class AiCommandsTests {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
 			StubGenerateCodeAiService stubGenerateCodeAiService = new StubGenerateCodeAiService(TerminalMessage.noop());
-			AiCommands aiCommands = new AiCommands(new OpenAiHandler(stubGenerateCodeAiService), TerminalMessage.noop());
+			AiCommands aiCommands = new AiCommands(new OpenAiHandler(stubGenerateCodeAiService),
+					TerminalMessage.noop());
 
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.build();
 			commandRunner.run();
 
-			//TODO this takes a while, need to move to integration test
-			//aiCommands.aiAdd("jpa", workingDir.toAbsolutePath().toString(), true);
-
+			// TODO this takes a while, need to move to integration test
+			// aiCommands.aiAdd("jpa", workingDir.toAbsolutePath().toString(), true);
 
 		});
 	}
+
 }

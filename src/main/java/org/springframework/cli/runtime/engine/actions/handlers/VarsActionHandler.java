@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import java.nio.file.Path;
@@ -67,7 +66,8 @@ public class VarsActionHandler {
 
 	private final Terminal terminal;
 
-	public VarsActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, Path dynamicSubCommandPath, TerminalMessage terminalMessage, Terminal terminal) {
+	public VarsActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd,
+			Path dynamicSubCommandPath, TerminalMessage terminalMessage, Terminal terminal) {
 		this.templateEngine = templateEngine;
 		this.model = model;
 		this.cwd = cwd;
@@ -116,8 +116,8 @@ public class VarsActionHandler {
 		}
 		for (Question question : questions) {
 			if (!isValidType(question.getType())) {
-				throw new SpringCliException("Invalid type '" + question.getType() +
-						"' for question with label '" + question.getLabel() + "'.");
+				throw new SpringCliException("Invalid type '" + question.getType() + "' for question with label '"
+						+ question.getLabel() + "'.");
 			}
 		}
 	}
@@ -135,13 +135,15 @@ public class VarsActionHandler {
 			throw new SpringCliException("Question field is null.  Add a question: field");
 		}
 		if (Objects.isNull(question.getType())) {
-			throw new SpringCliException("Question type " + question.getType() + " is null.  Valid options are 'input', 'dropwdown', and 'path'.");
+			throw new SpringCliException("Question type " + question.getType()
+					+ " is null.  Valid options are 'input', 'dropwdown', and 'path'.");
 		}
 
-		Builder builder = ComponentFlow.builder().reset()
-				.terminal(this.terminal)
-				.resourceLoader(this.resourceLoader)
-				.templateExecutor(this.templateExecutor);
+		Builder builder = ComponentFlow.builder()
+			.reset()
+			.terminal(this.terminal)
+			.resourceLoader(this.resourceLoader)
+			.templateExecutor(this.templateExecutor);
 
 		switch (question.getType()) {
 			case "input":
@@ -154,20 +156,24 @@ public class VarsActionHandler {
 				processPathQuestion(question, builder);
 				break;
 			default:
-				throw new SpringCliException("Question type " + question.getType() + " is not valid.  Valid options are 'input', 'dropwdown', and 'path'.");
+				throw new SpringCliException("Question type " + question.getType()
+						+ " is not valid.  Valid options are 'input', 'dropwdown', and 'path'.");
 		}
 	}
 
 	private void processInputQuestion(Question question, Builder builder) {
 		String resultValue = "";
 
-				// now the good stuff
+		// now the good stuff
+		// @formatter:off
 		ComponentFlow componentFlow = builder
 				.withStringInput(question.getName()) //this is the variable name
-				.name(question.getLabel()) // This is the text string the user sees.
-				.resultValue(resultValue)
-				.resultMode(ResultMode.ACCEPT)
-				.and().build();
+					.name(question.getLabel()) // This is the text string the user sees.
+					.resultValue(resultValue)
+					.resultMode(ResultMode.ACCEPT)
+					.and()
+				.build();
+		// @formatter:on
 
 		ComponentFlowResult componentFlowResult = componentFlow.run();
 		ComponentContext<?> resultContext = componentFlowResult.getContext();
@@ -180,7 +186,6 @@ public class VarsActionHandler {
 
 	}
 
-
 	private void processPathQuestion(Question question, Builder builder) {
 		throw new SpringCliException("Unsupported path question type");
 	}
@@ -192,7 +197,8 @@ public class VarsActionHandler {
 		}
 		if (isMultiple) {
 			processMultiItemSelector(question, builder);
-		} else {
+		}
+		else {
 			processSingleItemSelector(question, builder);
 		}
 	}
@@ -203,14 +209,17 @@ public class VarsActionHandler {
 			return;
 		}
 		Map<String, String> options = getOptions(question.getOptions());
-		ComponentFlow componentFlow = builder.withSingleItemSelector(question.getName())
-				.name(question.getLabel())
-				.resultValue(resultValue)
-				.resultMode(ResultMode.ACCEPT)
-				.selectItems(options)
-				.sort(NAME_COMPARATOR)
-				.and().build();
-
+		// @formatter:off
+		ComponentFlow componentFlow = builder
+				.withSingleItemSelector(question.getName())
+					.name(question.getLabel())
+					.resultValue(resultValue)
+					.resultMode(ResultMode.ACCEPT)
+					.selectItems(options)
+					.sort(NAME_COMPARATOR)
+					.and()
+				.build();
+		// @formatter:on
 
 		ComponentFlowResult componentFlowResult = componentFlow.run();
 		ComponentContext<?> resultContext = componentFlowResult.getContext();
@@ -222,6 +231,7 @@ public class VarsActionHandler {
 			roleService.updateRole("", question.getName(), inferType(object));
 		}
 	}
+
 	private final static Comparator<SelectorItem<String>> NAME_COMPARATOR = (o1, o2) -> {
 		return o1.getName().compareTo(o2.getName());
 	};
@@ -231,7 +241,8 @@ public class VarsActionHandler {
 			return new HashMap<>();
 		}
 
-		ExecActionHandler execActionHandler = new ExecActionHandler(this.templateEngine, this.model, this.dynamicSubCommandPath, this.terminalMessage);
+		ExecActionHandler execActionHandler = new ExecActionHandler(this.templateEngine, this.model,
+				this.dynamicSubCommandPath, this.terminalMessage);
 		Map<String, Object> outputs = new HashMap<>();
 		execActionHandler.executeShellCommand(options.getExec(), outputs);
 
@@ -239,7 +250,7 @@ public class VarsActionHandler {
 			return new HashMap<>(0);
 		}
 
-		//determine if output is a list or a map
+		// determine if output is a list or a map
 		Object jsonPathObject = outputs.get(ExecActionHandler.OUTPUT_STDOUT_JSONPATH);
 		if (jsonPathObject instanceof String) {
 			Map<String, String> map = new HashMap<>();
@@ -248,7 +259,7 @@ public class VarsActionHandler {
 		}
 		if (jsonPathObject instanceof Map) {
 			// TODO review
-			return (Map<String,String>)jsonPathObject;
+			return (Map<String, String>) jsonPathObject;
 		}
 		else if (jsonPathObject instanceof List list) {
 			Map<String, String> map = new HashMap<>();
@@ -258,14 +269,15 @@ public class VarsActionHandler {
 			return map;
 		}
 		else {
-			throw new SpringCliException("Can not convert the JSON Path output to a Map for use in dropdown items in question.  JSON Path output = " + jsonPathObject);
+			throw new SpringCliException(
+					"Can not convert the JSON Path output to a Map for use in dropdown items in question.  JSON Path output = "
+							+ jsonPathObject);
 		}
 	}
 
 	private void processMultiItemSelector(Question question, Builder builder) {
 		throw new SpringCliException("Unsupported question type multi-item-selector");
 	}
-
 
 	private void createResourceLoaderAndTemplateExecutor() {
 
@@ -286,4 +298,5 @@ public class VarsActionHandler {
 
 		this.resourceLoader = new DefaultResourceLoader();
 	}
+
 }

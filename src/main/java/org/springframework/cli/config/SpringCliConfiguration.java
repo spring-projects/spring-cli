@@ -48,7 +48,7 @@ import java.util.Collection;
  * @author Janne Valkealahti
  */
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties({SpringCliProperties.class, SpringCliProjectCatalogProperties.class})
+@EnableConfigurationProperties({ SpringCliProperties.class, SpringCliProjectCatalogProperties.class })
 @Import(RewriteLauncherConfiguration.class) // required for boot upgrade command
 public class SpringCliConfiguration {
 
@@ -56,6 +56,7 @@ public class SpringCliConfiguration {
 	public CommandNotFoundMessageProvider commandNotFoundMessageProvider() {
 		return new SpringCliCommandNotFoundMessageProvider();
 	}
+
 	@Bean
 	public CommandExceptionResolver commandExceptionResolver() {
 		return new SpringCliExceptionResolver();
@@ -83,22 +84,23 @@ public class SpringCliConfiguration {
 
 	@Bean
 	public DynamicMethodCommandResolver dynamicMethodTargetRegistrar(Collection<ModelPopulator> modelPopulators,
-			CommandRegistration.BuilderSupplier builder, TerminalMessage terminalMessage, ObjectProvider<Terminal> terminalProvider) {
+			CommandRegistration.BuilderSupplier builder, TerminalMessage terminalMessage,
+			ObjectProvider<Terminal> terminalProvider) {
 		return new DynamicMethodCommandResolver(modelPopulators, builder, terminalMessage, terminalProvider);
 	}
 
-    @Bean
-    public ReactorResourceFactory reactorClientResourceFactory() {
+	@Bean
+	public ReactorResourceFactory reactorClientResourceFactory() {
 		// change default 2s quiet period so that context terminates more quick
-        ReactorResourceFactory factory = new ReactorResourceFactory();
-        factory.setShutdownQuietPeriod(Duration.ZERO);
-        return factory;
-    }
+		ReactorResourceFactory factory = new ReactorResourceFactory();
+		factory.setShutdownQuietPeriod(Duration.ZERO);
+		return factory;
+	}
 
 	@Bean
 	ReactorNettyHttpClientMapper reactorNettyHttpClientMapper() {
-        // workaround for native/graal issue
-        // https://github.com/spring-projects-experimental/spring-native/issues/1319
+		// workaround for native/graal issue
+		// https://github.com/spring-projects-experimental/spring-native/issues/1319
 		// There's also issue #4304 on https://github.com/oracle/graal
 		return httpClient -> httpClient.resolver(DefaultAddressResolverGroup.INSTANCE);
 	}
@@ -118,4 +120,5 @@ public class SpringCliConfiguration {
 			SpringCliProjectCatalogProperties springCliProjectCatalogProperties) {
 		return new ProjectCatalogInitializer(springCliUserConfig, springCliProjectCatalogProperties);
 	}
+
 }

@@ -25,48 +25,61 @@ import org.openrewrite.maven.table.MavenMetadataFailures;
 import java.util.regex.Pattern;
 
 /**
- * Alternative to {@link org.openrewrite.maven.AddDependency} not doing any version checks.
- * It uses the {@link AddDependencyVisitor} and bypasses all checks and other code in {@link org.openrewrite.maven.AddManagedDependency}.
+ * Alternative to {@link org.openrewrite.maven.AddDependency} not doing any version
+ * checks. It uses the {@link AddDependencyVisitor} and bypasses all checks and other code
+ * in {@link org.openrewrite.maven.AddManagedDependency}.
  *
  * @author Fabian Krüger
  */
 public class AddDependencyRecipe extends Recipe {
 
-    private final String groupId;
-    private final String artifactId;
-    private final String version;
-    private final String scope;
-    private final String type;
-    private final @Nullable String classifier;
-    private final @Nullable Boolean optional;
-    private final Pattern familyRegex;
-    private final MavenMetadataFailures metadataFailures;
+	private final String groupId;
 
-    public AddDependencyRecipe(String groupId, String artifactId, String version, String scope, String type, @Nullable String classifier, @Nullable Boolean optional, Pattern familyRegex, MavenMetadataFailures metadataFailures) {
-        this.groupId = groupId;
-        this.artifactId = artifactId;
-        this.version = version;
-        this.scope = scope;
-        this.type = type;
-        this.classifier = classifier;
-        this.optional = optional;
-        this.familyRegex = familyRegex;
-        this.metadataFailures = metadataFailures;
-    }
+	private final String artifactId;
 
-    @Override
-    public String getDisplayName() {
-        return "Add dependency '%s:%s'".formatted(groupId, artifactId);
-    }
+	private final String version;
 
-    @Override
-    public String getDescription() {
-        return getDisplayName();
-    }
+	private final String scope;
 
-    @Override
-    public TreeVisitor<?, ExecutionContext> getVisitor() {
-        AddDependencyVisitor addDependencyVisitor = new AddDependencyVisitor(groupId, artifactId, version, null, scope, true, type, classifier, optional, familyRegex, metadataFailures);
-        return addDependencyVisitor;
-    }
+	private final String type;
+
+	private final @Nullable String classifier;
+
+	private final @Nullable Boolean optional;
+
+	private final Pattern familyRegex;
+
+	private final MavenMetadataFailures metadataFailures;
+
+	public AddDependencyRecipe(String groupId, String artifactId, String version, String scope, String type,
+			@Nullable String classifier, @Nullable Boolean optional, Pattern familyRegex,
+			MavenMetadataFailures metadataFailures) {
+		this.groupId = groupId;
+		this.artifactId = artifactId;
+		this.version = version;
+		this.scope = scope;
+		this.type = type;
+		this.classifier = classifier;
+		this.optional = optional;
+		this.familyRegex = familyRegex;
+		this.metadataFailures = metadataFailures;
+	}
+
+	@Override
+	public String getDisplayName() {
+		return "Add dependency '%s:%s'".formatted(groupId, artifactId);
+	}
+
+	@Override
+	public String getDescription() {
+		return getDisplayName();
+	}
+
+	@Override
+	public TreeVisitor<?, ExecutionContext> getVisitor() {
+		AddDependencyVisitor addDependencyVisitor = new AddDependencyVisitor(groupId, artifactId, version, null, scope,
+				true, type, classifier, optional, familyRegex, metadataFailures);
+		return addDependencyVisitor;
+	}
+
 }

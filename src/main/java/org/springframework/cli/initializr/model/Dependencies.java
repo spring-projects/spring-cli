@@ -32,4 +32,5 @@ public class Dependencies {
 	public void setValues(List<DependencyCategory> values) {
 		this.values = values;
 	}
+
 }

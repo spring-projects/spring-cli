@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import java.io.File;
@@ -39,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ExecHandlerTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withUserConfiguration(MockBaseConfig.class);
+		.withUserConfiguration(MockBaseConfig.class);
 
 	@Test
 	@DisabledOnOs(OS.WINDOWS)
@@ -52,12 +51,11 @@ public class ExecHandlerTests {
 			FileUtils.deleteDirectory(dir.toFile());
 			assertThat(dir).doesNotExist();
 
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("exec")
-					.executeCommand("util/mkdir")
-					.withArguments("directory-to-create", dir.toFile().getAbsolutePath())
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("exec")
+				.executeCommand("util/mkdir")
+				.withArguments("directory-to-create", dir.toFile().getAbsolutePath())
+				.build();
 			commandRunner.run();
 
 			// Assert that the exec action created the directory
@@ -73,12 +71,11 @@ public class ExecHandlerTests {
 
 			File tempFile = new File(tempPath.toFile(), "temp.txt");
 
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("exec-define")
-					.executeCommand("varoutput/define")
-					.withArguments("output-temp-file", tempFile.getAbsolutePath())
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("exec-define")
+				.executeCommand("varoutput/define")
+				.withArguments("output-temp-file", tempFile.getAbsolutePath())
+				.build();
 			commandRunner.run();
 
 			assertThat(tempFile).hasContent("Hello from echo");
@@ -93,12 +90,11 @@ public class ExecHandlerTests {
 
 			File tempFile = new File(tempPath.toFile(), "temp.txt");
 
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("exec-define")
-					.executeCommand("varjsonpath/define")
-					.withArguments("output-temp-file", tempFile.getAbsolutePath())
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("exec-define")
+				.executeCommand("varjsonpath/define")
+				.withArguments("output-temp-file", tempFile.getAbsolutePath())
+				.build();
 			commandRunner.run();
 
 			assertThat(tempFile).hasContent("Hello iPhone");
@@ -113,19 +109,21 @@ public class ExecHandlerTests {
 
 			Path outputPath = tempPath.resolve("result.txt");
 			Path commandPath = Path.of("test-data")
-					.resolve("commands").resolve("exec-redirect")
-					.resolve("working").resolve("dir");
+				.resolve("commands")
+				.resolve("exec-redirect")
+				.resolve("working")
+				.resolve("dir");
 
-			CommandRunner commandRunner = new CommandRunner.Builder(context)
-					.prepareProject("rest-service", workingDir)
-					.installCommandGroup("exec-redirect")
-					.executeCommand("working/dir")
-					.withArguments("output", outputPath.toAbsolutePath().toString())
-					.withArguments("work-dir", commandPath.toString())
-					.build();
+			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
+				.installCommandGroup("exec-redirect")
+				.executeCommand("working/dir")
+				.withArguments("output", outputPath.toAbsolutePath().toString())
+				.withArguments("work-dir", commandPath.toString())
+				.build();
 			commandRunner.run();
 
 			assertThat(outputPath).hasContent("ls-action.yml");
 		});
 	}
+
 }

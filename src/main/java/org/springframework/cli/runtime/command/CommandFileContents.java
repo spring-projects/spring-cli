@@ -21,10 +21,9 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 /**
- * Holds the command data model that describes a command and possibly additional
- * metadata in the future that will be read from a file named command.yaml
+ * Holds the command data model that describes a command and possibly additional metadata
+ * in the future that will be read from a file named command.yaml
  *
  * @author Eric Bottard
  * @author Mark Pollack

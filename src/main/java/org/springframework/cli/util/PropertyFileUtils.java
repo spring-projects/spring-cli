@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.util;
 
 import java.io.File;
@@ -27,6 +26,7 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.cli.SpringCliException;
 
 public class PropertyFileUtils {
+
 	public static Properties getPropertyFile() {
 		File homeDir = new File(System.getProperty("user.home"));
 		File propertyFile = new File(homeDir, ".openai");
@@ -36,9 +36,11 @@ public class PropertyFileUtils {
 			in = new FileInputStream(propertyFile);
 			props.load(in);
 			return props;
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			throw new SpringCliException("Could not load property file ~/.openai", ex);
-		} finally {
+		}
+		finally {
 			IOUtils.closeQuietly(in);
 		}
 	}
@@ -50,4 +52,5 @@ public class PropertyFileUtils {
 		}
 		return mergedProperties;
 	}
+
 }

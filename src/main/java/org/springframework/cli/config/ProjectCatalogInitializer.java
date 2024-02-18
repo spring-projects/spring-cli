@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.config;
 
 import java.util.List;
@@ -32,11 +31,11 @@ public class ProjectCatalogInitializer implements InitializingBean {
 
 	private SpringCliUserConfig springCliUserConfig;
 
-	public ProjectCatalogInitializer(SpringCliUserConfig springCliUserConfig, SpringCliProjectCatalogProperties springCliProjectCatalogProperties) {
+	public ProjectCatalogInitializer(SpringCliUserConfig springCliUserConfig,
+			SpringCliProjectCatalogProperties springCliProjectCatalogProperties) {
 		this.springCliUserConfig = springCliUserConfig;
 		this.springCliProjectCatalogProperties = springCliProjectCatalogProperties;
 	}
-
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -45,8 +44,7 @@ public class ProjectCatalogInitializer implements InitializingBean {
 			// add to catalogs
 			projectCatalogList.add(ProjectCatalog.of(this.springCliProjectCatalogProperties.getName(),
 					this.springCliProjectCatalogProperties.getDescription(),
-					this.springCliProjectCatalogProperties.getUrl(),
-					this.springCliProjectCatalogProperties.getTags()));
+					this.springCliProjectCatalogProperties.getUrl(), this.springCliProjectCatalogProperties.getTags()));
 
 			// Save to disk
 			ProjectCatalogs projectCatalogs = new ProjectCatalogs();
@@ -54,4 +52,5 @@ public class ProjectCatalogInitializer implements InitializingBean {
 			springCliUserConfig.setProjectCatalogs(projectCatalogs);
 		}
 	}
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.model;
 
 import java.io.File;
@@ -35,4 +34,5 @@ public class RootPackageModelPopulator implements ModelPopulator {
 			model.put("root-package-dir", packageDir);
 		}
 	}
+
 }

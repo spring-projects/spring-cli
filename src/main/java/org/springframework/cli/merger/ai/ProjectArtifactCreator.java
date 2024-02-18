@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger.ai;
 
 import java.util.List;
@@ -33,4 +32,5 @@ public class ProjectArtifactCreator {
 
 		return markdownResponseVisitor.getProjectArtifacts();
 	}
+
 }

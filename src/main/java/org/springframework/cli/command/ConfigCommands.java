@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.command;
 
 import java.util.ArrayList;
@@ -46,15 +45,15 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 
 	// TODO - consider renaming to 'default set'
 	@Command(command = "set", description = "For a given command name, set the default value for an option.")
-	public void configSet(
-			@Option(description = "Name of the command.") String commandName,
+	public void configSet(@Option(description = "Name of the command.") String commandName,
 			@Option(description = "Name of the subcommand.") String subCommandName,
 			@Option(description = "Name of the option.") String optionName,
 			@Option(description = "Default value of the option.") String optionValue) {
 		// get current defaults
 		SpringCliUserConfig.CommandDefaults commandDefaults = new SpringCliUserConfig.CommandDefaults();
 		List<CommandDefault> commandDefaultList = new ArrayList<>();
-		SpringCliUserConfig.CommandDefault commandDefault = new SpringCliUserConfig.CommandDefault(commandName, subCommandName);
+		SpringCliUserConfig.CommandDefault commandDefault = new SpringCliUserConfig.CommandDefault(commandName,
+				subCommandName);
 		List<SpringCliUserConfig.Option> optionList = new ArrayList<>();
 		optionList.add(new SpringCliUserConfig.Option(optionName, optionValue));
 		commandDefault.setOptions(optionList);
@@ -64,8 +63,7 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 	}
 
 	@Command(command = "unset", description = "For a given command name, unset the default value for a given option.")
-	public boolean configUnSet(
-			@Option(description = "Name of the command.") String commandName,
+	public boolean configUnSet(@Option(description = "Name of the command.") String commandName,
 			@Option(description = "Name of the subcommand.") String subCommandName,
 			@Option(description = "Name of the option.") String optionName) {
 		CommandDefaults commandDefaults = this.springCliUserConfig.getCommandDefaults();
@@ -74,9 +72,11 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 		boolean removed = false;
 		while (it.hasNext()) {
 			CommandDefault commandDefault = it.next();
-			if (commandDefault.getCommandName().equals(commandName) &&
-					commandDefault.getSubCommandName().equals(subCommandName)) {
-				Iterator<org.springframework.cli.config.SpringCliUserConfig.Option> commandDefaultIterator = commandDefault.getOptions().iterator();
+			if (commandDefault.getCommandName().equals(commandName)
+					&& commandDefault.getSubCommandName().equals(subCommandName)) {
+				Iterator<org.springframework.cli.config.SpringCliUserConfig.Option> commandDefaultIterator = commandDefault
+					.getOptions()
+					.iterator();
 				while (commandDefaultIterator.hasNext()) {
 					org.springframework.cli.config.SpringCliUserConfig.Option option = commandDefaultIterator.next();
 					if (option.getName().equals(optionName)) {
@@ -103,13 +103,13 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 	@Command(command = "list", description = "List configuration values.")
 	public Table configList() {
 
-		Stream<String[]> header = Stream.<String[]>of(new String[] { "Command", "Sub Command", "Option Name/Values"});
+		Stream<String[]> header = Stream.<String[]>of(new String[] { "Command", "Sub Command", "Option Name/Values" });
 
 		List<CommandDefault> commandDefaults = this.springCliUserConfig.getCommandDefaults().getCommandDefaults();
 		Stream<String[]> rows = null;
 		if (commandDefaults != null) {
 			rows = commandDefaults.stream()
-					.map(tr -> new String[] { tr.getCommandName(), tr.getSubCommandName(), tr.getOptions().toString() });
+				.map(tr -> new String[] { tr.getCommandName(), tr.getSubCommandName(), tr.getOptions().toString() });
 		}
 		else {
 			rows = Stream.empty();
@@ -119,4 +119,5 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 		TableBuilder tableBuilder = new TableBuilder(model);
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
 	}
+
 }

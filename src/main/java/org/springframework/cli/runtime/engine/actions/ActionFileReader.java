@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions;
 
 import java.io.IOException;
@@ -59,13 +58,15 @@ public class ActionFileReader {
 		try {
 			String actionFileString = asString(resource);
 			ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
-					.setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE)
-					.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				.setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE)
+				.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			return mapper.readValue(actionFileString, ActionsFile.class);
-		} catch (JsonProcessingException ex) {
+		}
+		catch (JsonProcessingException ex) {
 			improveErrorMessage(resource, ex);
 			throw new SpringCliException("Could not deserialize action file " + resource.getDescription(), ex);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			throw new SpringCliException("Could not read resource " + resource.getDescription() + " as a String.", ex);
 		}
 	}
@@ -78,58 +79,69 @@ public class ActionFileReader {
 			checkForMissingArrayAfterActions(contents, resource, jsonProcessingException);
 			checkForMissingQuestionTextAndName(contents, resource, jsonProcessingException);
 			checkForBadValuesInVarsData(contents, resource, jsonProcessingException);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			throw new SpringCliException("Could not read resource " + resource.getDescription() + " as a String.", ex);
 		}
 	}
 
-	private void checkForBadValuesInVarsData(List<String> contents, Resource resource, JsonProcessingException jsonProcessingException) {
-		if (jsonProcessingException.getMessage().contains("org.springframework.cli.runtime.engine.actions.Vars[\"data\"")) {
+	private void checkForBadValuesInVarsData(List<String> contents, Resource resource,
+			JsonProcessingException jsonProcessingException) {
+		if (jsonProcessingException.getMessage()
+			.contains("org.springframework.cli.runtime.engine.actions.Vars[\"data\"")) {
 			JsonLocation location = jsonProcessingException.getLocation();
-			int lineNumber = location.getLineNr()-1;
+			int lineNumber = location.getLineNr() - 1;
 			int columnNumber = location.getColumnNr();
 			String content = contents.get(lineNumber);
 			StringBuffer sb = new StringBuffer();
 			sb.append("Could not deserialize action file " + resource.getDescription());
 			sb.append(System.lineSeparator());
-			sb.append("The error occurred at line,column [" + lineNumber + "," + columnNumber + "]  content = [" + content + "]");
+			sb.append("The error occurred at line,column [" + lineNumber + "," + columnNumber + "]  content = ["
+					+ content + "]");
 			sb.append(System.lineSeparator());
 			if (content.contains("{{")) {
-				sb.append("You may have forgotten to add double quotes around the value field when using a handlebars template expression");
+				sb.append(
+						"You may have forgotten to add double quotes around the value field when using a handlebars template expression");
 			}
 			throw new SpringCliException(sb.toString());
 		}
 	}
 
-	private static void checkForMissingQuestionTextAndName(List<String> contents, Resource resource, JsonProcessingException jsonProcessingException) {
-		if (jsonProcessingException.getMessage().contains("Cannot construct instance of `org.springframework.cli.runtime.engine.actions.Question`, problem: `java.lang.NullPointerException`")) {
-			throw new SpringCliException("Could not deserialize action file " + resource.getDescription() +
-					".  You may have forgot to define 'name' or 'label' as fields directly under the '-question:' field.  " +
-					"Nested exception message is " + jsonProcessingException.getMessage() + ". Location = " + jsonProcessingException.getLocation());
- 		}
+	private static void checkForMissingQuestionTextAndName(List<String> contents, Resource resource,
+			JsonProcessingException jsonProcessingException) {
+		if (jsonProcessingException.getMessage()
+			.contains(
+					"Cannot construct instance of `org.springframework.cli.runtime.engine.actions.Question`, problem: `java.lang.NullPointerException`")) {
+			throw new SpringCliException("Could not deserialize action file " + resource.getDescription()
+					+ ".  You may have forgot to define 'name' or 'label' as fields directly under the '-question:' field.  "
+					+ "Nested exception message is " + jsonProcessingException.getMessage() + ". Location = "
+					+ jsonProcessingException.getLocation());
+		}
 	}
 
-	private static void checkForMissingArrayAfterActions(List<String> contents, Resource resource, JsonProcessingException ex) {
+	private static void checkForMissingArrayAfterActions(List<String> contents, Resource resource,
+			JsonProcessingException ex) {
 		for (String line : contents) {
 			if (line.trim().contains("generate:") && !line.trim().contains("-")) {
-				throw new SpringCliException("Could not deserialize action file " + resource.getDescription() +
-						".  You may have forgot to add a '-' in front of 'generate' since an YAML array is needed.  " +
-						"Nested exception message is " + ex.getMessage());
+				throw new SpringCliException("Could not deserialize action file " + resource.getDescription()
+						+ ".  You may have forgot to add a '-' in front of 'generate' since an YAML array is needed.  "
+						+ "Nested exception message is " + ex.getMessage());
 			}
 			if (line.trim().contains("exec:") && !line.trim().contains("-")) {
-				throw new SpringCliException("Could not deserialize action file " + resource.getDescription() +
-						".  You may have forgot to add a '-' in front of 'exec' since an YAML array is needed.  " +
-						"Nested exception message is " + ex.getMessage());
+				throw new SpringCliException("Could not deserialize action file " + resource.getDescription()
+						+ ".  You may have forgot to add a '-' in front of 'exec' since an YAML array is needed.  "
+						+ "Nested exception message is " + ex.getMessage());
 			}
 		}
 	}
 
-	private static void checkForMissingColonOnAction(List<String> contents, Resource resource, JsonProcessingException ex) {
+	private static void checkForMissingColonOnAction(List<String> contents, Resource resource,
+			JsonProcessingException ex) {
 		for (String line : contents) {
 			if (line.trim().contains("action") && !line.trim().contains("actions:")) {
-				throw new SpringCliException("Could not deserialize action file " + resource.getDescription() +
-						".  You may have forgot to put a colon after the field 'action'.  " +
-						"Nested exception message is " + ex.getMessage());
+				throw new SpringCliException("Could not deserialize action file " + resource.getDescription()
+						+ ".  You may have forgot to put a colon after the field 'action'.  "
+						+ "Nested exception message is " + ex.getMessage());
 			}
 		}
 	}
@@ -138,4 +150,5 @@ public class ActionFileReader {
 		Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8);
 		return FileCopyUtils.copyToString(reader);
 	}
+
 }

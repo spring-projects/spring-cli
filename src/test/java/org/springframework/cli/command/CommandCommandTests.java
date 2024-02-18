@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.command;
 
 import java.nio.file.Path;
@@ -40,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CommandCommandTests extends AbstractCommandTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withUserConfiguration(MockBaseConfig.class);
+		.withUserConfiguration(MockBaseConfig.class);
 
 	@TempDir(cleanup = CleanupMode.NEVER)
 	Path workingDir;
@@ -55,8 +54,7 @@ public class CommandCommandTests extends AbstractCommandTests {
 			commandCommands.commandNew("hello", "world", workingDir.toString());
 			assertThat(workingDir).exists().isDirectory();
 			assertThat(workingDir.resolve("pom.xml")).exists();
-			Path helloWorldPath = workingDir.resolve(".spring").resolve("commands")
-					.resolve("hello").resolve("world");
+			Path helloWorldPath = workingDir.resolve(".spring").resolve("commands").resolve("hello").resolve("world");
 			assertThat(helloWorldPath.resolve("command.yaml")).exists();
 			assertThat(helloWorldPath.resolve("hello.yaml")).exists();
 
@@ -66,8 +64,9 @@ public class CommandCommandTests extends AbstractCommandTests {
 			Map<String, ModelPopulator> beansOfType = context.getBeansOfType(ModelPopulator.class);
 			runCommand("hello", "world", model, new ArrayList<>(beansOfType.values()), String.valueOf(workingDir));
 			assertThat(workingDir.resolve("hello.txt")).exists();
-			String platform = System.getProperty("os.name")  + ".";
+			String platform = System.getProperty("os.name") + ".";
 			assertThat(workingDir.resolve("hello.txt")).content().isEqualTo("Hello world on " + platform);
 		});
 	}
+
 }

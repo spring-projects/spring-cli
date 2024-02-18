@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger.ai;
 
 import java.util.ArrayList;
@@ -47,7 +46,8 @@ public class MarkdownResponseVisitor extends AbstractVisitor {
 			// sometimes the response doesn't contain
 			if (code.contains("package")) {
 				addJavaCode(code);
-			} else if (code.contains("<dependency>")) {
+			}
+			else if (code.contains("<dependency>")) {
 				addMavenDependencies(code);
 			}
 		}
@@ -69,9 +69,11 @@ public class MarkdownResponseVisitor extends AbstractVisitor {
 	private void addJavaCode(String code) {
 		if (code.contains("@SpringBootApplication") && code.contains("SpringApplication.run")) {
 			addIfNotPresent(new ProjectArtifact(ProjectArtifactType.MAIN_CLASS, code));
-		} else if (code.contains("@Test")) {
+		}
+		else if (code.contains("@Test")) {
 			addIfNotPresent(new ProjectArtifact(ProjectArtifactType.TEST_CODE, code));
-		} else {
+		}
+		else {
 			addIfNotPresent(new ProjectArtifact(ProjectArtifactType.SOURCE_CODE, code));
 		}
 	}
@@ -80,12 +82,14 @@ public class MarkdownResponseVisitor extends AbstractVisitor {
 		// TODO - investigate why Node has duplicate entries
 		if (!this.projectArtifacts.contains(projectArtifact)) {
 			this.projectArtifacts.add(projectArtifact);
-		} else {
-			//System.out.println("duplicate project artifact :(");
+		}
+		else {
+			// System.out.println("duplicate project artifact :(");
 		}
 	}
 
 	public List<ProjectArtifact> getProjectArtifacts() {
 		return this.projectArtifacts;
 	}
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.util;
 
 public class MavenBuildPluginReader extends AbstractMavenReader {
@@ -26,8 +25,10 @@ public class MavenBuildPluginReader extends AbstractMavenReader {
 	protected String massageText(String text) {
 		if (text.contains("<plugins>")) {
 			return text;
-		} else {
+		}
+		else {
 			return "<plugins>" + text + "</plugins>";
 		}
 	}
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.util;
 
 import java.io.IOException;
@@ -25,10 +24,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class JavaUtils {
+
 	public static int getJavaVersion(String javaVersionString) {
 		if ("1.8".equals(javaVersionString)) {
 			return 8;
-		} else {
+		}
+		else {
 			return Integer.valueOf(javaVersionString);
 		}
 	}
@@ -37,7 +38,8 @@ public class JavaUtils {
 		try {
 			Paths.get(directoryName);
 			return true;
-		} catch (InvalidPathException e) {
+		}
+		catch (InvalidPathException e) {
 			return false;
 		}
 	}
@@ -46,8 +48,10 @@ public class JavaUtils {
 		ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 		try {
 			return objectMapper.readValue(value.toString(), Object.class);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			return value.toString();
 		}
 	}
+
 }

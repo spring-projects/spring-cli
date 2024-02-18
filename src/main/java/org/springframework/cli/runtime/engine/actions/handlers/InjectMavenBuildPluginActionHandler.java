@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import org.openrewrite.maven.AddPlugin;
@@ -29,7 +28,8 @@ import java.util.Map;
 
 public class InjectMavenBuildPluginActionHandler extends AbstractInjectMavenActionHandler {
 
-	public InjectMavenBuildPluginActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, TerminalMessage terminalMessage) {
+	public InjectMavenBuildPluginActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd,
+			TerminalMessage terminalMessage) {
 		super(templateEngine, model, cwd, terminalMessage);
 	}
 
@@ -44,4 +44,5 @@ public class InjectMavenBuildPluginActionHandler extends AbstractInjectMavenActi
 			runRecipe(pomPath, addPlugin);
 		}
 	}
+
 }

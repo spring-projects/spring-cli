@@ -41,20 +41,22 @@ package org.springframework.cli.runtime.engine.spel;
 public class Greeter {
 
 	private int calls;
-    private String prefix, suffix;
 
-    public Greeter(String prefix, String suffix) {
-        this.prefix = prefix;
-        this.suffix = suffix;
-    }
+	private String prefix, suffix;
 
-    public boolean greeting(String who) {
-        System.out.println(prefix + who + suffix);
+	public Greeter(String prefix, String suffix) {
+		this.prefix = prefix;
+		this.suffix = suffix;
+	}
+
+	public boolean greeting(String who) {
+		System.out.println(prefix + who + suffix);
 		calls++;
 		return true;
-    }
+	}
 
 	public int getCalls() {
 		return calls;
 	}
+
 }

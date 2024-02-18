@@ -43,8 +43,10 @@ public class CommandFileContentsReaderTests {
 		// Test command options
 		List<CommandOption> optionsList = command.getOptions();
 		assertThat(optionsList).hasSize(3);
-		CommandOption commandOption = optionsList.stream().filter((option) -> "platform".equals(option.getName()))
-				.findAny().orElseThrow();
+		CommandOption commandOption = optionsList.stream()
+			.filter((option) -> "platform".equals(option.getName()))
+			.findAny()
+			.orElseThrow();
 		assertThat(commandOption.getDescription()).isEqualTo("platform to target");
 		assertThat(commandOption.getDataType()).isEqualTo("string");
 		assertThat(commandOption.getDefaultValue()).isEqualTo("azure");
@@ -52,7 +54,6 @@ public class CommandFileContentsReaderTests {
 		assertThat(commandOption.getChoices()).containsKeys("azure", "lambda", "google");
 
 	}
-
 
 	private static String packageAsPath(Class<?> clazz) {
 		return clazz.getPackageName().replace('.', '/');

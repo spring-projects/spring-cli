@@ -39,4 +39,5 @@ public class Dependency extends IdName {
 	public void setVersionRange(String versionRange) {
 		this.versionRange = versionRange;
 	}
+
 }

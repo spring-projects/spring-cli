@@ -28,32 +28,31 @@ public class SpringCliPropertiesTests {
 
 	@Test
 	public void defaultNoPropertiesSet() {
-		this.contextRunner
-				.withUserConfiguration(Config1.class)
-				.run((context) -> {
-					SpringCliProperties properties = context.getBean(SpringCliProperties.class);
-					assertThat(properties.getInitializr().getBaseUrl()).isEqualTo("https://start.spring.io");
-					assertThat(properties.getGithub().getClientId()).isNull();
-					assertThat(properties.getGithub().getDefaultScopes()).isEqualTo("repo,read:org");
-				});
+		this.contextRunner.withUserConfiguration(Config1.class).run((context) -> {
+			SpringCliProperties properties = context.getBean(SpringCliProperties.class);
+			assertThat(properties.getInitializr().getBaseUrl()).isEqualTo("https://start.spring.io");
+			assertThat(properties.getGithub().getClientId()).isNull();
+			assertThat(properties.getGithub().getDefaultScopes()).isEqualTo("repo,read:org");
+		});
 	}
 
 	@Test
 	public void setProperties() {
-		this.contextRunner
-				.withPropertyValues("spring.cli.initializr.base-url=fakeurl")
-				.withPropertyValues("spring.cli.github.client-id=fakeid")
-				.withPropertyValues("spring.cli.github.default-scopes=fakescopes")
-				.withUserConfiguration(Config1.class)
-				.run((context) -> {
-					SpringCliProperties properties = context.getBean(SpringCliProperties.class);
-					assertThat(properties.getInitializr().getBaseUrl()).isEqualTo("fakeurl");
-					assertThat(properties.getGithub().getClientId()).isEqualTo("fakeid");
-					assertThat(properties.getGithub().getDefaultScopes()).isEqualTo("fakescopes");
-				});
+		this.contextRunner.withPropertyValues("spring.cli.initializr.base-url=fakeurl")
+			.withPropertyValues("spring.cli.github.client-id=fakeid")
+			.withPropertyValues("spring.cli.github.default-scopes=fakescopes")
+			.withUserConfiguration(Config1.class)
+			.run((context) -> {
+				SpringCliProperties properties = context.getBean(SpringCliProperties.class);
+				assertThat(properties.getInitializr().getBaseUrl()).isEqualTo("fakeurl");
+				assertThat(properties.getGithub().getClientId()).isEqualTo("fakeid");
+				assertThat(properties.getGithub().getDefaultScopes()).isEqualTo("fakescopes");
+			});
 	}
 
 	@EnableConfigurationProperties({ SpringCliProperties.class })
 	private static class Config1 {
+
 	}
+
 }

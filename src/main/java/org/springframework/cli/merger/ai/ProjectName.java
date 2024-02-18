@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.merger.ai;
 
 public class ProjectName {
+
 	private final String shortPackageName;
 
 	private final String springProjectName;
@@ -37,9 +37,8 @@ public class ProjectName {
 
 	@Override
 	public String toString() {
-		return "ProjectName{" +
-				"shortPackageName='" + shortPackageName + '\'' +
-				", springProjectName='" + springProjectName + '\'' +
-				'}';
+		return "ProjectName{" + "shortPackageName='" + shortPackageName + '\'' + ", springProjectName='"
+				+ springProjectName + '\'' + '}';
 	}
+
 }

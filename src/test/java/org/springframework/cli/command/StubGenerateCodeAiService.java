@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.command;
 
 import java.io.IOException;
@@ -37,11 +36,14 @@ public class StubGenerateCodeAiService extends GenerateCodeAiService {
 	@Override
 	public String generate(Map<String, String> context) {
 		try {
-			ClassPathResource classPathResource = TestResourceUtils.qualifiedResource(StubGenerateCodeAiService.class, "response.md");
+			ClassPathResource classPathResource = TestResourceUtils.qualifiedResource(StubGenerateCodeAiService.class,
+					"response.md");
 			String response = StreamUtils.copyToString(classPathResource.getInputStream(), UTF_8);
 			return response;
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
+
 }

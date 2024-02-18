@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.util;
 
 import java.util.ArrayList;
@@ -25,6 +24,7 @@ import org.jline.utils.AttributedString;
 public class StubTerminalMessage implements TerminalMessage {
 
 	private List<String> printMessages = new ArrayList();
+
 	private List<String> printAttributedMessages = new ArrayList();
 
 	@Override
@@ -54,4 +54,5 @@ public class StubTerminalMessage implements TerminalMessage {
 	public List<String> getPrintAttributedMessages() {
 		return printAttributedMessages;
 	}
+
 }

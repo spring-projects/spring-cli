@@ -27,45 +27,54 @@ import java.util.regex.Pattern;
  * @author Fabian Krüger
  */
 public class AddDependencyRecipeFactory extends AbstractRecipeFactory {
-    /**
-     * Create {@link AddDependency} recipe from Maven dependency XML snippet.
-     *
-     * <pre>
-     * {@code
-     * <dependency>
-     *  <groupId>groupId</groupId>
-     *  <artifactId>artifactId</artifactId>
-     *  <version>${some.version}</version>
-     *  <classifier>classifier</classifier>
-     *  <scope>scope</scope>
-     *  <type>pom</type>
-     *  <optional>true</optional>
-     * </dependency>
-     * }
-     * </pre>
-     *
-     */
-    public AddDependencyRecipe create(String mavenDependency) {
-        try {
-            JsonNode jsonNode = getJsonNode(mavenDependency);
-            String groupId = getTextValue(jsonNode, "groupId");
-            String artifactId = getTextValue(jsonNode, "artifactId");
-            String version = getTextOrDefaultValue(jsonNode, "version", "latest");
-            @Nullable String scope = getNullOrTextValue(jsonNode, "scope");
-            @Nullable String type = getNullOrTextValue(jsonNode, "type");
-            @Nullable String classifier = getNullOrTextValue(jsonNode, "classifier");
-            @Nullable Boolean optional = Boolean.parseBoolean(getNullOrTextValue(jsonNode, "optional"));
-            @Nullable String familyPattern = null;
-            Pattern familyRegex = familyPattern == null ? null : Pattern.compile(familyPattern);
-            @Nullable Boolean acceptTransitive = null;
-            MavenMetadataFailures metadataFailures = null;
 
-            AddDependencyRecipe recipe = new AddDependencyRecipe(groupId, artifactId, version, scope, type, classifier, optional, familyRegex, metadataFailures);
-            return recipe;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+	/**
+	 * Create {@link AddDependency} recipe from Maven dependency XML snippet.
+	 *
+	 * <pre>
+	 * {@code
+	 * <dependency>
+	 *  <groupId>groupId</groupId>
+	 *  <artifactId>artifactId</artifactId>
+	 *  <version>${some.version}</version>
+	 *  <classifier>classifier</classifier>
+	 *  <scope>scope</scope>
+	 *  <type>pom</type>
+	 *  <optional>true</optional>
+	 * </dependency>
+	 * }
+	 * </pre>
+	 *
+	 */
+	public AddDependencyRecipe create(String mavenDependency) {
+		try {
+			JsonNode jsonNode = getJsonNode(mavenDependency);
+			String groupId = getTextValue(jsonNode, "groupId");
+			String artifactId = getTextValue(jsonNode, "artifactId");
+			String version = getTextOrDefaultValue(jsonNode, "version", "latest");
+			@Nullable
+			String scope = getNullOrTextValue(jsonNode, "scope");
+			@Nullable
+			String type = getNullOrTextValue(jsonNode, "type");
+			@Nullable
+			String classifier = getNullOrTextValue(jsonNode, "classifier");
+			@Nullable
+			Boolean optional = Boolean.parseBoolean(getNullOrTextValue(jsonNode, "optional"));
+			@Nullable
+			String familyPattern = null;
+			Pattern familyRegex = familyPattern == null ? null : Pattern.compile(familyPattern);
+			@Nullable
+			Boolean acceptTransitive = null;
+			MavenMetadataFailures metadataFailures = null;
 
-    }
+			AddDependencyRecipe recipe = new AddDependencyRecipe(groupId, artifactId, version, scope, type, classifier,
+					optional, familyRegex, metadataFailures);
+			return recipe;
+		}
+		catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
 
 }

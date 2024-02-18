@@ -61,30 +61,55 @@ import org.springframework.util.StringUtils;
 public class InitializerCommands extends AbstractShellComponent {
 
 	private final static String PATH_NAME = "Path";
+
 	private final static String PATH_ID = "path";
+
 	private final static String PROJECT_NAME = "Project";
+
 	private final static String PROJECT_ID = "project";
+
 	private final static String LANGUAGE_NAME = "Language";
+
 	private final static String LANGUAGE_ID = "language";
+
 	private final static String BOOT_VERSION_NAME = "Spring Boot";
+
 	private final static String BOOT_VERSION_ID = "bootVersion";
+
 	private final static String VERSION_NAME = "Version";
+
 	private final static String VERSION_ID = "version";
+
 	private final static String GROUP_NAME = "Group";
+
 	private final static String GROUP_ID = "group";
+
 	private final static String ARTIFACT_NAME = "Artifact";
+
 	private final static String ARTIFACT_ID = "artifact";
+
 	private final static String NAME_NAME = "Name";
+
 	private final static String NAME_ID = "name";
+
 	private final static String DESCRIPTION_NAME = "Description";
+
 	private final static String DESCRIPTION_ID = "description";
+
 	private final static String PACKAGE_NAME_NAME = "Package Name";
+
 	private final static String PACKAGE_NAME_ID = "packageName";
+
 	private final static String DEPENDENCIES_NAME = "Dependencies";
+
 	private final static String DEPENDENCIES_ID = "dependencies";
+
 	private final static String PACKAGING_NAME = "Packaging";
+
 	private final static String PACKAGING_ID = "packaging";
+
 	private final static String JAVA_VERSION_NAME = "Java";
+
 	private final static String JAVA_VERSION_ID = "javaVersion";
 
 	private final static Comparator<SelectorItem<String>> NAME_COMPARATOR = (o1, o2) -> {
@@ -96,18 +121,22 @@ public class InitializerCommands extends AbstractShellComponent {
 			Integer oo1 = Integer.valueOf(o1.getName());
 			Integer oo2 = Integer.valueOf(o2.getName());
 			return oo1.compareTo(oo2);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 		}
 		return NAME_COMPARATOR.compare(o1, o2);
 	};
 
 	private final InitializrClientCache clientCache;
+
 	private final ComponentFlow.Builder componentFlowBuilder;
+
 	private final SpringCliUserConfig springCliUserConfig;
+
 	private final SpringCliProperties springCliProperties;
 
 	InitializerCommands(InitializrClientCache clientCache, ComponentFlow.Builder componentFlowBuilder,
-						SpringCliUserConfig springCliUserConfig, SpringCliProperties springCliProperties) {
+			SpringCliUserConfig springCliUserConfig, SpringCliProperties springCliProperties) {
 		this.clientCache = clientCache;
 		this.componentFlowBuilder = componentFlowBuilder;
 		this.springCliUserConfig = springCliUserConfig;
@@ -115,49 +144,53 @@ public class InitializerCommands extends AbstractShellComponent {
 	}
 
 	@Command(command = "new", description = "Create a new project from start.spring.io")
-	public String init(
-		@Option(longNames = "server-id", description = "Server to use") String serverId,
-		@Option(description = "Path to extract") String path,
-		@Option(description = "Project") String project,
-		@Option(description = "Language") String language,
-		@Option(longNames = "boot-version", description = "Language") String bootVersion,
-		@Option(description = "Version") String version,
-		@Option(description = "Group") String group,
-		@Option(description = "Artifact") String artifact,
-		@Option(description = "Name") String name,
-		@Option(description = "Description") String description,
-		@Option(longNames = "package-name", description = "Package Name") String packageName,
-		@Option(description = "Dependencies") List<String> dependencies,
-		@Option(description = "Packaging") String packaging,
-		@Option(longNames = "java-version", description = "Java") String javaVersion
-	) {
+	public String init(@Option(longNames = "server-id", description = "Server to use") String serverId,
+			@Option(description = "Path to extract") String path, @Option(description = "Project") String project,
+			@Option(description = "Language") String language,
+			@Option(longNames = "boot-version", description = "Language") String bootVersion,
+			@Option(description = "Version") String version, @Option(description = "Group") String group,
+			@Option(description = "Artifact") String artifact, @Option(description = "Name") String name,
+			@Option(description = "Description") String description,
+			@Option(longNames = "package-name", description = "Package Name") String packageName,
+			@Option(description = "Dependencies") List<String> dependencies,
+			@Option(description = "Packaging") String packaging,
+			@Option(longNames = "java-version", description = "Java") String javaVersion) {
 		InitializrClient client = buildClient(serverId);
 		Metadata metadata = client.getMetadata();
 
-		Map<String, String> projectSelectItems = metadata.getType().getValues().stream()
-				.filter(v -> ObjectUtils.nullSafeEquals(v.getTags().get("format"), "project"))
-				.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
+		Map<String, String> projectSelectItems = metadata.getType()
+			.getValues()
+			.stream()
+			.filter(v -> ObjectUtils.nullSafeEquals(v.getTags().get("format"), "project"))
+			.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
 
 		String defaultProject = metadata.getType().getDefault();
-		String defaultProjectSelect = projectSelectItems.entrySet().stream()
+		String defaultProjectSelect = projectSelectItems.entrySet()
+			.stream()
 			.filter(e -> ObjectUtils.nullSafeEquals(e.getValue(), defaultProject))
 			.map(e -> e.getKey())
 			.findFirst()
 			.orElse(null);
-		Map<String, String> languageSelectItems = metadata.getLanguage().getValues().stream()
-				.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
+		Map<String, String> languageSelectItems = metadata.getLanguage()
+			.getValues()
+			.stream()
+			.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
 
 		String defaultLanguage = metadata.getLanguage().getDefault();
-		String defaultLanguageSelect = languageSelectItems.entrySet().stream()
+		String defaultLanguageSelect = languageSelectItems.entrySet()
+			.stream()
 			.filter(e -> ObjectUtils.nullSafeEquals(e.getValue(), defaultLanguage))
 			.map(e -> e.getKey())
 			.findFirst()
 			.orElse(null);
 
-		Map<String, String> bootSelectItems = metadata.getBootVersion().getValues().stream()
-				.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
+		Map<String, String> bootSelectItems = metadata.getBootVersion()
+			.getValues()
+			.stream()
+			.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
 		String defaultBootVersion = metadata.getBootVersion().getDefaultversion();
-		String defaultBootVersionSelect = bootSelectItems.entrySet().stream()
+		String defaultBootVersionSelect = bootSelectItems.entrySet()
+			.stream()
 			.filter(e -> ObjectUtils.nullSafeEquals(e.getValue(), defaultBootVersion))
 			.map(e -> e.getKey())
 			.findFirst()
@@ -171,24 +204,31 @@ public class InitializerCommands extends AbstractShellComponent {
 		String defaultPackageName = metadata.getPackageName().getDefault();
 		dependencies = dependencies == null ? Collections.emptyList() : dependencies;
 
-		Map<String, String> packagingSelectItems = metadata.getPackaging().getValues().stream()
-				.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
+		Map<String, String> packagingSelectItems = metadata.getPackaging()
+			.getValues()
+			.stream()
+			.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
 		String defaultPackaging = metadata.getPackaging().getDefault();
-		String defaultPackagingSelect = packagingSelectItems.entrySet().stream()
+		String defaultPackagingSelect = packagingSelectItems.entrySet()
+			.stream()
 			.filter(e -> ObjectUtils.nullSafeEquals(e.getValue(), defaultPackaging))
 			.map(e -> e.getKey())
 			.findFirst()
 			.orElse(null);
 
-		Map<String, String> javaVersionSelectItems = metadata.getJavaVersion().getValues().stream()
-				.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
+		Map<String, String> javaVersionSelectItems = metadata.getJavaVersion()
+			.getValues()
+			.stream()
+			.collect(Collectors.toMap(v -> v.getName(), v -> v.getId()));
 		String defaultJavaVersion = metadata.getJavaVersion().getDefault();
-		String defaultJavaVersionSelect = javaVersionSelectItems.entrySet().stream()
+		String defaultJavaVersionSelect = javaVersionSelectItems.entrySet()
+			.stream()
 			.filter(e -> ObjectUtils.nullSafeEquals(e.getValue(), defaultJavaVersion))
 			.map(e -> e.getKey())
 			.findFirst()
 			.orElse(null);
 
+		// @formatter:off
 		ComponentFlow wizard = componentFlowBuilder.clone().reset()
 				.withPathInput(PATH_ID)
 					.name(PATH_NAME)
@@ -290,23 +330,18 @@ public class InitializerCommands extends AbstractShellComponent {
 					.sort(JAVA_VERSION_COMPARATOR)
 					.and()
 				.build();
+		// @formatter:on
 
 		ComponentFlowResult result = wizard.run();
 		ComponentContext<?> context = result.getContext();
 
 		Path pathValue = result.getContext().get(PATH_ID);
 		List<String> dependenciesValue = result.getContext().get(DEPENDENCIES_ID);
-		Path generated = client.generate(context.get(PROJECT_ID, String.class),
-				context.get(LANGUAGE_ID, String.class),
-				context.get(BOOT_VERSION_ID, String.class),
-				dependenciesValue,
-				context.get(VERSION_ID, String.class),
-				context.get(GROUP_ID, String.class),
-				context.get(ARTIFACT_ID, String.class),
-				context.get(NAME_ID, String.class),
-				context.get(DESCRIPTION_ID, String.class),
-				context.get(PACKAGE_NAME_ID, String.class),
-				context.get(PACKAGING_ID, String.class),
+		Path generated = client.generate(context.get(PROJECT_ID, String.class), context.get(LANGUAGE_ID, String.class),
+				context.get(BOOT_VERSION_ID, String.class), dependenciesValue, context.get(VERSION_ID, String.class),
+				context.get(GROUP_ID, String.class), context.get(ARTIFACT_ID, String.class),
+				context.get(NAME_ID, String.class), context.get(DESCRIPTION_ID, String.class),
+				context.get(PACKAGE_NAME_ID, String.class), context.get(PACKAGING_ID, String.class),
 				context.get(JAVA_VERSION_ID, String.class));
 
 		File outFile = pathValue.toFile();
@@ -316,7 +351,8 @@ public class InitializerCommands extends AbstractShellComponent {
 		Archiver archiver = ArchiverFactory.createArchiver("tar", "gz");
 		try {
 			archiver.extract(generated.toFile(), outFile);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new RuntimeException(String.format("Extraction error from %s to %s",
 					generated.toFile().getAbsolutePath(), outFile.getAbsolutePath()), e);
 		}
@@ -326,8 +362,10 @@ public class InitializerCommands extends AbstractShellComponent {
 	@Command(command = "list", description = "Show the Initializr server environments")
 	public Table list() {
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "ServerId", "Url" });
-		Stream<String[]> rows = this.springCliUserConfig.getInitializrs().entrySet().stream()
-				.map(e -> new String[] { e.getKey(), e.getValue().getUrl() });
+		Stream<String[]> rows = this.springCliUserConfig.getInitializrs()
+			.entrySet()
+			.stream()
+			.map(e -> new String[] { e.getKey(), e.getValue().getUrl() });
 		String[][] data = Stream.concat(header, rows).toArray(String[][]::new);
 
 		TableModel model = new ArrayTableModel(data);
@@ -336,39 +374,35 @@ public class InitializerCommands extends AbstractShellComponent {
 	}
 
 	@Command(command = "set", description = "Set the Initializr server environment")
-	public void set(
-		@Option(longNames = "server-id", description = "Server to use") String serverId,
-		@Option(description = "Server base url") String url)
-	{
+	public void set(@Option(longNames = "server-id", description = "Server to use") String serverId,
+			@Option(description = "Server base url") String url) {
 		Map<String, Initializr> initializrs = this.springCliUserConfig.getInitializrs();
 		initializrs.put(serverId, Initializr.of(url));
 		this.springCliUserConfig.setInitializrs(Initializrs.of(initializrs));
 	}
 
 	@Command(command = "remove", description = "Remove the Initializr server environment")
-	public void remove(
-		@Option(longNames = "server-id", description = "Server to use") String serverId)
-	{
+	public void remove(@Option(longNames = "server-id", description = "Server to use") String serverId) {
 		Map<String, Initializr> initializrs = this.springCliUserConfig.getInitializrs();
 		initializrs.remove(serverId);
 		this.springCliUserConfig.setInitializrs(Initializrs.of(initializrs));
 	}
 
 	@Command(command = "dependencies", description = "List supported dependencies")
-	public Table dependencies(
-		@Option(longNames = "server-id", description = "Server to use") String serverId,
-		@Option(description = "Search string to limit results") String search,
-		@Option(description = "Limit to compatibility version") String version
-	) {
+	public Table dependencies(@Option(longNames = "server-id", description = "Server to use") String serverId,
+			@Option(description = "Search string to limit results") String search,
+			@Option(description = "Limit to compatibility version") String version) {
 		InitializrClient client = buildClient(serverId);
 		Metadata metadata = client.getMetadata();
 
 		Stream<String[]> header = Stream.<String[]>of(new String[] { "Id", "Name", "Description", "Required version" });
-		Stream<String[]> rows = metadata.getDependencies().getValues().stream()
-				.flatMap(dc -> dc.getValues().stream())
-				.filter(d -> InitializrUtils.isDependencyCompatible(d, version))
-				.map(d -> new String[] { d.getId(), d.getName(), d.getDescription(), d.getVersionRange() })
-				.filter(d -> matches(d, search));
+		Stream<String[]> rows = metadata.getDependencies()
+			.getValues()
+			.stream()
+			.flatMap(dc -> dc.getValues().stream())
+			.filter(d -> InitializrUtils.isDependencyCompatible(d, version))
+			.map(d -> new String[] { d.getId(), d.getName(), d.getDescription(), d.getVersionRange() })
+			.filter(d -> matches(d, search));
 		String[][] data = Stream.concat(header, rows).toArray(String[][]::new);
 
 		TableModel model = new ArrayTableModel(data);
@@ -399,4 +433,5 @@ public class InitializerCommands extends AbstractShellComponent {
 		}
 		return false;
 	}
+
 }

@@ -27,24 +27,31 @@ import org.openrewrite.maven.AddPlugin;
  */
 public class AddPluginRecipeFactory extends AbstractRecipeFactory {
 
-    /**
-     * Create {@link AddPlugin} from Maven plugin XML snippet.
-     */
-    public AddPlugin create(String buildPlugin) {
-        try {
-            JsonNode jsonNode = getJsonNode(buildPlugin);
-            String groupId = getTextValue(jsonNode,  "groupId");
-            String artifactId = getTextValue(jsonNode, "artifactId");
-            @Nullable String version = getNullOrTextValue(jsonNode, "version");
-            @Nullable String configuration = getNullOrTextValue(jsonNode, "configuration");
-            @Nullable String dependencies = getNullOrTextValue(jsonNode, "dependencies");
-            @Nullable String executions = getNullOrTextValue(jsonNode, "executions");
-            @Nullable String filePattern = getNullOrTextValue(jsonNode, "filePattern");
-            AddPlugin addPlugin = new AddPlugin(groupId, artifactId, version, configuration, dependencies, executions, filePattern);
-            return addPlugin;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
+	/**
+	 * Create {@link AddPlugin} from Maven plugin XML snippet.
+	 */
+	public AddPlugin create(String buildPlugin) {
+		try {
+			JsonNode jsonNode = getJsonNode(buildPlugin);
+			String groupId = getTextValue(jsonNode, "groupId");
+			String artifactId = getTextValue(jsonNode, "artifactId");
+			@Nullable
+			String version = getNullOrTextValue(jsonNode, "version");
+			@Nullable
+			String configuration = getNullOrTextValue(jsonNode, "configuration");
+			@Nullable
+			String dependencies = getNullOrTextValue(jsonNode, "dependencies");
+			@Nullable
+			String executions = getNullOrTextValue(jsonNode, "executions");
+			@Nullable
+			String filePattern = getNullOrTextValue(jsonNode, "filePattern");
+			AddPlugin addPlugin = new AddPlugin(groupId, artifactId, version, configuration, dependencies, executions,
+					filePattern);
+			return addPlugin;
+		}
+		catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }

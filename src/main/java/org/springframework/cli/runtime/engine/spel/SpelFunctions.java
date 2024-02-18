@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.spel;
 
 import java.nio.file.Path;
@@ -61,7 +60,8 @@ public class SpelFunctions {
 		Map<String, Object> varMap;
 		if (roles.length == 0) {
 			varMap = roleService.loadAsMap("");
-		} else {
+		}
+		else {
 			throw new SpringCliException("Roles not yet supported in SpelFunctions");
 		}
 		return varMap != null && !varMap.containsKey(name);

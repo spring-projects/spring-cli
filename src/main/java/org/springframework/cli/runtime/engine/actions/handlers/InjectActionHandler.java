@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import java.io.File;
@@ -45,7 +44,6 @@ public class InjectActionHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(InjectActionHandler.class);
 
-
 	private TemplateEngine templateEngine;
 
 	private Map<String, Object> model;
@@ -54,7 +52,8 @@ public class InjectActionHandler {
 
 	private TerminalMessage terminalMessage;
 
-	public InjectActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, TerminalMessage terminalMessage) {
+	public InjectActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd,
+			TerminalMessage terminalMessage) {
 		this.templateEngine = templateEngine;
 		this.model = model;
 		this.cwd = cwd;
@@ -67,8 +66,8 @@ public class InjectActionHandler {
 	}
 
 	/**
-	 *  Replaces any variables in the 'to:` field's value and check that the Path exists.
-	 *  Returns a valid path to a file to inject.
+	 * Replaces any variables in the 'to:` field's value and check that the Path exists.
+	 * Returns a valid path to a file to inject.
 	 */
 	private Path getFileToInject(Inject inject, TemplateEngine templateEngine, Map<String, Object> model, Path cwd) {
 		if (!StringUtils.hasText(inject.getTo())) {
@@ -76,14 +75,17 @@ public class InjectActionHandler {
 		}
 		String fileNameToInject = templateEngine.process(inject.getTo(), model);
 		if (!StringUtils.hasText(fileNameToInject)) {
-			throw new SpringCliException("Inject action can not be performed because the value of the 'to:' field resolved to an empty string.");
+			throw new SpringCliException(
+					"Inject action can not be performed because the value of the 'to:' field resolved to an empty string.");
 		}
 		Path pathToFile = cwd.resolve(fileNameToInject).toAbsolutePath();
 		if ((!Files.exists(pathToFile))) {
-			throw new SpringCliException("Inject action can not be performed because the file " + pathToFile + " does not exist.");
+			throw new SpringCliException(
+					"Inject action can not be performed because the file " + pathToFile + " does not exist.");
 		}
 		if ((pathToFile.toFile().isDirectory())) {
-			throw new SpringCliException("Inject action can not be performed because the path " + pathToFile + " is a directory, not a file.");
+			throw new SpringCliException("Inject action can not be performed because the path " + pathToFile
+					+ " is a directory, not a file.");
 		}
 		return pathToFile;
 	}
@@ -104,7 +106,8 @@ public class InjectActionHandler {
 					lines.add(injectIndex, result);
 				}
 				else {
-					terminalMessage.print("Could not inject into file " + pathToFile.toFile().getAbsolutePath() + " no match on before: " + inject.getBefore());
+					terminalMessage.print("Could not inject into file " + pathToFile.toFile().getAbsolutePath()
+							+ " no match on before: " + inject.getBefore());
 				}
 			}
 			// process after injection
@@ -115,7 +118,8 @@ public class InjectActionHandler {
 					lines.add(injectIndex + 1, result);
 				}
 				else {
-					terminalMessage.print("Could not inject into file " + pathToFile.toFile().getAbsolutePath() + " no match on after: " + inject.getAfter());
+					terminalMessage.print("Could not inject into file " + pathToFile.toFile().getAbsolutePath()
+							+ " no match on after: " + inject.getAfter());
 				}
 			}
 
@@ -128,7 +132,8 @@ public class InjectActionHandler {
 			terminalMessage.print("Injected into " + pathToFile.toFile().getAbsolutePath());
 		}
 		catch (IOException ex) {
-			terminalMessage.print("Could not inject into file " + pathToFile.toFile().getAbsolutePath() + ".  Exception Message = " + ex.getMessage());
+			terminalMessage.print("Could not inject into file " + pathToFile.toFile().getAbsolutePath()
+					+ ".  Exception Message = " + ex.getMessage());
 			deleteFile(newFile);
 		}
 
@@ -180,4 +185,5 @@ public class InjectActionHandler {
 			}
 		}
 	}
+
 }

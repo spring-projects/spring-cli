@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.util;
 
 public class YmlMerger {
+
 }

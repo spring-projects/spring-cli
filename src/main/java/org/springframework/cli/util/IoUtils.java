@@ -42,7 +42,7 @@ public abstract class IoUtils {
 
 	public static void createDirectory(Path directory) {
 		if (!Files.exists(directory)) {
-			//TODO remove File usage
+			// TODO remove File usage
 			boolean createdDir = directory.toFile().mkdirs();
 			if (createdDir) {
 				logger.debug("Created directory " + directory.toAbsolutePath());
@@ -66,6 +66,7 @@ public abstract class IoUtils {
 		}
 		return resolved;
 	}
+
 	public static void writeToDir(File dir, String fileName, Resource resource) {
 		try {
 			String data = StreamUtils.copyToString(resource.getInputStream(), Charset.defaultCharset());
@@ -86,4 +87,5 @@ public abstract class IoUtils {
 			throw new SpringCliException("Cannot write file " + target, e);
 		}
 	}
+
 }

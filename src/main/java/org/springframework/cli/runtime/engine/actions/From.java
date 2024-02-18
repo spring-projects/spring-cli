@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -37,8 +36,7 @@ public class From {
 
 	@Override
 	public String toString() {
-		return "From{" +
-				"question=" + question +
-				'}';
+		return "From{" + "question=" + question + '}';
 	}
+
 }

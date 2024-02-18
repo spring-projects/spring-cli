@@ -33,4 +33,5 @@ public class SpringCliPromptProvider implements PromptProvider {
 	public AttributedString getPrompt() {
 		return new AttributedString("spring:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
 	}
+
 }

@@ -21,6 +21,7 @@ public class Version {
 
 	@JsonProperty("default")
 	private String defaultId;
+
 	private String type;
 
 	public Version() {
@@ -41,4 +42,5 @@ public class Version {
 	public void setType(String type) {
 		this.type = type;
 	}
+
 }

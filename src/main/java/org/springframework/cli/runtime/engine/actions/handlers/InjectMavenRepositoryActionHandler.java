@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.runtime.engine.actions.handlers;
 
 import java.nio.file.Path;
@@ -28,7 +27,8 @@ import org.springframework.cli.util.TerminalMessage;
 
 public class InjectMavenRepositoryActionHandler extends AbstractInjectMavenActionHandler {
 
-	public InjectMavenRepositoryActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd, TerminalMessage terminalMessage) {
+	public InjectMavenRepositoryActionHandler(TemplateEngine templateEngine, Map<String, Object> model, Path cwd,
+			TerminalMessage terminalMessage) {
 		super(templateEngine, model, cwd, terminalMessage);
 	}
 
@@ -38,8 +38,10 @@ public class InjectMavenRepositoryActionHandler extends AbstractInjectMavenActio
 		MavenRepositoryReader mavenRepositoryReader = new MavenRepositoryReader();
 		String[] mavenRepositories = mavenRepositoryReader.parseMavenSection(text);
 		for (String mavenRepository : mavenRepositories) {
-			InjectTextMavenRepositoryRecipe injectTextMavenRepositoryRecipe = new InjectTextMavenRepositoryRecipe(mavenRepository);
+			InjectTextMavenRepositoryRecipe injectTextMavenRepositoryRecipe = new InjectTextMavenRepositoryRecipe(
+					mavenRepository);
 			runRecipe(pomPath, injectTextMavenRepositoryRecipe);
 		}
 	}
+
 }

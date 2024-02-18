@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.springframework.cli.config;
 
 import java.io.File;
@@ -66,7 +65,6 @@ public class SpringCliExceptionResolver implements CommandExceptionResolver, App
 		getTerminal().writer().flush();
 	}
 
-
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		terminalProvider = applicationContext.getBeanProvider(Terminal.class);
@@ -76,6 +74,5 @@ public class SpringCliExceptionResolver implements CommandExceptionResolver, App
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
-
 
 }
