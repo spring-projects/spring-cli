@@ -50,7 +50,7 @@ public class SpringCliCommandNotFoundMessageProvider
 			try {
 				return commandHelpMessage(commands, commandCatalog, providerContext, group.get(), help);
 			}
-			catch (IOException e) {
+			catch (IOException ex) {
 				return defaultHelpMessage(providerContext);
 			}
 		}
@@ -65,7 +65,7 @@ public class SpringCliCommandNotFoundMessageProvider
 				sb.append(help.help(null));
 				return sb.toAttributedString().toAnsi();
 			}
-			catch (IOException e) {
+			catch (IOException ex) {
 				return defaultHelpMessage(providerContext);
 			}
 		}

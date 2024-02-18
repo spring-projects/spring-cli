@@ -50,11 +50,11 @@ public class PomReader {
 			MavenXpp3Reader xpp3Reader = new MavenXpp3Reader();
 			return xpp3Reader.read(reader);
 		}
-		catch (XmlPullParserException | IOException e) {
+		catch (XmlPullParserException | IOException ex) {
 			if (file.isFile() && fileText.length() == 0) {
-				throw new IllegalStateException("File [" + pom.getAbsolutePath() + "] is empty", e);
+				throw new IllegalStateException("File [" + pom.getAbsolutePath() + "] is empty", ex);
 			}
-			throw new IllegalStateException("Failed to read file: " + pom.getAbsolutePath(), e);
+			throw new IllegalStateException("Failed to read file: " + pom.getAbsolutePath(), ex);
 		}
 	}
 

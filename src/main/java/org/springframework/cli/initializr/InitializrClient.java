@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.initializr;
 
 import java.nio.file.Files;
@@ -62,6 +63,15 @@ public interface InitializrClient {
 			String packaging, String javaVersion);
 
 	/**
+	 * Gets a new builder instance for initializr client.
+	 * @param webClientBuilder the webclient builder
+	 * @return the builder for initializr client
+	 */
+	static Builder builder(WebClient.Builder webClientBuilder) {
+		return new DefaultBuilder(webClientBuilder);
+	}
+
+	/**
 	 * Interface for a initializr client builder.
 	 */
 	interface Builder {
@@ -81,16 +91,7 @@ public interface InitializrClient {
 
 	}
 
-	/**
-	 * Gets a new builder instance for initializr client.
-	 * @param webClientBuilder the webclient builder
-	 * @return the builder for initializr client
-	 */
-	public static Builder builder(WebClient.Builder webClientBuilder) {
-		return new DefaultBuilder(webClientBuilder);
-	}
-
-	public static class DefaultBuilder implements Builder {
+	class DefaultBuilder implements Builder {
 
 		private String baseUrl;
 
@@ -112,9 +113,9 @@ public interface InitializrClient {
 
 	}
 
-	public static class DefaultInitializrClient implements InitializrClient {
+	class DefaultInitializrClient implements InitializrClient {
 
-		private final static MediaType INITIALIZER_MEDIA_TYPE = new MediaType("application",
+		private static final MediaType INITIALIZER_MEDIA_TYPE = new MediaType("application",
 				"vnd.initializr.v2.2+json");
 
 		private WebClient client;
@@ -177,8 +178,8 @@ public interface InitializrClient {
 				DataBufferUtils.write(dataBuffer, tmp).block();
 				return tmp;
 			}
-			catch (Exception e) {
-				throw new RuntimeException(e);
+			catch (Exception ex) {
+				throw new RuntimeException(ex);
 			}
 		}
 

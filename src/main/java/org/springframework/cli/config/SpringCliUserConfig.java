@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.config;
 
 import java.nio.file.Path;
@@ -42,37 +43,37 @@ public class SpringCliUserConfig {
 	/**
 	 * Optional env variable for {@code Spring CLI} configuration dir.
 	 */
-	public final static String SPRING_CLI_CONFIG_DIR = "SPRING_CLI_CONFIG_DIR";
+	public static final String SPRING_CLI_CONFIG_DIR = "SPRING_CLI_CONFIG_DIR";
 
 	/**
 	 * {@code hosts.yml} stores authentication specific info for hosts.
 	 */
-	public final static String HOSTS_FILE_NAME = "hosts.yml";
+	public static final String HOSTS_FILE_NAME = "hosts.yml";
 
 	/**
 	 * {@code catalogs.yml} stores project catalog specific info.
 	 */
-	public final static String PROJECT_CATALOGS_FILE_NAME = "project-catalogs.yml";
+	public static final String PROJECT_CATALOGS_FILE_NAME = "project-catalogs.yml";
 
 	/**
 	 * {@code repositories.yml} stores project repository specific info.
 	 */
-	public final static String PROJECT_REPOSITORIES_FILE_NAME = "project-repositories.yml";
+	public static final String PROJECT_REPOSITORIES_FILE_NAME = "project-repositories.yml";
 
 	/**
 	 * {@code command-defaults.yml} store default option values for commands.
 	 */
-	public final static String COMMAND_DEFAULTS_FILE_NAME = "command-defaults.yml";
+	public static final String COMMAND_DEFAULTS_FILE_NAME = "command-defaults.yml";
 
 	/**
 	 * {@code initializr.yml} stores initializr specific info.
 	 */
-	public final static String INITIALIZR_FILE_NAME = "initializr.yml";
+	public static final String INITIALIZR_FILE_NAME = "initializr.yml";
 
 	/**
 	 * Base directory name we store our config files.
 	 */
-	private final static String SPRING_CLI_CONFIG_DIR_NAME = "springcli";
+	private static final String SPRING_CLI_CONFIG_DIR_NAME = "springcli";
 
 	/**
 	 * Keeps auth tokens per hostname.
@@ -123,12 +124,12 @@ public class SpringCliUserConfig {
 	 */
 	public Map<String, Host> getHosts() {
 		Hosts hosts = hostsUserConfig.getConfig();
-		return hosts != null ? hosts.getHosts() : null;
+		return (hosts != null) ? hosts.getHosts() : null;
 	}
 
 	/**
 	 * Sets hosts.
-	 * @param hosts
+	 * @param hosts the hosts
 	 */
 	public void setHosts(Hosts hosts) {
 		hostsUserConfig.setConfig(hosts);
@@ -162,7 +163,7 @@ public class SpringCliUserConfig {
 	 */
 	public ProjectCatalogs getProjectCatalogs() {
 		ProjectCatalogs catalogs = projectCatalogsUserConfig.getConfig();
-		return catalogs != null ? catalogs : new ProjectCatalogs();
+		return (catalogs != null) ? catalogs : new ProjectCatalogs();
 	}
 
 	/**
@@ -179,12 +180,12 @@ public class SpringCliUserConfig {
 	 */
 	public ProjectRepositories getProjectRepositories() {
 		ProjectRepositories repositories = projectRepositoriesUserConfig.getConfig();
-		return repositories != null ? repositories : new ProjectRepositories();
+		return (repositories != null) ? repositories : new ProjectRepositories();
 	}
 
 	/**
 	 * Sets project repositories.
-	 * @param projectRepositories
+	 * @param projectRepositories the project repositories
 	 */
 	public void setProjectRepositories(ProjectRepositories projectRepositories) {
 		projectRepositoriesUserConfig.setConfig(projectRepositories);
@@ -196,15 +197,41 @@ public class SpringCliUserConfig {
 	 */
 	public CommandDefaults getCommandDefaults() {
 		CommandDefaults commandDefaults = this.commandDefaultsUserConfig.getConfig();
-		return commandDefaults != null ? commandDefaults : new CommandDefaults();
+		return (commandDefaults != null) ? commandDefaults : new CommandDefaults();
 	}
 
 	/**
 	 * Sets command defaults
-	 * @param commandDefaults
+	 * @param commandDefaults the command defaults
 	 */
 	public void setCommandDefaults(CommandDefaults commandDefaults) {
 		this.commandDefaultsUserConfig.setConfig(commandDefaults);
+	}
+
+	public Map<String, Initializr> getInitializrs() {
+		Initializrs initializrs = initializrsUserConfig.getConfig();
+		return (initializrs != null) ? initializrs.getInitializrs() : new HashMap<>();
+	}
+
+	public void setInitializrs(Initializrs initializrs) {
+		initializrsUserConfig.setConfig(initializrs);
+	}
+
+	public void updateInitializr(String key, Initializr initializr) {
+		Map<String, Initializr> initializrsMap = null;
+		Initializrs initializrs = initializrsUserConfig.getConfig();
+		if (initializrs != null) {
+			initializrsMap = initializrs.getInitializrs();
+		}
+		else {
+			initializrs = new Initializrs();
+		}
+		if (initializrsMap == null) {
+			initializrsMap = new HashMap<>();
+		}
+		initializrsMap.put(key, initializr);
+		initializrs.setInitializrs(initializrsMap);
+		setInitializrs(initializrs);
 	}
 
 	public static class Hosts {
@@ -255,32 +282,6 @@ public class SpringCliUserConfig {
 			this.user = user;
 		}
 
-	}
-
-	public Map<String, Initializr> getInitializrs() {
-		Initializrs initializrs = initializrsUserConfig.getConfig();
-		return initializrs != null ? initializrs.getInitializrs() : new HashMap<>();
-	}
-
-	public void setInitializrs(Initializrs initializrs) {
-		initializrsUserConfig.setConfig(initializrs);
-	}
-
-	public void updateInitializr(String key, Initializr initializr) {
-		Map<String, Initializr> initializrsMap = null;
-		Initializrs initializrs = initializrsUserConfig.getConfig();
-		if (initializrs != null) {
-			initializrsMap = initializrs.getInitializrs();
-		}
-		else {
-			initializrs = new Initializrs();
-		}
-		if (initializrsMap == null) {
-			initializrsMap = new HashMap<>();
-		}
-		initializrsMap.put(key, initializr);
-		initializrs.setInitializrs(initializrsMap);
-		setInitializrs(initializrs);
 	}
 
 	public static class Initializrs {

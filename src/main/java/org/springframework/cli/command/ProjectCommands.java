@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.command;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -81,10 +83,6 @@ public class ProjectCommands {
 		this.terminalMessage.print(PROJECT + name + "' added from URL = " + url);
 	}
 
-	private record ProjectRepositoryData(String name, String url, String description, List<String> tags,
-			String catalog) {
-	}
-
 	@Command(command = "list",
 			description = "List projects available for use with the 'boot new' and 'boot add' commands")
 	public Object projectList(
@@ -93,8 +91,8 @@ public class ProjectCommands {
 		// Retrieve project that were registered using the `project add` command and
 		// stored locally
 		List<ProjectRepository> repos = upCliUserConfig.getProjectRepositories().getProjectRepositories();
-		List<ProjectRepositoryData> projectRepositories = (repos == null ? Stream.<ProjectRepository>empty()
-				: repos.stream())
+		List<ProjectRepositoryData> projectRepositories = ((repos != null) ? repos.stream()
+				: Stream.<ProjectRepository>empty())
 			.map(pr -> new ProjectRepositoryData(pr.getName(), pr.getUrl(), pr.getDescription(), pr.getTags(), null))
 			.collect(Collectors.toList());
 
@@ -155,6 +153,10 @@ public class ProjectCommands {
 		else {
 			this.terminalMessage.print(PROJECT + name + "' removed");
 		}
+	}
+
+	private record ProjectRepositoryData(String name, String url, String description, List<String> tags,
+			String catalog) {
 	}
 
 }

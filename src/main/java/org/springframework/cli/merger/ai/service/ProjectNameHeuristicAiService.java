@@ -26,7 +26,6 @@ import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.merger.ai.ProjectName;
 import org.springframework.cli.merger.ai.PromptRequest;
-import org.springframework.cli.merger.ai.service.AbstractOpenAiService;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.util.StringUtils;
 

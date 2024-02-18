@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.command;
 
 import java.io.File;
@@ -60,69 +61,69 @@ import org.springframework.util.StringUtils;
 @Command(command = "initializer", group = "Initializer")
 public class InitializerCommands extends AbstractShellComponent {
 
-	private final static String PATH_NAME = "Path";
+	private static final String PATH_NAME = "Path";
 
-	private final static String PATH_ID = "path";
+	private static final String PATH_ID = "path";
 
-	private final static String PROJECT_NAME = "Project";
+	private static final String PROJECT_NAME = "Project";
 
-	private final static String PROJECT_ID = "project";
+	private static final String PROJECT_ID = "project";
 
-	private final static String LANGUAGE_NAME = "Language";
+	private static final String LANGUAGE_NAME = "Language";
 
-	private final static String LANGUAGE_ID = "language";
+	private static final String LANGUAGE_ID = "language";
 
-	private final static String BOOT_VERSION_NAME = "Spring Boot";
+	private static final String BOOT_VERSION_NAME = "Spring Boot";
 
-	private final static String BOOT_VERSION_ID = "bootVersion";
+	private static final String BOOT_VERSION_ID = "bootVersion";
 
-	private final static String VERSION_NAME = "Version";
+	private static final String VERSION_NAME = "Version";
 
-	private final static String VERSION_ID = "version";
+	private static final String VERSION_ID = "version";
 
-	private final static String GROUP_NAME = "Group";
+	private static final String GROUP_NAME = "Group";
 
-	private final static String GROUP_ID = "group";
+	private static final String GROUP_ID = "group";
 
-	private final static String ARTIFACT_NAME = "Artifact";
+	private static final String ARTIFACT_NAME = "Artifact";
 
-	private final static String ARTIFACT_ID = "artifact";
+	private static final String ARTIFACT_ID = "artifact";
 
-	private final static String NAME_NAME = "Name";
+	private static final String NAME_NAME = "Name";
 
-	private final static String NAME_ID = "name";
+	private static final String NAME_ID = "name";
 
-	private final static String DESCRIPTION_NAME = "Description";
+	private static final String DESCRIPTION_NAME = "Description";
 
-	private final static String DESCRIPTION_ID = "description";
+	private static final String DESCRIPTION_ID = "description";
 
-	private final static String PACKAGE_NAME_NAME = "Package Name";
+	private static final String PACKAGE_NAME_NAME = "Package Name";
 
-	private final static String PACKAGE_NAME_ID = "packageName";
+	private static final String PACKAGE_NAME_ID = "packageName";
 
-	private final static String DEPENDENCIES_NAME = "Dependencies";
+	private static final String DEPENDENCIES_NAME = "Dependencies";
 
-	private final static String DEPENDENCIES_ID = "dependencies";
+	private static final String DEPENDENCIES_ID = "dependencies";
 
-	private final static String PACKAGING_NAME = "Packaging";
+	private static final String PACKAGING_NAME = "Packaging";
 
-	private final static String PACKAGING_ID = "packaging";
+	private static final String PACKAGING_ID = "packaging";
 
-	private final static String JAVA_VERSION_NAME = "Java";
+	private static final String JAVA_VERSION_NAME = "Java";
 
-	private final static String JAVA_VERSION_ID = "javaVersion";
+	private static final String JAVA_VERSION_ID = "javaVersion";
 
-	private final static Comparator<SelectorItem<String>> NAME_COMPARATOR = (o1, o2) -> {
+	private static final Comparator<SelectorItem<String>> NAME_COMPARATOR = (o1, o2) -> {
 		return o1.getName().compareTo(o2.getName());
 	};
 
-	private final static Comparator<SelectorItem<String>> JAVA_VERSION_COMPARATOR = (o1, o2) -> {
+	private static final Comparator<SelectorItem<String>> JAVA_VERSION_COMPARATOR = (o1, o2) -> {
 		try {
 			Integer oo1 = Integer.valueOf(o1.getName());
 			Integer oo2 = Integer.valueOf(o2.getName());
 			return oo1.compareTo(oo2);
 		}
-		catch (Exception e) {
+		catch (Exception ex) {
 		}
 		return NAME_COMPARATOR.compare(o1, o2);
 	};
@@ -202,7 +203,7 @@ public class InitializerCommands extends AbstractShellComponent {
 		String defaultName = metadata.getName().getDefault();
 		String defaultDescription = metadata.getDescription().getDefault();
 		String defaultPackageName = metadata.getPackageName().getDefault();
-		dependencies = dependencies == null ? Collections.emptyList() : dependencies;
+		dependencies = (dependencies != null) ? dependencies : Collections.emptyList();
 
 		Map<String, String> packagingSelectItems = metadata.getPackaging()
 			.getValues()
@@ -352,9 +353,9 @@ public class InitializerCommands extends AbstractShellComponent {
 		try {
 			archiver.extract(generated.toFile(), outFile);
 		}
-		catch (Exception e) {
+		catch (Exception ex) {
 			throw new RuntimeException(String.format("Extraction error from %s to %s",
-					generated.toFile().getAbsolutePath(), outFile.getAbsolutePath()), e);
+					generated.toFile().getAbsolutePath(), outFile.getAbsolutePath()), ex);
 		}
 		return String.format("Extracted to %s", outFile.getAbsolutePath());
 	}

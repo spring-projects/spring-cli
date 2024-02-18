@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.runtime.command;
 
 import java.nio.file.Path;
@@ -21,8 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import org.jline.terminal.Terminal;
 import org.slf4j.Logger;
@@ -34,8 +35,8 @@ import org.springframework.cli.util.IoUtils;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.CommandRegistration.BuilderSupplier;
-import org.springframework.shell.command.CommandResolver;
 import org.springframework.shell.command.CommandRegistration.OptionSpec;
+import org.springframework.shell.command.CommandResolver;
 import org.springframework.util.StringUtils;
 
 /**
@@ -50,7 +51,7 @@ import org.springframework.util.StringUtils;
  */
 public class DynamicMethodCommandResolver implements CommandResolver {
 
-	private final static Logger log = LoggerFactory.getLogger(DynamicMethodCommandResolver.class);
+	private static final Logger log = LoggerFactory.getLogger(DynamicMethodCommandResolver.class);
 
 	private final Collection<ModelPopulator> modelPopulators;
 

@@ -69,9 +69,9 @@ public class RoleCommands extends AbstractSpringCliCommands {
 				roleFile.createNewFile();
 				this.terminalMessage.print("Role '" + name + "' created.");
 			}
-			catch (IOException e) {
+			catch (IOException ex) {
 				String message = StringUtils.hasText(name) ? "role " + name : "the default role ";
-				throw new SpringCliException("Error adding '" + message + ".  " + e.getMessage());
+				throw new SpringCliException("Error adding '" + message + ".  " + ex.getMessage());
 			}
 		}
 		else {

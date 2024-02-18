@@ -20,9 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.runtime.engine.actions.Generate;
@@ -59,9 +57,9 @@ public class GenerateActionHandler {
 				try {
 					generateFile(generate, templateEngine, toFileName, model, cwd);
 				}
-				catch (IOException e) {
+				catch (IOException ex) {
 					terminalMessage.print("Could not generate file " + toFileName);
-					terminalMessage.print(e.getMessage());
+					terminalMessage.print(ex.getMessage());
 				}
 			}
 		}
@@ -95,8 +93,8 @@ public class GenerateActionHandler {
 						String contents = Files.readString(templateFilePath);
 						result = templateEngine.process(contents, model);
 					}
-					catch (IOException e) {
-						throw new SpringCliException("Can not read from file " + templateFilePath.toAbsolutePath(), e);
+					catch (IOException ex) {
+						throw new SpringCliException("Can not read from file " + templateFilePath.toAbsolutePath(), ex);
 					}
 				}
 				else {

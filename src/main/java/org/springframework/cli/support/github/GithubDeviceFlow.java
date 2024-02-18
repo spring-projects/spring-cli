@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.support.github;
 
 import java.time.Duration;
@@ -35,7 +36,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 public class GithubDeviceFlow {
 
-	private final static ParameterizedTypeReference<Map<String, String>> RESPONSE_TYPE_REFERENCE = new ParameterizedTypeReference<Map<String, String>>() {
+	private static final ParameterizedTypeReference<Map<String, String>> RESPONSE_TYPE_REFERENCE = new ParameterizedTypeReference<Map<String, String>>() {
 	};
 
 	private String baseUrl;

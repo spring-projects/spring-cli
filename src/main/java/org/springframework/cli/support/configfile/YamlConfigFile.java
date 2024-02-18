@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.support.configfile;
 
 import java.io.DataInputStream;
@@ -45,8 +46,8 @@ public class YamlConfigFile implements ConfigFile {
 			InputStream in = new DataInputStream(Files.newInputStream(path));
 			return mapper.readValue(in, type);
 		}
-		catch (Exception e) {
-			throw new RuntimeException("Unable to read YAML file from path " + path, e);
+		catch (Exception ex) {
+			throw new RuntimeException("Unable to read YAML file from path " + path, ex);
 		}
 	}
 
@@ -56,8 +57,8 @@ public class YamlConfigFile implements ConfigFile {
 			OutputStream out = new DataOutputStream(Files.newOutputStream(path));
 			mapper.writeValue(out, value);
 		}
-		catch (Exception e) {
-			throw new RuntimeException("Unable to write YAML file to path " + path, e);
+		catch (Exception ex) {
+			throw new RuntimeException("Unable to write YAML file to path " + path, ex);
 		}
 	}
 

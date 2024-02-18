@@ -56,8 +56,8 @@ public class HandlebarsTemplateEngine implements TemplateEngine {
 				return "";
 			}
 		}
-		catch (IOException e) {
-			throw new RuntimeException(e);
+		catch (IOException ex) {
+			throw new RuntimeException(ex);
 		}
 	}
 

@@ -16,6 +16,30 @@
 
 package org.springframework.cli.merger;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
@@ -25,40 +49,39 @@ import org.apache.tools.ant.util.FileUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
-import org.openrewrite.*;
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.InMemoryExecutionContext;
+import org.openrewrite.Recipe;
+import org.openrewrite.RecipeRun;
+import org.openrewrite.Result;
+import org.openrewrite.SourceFile;
+import org.openrewrite.TreeVisitor;
 import org.openrewrite.internal.InMemoryLargeSourceSet;
 import org.openrewrite.internal.lang.Nullable;
 import org.openrewrite.java.AddImport;
 import org.openrewrite.java.Java17Parser;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.java.tree.J.Annotation;
-import org.openrewrite.maven.*;
+import org.openrewrite.maven.AddDependencyVisitor;
+import org.openrewrite.maven.AddManagedDependency;
+import org.openrewrite.maven.AddRepository;
+import org.openrewrite.maven.ChangePropertyValue;
+import org.openrewrite.maven.MavenParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
+
 import org.springframework.beans.factory.config.YamlMapFactoryBean;
 import org.springframework.beans.factory.config.YamlProcessor.ResolutionMethod;
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.recipe.AddManagedDependencyRecipeFactory;
 import org.springframework.cli.util.PomReader;
+import org.springframework.cli.util.PropertyFileUtils;
+import org.springframework.cli.util.RefactorUtils;
 import org.springframework.cli.util.RootPackageFinder;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.FileSystemResource;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.function.Consumer;
-import java.util.regex.Pattern;
-
-import static org.springframework.cli.util.PropertyFileUtils.mergeProperties;
-import static org.springframework.cli.util.RefactorUtils.refactorPackage;
 
 /**
  * Performs the refactoring steps to merge two Spring projects
@@ -101,9 +124,9 @@ public class ProjectMerger {
 				copyToMergeCodebase();
 				return;
 			}
-			catch (IOException e) {
+			catch (IOException ex) {
 				throw new SpringCliException(
-						"Error copying files from to be merged project.  Error Message = " + e.getMessage(), e);
+						"Error copying files from to be merged project.  Error Message = " + ex.getMessage(), ex);
 			}
 		}
 		Path currentProjectPomPath = this.currentProjectPath.resolve("pom.xml");
@@ -118,8 +141,7 @@ public class ProjectMerger {
 		paths.add(currentProjectPomPath);
 		MavenParser mavenParser = MavenParser.builder().build();
 
-		MergerPreCheck mergerPreCheck = new MergerPreCheck();
-		mergerPreCheck.canMergeProject(currentModel, toMergeModel, this.toMergeProjectPath);
+		MergerPreCheck.canMergeProject(currentModel, toMergeModel, this.toMergeProjectPath);
 
 		try {
 			// Maven merges
@@ -334,7 +356,7 @@ public class ProjectMerger {
 		Properties destProperties = new Properties();
 		srcProperties.load(new FileInputStream(srcFile));
 		destProperties.load(new FileInputStream(destFile));
-		Properties mergedProperties = mergeProperties(srcProperties, destProperties);
+		Properties mergedProperties = PropertyFileUtils.mergeProperties(srcProperties, destProperties);
 		// look into handling a merge of maven-wrapper.properties - should only merge
 		// using latest versions.
 		if (!mergedProperties.equals(srcProperties)) {
@@ -374,7 +396,7 @@ public class ProjectMerger {
 			sb.style(sb.style().foreground(AttributedStyle.WHITE));
 			sb.append("Refactoring code base that is to be merged to package name " + currentRootPackageName.get());
 			terminalMessage.print(sb.toAttributedString());
-			refactorPackage(currentRootPackageName.get(), toMergeRootPackageName.get(), this.toMergeProjectPath);
+			RefactorUtils.refactorPackage(currentRootPackageName.get(), toMergeRootPackageName.get(), this.toMergeProjectPath);
 			logger.debug("look in " + this.toMergeProjectPath
 					+ " to see if refactoring of 'to merge code base' was done correctly");
 		}
@@ -403,7 +425,7 @@ public class ProjectMerger {
 				if (scope == null) {
 					scope = "compile";
 				}
-				String version = candidateDependency.getVersion() == null ? "latest" : candidateDependency.getVersion();
+				String version = (candidateDependency.getVersion() == null) ? "latest" : candidateDependency.getVersion();
 				@Nullable
 				String versionPattern = ".*";
 				@Nullable

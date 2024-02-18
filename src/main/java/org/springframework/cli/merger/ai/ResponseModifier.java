@@ -19,8 +19,6 @@ package org.springframework.cli.merger.ai;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ResponseModifier {
 

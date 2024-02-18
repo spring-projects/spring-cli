@@ -16,15 +16,16 @@
 
 package org.springframework.cli.runtime.engine.actions.handlers;
 
+import java.nio.file.Path;
+import java.util.Map;
+
 import org.openrewrite.maven.AddPlugin;
+
 import org.springframework.cli.recipe.AddPluginRecipeFactory;
 import org.springframework.cli.runtime.engine.actions.InjectMavenBuildPlugin;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
 import org.springframework.cli.util.MavenBuildPluginReader;
 import org.springframework.cli.util.TerminalMessage;
-
-import java.nio.file.Path;
-import java.util.Map;
 
 public class InjectMavenBuildPluginActionHandler extends AbstractInjectMavenActionHandler {
 

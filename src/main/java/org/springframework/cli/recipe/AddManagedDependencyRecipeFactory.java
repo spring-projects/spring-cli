@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 - 2023 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.recipe;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.maven.model.Dependency;
-import org.jetbrains.annotations.NotNull;
-import org.openrewrite.Recipe;
 import org.openrewrite.internal.lang.Nullable;
-import org.openrewrite.maven.AddManagedDependencyVisitor;
 
 /**
  * @author Fabian Krüger
@@ -60,8 +58,8 @@ public class AddManagedDependencyRecipeFactory extends AbstractRecipeFactory {
 					version, scope, type, classifier);
 			return addManagedDependency;
 		}
-		catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
+		catch (JsonProcessingException ex) {
+			throw new RuntimeException(ex);
 		}
 	}
 

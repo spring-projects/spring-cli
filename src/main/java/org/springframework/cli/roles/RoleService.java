@@ -27,8 +27,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -36,10 +34,9 @@ import org.springframework.beans.factory.config.YamlMapFactoryBean;
 import org.springframework.beans.factory.config.YamlProcessor.ResolutionMethod;
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.util.IoUtils;
+import org.springframework.cli.util.JavaUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.StringUtils;
-
-import static org.springframework.cli.util.JavaUtils.inferType;
 
 public class RoleService {
 
@@ -78,7 +75,7 @@ public class RoleService {
 
 		}
 		Map<String, Object> map = loadAsMap(roleName);
-		Object valueToUse = inferType(value);
+		Object valueToUse = JavaUtils.inferType(value);
 		map.put(key, valueToUse);
 
 		DumperOptions dumperOptions = new DumperOptions();
@@ -90,9 +87,9 @@ public class RoleService {
 		try {
 			yaml.dump(map, new PrintWriter(getRoleFile));
 		}
-		catch (FileNotFoundException e) {
+		catch (FileNotFoundException ex) {
 			throw new SpringCliException(
-					"The file for the role '" + roleName + "' was not found.  Error = " + e.getMessage());
+					"The file for the role '" + roleName + "' was not found.  Error = " + ex.getMessage());
 		}
 
 	}

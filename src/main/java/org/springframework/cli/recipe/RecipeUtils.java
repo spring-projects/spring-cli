@@ -29,7 +29,10 @@ import org.springframework.cli.SpringCliException;
 /**
  * Utilities for recipe execution
  */
-public class RecipeUtils {
+public final class RecipeUtils {
+
+	private RecipeUtils() {
+	}
 
 	public static void writeResults(String recipeName, Path path, List<Result> resultList) {
 		try {

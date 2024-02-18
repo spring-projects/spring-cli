@@ -43,9 +43,8 @@ import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenDepend
 import org.springframework.cli.util.ClassNameExtractor;
 import org.springframework.cli.util.MavenDependencyReader;
 import org.springframework.cli.util.PomReader;
+import org.springframework.cli.util.PropertyFileUtils;
 import org.springframework.cli.util.TerminalMessage;
-
-import static org.springframework.cli.util.PropertyFileUtils.mergeProperties;
 
 public class ProjectArtifactProcessor {
 
@@ -232,7 +231,7 @@ public class ProjectArtifactProcessor {
 		Properties destProperties = new Properties();
 		srcProperties.load(IOUtils.toInputStream(projectArtifact.getText(), StandardCharsets.UTF_8));
 		destProperties.load(new FileInputStream(applicationPropertiesPath.toFile()));
-		Properties mergedProperties = mergeProperties(srcProperties, destProperties);
+		Properties mergedProperties = PropertyFileUtils.mergeProperties(srcProperties, destProperties);
 		mergedProperties.store(new FileWriter(applicationPropertiesPath.toFile()), "updated by spring ai add");
 	}
 
@@ -268,7 +267,7 @@ public class ProjectArtifactProcessor {
 				}
 			}
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 			throw new SpringCliException(
 					"Could not parse package name from Project Artifact: " + projectArtifact.getText());
 		}

@@ -53,13 +53,13 @@ public class ExecActionHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExecActionHandler.class);
 
-	public final static String OUTPUT_STDOUT = "stdout";
+	public static final String OUTPUT_STDOUT = "stdout";
 
-	public final static String OUTPUT_STDERR = "stderr";
+	public static final String OUTPUT_STDERR = "stderr";
 
-	public final static String OUTPUT_EXIT_VALUE = "exit-value";
+	public static final String OUTPUT_EXIT_VALUE = "exit-value";
 
-	public final static String OUTPUT_STDOUT_JSONPATH = "stdout-json-path";
+	public static final String OUTPUT_STDOUT_JSONPATH = "stdout-json-path";
 
 	private final TemplateEngine templateEngine;
 
@@ -94,8 +94,8 @@ public class ExecActionHandler {
 					List<String> lines = Files.readAllLines(commandFilePath);
 					commandToUse = templateEngine.process(lines.get(0), model);
 				}
-				catch (IOException e) {
-					throw new SpringCliException("Can not read from file " + commandFilePath.toAbsolutePath(), e);
+				catch (IOException ex) {
+					throw new SpringCliException("Can not read from file " + commandFilePath.toAbsolutePath(), ex);
 				}
 			}
 			else {
@@ -110,8 +110,8 @@ public class ExecActionHandler {
 			String dir = templateEngine.process(exec.getDir(), model);
 			processBuilder.directory(new File(dir).getCanonicalFile());
 		}
-		catch (Exception e) {
-			throw new SpringCliException("Error evaluating exec working directory. Expression: " + exec.getDir(), e);
+		catch (Exception ex) {
+			throw new SpringCliException("Error evaluating exec working directory. Expression: " + exec.getDir(), ex);
 		}
 
 		// If exec.getTo is set, it is the relative path to which to redirect stdout of
@@ -121,8 +121,8 @@ public class ExecActionHandler {
 				String execGetTo = templateEngine.process(exec.getTo(), model);
 				processBuilder.redirectOutput(new File(execGetTo));
 			}
-			catch (Exception e) {
-				throw new SpringCliException("Error evaluating exec destination file. Expression: " + exec.getTo(), e);
+			catch (Exception ex) {
+				throw new SpringCliException("Error evaluating exec destination file. Expression: " + exec.getTo(), ex);
 			}
 		}
 
@@ -133,8 +133,8 @@ public class ExecActionHandler {
 				String execErroTo = templateEngine.process(exec.getErrto(), model);
 				processBuilder.redirectError(new File(execErroTo));
 			}
-			catch (Exception e) {
-				throw new SpringCliException("Error evaluating exec error file. Expression: " + exec.getErrto(), e);
+			catch (Exception ex) {
+				throw new SpringCliException("Error evaluating exec error file. Expression: " + exec.getErrto(), ex);
 			}
 		}
 
@@ -182,15 +182,15 @@ public class ExecActionHandler {
 				}
 			}
 		}
-		catch (InterruptedException e) {
+		catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 			throw new SpringCliException(
-					"Execution of command '" + StringUtils.arrayToDelimitedString(commands, " ") + "' failed", e);
+					"Execution of command '" + StringUtils.arrayToDelimitedString(commands, " ") + "' failed", ex);
 
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 			throw new SpringCliException(
-					"Execution of command '" + StringUtils.arrayToDelimitedString(commands, " ") + "' failed", e);
+					"Execution of command '" + StringUtils.arrayToDelimitedString(commands, " ") + "' failed", ex);
 		}
 	}
 
@@ -218,8 +218,8 @@ public class ExecActionHandler {
 		try (BufferedReader buffer = new BufferedReader(new InputStreamReader(input))) {
 			return Optional.of(buffer.lines().collect(Collectors.joining(newline)));
 		}
-		catch (IOException e) {
-			logger.error("Could not read command output: " + e.getMessage());
+		catch (IOException ex) {
+			logger.error("Could not read command output: " + ex.getMessage());
 		}
 		return Optional.empty();
 	}

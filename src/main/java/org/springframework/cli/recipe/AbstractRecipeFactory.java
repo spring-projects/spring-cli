@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 - 2023 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.recipe;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,7 +29,7 @@ public class AbstractRecipeFactory {
 
 	@org.jetbrains.annotations.Nullable
 	protected static String getNullOrTextValue(JsonNode jsonNode, String field) {
-		return jsonNode.get(field) != null ? AbstractRecipeFactory.getTextValue(jsonNode, field) : null;
+		return (jsonNode.get(field) != null) ? AbstractRecipeFactory.getTextValue(jsonNode, field) : null;
 	}
 
 	protected static String getTextValue(JsonNode jsonNode, String field) {
@@ -49,7 +50,7 @@ public class AbstractRecipeFactory {
 
 	protected String getTextOrDefaultValue(JsonNode jsonNode, String version, String defaultValue) {
 		String nullOrTextValue = getNullOrTextValue(jsonNode, version);
-		return nullOrTextValue == null ? defaultValue : nullOrTextValue;
+		return (nullOrTextValue != null) ? nullOrTextValue : defaultValue;
 	}
 
 }

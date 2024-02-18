@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.git;
 
 import java.io.ByteArrayInputStream;
@@ -74,8 +75,8 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 		try {
 			targetPath = Files.createTempDirectory("source-repo-");
 		}
-		catch (IOException e) {
-			throw new SpringCliException("Failed to create temp directory: " + e.getMessage(), e);
+		catch (IOException ex) {
+			throw new SpringCliException("Failed to create temp directory: " + ex.getMessage(), ex);
 		}
 
 		Path contentPath;
@@ -105,8 +106,8 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 			logger.debug("Copying files from: " + src + " to: " + dest);
 			FileSystemUtils.copyRecursively(src, dest);
 		}
-		catch (IOException e) {
-			throw new SpringCliException("Failed processing " + source, e);
+		catch (IOException ex) {
+			throw new SpringCliException("Failed processing " + source, ex);
 		}
 		return targetPath;
 	}
@@ -126,8 +127,8 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 					try {
 						github = GitHubBuilder.fromEnvironment().build();
 					}
-					catch (IOException e) {
-						logger.trace("No environment variable GITHUB_AUTH found.", e.getMessage());
+					catch (IOException ex) {
+						logger.trace("No environment variable GITHUB_AUTH found.", ex.getMessage());
 						// do nothing
 					}
 				}
@@ -136,8 +137,8 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 					try {
 						github = GitHubBuilder.fromPropertyFile().build();
 					}
-					catch (IOException e) {
-						logger.trace("No .github directory found under the base user.dir.", e.getMessage());
+					catch (IOException ex) {
+						logger.trace("No .github directory found under the base user.dir.", ex.getMessage());
 						// ignore as there is not a .github directory under the user.dir
 					}
 				}
@@ -164,8 +165,8 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 			try {
 				archiver.extract(inputStream, targetPath.toFile());
 			}
-			catch (Exception e) {
-				throw new SpringCliException(String.format("Extraction error to %s", targetFile.getAbsolutePath()), e);
+			catch (Exception ex) {
+				throw new SpringCliException(String.format("Extraction error to %s", targetFile.getAbsolutePath()), ex);
 			}
 
 			Path unTar = Paths.get(targetPath.toFile().getAbsolutePath());
@@ -192,8 +193,8 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 			}
 			return contentPath;
 		}
-		catch (IOException | URISyntaxException e) {
-			throw new SpringCliException("Failed processing " + url, e);
+		catch (IOException | URISyntaxException ex) {
+			throw new SpringCliException("Failed processing " + url, ex);
 		}
 	}
 
@@ -238,8 +239,8 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 			try {
 				archiver.extract(tarfile, targetPath.toFile());
 			}
-			catch (Exception e) {
-				throw new SpringCliException(String.format("Extraction error to %s", targetFile.getAbsolutePath()), e);
+			catch (Exception ex) {
+				throw new SpringCliException(String.format("Extraction error to %s", targetFile.getAbsolutePath()), ex);
 			}
 
 			String zipDirName = tarfile.getName().substring(0, tarfile.getName().indexOf('.'));
@@ -255,8 +256,8 @@ public class GitSourceRepositoryService implements SourceRepositoryService {
 			}
 			return contentPath;
 		}
-		catch (URISyntaxException | GitLabApiException e) {
-			throw new SpringCliException("Failed processing " + url, e);
+		catch (URISyntaxException | GitLabApiException ex) {
+			throw new SpringCliException("Failed processing " + url, ex);
 		}
 	}
 

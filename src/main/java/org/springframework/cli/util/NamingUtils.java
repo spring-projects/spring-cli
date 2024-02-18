@@ -16,7 +16,10 @@
 
 package org.springframework.cli.util;
 
-public class NamingUtils {
+public final class NamingUtils {
+
+	private NamingUtils() {
+	}
 
 	public static String toKebab(CharSequence original) {
 		StringBuilder result = new StringBuilder(original.length());

@@ -30,9 +30,12 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.cli.SpringCliException;
 
-public class RootPackageFinder {
+public final class RootPackageFinder {
 
 	private static final Logger logger = LoggerFactory.getLogger(RootPackageFinder.class);
+
+	private RootPackageFinder() {
+	}
 
 	public static Optional<String> findRootPackage(File baseDirectory) {
 		String[] fileNames = getFileNames(baseDirectory);
@@ -51,8 +54,8 @@ public class RootPackageFinder {
 					return Optional.of(extractRootPackageName(new File(fileName)));
 				}
 			}
-			catch (IOException e) {
-				throw new SpringCliException("Exception reading " + fileName + " " + e.getMessage(), e);
+			catch (IOException ex) {
+				throw new SpringCliException("Exception reading " + fileName + " " + ex.getMessage(), ex);
 
 			}
 		}
@@ -75,9 +78,9 @@ public class RootPackageFinder {
 					return Optional.of(new File(baseDirectory, fileName));
 				}
 			}
-			catch (IOException e) {
-				e.printStackTrace();
-				throw new SpringCliException("Exception reading " + fileName + " " + e.getMessage(), e);
+			catch (IOException ex) {
+				ex.printStackTrace();
+				throw new SpringCliException("Exception reading " + fileName + " " + ex.getMessage(), ex);
 
 			}
 		}

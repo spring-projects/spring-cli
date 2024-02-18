@@ -23,7 +23,10 @@ import java.nio.file.Paths;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-public class JavaUtils {
+public final class JavaUtils {
+
+	private JavaUtils() {
+	}
 
 	public static int getJavaVersion(String javaVersionString) {
 		if ("1.8".equals(javaVersionString)) {
@@ -39,7 +42,7 @@ public class JavaUtils {
 			Paths.get(directoryName);
 			return true;
 		}
-		catch (InvalidPathException e) {
+		catch (InvalidPathException ex) {
 			return false;
 		}
 	}
@@ -49,7 +52,7 @@ public class JavaUtils {
 		try {
 			return objectMapper.readValue(value.toString(), Object.class);
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 			return value.toString();
 		}
 	}

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -43,6 +44,11 @@ public class SpringCliProperties {
 
 	public void setGithub(Github github) {
 		this.github = github;
+	}
+
+	@Override
+	public String toString() {
+		return "SpringCliProperties{" + "initializr=" + initializr + ", github=" + github + '}';
 	}
 
 	/**
@@ -101,11 +107,6 @@ public class SpringCliProperties {
 			return "Github{" + "clientId='" + clientId + '\'' + ", defaultScopes='" + defaultScopes + '\'' + '}';
 		}
 
-	}
-
-	@Override
-	public String toString() {
-		return "SpringCliProperties{" + "initializr=" + initializr + ", github=" + github + '}';
 	}
 
 }

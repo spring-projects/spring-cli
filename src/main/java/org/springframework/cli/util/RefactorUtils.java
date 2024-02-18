@@ -16,6 +16,12 @@
 
 package org.springframework.cli.util;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.function.Consumer;
+
 import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.RecipeRun;
 import org.openrewrite.Result;
@@ -26,15 +32,13 @@ import org.openrewrite.java.Java17Parser;
 import org.openrewrite.java.JavaParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.cli.SpringCliException;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.function.Consumer;
+public final class RefactorUtils {
 
-public class RefactorUtils {
+	private RefactorUtils() {
+	}
 
 	private static final Logger logger = LoggerFactory.getLogger(RefactorUtils.class);
 
@@ -44,8 +48,8 @@ public class RefactorUtils {
 		try {
 			Files.walkFileTree(workingPath, collector);
 		}
-		catch (IOException e) {
-			throw new SpringCliException("Failed reading files in " + workingPath, e);
+		catch (IOException ex) {
+			throw new SpringCliException("Failed reading files in " + workingPath, ex);
 		}
 		Consumer<Throwable> onError = e -> {
 			logger.error("error in javaParser execution", e);
@@ -62,8 +66,8 @@ public class RefactorUtils {
 		try {
 			container.execute();
 		}
-		catch (IOException e) {
-			throw new SpringCliException("Error performing refactoring", e);
+		catch (IOException ex) {
+			throw new SpringCliException("Error performing refactoring", ex);
 		}
 
 		// TODO change groupId and artifactId

@@ -20,11 +20,12 @@ import java.util.Arrays;
 
 import javax.lang.model.SourceVersion;
 
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-@Component
-public class PackageNameUtils {
+public final class PackageNameUtils {
+
+	private PackageNameUtils() {
+	}
 
 	/**
 	 * Get the package name to use for the new project

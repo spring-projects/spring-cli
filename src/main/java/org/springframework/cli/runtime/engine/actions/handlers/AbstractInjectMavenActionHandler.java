@@ -16,17 +16,6 @@
 
 package org.springframework.cli.runtime.engine.actions.handlers;
 
-import org.jetbrains.annotations.NotNull;
-import org.openrewrite.*;
-import org.openrewrite.internal.InMemoryLargeSourceSet;
-import org.openrewrite.maven.MavenParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cli.SpringCliException;
-import org.springframework.cli.runtime.engine.templating.TemplateEngine;
-import org.springframework.cli.util.TerminalMessage;
-import org.springframework.util.StringUtils;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -36,6 +25,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import org.jetbrains.annotations.NotNull;
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.InMemoryExecutionContext;
+import org.openrewrite.Recipe;
+import org.openrewrite.Result;
+import org.openrewrite.SourceFile;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
+import org.openrewrite.maven.MavenParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.cli.SpringCliException;
+import org.springframework.cli.runtime.engine.templating.TemplateEngine;
+import org.springframework.cli.util.TerminalMessage;
+import org.springframework.util.StringUtils;
 
 public abstract class AbstractInjectMavenActionHandler {
 

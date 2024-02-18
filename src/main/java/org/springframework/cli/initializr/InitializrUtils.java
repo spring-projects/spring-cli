@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.initializr;
 
 import java.util.Collections;
@@ -26,7 +27,7 @@ import org.springframework.util.StringUtils;
 
 public abstract class InitializrUtils {
 
-	private final static VersionParser VERSION_PARSER_INSTANCE = new VersionParser(Collections.emptyList());
+	private static final VersionParser VERSION_PARSER_INSTANCE = new VersionParser(Collections.emptyList());
 
 	public static boolean isDependencyCompatible(Dependency dependency, String version) {
 		if (!StringUtils.hasText(version) || !StringUtils.hasText(dependency.getVersionRange())) {

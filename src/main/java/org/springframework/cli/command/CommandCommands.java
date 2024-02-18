@@ -67,7 +67,7 @@ public class CommandCommands extends AbstractSpringCliCommands {
 			@Option(description = "The name of the user-defined sub-command to create.", defaultValue = "new",
 					longNames = "sub-command-name") String subCommandName,
 			@Option(description = "Path on which to run the command.") String path) {
-		Path projectPath = path != null ? IoUtils.getProjectPath(path) : IoUtils.getWorkingDirectory();
+		Path projectPath = (path != null) ? IoUtils.getProjectPath(path) : IoUtils.getWorkingDirectory();
 		// TODO check validity of passed in names as directory names.
 		Path commandPath = projectPath.resolve(".spring")
 			.resolve("commands")
@@ -90,8 +90,8 @@ public class CommandCommands extends AbstractSpringCliCommands {
 		try {
 			FileSystemUtils.copyRecursively(downloadedCommandPath, cwd);
 		}
-		catch (IOException e) {
-			throw new SpringCliException("Could not add command.", e);
+		catch (IOException ex) {
+			throw new SpringCliException("Could not add command.", ex);
 		}
 
 		// Display which commands were added.
@@ -141,8 +141,8 @@ public class CommandCommands extends AbstractSpringCliCommands {
 			FileSystemUtils.deleteRecursively(dynamicSubCommandPath);
 			logger.debug("Deleted " + dynamicSubCommandPath);
 		}
-		catch (IOException e) {
-			throw new SpringCliException("Could not delete " + dynamicSubCommandPath, e);
+		catch (IOException ex) {
+			throw new SpringCliException("Could not delete " + dynamicSubCommandPath, ex);
 		}
 	}
 

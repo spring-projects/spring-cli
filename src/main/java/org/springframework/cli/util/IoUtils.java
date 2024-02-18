@@ -73,9 +73,9 @@ public abstract class IoUtils {
 			File file = new File(dir, fileName);
 			writeText(file, data);
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 			throw new SpringCliException(
-					"Could not write " + resource.getDescription() + " to directory " + dir.toString(), e);
+					"Could not write " + resource.getDescription() + " to directory " + dir.toString(), ex);
 		}
 	}
 
@@ -83,8 +83,8 @@ public abstract class IoUtils {
 		try (OutputStream stream = new FileOutputStream(target)) {
 			StreamUtils.copy(body, Charset.forName("UTF-8"), stream);
 		}
-		catch (Exception e) {
-			throw new SpringCliException("Cannot write file " + target, e);
+		catch (Exception ex) {
+			throw new SpringCliException("Cannot write file " + target, ex);
 		}
 	}
 

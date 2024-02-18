@@ -22,8 +22,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.cli.SpringCliException;
-
 public class ClassNameExtractor {
 
 	private String[] patternStrings = { "(?<=\\bclass\\s)\\w+", "(?<=\\binterface\\s)\\w+", "(?<=\\b@interface\\s)\\w+",

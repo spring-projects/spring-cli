@@ -16,6 +16,9 @@
 
 package org.springframework.cli.runtime.engine.actions.handlers;
 
+import java.nio.file.Path;
+import java.util.Map;
+
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.recipe.AddManagedDependencyRecipe;
 import org.springframework.cli.recipe.AddManagedDependencyRecipeFactory;
@@ -24,9 +27,6 @@ import org.springframework.cli.runtime.engine.templating.TemplateEngine;
 import org.springframework.cli.util.MavenDependencyReader;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.util.StringUtils;
-
-import java.nio.file.Path;
-import java.util.Map;
 
 public class InjectMavenDependencyManagementActionHandler extends AbstractInjectMavenActionHandler {
 

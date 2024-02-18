@@ -25,7 +25,10 @@ import org.apache.commons.compress.utils.IOUtils;
 
 import org.springframework.cli.SpringCliException;
 
-public class PropertyFileUtils {
+public final class PropertyFileUtils {
+
+	private PropertyFileUtils() {
+	}
 
 	public static Properties getPropertyFile() {
 		File homeDir = new File(System.getProperty("user.home"));

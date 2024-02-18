@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.config;
+
+import java.time.Duration;
+import java.util.Collection;
 
 import io.netty.resolver.DefaultAddressResolverGroup;
 import org.jline.terminal.Terminal;
+
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactorNettyHttpClientMapper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -38,9 +43,6 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.result.CommandNotFoundMessageProvider;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.time.Duration;
-import java.util.Collection;
 
 /**
  * Configuration for cli related beans.

@@ -32,7 +32,10 @@ import org.springframework.cli.util.JavaUtils;
  *
  * Note, currently only checks Java version compatibility for Maven projects
  */
-public class MergerPreCheck {
+public final class MergerPreCheck {
+
+	private MergerPreCheck() {
+	}
 
 	/**
 	 * Checks if the two projects can be merged, if not an exception is thrown.

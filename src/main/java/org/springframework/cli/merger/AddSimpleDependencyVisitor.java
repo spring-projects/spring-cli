@@ -16,7 +16,9 @@
 
 package org.springframework.cli.merger;
 
+import java.util.Collections;
 import java.util.regex.Pattern;
+
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.internal.lang.Nullable;
 import org.openrewrite.maven.MavenIsoVisitor;
@@ -27,8 +29,6 @@ import org.openrewrite.semver.VersionComparator;
 import org.openrewrite.xml.AddToTagVisitor;
 import org.openrewrite.xml.XPathMatcher;
 import org.openrewrite.xml.tree.Xml;
-
-import static java.util.Collections.emptyList;
 
 public class AddSimpleDependencyVisitor extends MavenIsoVisitor<ExecutionContext> {
 
@@ -90,7 +90,7 @@ public class AddSimpleDependencyVisitor extends MavenIsoVisitor<ExecutionContext
 		Xml.Tag root = maven.getRoot();
 		if (!root.getChild("dependencies").isPresent()) {
 			doAfterVisit(new AddToTagVisitor<>(root, Xml.Tag.build("<dependencies/>"),
-					new MavenTagInsertionComparator(root.getContent() == null ? emptyList() : root.getContent())));
+					new MavenTagInsertionComparator((root.getContent() == null) ? Collections.emptyList() : root.getContent())));
 		}
 
 		doAfterVisit(new InsertDependencyInOrder(scope));
@@ -103,7 +103,7 @@ public class AddSimpleDependencyVisitor extends MavenIsoVisitor<ExecutionContext
 		@Nullable
 		private final String scope;
 
-		public InsertDependencyInOrder(@Nullable String scope) {
+		InsertDependencyInOrder(@Nullable String scope) {
 			this.scope = scope;
 		}
 
@@ -115,13 +115,13 @@ public class AddSimpleDependencyVisitor extends MavenIsoVisitor<ExecutionContext
 
 				Xml.Tag dependencyTag = Xml.Tag.build("\n<dependency>\n" + "<groupId>" + groupId + "</groupId>\n"
 						+ "<artifactId>" + artifactId + "</artifactId>\n"
-						+ (versionToUse == null ? "" : "<version>" + versionToUse + "</version>\n")
-						+ (classifier == null ? "" : "<classifier>" + classifier + "</classifier>\n")
-						+ (scope == null || "compile".equals(scope) ? "" : "<scope>" + scope + "</scope>\n")
+						+ ((versionToUse != null) ? "<version>" + versionToUse + "</version>\n" : "")
+						+ ((classifier != null) ? "<classifier>" + classifier + "</classifier>\n" : "")
+						+ ((scope == null || "compile".equals(scope)) ? "" : "<scope>" + scope + "</scope>\n")
 						+ (Boolean.TRUE.equals(optional) ? "<optional>true</optional>\n" : "") + "</dependency>");
 
 				doAfterVisit(new AddToTagVisitor<>(tag, dependencyTag, new InsertDependencyComparator(
-						tag.getContent() == null ? emptyList() : tag.getContent(), dependencyTag)));
+						(tag.getContent() == null) ? Collections.emptyList() : tag.getContent(), dependencyTag)));
 				maybeUpdateModel();
 
 				return tag;

@@ -18,6 +18,7 @@ package org.springframework.cli.merger.ai.service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -37,8 +38,6 @@ import org.springframework.cli.util.PropertyFileUtils;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public abstract class AbstractOpenAiService implements org.springframework.cli.merger.ai.service.OpenAiService {
 
@@ -94,7 +93,7 @@ public abstract class AbstractOpenAiService implements org.springframework.cli.m
 		String resourceFileName = "/org/springframework/cli/merger/ai/openai-" + promptType + "-prompt.txt";
 		try {
 			ClassPathResource promptResource = new ClassPathResource(resourceFileName);
-			String promptRaw = StreamUtils.copyToString(promptResource.getInputStream(), UTF_8);
+			String promptRaw = StreamUtils.copyToString(promptResource.getInputStream(), StandardCharsets.UTF_8);
 			return getHandlebarsTemplateEngine().process(promptRaw, context);
 		}
 		catch (FileNotFoundException ex) {

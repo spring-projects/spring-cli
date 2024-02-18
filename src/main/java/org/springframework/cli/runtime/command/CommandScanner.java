@@ -105,8 +105,8 @@ public class CommandScanner {
 			try {
 				manifest = CommandFileReader.read(manifestFile.toPath());
 			}
-			catch (IOException e) {
-				throw new SpringCliException("Failed to read " + manifestFile, e);
+			catch (IOException ex) {
+				throw new SpringCliException("Failed to read " + manifestFile, ex);
 			}
 			command = manifest.getCommand();
 		}

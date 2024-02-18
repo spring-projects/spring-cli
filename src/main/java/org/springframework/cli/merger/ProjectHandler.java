@@ -1,31 +1,20 @@
-package org.springframework.cli.merger;
+/*
+ * Copyright 2022-2024 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import org.apache.tools.ant.util.FileUtils;
-import org.codehaus.plexus.util.DirectoryScanner;
-import org.jline.utils.AttributedStringBuilder;
-import org.jline.utils.AttributedStyle;
-import org.openrewrite.ExecutionContext;
-import org.openrewrite.InMemoryExecutionContext;
-import org.openrewrite.Result;
-import org.openrewrite.SourceFile;
-import org.openrewrite.internal.InMemoryLargeSourceSet;
-import org.openrewrite.xml.XmlParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cli.SpringCliException;
-import org.springframework.cli.config.SpringCliUserConfig;
-import org.springframework.cli.config.SpringCliUserConfig.CommandDefaults;
-import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
-import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
-import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
-import org.springframework.cli.git.SourceRepositoryService;
-import org.springframework.cli.recipe.RecipeUtils;
-import org.springframework.cli.support.configfile.YamlConfigFile;
-import org.springframework.cli.util.*;
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.FileSystemUtils;
-import org.springframework.util.StringUtils;
+package org.springframework.cli.merger;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +28,40 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+
+import org.apache.tools.ant.util.FileUtils;
+import org.codehaus.plexus.util.DirectoryScanner;
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.InMemoryExecutionContext;
+import org.openrewrite.Result;
+import org.openrewrite.SourceFile;
+import org.openrewrite.internal.InMemoryLargeSourceSet;
+import org.openrewrite.xml.XmlParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.cli.SpringCliException;
+import org.springframework.cli.config.SpringCliUserConfig;
+import org.springframework.cli.config.SpringCliUserConfig.CommandDefaults;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
+import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
+import org.springframework.cli.git.SourceRepositoryService;
+import org.springframework.cli.recipe.RecipeUtils;
+import org.springframework.cli.support.configfile.YamlConfigFile;
+import org.springframework.cli.util.IoUtils;
+import org.springframework.cli.util.JavaUtils;
+import org.springframework.cli.util.PackageNameUtils;
+import org.springframework.cli.util.ProjectInfo;
+import org.springframework.cli.util.RefactorUtils;
+import org.springframework.cli.util.RootPackageFinder;
+import org.springframework.cli.util.TerminalMessage;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Contain features to create and modify projects. This is kept outside of terminal
@@ -75,7 +98,6 @@ public class ProjectHandler {
 		this.springCliUserConfig = springCliUserConfig;
 		this.sourceRepositoryService = sourceRepositoryService;
 		this.terminalMessage = terminalMessage;
-		;
 	}
 
 	/**
@@ -153,7 +175,7 @@ public class ProjectHandler {
 
 		Path repositoryContentsPath = sourceRepositoryService.retrieveRepositoryContents(urlToUse);
 		Path projectDir = IoUtils.getProjectPath(path);
-		Path workingPath = projectDir != null ? projectDir : IoUtils.getWorkingDirectory();
+		Path workingPath = (projectDir != null) ? projectDir : IoUtils.getWorkingDirectory();
 
 		ProjectMerger projectMerger = new ProjectMerger(repositoryContentsPath, workingPath, projectName,
 				this.terminalMessage);
@@ -225,7 +247,7 @@ public class ProjectHandler {
 	}
 
 	private Path getProjectDirectoryFromProjectName(Path projectDir, String projectName) {
-		Path workingPath = projectDir != null ? projectDir : IoUtils.getWorkingDirectory();
+		Path workingPath = (projectDir != null) ? projectDir : IoUtils.getWorkingDirectory();
 		Path projectDirectoryPath = Paths.get(workingPath.toString(), projectName);
 		if (Files.exists(projectDirectoryPath) && Files.isDirectory(projectDirectoryPath)) {
 			throw new SpringCliException("Directory named " + projectName + " already exists.  Choose another name.");
@@ -290,7 +312,7 @@ public class ProjectHandler {
 					destFile.setExecutable(true);
 				}
 			}
-			catch (IOException e) {
+			catch (IOException ex) {
 				throw new SpringCliException(
 						"Could not copy files from " + fromDir.getAbsolutePath() + " to " + toDir.getAbsolutePath());
 			}
@@ -384,8 +406,9 @@ public class ProjectHandler {
 			.getProjectRepositories();
 		if (projectRepositories != null && projectRepositories.size() > 0) {
 			String url = findUrlFromProjectRepositories(projectName, projectRepositories);
-			if (url != null)
+			if (url != null) {
 				return url;
+			}
 		}
 
 		List<ProjectCatalog> projectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
@@ -404,8 +427,9 @@ public class ProjectHandler {
 					logger.warn("Could not delete path " + path, ex);
 				}
 				url = findUrlFromProjectRepositories(projectName, projectRepositories);
-				if (url != null)
+				if (url != null) {
 					return url;
+				}
 			}
 		}
 

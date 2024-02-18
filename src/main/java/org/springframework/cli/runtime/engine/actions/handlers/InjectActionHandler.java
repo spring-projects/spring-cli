@@ -148,7 +148,7 @@ public class InjectActionHandler {
 				shouldInject = false;
 			}
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 			throw new SpringCliException("Could not read file contents of " + file.getAbsolutePath());
 		}
 		return shouldInject;
@@ -180,7 +180,7 @@ public class InjectActionHandler {
 			try {
 				Files.delete(newFile);
 			}
-			catch (IOException e) {
+			catch (IOException ex) {
 				logger.error("Could not delete file {}", newFile);
 			}
 		}

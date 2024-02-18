@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.command;
 
 import java.io.IOException;
@@ -51,9 +52,9 @@ import org.springframework.web.reactive.function.client.WebClient.Builder;
 @Command(command = { "github", "auth" }, group = "Github")
 public class GithubCommands extends AbstractSpringCliCommands {
 
-	private final static Logger log = LoggerFactory.getLogger(GithubCommands.class);
+	private static final Logger log = LoggerFactory.getLogger(GithubCommands.class);
 
-	private final static RateLimitChecker RATE_LIMIT_CHECKER = new RateLimitChecker.LiteralValue(0);
+	private static final RateLimitChecker RATE_LIMIT_CHECKER = new RateLimitChecker.LiteralValue(0);
 
 	private WebClient.Builder webClientBuilder;
 
@@ -163,8 +164,8 @@ public class GithubCommands extends AbstractSpringCliCommands {
 				loginName = gh.getMyself().getLogin();
 				log.debug("Got loginName {}", loginName);
 			}
-			catch (IOException e) {
-				log.error("Error getting GitHub login.", e);
+			catch (IOException ex) {
+				log.error("Error getting GitHub login.", ex);
 			}
 			AttributedString ret = terminal.styledString("You are logged into GitHub as ", null);
 			ret = terminal.join(ret, terminal.styledString(loginName, StyleSettings.TAG_HIGHLIGHT));

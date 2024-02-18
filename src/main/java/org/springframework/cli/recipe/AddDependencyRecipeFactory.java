@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 - 2023 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.recipe;
+
+import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.openrewrite.internal.lang.Nullable;
 import org.openrewrite.maven.AddDependency;
 import org.openrewrite.maven.table.MavenMetadataFailures;
-
-import java.util.regex.Pattern;
 
 /**
  * @author Fabian Krüger
@@ -62,7 +63,7 @@ public class AddDependencyRecipeFactory extends AbstractRecipeFactory {
 			Boolean optional = Boolean.parseBoolean(getNullOrTextValue(jsonNode, "optional"));
 			@Nullable
 			String familyPattern = null;
-			Pattern familyRegex = familyPattern == null ? null : Pattern.compile(familyPattern);
+			Pattern familyRegex = (familyPattern != null) ? Pattern.compile(familyPattern) : null;
 			@Nullable
 			Boolean acceptTransitive = null;
 			MavenMetadataFailures metadataFailures = null;
@@ -71,8 +72,8 @@ public class AddDependencyRecipeFactory extends AbstractRecipeFactory {
 					optional, familyRegex, metadataFailures);
 			return recipe;
 		}
-		catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
+		catch (JsonProcessingException ex) {
+			throw new RuntimeException(ex);
 		}
 
 	}

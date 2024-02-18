@@ -35,8 +35,7 @@ public class MergerPreCheckTests {
 			.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-8.xml").toFile());
 		Model toMergeModel = pomReader
 			.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-17.xml").toFile());
-		MergerPreCheck mergerPreCheck = new MergerPreCheck();
-		assertThrows(SpringCliException.class, () -> mergerPreCheck.canMergeProject(currentModel, toMergeModel, null));
+		assertThrows(SpringCliException.class, () -> MergerPreCheck.canMergeProject(currentModel, toMergeModel, null));
 	}
 
 	@Test
@@ -46,8 +45,7 @@ public class MergerPreCheckTests {
 			.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-8.xml").toFile());
 		Model toMergeModel = pomReader
 			.readPom(Paths.get("src/test/resources/org/springframework/cli/merger/pom-java-8.xml").toFile());
-		MergerPreCheck mergerPreCheck = new MergerPreCheck();
-		mergerPreCheck.canMergeProject(currentModel, toMergeModel, null);
+		MergerPreCheck.canMergeProject(currentModel, toMergeModel, null);
 	}
 
 }

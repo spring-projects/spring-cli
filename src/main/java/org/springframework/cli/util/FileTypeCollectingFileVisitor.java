@@ -24,8 +24,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.nio.file.FileVisitResult.CONTINUE;
-
 /**
  * A simple {@link FileVisitor} that collects file that end with a given extension.
  *
@@ -46,7 +44,7 @@ public class FileTypeCollectingFileVisitor extends SimpleFileVisitor<Path> {
 		if (attrs.isRegularFile() && file.getFileName().toString().endsWith(extension)) {
 			matches.add(file);
 		}
-		return CONTINUE;
+		return FileVisitResult.CONTINUE;
 	}
 
 	public List<Path> getMatches() {

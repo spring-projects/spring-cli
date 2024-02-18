@@ -61,8 +61,8 @@ public final class GitRepoUrlRef {
 				uri = extractSubPathAndRef(uri);
 			}
 		}
-		catch (URISyntaxException e) {
-			throw new IllegalArgumentException("Invalid URI provided: '" + uriString + "'", e);
+		catch (URISyntaxException ex) {
+			throw new IllegalArgumentException("Invalid URI provided: '" + uriString + "'", ex);
 		}
 		return fromParsedUri(uri);
 	}
@@ -81,8 +81,8 @@ public final class GitRepoUrlRef {
 		try {
 			repoUrl = new URL(uri.getScheme() + "://" + uri.getHost() + uri.getPath());
 		}
-		catch (MalformedURLException e) {
-			throw new IllegalArgumentException("Unable to construct URL for Git repository", e);
+		catch (MalformedURLException ex) {
+			throw new IllegalArgumentException("Unable to construct URL for Git repository", ex);
 		}
 		String ref = null;
 		String subPath = null;

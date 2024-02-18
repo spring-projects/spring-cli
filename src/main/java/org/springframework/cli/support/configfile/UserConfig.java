@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.support.configfile;
 
 import java.io.IOException;
@@ -36,9 +37,9 @@ public class UserConfig<T> {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserConfig.class);
 
-	private final static String XDG_CONFIG_HOME = "XDG_CONFIG_HOME";
+	private static final String XDG_CONFIG_HOME = "XDG_CONFIG_HOME";
 
-	private final static String APP_DATA = "APP_DATA";
+	private static final String APP_DATA = "APP_DATA";
 
 	private Function<String, Path> pathProvider = (path) -> Paths.get(path);
 
@@ -83,7 +84,7 @@ public class UserConfig<T> {
 		try {
 			Files.createDirectories(path.getParent());
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 		}
 		logger.debug("Writing config to path " + path);
 		logger.debug("config = " + config);

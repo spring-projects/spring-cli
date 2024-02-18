@@ -16,6 +16,9 @@
 
 package org.springframework.cli.merger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.Recipe;
 import org.openrewrite.TreeVisitor;
@@ -26,9 +29,6 @@ import org.openrewrite.java.tree.J.CompilationUnit;
 import org.openrewrite.java.tree.J.Import;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Collect declared imports and annotations of a class

@@ -38,16 +38,16 @@ public class SpringCliExceptionResolver implements CommandExceptionResolver, App
 	private ObjectProvider<Terminal> terminalProvider;
 
 	@Override
-	public CommandHandlingResult resolve(Exception ex) {
+	public CommandHandlingResult resolve(Exception e) {
 		File stackTraceFile = new File(System.getProperty("java.io.tmpdir"), "spring-cli-stacktrace.txt");
 		try {
-			ex.printStackTrace(new PrintStream(stackTraceFile));
+			e.printStackTrace(new PrintStream(stackTraceFile));
 		}
-		catch (FileNotFoundException e) {
+		catch (FileNotFoundException ex) {
 			shellPrint("Could not write stack trace to file " + stackTraceFile);
-			shellPrint(Arrays.toString(e.getStackTrace()));
+			shellPrint(Arrays.toString(ex.getStackTrace()));
 		}
-		return CommandHandlingResult.of(ex.getMessage(), 1);
+		return CommandHandlingResult.of(e.getMessage(), 1);
 	}
 
 	private Terminal getTerminal() {

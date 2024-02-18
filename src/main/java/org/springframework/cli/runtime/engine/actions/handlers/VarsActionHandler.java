@@ -32,6 +32,7 @@ import org.springframework.cli.runtime.engine.actions.Options;
 import org.springframework.cli.runtime.engine.actions.Question;
 import org.springframework.cli.runtime.engine.actions.Vars;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
+import org.springframework.cli.util.JavaUtils;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.shell.component.context.ComponentContext;
@@ -46,7 +47,6 @@ import org.springframework.shell.style.ThemeRegistry;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.shell.style.ThemeSettings;
 
-import static org.springframework.cli.util.JavaUtils.inferType;
 
 public class VarsActionHandler {
 
@@ -96,7 +96,7 @@ public class VarsActionHandler {
 		RoleService roleService = new RoleService(cwd);
 		for (Entry<String, Object> objectEntry : data.entrySet()) {
 			String keyToUse = templateEngine.process(objectEntry.getKey().toString(), model);
-			Object valueToUse = inferType(templateEngine.process(objectEntry.getValue().toString(), model));
+			Object valueToUse = JavaUtils.inferType(templateEngine.process(objectEntry.getValue().toString(), model));
 			// TODO store in default role "" for now
 			String roleName = "";
 			roleService.updateRole(roleName, keyToUse, valueToUse);
@@ -182,7 +182,7 @@ public class VarsActionHandler {
 
 		RoleService roleService = new RoleService();
 		// store in default role "" for now
-		roleService.updateRole("", question.getName(), inferType(object));
+		roleService.updateRole("", question.getName(), JavaUtils.inferType(object));
 
 	}
 
@@ -228,11 +228,11 @@ public class VarsActionHandler {
 			Object object = resultContext.get(question.getName());
 			// store in default role for now
 			RoleService roleService = new RoleService();
-			roleService.updateRole("", question.getName(), inferType(object));
+			roleService.updateRole("", question.getName(), JavaUtils.inferType(object));
 		}
 	}
 
-	private final static Comparator<SelectorItem<String>> NAME_COMPARATOR = (o1, o2) -> {
+	private static final Comparator<SelectorItem<String>> NAME_COMPARATOR = (o1, o2) -> {
 		return o1.getName().compareTo(o2.getName());
 	};
 

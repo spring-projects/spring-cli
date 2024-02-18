@@ -16,14 +16,13 @@
 
 package org.springframework.cli.command;
 
+import org.springframework.cli.util.JavaUtils;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.component.context.ComponentContext;
 import org.springframework.shell.component.flow.ComponentFlow;
 import org.springframework.shell.component.flow.ComponentFlow.ComponentFlowResult;
 import org.springframework.shell.component.flow.ResultMode;
 import org.springframework.shell.standard.AbstractShellComponent;
-
-import static org.springframework.cli.util.JavaUtils.inferType;
 
 @Command(command = "vars", group = "Vars")
 public class VarsCommands extends AbstractShellComponent {
@@ -50,7 +49,7 @@ public class VarsCommands extends AbstractShellComponent {
 		ComponentContext<?> resultContext = componentFlowResult.getContext();
 
 		Object obj = resultContext.get("language_id");
-		System.out.println("Collected " + obj + " as value.  Inferred type " + inferType(obj).getClass());
+		System.out.println("Collected " + obj + " as value.  Inferred type " + JavaUtils.inferType(obj).getClass());
 		return "Flow completed";
 	}
 
