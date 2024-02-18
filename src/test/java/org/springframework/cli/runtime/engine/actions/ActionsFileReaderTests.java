@@ -44,7 +44,8 @@ class ActionsFileReaderTests {
 
 		assertThatThrownBy(() -> {
 			actionFileReader.read(classPathResource);
-		}).hasMessageContaining("You may have forgot to define 'name' or 'label' as fields directly under the '-question:' field");
+		}).hasMessageContaining(
+				"You may have forgot to define 'name' or 'label' as fields directly under the '-question:' field");
 	}
 
 	@Test

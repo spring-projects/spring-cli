@@ -47,7 +47,6 @@ import org.springframework.shell.style.ThemeRegistry;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.shell.style.ThemeSettings;
 
-
 public class VarsActionHandler {
 
 	private TemplateExecutor templateExecutor;

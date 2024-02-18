@@ -396,7 +396,8 @@ public class ProjectMerger {
 			sb.style(sb.style().foreground(AttributedStyle.WHITE));
 			sb.append("Refactoring code base that is to be merged to package name " + currentRootPackageName.get());
 			terminalMessage.print(sb.toAttributedString());
-			RefactorUtils.refactorPackage(currentRootPackageName.get(), toMergeRootPackageName.get(), this.toMergeProjectPath);
+			RefactorUtils.refactorPackage(currentRootPackageName.get(), toMergeRootPackageName.get(),
+					this.toMergeProjectPath);
 			logger.debug("look in " + this.toMergeProjectPath
 					+ " to see if refactoring of 'to merge code base' was done correctly");
 		}
@@ -425,7 +426,8 @@ public class ProjectMerger {
 				if (scope == null) {
 					scope = "compile";
 				}
-				String version = (candidateDependency.getVersion() == null) ? "latest" : candidateDependency.getVersion();
+				String version = (candidateDependency.getVersion() == null) ? "latest"
+						: candidateDependency.getVersion();
 				@Nullable
 				String versionPattern = ".*";
 				@Nullable

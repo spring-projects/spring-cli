@@ -89,8 +89,8 @@ public class AddSimpleDependencyVisitor extends MavenIsoVisitor<ExecutionContext
 
 		Xml.Tag root = maven.getRoot();
 		if (!root.getChild("dependencies").isPresent()) {
-			doAfterVisit(new AddToTagVisitor<>(root, Xml.Tag.build("<dependencies/>"),
-					new MavenTagInsertionComparator((root.getContent() == null) ? Collections.emptyList() : root.getContent())));
+			doAfterVisit(new AddToTagVisitor<>(root, Xml.Tag.build("<dependencies/>"), new MavenTagInsertionComparator(
+					(root.getContent() == null) ? Collections.emptyList() : root.getContent())));
 		}
 
 		doAfterVisit(new InsertDependencyInOrder(scope));

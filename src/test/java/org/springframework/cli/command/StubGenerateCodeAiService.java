@@ -26,7 +26,6 @@ import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 
-
 public class StubGenerateCodeAiService extends GenerateCodeAiService {
 
 	public StubGenerateCodeAiService(TerminalMessage terminalMessage) {
