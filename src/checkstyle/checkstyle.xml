@@ -12,7 +12,8 @@
 			com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocStyleCheck,
 			com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTypeCheck,
 			com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocVariableCheck,
-			io.spring.javaformat.checkstyle.check.SpringJavadocCheck" />
+			io.spring.javaformat.checkstyle.check.SpringJavadocCheck,
+			io.spring.javaformat.checkstyle.check.SpringLambdaCheck" />
 	</module>
 
 </module>
