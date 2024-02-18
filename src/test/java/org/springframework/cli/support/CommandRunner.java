@@ -40,7 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 
-public class CommandRunner {
+public final class CommandRunner {
 
 	private final ApplicationContext context;
 

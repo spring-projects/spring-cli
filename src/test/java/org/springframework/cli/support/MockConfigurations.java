@@ -23,6 +23,7 @@ import java.util.function.Function;
 
 import com.google.common.jimfs.Jimfs;
 import org.jline.terminal.Terminal;
+import org.mockito.Mockito;
 
 import org.springframework.cli.command.BootCommands;
 import org.springframework.cli.command.CommandCommands;
@@ -47,9 +48,6 @@ import org.springframework.rewrite.RewriteRecipeLauncher;
 import org.springframework.rewrite.boot.autoconfigure.RewriteLauncherConfiguration;
 import org.springframework.shell.style.ThemeResolver;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 public class MockConfigurations {
 
 	@Configuration
@@ -58,13 +56,13 @@ public class MockConfigurations {
 
 		@Bean
 		Terminal terminal() {
-			Terminal mockTerminal = mock(Terminal.class);
+			Terminal mockTerminal = Mockito.mock(Terminal.class);
 			return mockTerminal;
 		}
 
 		@Bean
 		ThemeResolver themeResolver() {
-			ThemeResolver mockThemeResolver = mock(ThemeResolver.class);
+			ThemeResolver mockThemeResolver = Mockito.mock(ThemeResolver.class);
 			return mockThemeResolver;
 		}
 
@@ -130,19 +128,19 @@ public class MockConfigurations {
 
 		@Bean
 		SpringCliUserConfig springCliUserConfig() {
-			SpringCliUserConfig mock = mock(SpringCliUserConfig.class);
+			SpringCliUserConfig mock = Mockito.mock(SpringCliUserConfig.class);
 			ProjectRepository pr1 = ProjectRepository.of("jpa", "Learn JPA",
 					"https://github.com/rd-1-2022/rpt-spring-data-jpa", null);
 			ProjectRepository pr2 = ProjectRepository.of("scheduling", "Scheduling",
 					"https://github.com/rd-1-2022/rpt-spring-scheduling-tasks", null);
 			ProjectRepositories prs = new ProjectRepositories();
 			prs.setProjectRepositories(Arrays.asList(pr1, pr2));
-			when(mock.getProjectRepositories()).thenReturn(prs);
+			Mockito.when(mock.getProjectRepositories()).thenReturn(prs);
 			ProjectCatalogs pcs = new ProjectCatalogs();
 			ProjectCatalog pc = ProjectCatalog.of("getting-started", "Spring Getting Started Projects",
 					"https://github.com/rd-1-2022/spring-gs-catalog/", null);
 			pcs.setProjectCatalogs(Arrays.asList(pc));
-			when(mock.getProjectCatalogs()).thenReturn(pcs);
+			Mockito.when(mock.getProjectCatalogs()).thenReturn(pcs);
 			return mock;
 		}
 

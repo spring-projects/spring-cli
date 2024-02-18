@@ -84,6 +84,22 @@ public class ProjectCatalogInitializerTests {
 		});
 	}
 
+	@Test
+	void testWithExistingProjectCatalog() {
+		ApplicationContextRunner contextRunner = new ApplicationContextRunner().withUserConfiguration(
+				ProjectCatalogInitializerTests.ProjectCatalogInitializerWithExistingCatalogConfig.class);
+		contextRunner.run((context) -> {
+			assertThat(context).hasSingleBean(ProjectCatalogCommands.class);
+			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
+			Table table = (Table) projectCatalogCommands.catalogList(false);
+			assertThat(table.getModel().getRowCount()).isEqualTo(2);
+			TableAssertions.verifyTableValue(table, 1, 0, "fooname");
+			TableAssertions.verifyTableValue(table, 1, 1, "foodescription");
+			TableAssertions.verifyTableValue(table, 1, 2, "foourl");
+			TableAssertions.verifyTableValue(table, 1, 3, "[footag1, footag2]");
+		});
+	}
+
 	@Configuration
 	@EnableConfigurationProperties(SpringCliProjectCatalogProperties.class)
 	static class ProjectCatalogInitializerConfig {
@@ -118,22 +134,6 @@ public class ProjectCatalogInitializerTests {
 			return new ProjectCatalogInitializer(springCliUserConfig, springCliProjectCatalogProperties);
 		}
 
-	}
-
-	@Test
-	void testWithExistingProjectCatalog() {
-		ApplicationContextRunner contextRunner = new ApplicationContextRunner().withUserConfiguration(
-				ProjectCatalogInitializerTests.ProjectCatalogInitializerWithExistingCatalogConfig.class);
-		contextRunner.run((context) -> {
-			assertThat(context).hasSingleBean(ProjectCatalogCommands.class);
-			ProjectCatalogCommands projectCatalogCommands = context.getBean(ProjectCatalogCommands.class);
-			Table table = (Table) projectCatalogCommands.catalogList(false);
-			assertThat(table.getModel().getRowCount()).isEqualTo(2);
-			TableAssertions.verifyTableValue(table, 1, 0, "fooname");
-			TableAssertions.verifyTableValue(table, 1, 1, "foodescription");
-			TableAssertions.verifyTableValue(table, 1, 2, "foourl");
-			TableAssertions.verifyTableValue(table, 1, 3, "[footag1, footag2]");
-		});
 	}
 
 	@Configuration
