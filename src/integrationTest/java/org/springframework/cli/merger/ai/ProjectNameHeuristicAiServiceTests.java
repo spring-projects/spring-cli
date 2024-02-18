@@ -1,12 +1,3 @@
-package org.springframework.cli.merger.ai;
-
-import org.junit.jupiter.api.Test;
-
-import org.springframework.cli.merger.ai.service.ProjectNameHeuristicAiService;
-import org.springframework.cli.util.TerminalMessage;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 /*
  * Copyright 2021 the original author or authors.
  *
@@ -23,7 +14,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * limitations under the License.
  */
 
-class ProjectNameHeuristicAiServiceTest {
+package org.springframework.cli.merger.ai;
+
+import org.junit.jupiter.api.Test;
+
+import org.springframework.cli.merger.ai.service.ProjectNameHeuristicAiService;
+import org.springframework.cli.util.TerminalMessage;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class ProjectNameHeuristicAiServiceTests {
 
 	@Test
 	void deriveProjectName() {
