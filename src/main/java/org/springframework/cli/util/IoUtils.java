@@ -56,7 +56,7 @@ public abstract class IoUtils {
 
 	public static boolean inProjectRootDirectory(Path path) {
 		Path pomFile = path.resolve("pom.xml");
-		return Files.exists(pomFile) ? true : false;
+		return Files.exists(pomFile);
 	}
 
 	public static Path getProjectPath(String path) {

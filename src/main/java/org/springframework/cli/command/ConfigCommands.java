@@ -89,7 +89,7 @@ public class ConfigCommands extends AbstractSpringCliCommands {
 				}
 			}
 		}
-		if (removed = true) {
+		if (removed) {
 			pruneEmptyOptions(commandDefaults);
 			this.springCliUserConfig.setCommandDefaults(commandDefaults);
 		}
