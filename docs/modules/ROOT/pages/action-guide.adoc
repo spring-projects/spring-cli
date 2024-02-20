@@ -28,7 +28,7 @@ actions:
       text: Hello {{user-name}} on {{os-name}}.
 ```
 
-The `{{user-name}}` and `{{os-name}} variables are replaced with actual values by the Handlebars template engine.
+The `{{user-name}}` and `{{os-name}}` variables are replaced with actual values by the Handlebars template engine.
 Command line options passed to user-defined command are exposed as variables to be used by the template engine.
 
 For more information on predefined template engine variables, see the xref:user-command-guide.adoc#_template_engine[Template Engine] section.
