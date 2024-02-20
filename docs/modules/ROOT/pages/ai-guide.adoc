@@ -62,7 +62,7 @@ To do so, provide a brief description of the code you want to add by using the `
 
 By default, this command modifies your code base.
 
-The following listing showss an example:
+The following listing shows an example:
 
 [source, bash]
 ----
