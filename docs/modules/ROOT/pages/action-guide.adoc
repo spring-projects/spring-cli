@@ -135,6 +135,7 @@ actions:
 
 For more information on predefined template engine variables, see the xref:user-command-guide.adoc#_template_engine[Template Engine] section.
 
+[[action-inject]]
 == Inject
 
 The `inject` action is used to inject text into a file.
