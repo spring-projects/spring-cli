@@ -10,7 +10,7 @@ plugins {
 }
 
 def useNative = project.hasProperty('springCliNative') && springCliNative.toBoolean()
-def useChecks = project.hasProperty('springCliChecks') && springCliChecks.toBoolean()
+def useChecks = project.hasProperty('springCliChecks') ? springCliChecks.toBoolean() : true
 
 if (useNative) {
 	apply plugin: 'org.graalvm.buildtools.native'

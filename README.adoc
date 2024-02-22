@@ -34,6 +34,24 @@ TIP: There is a CI workflow which builds native binaries for linux, macos and wi
      Published artifacts in CI workflow will get removed daily so take it from
      a latest run which is scheduled nightly.
 
+=== Code Formatting
+
+This project uses Spring Javaformat and is enabled by default.
+
+Run individual tasks:
+
+```
+./gradlew checkFormat
+./gradlew checkstyleMain
+./gradlew checkstyleTest
+./gradlew format
+```
+
+You can temporarily disable checks by setting property `springCliChecks` to `false`:
+
+```
+./gradlew build -PspringCliChecks=false
+```
 
 === Building Documentation
 
