@@ -41,12 +41,15 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.maven.model.Build;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.model.Repository;
 import org.apache.tools.ant.util.FileUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.openrewrite.ExecutionContext;
@@ -64,6 +67,8 @@ import org.openrewrite.java.JavaParser;
 import org.openrewrite.java.tree.J.Annotation;
 import org.openrewrite.maven.AddDependencyVisitor;
 import org.openrewrite.maven.AddManagedDependency;
+import org.openrewrite.maven.AddPlugin;
+import org.openrewrite.maven.AddPluginDependency;
 import org.openrewrite.maven.AddRepository;
 import org.openrewrite.maven.ChangePropertyValue;
 import org.openrewrite.maven.MavenParser;
@@ -76,17 +81,20 @@ import org.springframework.beans.factory.config.YamlMapFactoryBean;
 import org.springframework.beans.factory.config.YamlProcessor.ResolutionMethod;
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.recipe.AddManagedDependencyRecipeFactory;
+import org.springframework.cli.util.ConversionUtils;
 import org.springframework.cli.util.PomReader;
 import org.springframework.cli.util.PropertyFileUtils;
 import org.springframework.cli.util.RefactorUtils;
 import org.springframework.cli.util.RootPackageFinder;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Performs the refactoring steps to merge two Spring projects
  *
  * @author Mark Pollack
+ * @author Oleg Zhurakousky
  */
 public class ProjectMerger {
 
@@ -149,6 +157,7 @@ public class ProjectMerger {
 			mergeMavenProperties(currentProjectPomPath, toMergeModel);
 			mergeMavenDependencyManagement(currentProjectPomPath, toMergeModel, paths, mavenParser);
 			mergeMavenDependencies(currentProjectPomPath, currentModel, toMergeModel, paths, mavenParser);
+			mergeMavenPlugins(currentProjectPomPath, currentModel, toMergeModel, paths, mavenParser);
 
 			// Code Refactoring
 			refactorToMergeCodebase();
@@ -405,6 +414,55 @@ public class ProjectMerger {
 			terminalMessage
 				.print("WARNING: Could not find root package containing class with @SpringBootApplication in "
 						+ this.currentProjectPath.toFile());
+		}
+	}
+
+	private void mergeMavenPlugins(Path currentProjectPomPath, Model currentModel, Model toMergeModel, List<Path> paths,
+			MavenParser mavenParser) throws IOException {
+
+		Build currentModelBuild = currentModel.getBuild();
+		Build toMergeModelBuild = toMergeModel.getBuild();
+
+		List<Plugin> plugins = toMergeModelBuild.getPlugins();
+		for (Plugin plugin : plugins) {
+
+			String configuration = (plugin.getConfiguration() != null)
+					? ConversionUtils.fromDomToString((Xpp3Dom) plugin.getConfiguration()) : null;
+			String dependencies = null;
+			if (!currentModelBuild.getPlugins().contains(plugin)
+					&& !CollectionUtils.isEmpty(plugin.getDependencies())) {
+				dependencies = ConversionUtils.fromDependencyListToString(plugin.getDependencies());
+			}
+
+			Recipe addPluginRecipe = new AddPlugin(plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion(),
+					configuration, dependencies, null, null);
+
+			List<SourceFile> parsedPomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext())
+				.toList();
+			List<Result> resultList = addPluginRecipe
+				.run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext())
+				.getChangeset()
+				.getAllResults();
+			updatePomFile(currentProjectPomPath, resultList);
+
+			if (currentModelBuild.getPluginsAsMap()
+				.containsKey(Plugin.constructKey(plugin.getGroupId(), plugin.getArtifactId()))) {
+				if (!CollectionUtils.isEmpty(plugin.getDependencies())) {
+					for (Dependency dependency : plugin.getDependencies()) {
+						Recipe addPluginDependencies = new AddPluginDependency(plugin.getGroupId(),
+								plugin.getArtifactId(), dependency.getGroupId(), dependency.getArtifactId(),
+								dependency.getVersion());
+						parsedPomFiles = mavenParser.parse(paths, this.currentProjectPath, getExecutionContext())
+							.toList();
+						List<Result> result = addPluginDependencies
+							.run(new InMemoryLargeSourceSet(parsedPomFiles), getExecutionContext())
+							.getChangeset()
+							.getAllResults();
+						updatePomFile(currentProjectPomPath, result);
+					}
+				}
+
+			}
 		}
 	}
 

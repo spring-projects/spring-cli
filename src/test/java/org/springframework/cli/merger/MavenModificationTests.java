@@ -17,6 +17,7 @@
 package org.springframework.cli.merger;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,6 +28,8 @@ import java.util.function.Consumer;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Plugin;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.openrewrite.InMemoryExecutionContext;
@@ -38,7 +41,9 @@ import org.openrewrite.maven.MavenParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.cli.util.ConversionUtils;
 import org.springframework.cli.util.PomReader;
+import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,6 +53,52 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MavenModificationTests {
 
 	private static final Logger logger = LoggerFactory.getLogger(MavenModificationTests.class);
+
+	@Test
+	void addPluginDependency(@TempDir Path tempDir) throws Exception {
+		MavenParser mavenParser = MavenParser.builder().build();
+
+		Path mergedPomPath = tempDir.resolve("temp-existing-pom.xml");
+		Path pomExisting = Paths.get("src/test/resources/pom-existing-project.xml");
+
+		// move existing contents into a pom.xml in the temp dir
+		Files.write(mergedPomPath, Files.readAllLines(pomExisting));
+
+		PomReader pomReader = new PomReader();
+		Path pomToMerge = Paths.get("src/test/resources/pom-project-to-add.xml");
+
+		ProjectMerger merger = new ProjectMerger(tempDir.resolve("to"), tempDir.resolve("from"), "foo-project", null);
+		Method mergeMavenPlugins = ReflectionUtils.findMethod(ProjectMerger.class, "mergeMavenPlugins", Path.class,
+				Model.class, Model.class, List.class, MavenParser.class);
+		mergeMavenPlugins.setAccessible(true);
+
+		List<Path> paths = new ArrayList<>();
+		paths.add(mergedPomPath);
+		mergeMavenPlugins.invoke(merger, mergedPomPath, pomReader.readPom(pomExisting.toFile()),
+				pomReader.readPom(pomToMerge.toFile()), paths, mavenParser);
+
+		Model mergedModel = pomReader.readPom(mergedPomPath.toFile());
+		for (Plugin plugin : mergedModel.getBuild().getPlugins()) {
+			if (plugin.getGroupId().equals("org.apache.maven.plugins")
+					&& plugin.getArtifactId().equals("maven-deploy-plugin")) {
+				assertThat(ConversionUtils.fromDomToString((Xpp3Dom) plugin.getConfiguration()))
+					.contains("<skip>true</skip>");
+			}
+			else if (plugin.getGroupId().equals("org.apache.maven.plugins")
+					&& plugin.getArtifactId().equals("maven-shade-plugin")) {
+				String configurationXML = ConversionUtils.fromDomToString(((Xpp3Dom) plugin.getConfiguration()));
+				assertThat(configurationXML).contains("<createDependencyReducedPom>false</createDependencyReducedPom>");
+				assertThat(configurationXML).contains("<shadedArtifactAttached>true</shadedArtifactAttached>");
+				assertThat(configurationXML).contains("<shadedClassifierName>aws</shadedClassifierName>");
+			}
+			else if (plugin.getGroupId().equals("org.springframework.boot")
+					&& plugin.getArtifactId().equals("spring-boot-maven-plugin")) {
+				Dependency dep = plugin.getDependencies().iterator().next();
+				assertThat(dep.getGroupId()).isEqualTo("org.springframework.boot.experimental");
+				assertThat(dep.getArtifactId()).isEqualTo("spring-boot-thin-layout");
+			}
+		}
+	}
 
 	@Test
 	void addManagedDependency(@TempDir Path tempDir) throws IOException {
