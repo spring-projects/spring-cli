@@ -29,14 +29,12 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
  */
 public final class ConversionUtils {
 
-	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
 	private ConversionUtils() {
 
 	}
 
 	public static String fromDomToString(Xpp3Dom dom) {
-		String element = trim(dom.toString());
+		String element = dom.toString();
 		return element;
 	}
 
@@ -44,12 +42,8 @@ public final class ConversionUtils {
 		StringWriter sw = new StringWriter();
 		Dependencies deps = new Dependencies(dependencies);
 		JAXB.marshal(deps, sw);
-		String xmlString = trim(sw.toString());
+		String xmlString = sw.toString();
 		return xmlString;
-	}
-
-	private static String trim(String value) {
-		return value.substring(value.indexOf(LINE_SEPARATOR) + 1);
 	}
 
 	/*
