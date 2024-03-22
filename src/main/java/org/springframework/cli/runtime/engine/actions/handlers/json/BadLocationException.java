@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.springframework.cli.runtime.engine.actions.handlers.json;
 
-package org.springframework.cli.merger.ai;
+public class BadLocationException extends Exception {
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ProcessArtifactResult<T> {
-
-	List<ProjectArtifact> notProcessedArtifacts = new ArrayList<>();
-
-	private T result;
-
-	public List<ProjectArtifact> getNotProcessedArtifacts() {
-		return notProcessedArtifacts;
+	public BadLocationException(Throwable e) {
+		super(e);
 	}
 
-	public void addToNotProcessed(ProjectArtifact projectArtifact) {
-		notProcessedArtifacts.add(projectArtifact);
+	public BadLocationException(String message) {
+		super(message);
 	}
 
-	public T getResult() {
-		return result;
-	}
-
-	void setResult(T result) {
-		this.result = result;
+	public BadLocationException() {
+		super();
 	}
 
 }

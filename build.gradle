@@ -39,6 +39,9 @@ repositories {
 	if (version.endsWith('-SNAPSHOT')) {
 		maven { url "https://repo.spring.io/snapshot" }
 	}
+	maven {
+		url = uri("https://repo.gradle.org/gradle/libs-releases")
+	}
 }
 
 ext {
