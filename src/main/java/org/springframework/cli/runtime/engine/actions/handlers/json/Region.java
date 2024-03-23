@@ -1,13 +1,18 @@
-/*******************************************************************************
- * Copyright (c) 2016-2017 Pivotal, Inc.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * https://www.eclipse.org/legal/epl-v10.html
+/*
+ * Copyright 2024 the original author or authors.
  *
- * Contributors:
- *     Pivotal, Inc. - initial API and implementation
- *******************************************************************************/
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.springframework.cli.runtime.engine.actions.handlers.json;
 
@@ -19,9 +24,9 @@ package org.springframework.cli.runtime.engine.actions.handlers.json;
  */
 public class Region implements IRegion {
 
-	private int ofs;
+	private final int ofs;
 
-	private int len;
+	private final int len;
 
 	public Region(int ofs, int len) {
 		super();
@@ -30,18 +35,24 @@ public class Region implements IRegion {
 	}
 
 	@Override
-	public int getOffset() {
-		return ofs;
-	}
-
-	@Override
-	public int getLength() {
-		return len;
-	}
-
-	@Override
-	public String toString() {
-		return "Region [ofs=" + ofs + ", len=" + len + "]";
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Region other = (Region) obj;
+		if (len != other.len) {
+			return false;
+		}
+		if (ofs != other.ofs) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -54,19 +65,18 @@ public class Region implements IRegion {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Region other = (Region) obj;
-		if (len != other.len)
-			return false;
-		if (ofs != other.ofs)
-			return false;
-		return true;
+	public String toString() {
+		return "Region [ofs=" + ofs + ", len=" + len + "]";
+	}
+
+	@Override
+	public int getOffset() {
+		return ofs;
+	}
+
+	@Override
+	public int getLength() {
+		return len;
 	}
 
 }

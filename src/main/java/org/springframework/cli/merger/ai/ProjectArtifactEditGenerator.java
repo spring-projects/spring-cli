@@ -1,9 +1,45 @@
+/*
+ * Copyright 2021 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.cli.merger.ai;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.openrewrite.Result;
+
 import org.springframework.cli.SpringCliException;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
 import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenActionHandler;
@@ -12,17 +48,8 @@ import org.springframework.cli.runtime.engine.actions.handlers.json.Lsp;
 import org.springframework.cli.util.ClassNameExtractor;
 import org.springframework.cli.util.MavenDependencyReader;
 import org.springframework.cli.util.PomReader;
+import org.springframework.cli.util.PropertyFileUtils;
 import org.springframework.cli.util.TerminalMessage;
-
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.springframework.cli.util.PropertyFileUtils.mergeProperties;
 
 public class ProjectArtifactEditGenerator {
 
@@ -90,11 +117,6 @@ public class ProjectArtifactEditGenerator {
 					processArtifactResult.addToNotProcessed(projectArtifact);
 					break;
 			}
-			// }
-			// catch (IOException ex) {
-			// ex.printStackTrace();
-			// throw new SpringCliException("Could not write project artifact.", ex);
-			// }
 		}
 		processArtifactResult.setResult(we);
 		return processArtifactResult;
@@ -157,7 +179,7 @@ public class ProjectArtifactEditGenerator {
 	private List<Lsp.ChangeOperation> convertToEdits(List<Result> allResults, String changeAnnotationId) {
 		List<Lsp.ChangeOperation> edits = new ArrayList<>();
 		for (Result res : allResults) {
-			Path p = res.getBefore() == null ? res.getAfter().getSourcePath() : res.getBefore().getSourcePath();
+			Path p = (res.getBefore() == null) ? res.getAfter().getSourcePath() : res.getBefore().getSourcePath();
 			String uri = p.toUri().toASCIIString();
 			ConversionUtils
 				.computeTextDocEdit(uri, res.getBefore().printAll(), res.getAfter().printAll(), changeAnnotationId)
@@ -221,7 +243,7 @@ public class ProjectArtifactEditGenerator {
 		if (Files.exists(applicationPropertiesPath)) {
 			destProperties.load(new FileInputStream(applicationPropertiesPath.toFile()));
 		}
-		Properties mergedProperties = mergeProperties(srcProperties, destProperties);
+		Properties mergedProperties = PropertyFileUtils.mergeProperties(srcProperties, destProperties);
 
 		StringWriter sw = new StringWriter();
 		mergedProperties.store(sw, "updated by spring ai add");
@@ -287,9 +309,9 @@ public class ProjectArtifactEditGenerator {
 				}
 			}
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 			throw new SpringCliException(
-					"Could not parse package name from Project Artifact: " + projectArtifact.getText());
+					"Could not parse package name from Project Artifact: " + projectArtifact.getText(), ex);
 		}
 		return packageToUse;
 	}

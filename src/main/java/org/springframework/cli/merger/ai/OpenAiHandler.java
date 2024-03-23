@@ -21,6 +21,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -40,8 +41,6 @@ import org.springframework.cli.util.IoUtils;
 import org.springframework.cli.util.RootPackageFinder;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.util.StreamUtils;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class OpenAiHandler {
 
@@ -74,13 +73,6 @@ public class OpenAiHandler {
 		String readmeResponse = this.generateCodeAiService.generate(context);
 
 		writeReadMe(projectName, readmeResponse, projectPath, terminalMessage);
-		if (!preview) {
-			List<ProjectArtifact> projectArtifacts = computeProjectArtifacts(readmeResponse);
-			ProjectArtifactProcessor projectArtifactProcessor = new ProjectArtifactProcessor(projectArtifacts,
-					projectPath, terminalMessage);
-			ProcessArtifactResult processArtifactResult = projectArtifactProcessor.process();
-			// TODO mention artifacts not processed
-		}
 	}
 
 	public void apply(String file, String path, TerminalMessage terminalMessage) {
@@ -100,7 +92,7 @@ public class OpenAiHandler {
 			throw new SpringCliException("The Path " + readmePath + " is not a regular file, can't read");
 		}
 		try (InputStream stream = Files.newInputStream(readmePath)) {
-			String response = StreamUtils.copyToString(stream, UTF_8);
+			String response = StreamUtils.copyToString(stream, StandardCharsets.UTF_8);
 			return computeProjectArtifacts(response);
 		}
 		catch (IOException ex) {

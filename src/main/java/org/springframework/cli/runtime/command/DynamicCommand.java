@@ -52,10 +52,14 @@ import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
 import org.springframework.cli.runtime.engine.actions.InjectMavenDependencyManagement;
 import org.springframework.cli.runtime.engine.actions.InjectMavenRepository;
 import org.springframework.cli.runtime.engine.actions.Vars;
-import org.springframework.cli.runtime.engine.actions.handlers.*;
+import org.springframework.cli.runtime.engine.actions.handlers.ExecActionHandler;
+import org.springframework.cli.runtime.engine.actions.handlers.GenerateActionHandler;
+import org.springframework.cli.runtime.engine.actions.handlers.InjectActionHandler;
+import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenActionHandler;
+import org.springframework.cli.runtime.engine.actions.handlers.VarsActionHandler;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
-import org.springframework.cli.runtime.engine.spel.SpelFunctions;
 import org.springframework.cli.runtime.engine.spel.SpELCondition;
+import org.springframework.cli.runtime.engine.spel.SpelFunctions;
 import org.springframework.cli.runtime.engine.templating.HandlebarsTemplateEngine;
 import org.springframework.cli.runtime.engine.templating.TemplateEngine;
 import org.springframework.cli.util.IoUtils;
@@ -218,10 +222,10 @@ public class DynamicCommand {
 		try {
 			processCommandActionFiles(commandActionFiles, workingDirectory, dynamicSubCommandPath, model);
 		}
-		catch (SpringCliException e) {
+		catch (SpringCliException ex) {
 			AttributedStringBuilder sb = new AttributedStringBuilder();
 			sb.style(sb.style().foreground(AttributedStyle.RED));
-			sb.append(e.getMessage());
+			sb.append(ex.getMessage());
 			terminalMessage.print(sb.toAttributedString());
 		}
 
@@ -337,8 +341,8 @@ public class DynamicCommand {
 		try {
 			Files.walkFileTree(dynamicSubCommandPath, visitor);
 		}
-		catch (IOException e) {
-			throw new SpringCliException("Error trying to detect action files. " + e.getMessage(), e);
+		catch (IOException ex) {
+			throw new SpringCliException("Error trying to detect action files. " + ex.getMessage(), ex);
 		}
 
 		// Then actually parse, retaining only those paths that yielded a result

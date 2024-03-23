@@ -13,11 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.runtime.engine.actions.handlers;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import org.openrewrite.Recipe;
 import org.openrewrite.config.DeclarativeRecipe;
 import org.openrewrite.maven.MavenParser;
+
 import org.springframework.cli.recipe.AddDependencyRecipeFactory;
 import org.springframework.cli.recipe.AddManagedDependencyRecipeFactory;
 import org.springframework.cli.recipe.AddPluginRecipeFactory;
@@ -31,10 +39,6 @@ import org.springframework.cli.util.MavenBuildPluginReader;
 import org.springframework.cli.util.MavenDependencyReader;
 import org.springframework.cli.util.MavenRepositoryReader;
 import org.springframework.cli.util.TerminalMessage;
-
-import java.nio.file.Path;
-import java.util.*;
-import java.util.stream.Collectors;
 
 public class InjectMavenActionHandler extends AbstractInjectMavenActionHandler {
 

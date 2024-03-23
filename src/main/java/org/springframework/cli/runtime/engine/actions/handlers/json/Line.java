@@ -1,13 +1,19 @@
-/*******************************************************************************
- * Copyright (c) 2016-2017 Pivotal, Inc.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * https://www.eclipse.org/legal/epl-v10.html
+/*
+ * Copyright 2024 the original author or authors.
  *
- * Contributors:
- *     Pivotal, Inc. - initial API and implementation
- *******************************************************************************/
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.cli.runtime.engine.actions.handlers.json;
 
 /**
@@ -32,7 +38,7 @@ final class Line implements IRegion {
 	 * @param end the last including character offset of the line
 	 * @param delimiter the line's delimiter
 	 */
-	public Line(int offset, int end, String delimiter) {
+	Line(int offset, int end, String delimiter) {
 		this.offset = offset;
 		this.length = (end - offset) + 1;
 		this.delimiter = delimiter;
@@ -43,7 +49,7 @@ final class Line implements IRegion {
 	 * @param offset the offset of the line
 	 * @param length the length of the line
 	 */
-	public Line(int offset, int length) {
+	Line(int offset, int length) {
 		this.offset = offset;
 		this.length = length;
 		this.delimiter = null;

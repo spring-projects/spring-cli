@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.cli.runtime.engine.actions.handlers.json;
 
 public class BadLocationException extends Exception {
+
+	private static final long serialVersionUID = 4005922462747639763L;
 
 	public BadLocationException(Throwable e) {
 		super(e);

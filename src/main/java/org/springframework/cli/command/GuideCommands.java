@@ -16,17 +16,17 @@
 
 package org.springframework.cli.command;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cli.SpringCliException;
 import org.springframework.cli.merger.ai.OpenAiHandler;
 import org.springframework.cli.merger.ai.service.GenerateCodeAiService;
 import org.springframework.cli.runtime.engine.actions.handlers.json.Lsp;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-
-import java.io.IOException;
 
 @Command(command = "guide", group = "Guide")
 public class GuideCommands {

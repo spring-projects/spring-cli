@@ -16,18 +16,13 @@
 
 package org.springframework.cli.merger.ai;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Model;
-import org.springframework.cli.SpringCliException;
-import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
-import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenActionHandler;
-import org.springframework.cli.util.ClassNameExtractor;
-import org.springframework.cli.util.MavenDependencyReader;
-import org.springframework.cli.util.PomReader;
-import org.springframework.cli.util.TerminalMessage;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,7 +33,18 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.springframework.cli.util.PropertyFileUtils.mergeProperties;
+import org.apache.commons.io.IOUtils;
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
+
+import org.springframework.cli.SpringCliException;
+import org.springframework.cli.runtime.engine.actions.InjectMavenDependency;
+import org.springframework.cli.runtime.engine.actions.handlers.InjectMavenActionHandler;
+import org.springframework.cli.util.ClassNameExtractor;
+import org.springframework.cli.util.MavenDependencyReader;
+import org.springframework.cli.util.PomReader;
+import org.springframework.cli.util.PropertyFileUtils;
+import org.springframework.cli.util.TerminalMessage;
 
 public class ProjectArtifactProcessor {
 
@@ -61,6 +67,7 @@ public class ProjectArtifactProcessor {
 		compiledArtifactIdPattern = Pattern.compile("<artifactId>(.*?)</artifactId>");
 	}
 
+	@SuppressWarnings("rawtypes")
 	public ProcessArtifactResult process() {
 		return processArtifacts(projectArtifacts, projectPath, terminalMessage);
 	}
@@ -180,15 +187,6 @@ public class ProjectArtifactProcessor {
 
 	}
 
-	private String massageText(String text) {
-		if (text.contains("<dependencies>")) {
-			return text;
-		}
-		else {
-			return "<dependencies>" + text + "</dependencies>";
-		}
-	}
-
 	private ProjectDependency getProjectDependency(String xml) {
 		String groupId = null;
 		String artifactId = null;
@@ -227,7 +225,7 @@ public class ProjectArtifactProcessor {
 		Properties destProperties = new Properties();
 		srcProperties.load(IOUtils.toInputStream(projectArtifact.getText(), StandardCharsets.UTF_8));
 		destProperties.load(new FileInputStream(applicationPropertiesPath.toFile()));
-		Properties mergedProperties = mergeProperties(srcProperties, destProperties);
+		Properties mergedProperties = PropertyFileUtils.mergeProperties(srcProperties, destProperties);
 		mergedProperties.store(new FileWriter(applicationPropertiesPath.toFile()), "updated by spring ai add");
 	}
 
@@ -256,16 +254,14 @@ public class ProjectArtifactProcessor {
 				String regex = "^package\\s+([a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*);";
 				Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
 				Matcher matcher = pattern.matcher(firstLine);
-				// Find the package statement and extract the package name
-				String packageName = "";
 				if (matcher.find()) {
 					packageToUse = matcher.group(1);
 				}
 			}
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 			throw new SpringCliException(
-					"Could not parse package name from Project Artifact: " + projectArtifact.getText());
+					"Could not parse package name from Project Artifact: " + projectArtifact.getText(), ex);
 		}
 		return packageToUse;
 	}
@@ -308,7 +304,6 @@ public class ProjectArtifactProcessor {
 
 	private void createFile(Path file) throws IOException {
 		if (Files.exists(file)) {
-			// System.out.println("deleting file " + file.toAbsolutePath());
 			Files.delete(file);
 		}
 		Files.createDirectories(file.getParent());
