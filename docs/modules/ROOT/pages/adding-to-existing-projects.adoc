@@ -8,7 +8,7 @@ You can use two methods to add code to existing projects:
 [[adding-using-boot-add-command]]
 == Using the Boot Add Command
 
-The `boot add`` command allows for intelligent merging of an existing project into the current project.
+The `boot add` command allows for intelligent merging of an existing project into the current project.
 The code of the existing project, located in a source code repository, is checked out into a temporary directory.
 The package structure of the existing project is then refactored to match the current project.
 Finally, all code and configuration are copied from the temporary location, creating new files or updating existing ones as necessary.
