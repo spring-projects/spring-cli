@@ -43,15 +43,11 @@ import org.springframework.cli.runtime.engine.model.SystemModelPopulator;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.rewrite.RewriteRecipeLauncher;
-import org.springframework.rewrite.boot.autoconfigure.RewriteLauncherConfiguration;
 import org.springframework.shell.style.ThemeResolver;
 
 public class MockConfigurations {
 
 	@Configuration
-	@Import(RewriteLauncherConfiguration.class) // required for boot upgrade command
 	public static class MockBaseConfig {
 
 		@Bean
@@ -78,9 +74,9 @@ public class MockConfigurations {
 
 		@Bean
 		BootCommands bootCommands(SpringCliUserConfig springCliUserConfig,
-				SourceRepositoryService sourceRepositoryService, RewriteRecipeLauncher rewriteRecipeLauncher) {
+				SourceRepositoryService sourceRepositoryService) {
 			BootCommands bootCommands = new BootCommands(springCliUserConfig, sourceRepositoryService,
-					TerminalMessage.noop(), rewriteRecipeLauncher);
+					TerminalMessage.noop());
 			return bootCommands;
 		}
 

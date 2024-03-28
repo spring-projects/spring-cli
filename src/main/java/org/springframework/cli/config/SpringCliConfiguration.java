@@ -35,9 +35,7 @@ import org.springframework.cli.util.SpringCliTerminal;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.client.reactive.ReactorResourceFactory;
-import org.springframework.rewrite.boot.autoconfigure.RewriteLauncherConfiguration;
 import org.springframework.shell.command.CommandExceptionResolver;
 import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.result.CommandNotFoundMessageProvider;
@@ -51,7 +49,6 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({ SpringCliProperties.class, SpringCliProjectCatalogProperties.class })
-@Import(RewriteLauncherConfiguration.class) // required for boot upgrade command
 public class SpringCliConfiguration {
 
 	@Bean
