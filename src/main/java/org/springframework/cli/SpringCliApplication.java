@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.springframework.cli;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cli.config.SpringCliRuntimeHints;
 import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.shell.command.annotation.CommandScan;
@@ -33,7 +34,11 @@ import org.springframework.shell.command.annotation.CommandScan;
 public class SpringCliApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringCliApplication.class, args);
+		SpringApplication app = new SpringApplicationBuilder(SpringCliApplication.class)
+			.properties("spring.config.name=springcliapp")
+			.properties("spring.config.location=classpath:/springcliapp.yml")
+			.build();
+		app.run(args);
 	}
 
 }
