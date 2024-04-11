@@ -27,7 +27,7 @@
 
   <Product
     Id="$(var.JpProductCode)"
-    Name="$(var.JpAppName)"
+    Name="Spring CLI"
     Language="$(var.JpProductLanguage)"
     Version="$(var.JpAppVersion)"
     Manufacturer="$(var.JpAppVendor)"

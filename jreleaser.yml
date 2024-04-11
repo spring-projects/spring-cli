@@ -101,6 +101,7 @@ assemble:
         types: [msi]
         console: true
         dirChooser: true
+        icon: 'src/jreleaser/images/spring-cli.ico'
         resourceDir: 'src/jreleaser/jpackage/windows'
 
 platform:
