@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '3.2.3'
+	id 'org.springframework.boot' version '3.2.5'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'org.graalvm.buildtools.native' version '0.9.19' apply false
@@ -76,7 +76,9 @@ dependencies {
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 	implementation 'org.rauschig:jarchivelib'
 	implementation 'org.kohsuke:github-api'
-	implementation 'org.gitlab4j:gitlab4j-api'
+	implementation ('org.gitlab4j:gitlab4j-api') {
+		exclude group: 'commons-logging', module: 'commons-logging'
+	}
 	implementation 'org.openrewrite:rewrite-java-17'
 	implementation 'org.openrewrite:rewrite-maven'
 	implementation 'org.openrewrite:rewrite-xml'
