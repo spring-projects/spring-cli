@@ -67,14 +67,14 @@ generate() {
     jarabsfile=$(get_abs_filename $_arg_jar)
     pushd $DOCS_DIR > /dev/null
     echo ".Commands" > modules/ROOT/nav-commands.adoc
-    mapfile arr < <(java -jar $jarabsfile help 2>&1)
+    mapfile arr < <(SPRING_SHELL_COMMAND_HELP_COMMANDS_TEMPLATE=file:help-commands-adoc.stg java -jar $jarabsfile help 2>&1)
     for path in "${arr[@]}"; do
         IFS=':' read -ra FIELDS <<< "$path"
         echo ${FIELDS[0]}
         for F in "${FIELDS[@]:1}"; do
             echo $F
             NAME="${F// /-}"
-            java -jar $jarabsfile help $F &> modules/ROOT/pages/commands/$NAME.adoc
+            SPRING_SHELL_COMMAND_HELP_COMMAND_TEMPLATE=file:help-command-adoc.stg java -jar $jarabsfile help $F &> modules/ROOT/pages/commands/$NAME.adoc
             echo "** xref:commands/$NAME.adoc[$F]" >> modules/ROOT/nav-commands.adoc
         done
     done
