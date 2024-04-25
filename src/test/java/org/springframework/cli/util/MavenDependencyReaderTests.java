@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,13 +34,16 @@ class MavenDependencyReaderTests {
 		MavenDependencyReader mavenDependencyReader = new MavenDependencyReader();
 		String[] mavenDependencies = mavenDependencyReader.parseMavenSection(dependencyText);
 		assertThat(mavenDependencies).hasSize(3);
-		assertThat(mavenDependencies[0]).isEqualTo("<dependency>\n" + "  <groupId>org.springframework.boot</groupId>\n"
-				+ "  <artifactId>spring-boot-starter-data-jpa</artifactId>\n" + "</dependency>");
-		assertThat(mavenDependencies[1]).isEqualTo("<dependency>\n" + "  <groupId>org.springframework.boot</groupId>\n"
-				+ "  <artifactId>spring-boot-starter-test</artifactId>\n" + "  <scope>test</scope>\n"
-				+ "</dependency>");
-		assertThat(mavenDependencies[2]).isEqualTo("<dependency>\n" + "  <groupId>com.h2database</groupId>\n"
-				+ "  <artifactId>h2</artifactId>\n" + "  <scope>runtime</scope>\n" + "</dependency>");
+		assertThat(mavenDependencies[0])
+			.isEqualToIgnoringWhitespace("<dependency>\n" + "  <groupId>org.springframework.boot</groupId>\n"
+					+ "  <artifactId>spring-boot-starter-data-jpa</artifactId>\n" + "</dependency>");
+		assertThat(mavenDependencies[1])
+			.isEqualToIgnoringWhitespace("<dependency>\n" + "  <groupId>org.springframework.boot</groupId>\n"
+					+ "  <artifactId>spring-boot-starter-test</artifactId>\n" + "  <scope>test</scope>\n"
+					+ "</dependency>");
+		assertThat(mavenDependencies[2])
+			.isEqualToIgnoringWhitespace("<dependency>\n" + "  <groupId>com.h2database</groupId>\n"
+					+ "  <artifactId>h2</artifactId>\n" + "  <scope>runtime</scope>\n" + "</dependency>");
 	}
 
 }
