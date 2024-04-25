@@ -10,7 +10,17 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - nickname: macos
+            os: macos-latest
+          - nickname: linux
+            os: ubuntu-latest
+          - nickname: windows
+            os: windows-latest
     name: CI Build
     steps:
       - uses: actions/checkout@v2
@@ -21,12 +31,8 @@ jobs:
           cache: gradle
       - run: ./gradlew build --no-daemon
       - uses: actions/upload-artifact@v3
-        with:
-          path: build/libs/*.jar
-          retention-days: 1
-      - uses: actions/upload-artifact@v3
         if: ${{ failure() }}
         with:
-          name: buildreports
+          name: buildreports-${{ matrix.nickname }}
           path: build/reports
           retention-days: 1
