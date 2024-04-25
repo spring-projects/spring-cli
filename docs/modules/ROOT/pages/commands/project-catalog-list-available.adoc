@@ -8,11 +8,13 @@ project-catalog list-available
 ====
 [source]
 ----
-project-catalog list-available --help 
+project-catalog list-available --json boolean --help 
 ----
 ====
 
 == OPTIONS
+`--json` boolean JSON format output *Optional, default = false*
+
 `--help or -h`  help for project-catalog list-available *Optional*
 
 

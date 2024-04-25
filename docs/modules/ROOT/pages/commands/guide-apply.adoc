@@ -8,7 +8,7 @@ guide apply
 ====
 [source]
 ----
-guide apply --file String --path String --help 
+guide apply --file String --path String --lsp-edit boolean --help 
 ----
 ====
 
@@ -16,6 +16,8 @@ guide apply --file String --path String --help
 `--file` String The readme file that contains the instructions for how to modify the code base, such as README-ai-jpa.md *Optional*
 
 `--path` String Path on which to run the command. Most of the time, you can not specify the path and use the default value, which is the current working directory. *Optional*
+
+`--lsp-edit` boolean LSP Edit Json is produced to be applied by an IDE or Language Server. *Optional, default = false*
 
 `--help or -h`  help for guide apply *Optional*
 
