@@ -55,8 +55,15 @@ public abstract class IoUtils {
 	}
 
 	public static boolean inProjectRootDirectory(Path path) {
+		Path dotGit = path.resolve(".git");
+		if (Files.exists(dotGit)) {
+			return true;
+		}
 		Path pomFile = path.resolve("pom.xml");
-		return Files.exists(pomFile);
+		if (Files.exists(pomFile)) {
+			return true;
+		}
+		return false;
 	}
 
 	public static Path getProjectPath(String path) {
