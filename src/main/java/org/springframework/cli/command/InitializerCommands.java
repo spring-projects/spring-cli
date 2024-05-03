@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
 
 import org.springframework.cli.config.SpringCliProperties;
-import org.springframework.cli.config.SpringCliUserConfig;
-import org.springframework.cli.config.SpringCliUserConfig.Initializr;
-import org.springframework.cli.config.SpringCliUserConfig.Initializrs;
 import org.springframework.cli.initializr.InitializrClient;
 import org.springframework.cli.initializr.InitializrClientCache;
 import org.springframework.cli.initializr.InitializrUtils;
@@ -45,20 +41,14 @@ import org.springframework.shell.component.flow.ResultMode;
 import org.springframework.shell.component.flow.SelectItem;
 import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.standard.AbstractShellComponent;
-import org.springframework.shell.table.ArrayTableModel;
-import org.springframework.shell.table.BorderStyle;
-import org.springframework.shell.table.Table;
-import org.springframework.shell.table.TableBuilder;
-import org.springframework.shell.table.TableModel;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Commands for spring initializr.
  *
  * @author Janne Valkealahti
  */
-@Command(command = "initializer", group = "Initializer")
+@Command(command = "boot", group = "Boot")
 public class InitializerCommands extends AbstractShellComponent {
 
 	private static final String PATH_NAME = "Path";
@@ -132,22 +122,18 @@ public class InitializerCommands extends AbstractShellComponent {
 
 	private final ComponentFlow.Builder componentFlowBuilder;
 
-	private final SpringCliUserConfig springCliUserConfig;
-
 	private final SpringCliProperties springCliProperties;
 
 	InitializerCommands(InitializrClientCache clientCache, ComponentFlow.Builder componentFlowBuilder,
-			SpringCliUserConfig springCliUserConfig, SpringCliProperties springCliProperties) {
+			SpringCliProperties springCliProperties) {
 		this.clientCache = clientCache;
 		this.componentFlowBuilder = componentFlowBuilder;
-		this.springCliUserConfig = springCliUserConfig;
 		this.springCliProperties = springCliProperties;
 	}
 
-	@Command(command = "new", description = "Create a new project from start.spring.io")
-	public String init(@Option(longNames = "server-id", description = "Server to use") String serverId,
-			@Option(description = "Path to extract") String path, @Option(description = "Project") String project,
-			@Option(description = "Language") String language,
+	@Command(command = "start", description = "Create a new project from start.spring.io")
+	public String init(@Option(description = "Path to extract") String path,
+			@Option(description = "Project") String project, @Option(description = "Language") String language,
 			@Option(longNames = "boot-version", description = "Language") String bootVersion,
 			@Option(description = "Version") String version, @Option(description = "Group") String group,
 			@Option(description = "Artifact") String artifact, @Option(description = "Name") String name,
@@ -156,7 +142,7 @@ public class InitializerCommands extends AbstractShellComponent {
 			@Option(description = "Dependencies") List<String> dependencies,
 			@Option(description = "Packaging") String packaging,
 			@Option(longNames = "java-version", description = "Java") String javaVersion) {
-		InitializrClient client = buildClient(serverId);
+		InitializrClient client = buildClient();
 		Metadata metadata = client.getMetadata();
 
 		Map<String, String> projectSelectItems = metadata.getType()
@@ -360,79 +346,9 @@ public class InitializerCommands extends AbstractShellComponent {
 		return String.format("Extracted to %s", outFile.getAbsolutePath());
 	}
 
-	@Command(command = "list", description = "Show the Initializr server environments")
-	public Table list() {
-		Stream<String[]> header = Stream.<String[]>of(new String[] { "ServerId", "Url" });
-		Stream<String[]> rows = this.springCliUserConfig.getInitializrs()
-			.entrySet()
-			.stream()
-			.map(e -> new String[] { e.getKey(), e.getValue().getUrl() });
-		String[][] data = Stream.concat(header, rows).toArray(String[][]::new);
-
-		TableModel model = new ArrayTableModel(data);
-		TableBuilder tableBuilder = new TableBuilder(model);
-		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
-	}
-
-	@Command(command = "set", description = "Set the Initializr server environment")
-	public void set(@Option(longNames = "server-id", description = "Server to use") String serverId,
-			@Option(description = "Server base url") String url) {
-		Map<String, Initializr> initializrs = this.springCliUserConfig.getInitializrs();
-		initializrs.put(serverId, Initializr.of(url));
-		this.springCliUserConfig.setInitializrs(Initializrs.of(initializrs));
-	}
-
-	@Command(command = "remove", description = "Remove the Initializr server environment")
-	public void remove(@Option(longNames = "server-id", description = "Server to use") String serverId) {
-		Map<String, Initializr> initializrs = this.springCliUserConfig.getInitializrs();
-		initializrs.remove(serverId);
-		this.springCliUserConfig.setInitializrs(Initializrs.of(initializrs));
-	}
-
-	@Command(command = "dependencies", description = "List supported dependencies")
-	public Table dependencies(@Option(longNames = "server-id", description = "Server to use") String serverId,
-			@Option(description = "Search string to limit results") String search,
-			@Option(description = "Limit to compatibility version") String version) {
-		InitializrClient client = buildClient(serverId);
-		Metadata metadata = client.getMetadata();
-
-		Stream<String[]> header = Stream.<String[]>of(new String[] { "Id", "Name", "Description", "Required version" });
-		Stream<String[]> rows = metadata.getDependencies()
-			.getValues()
-			.stream()
-			.flatMap(dc -> dc.getValues().stream())
-			.filter(d -> InitializrUtils.isDependencyCompatible(d, version))
-			.map(d -> new String[] { d.getId(), d.getName(), d.getDescription(), d.getVersionRange() })
-			.filter(d -> matches(d, search));
-		String[][] data = Stream.concat(header, rows).toArray(String[][]::new);
-
-		TableModel model = new ArrayTableModel(data);
-		TableBuilder tableBuilder = new TableBuilder(model);
-		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
-	}
-
-	private InitializrClient buildClient(String serverId) {
+	private InitializrClient buildClient() {
 		String cacheKey = this.springCliProperties.getInitializr().getBaseUrl();
-		if (StringUtils.hasText(serverId)) {
-			Initializr initializr = this.springCliUserConfig.getInitializrs().get(serverId);
-			if (initializr != null) {
-				cacheKey = initializr.getUrl();
-			}
-		}
 		return clientCache.get(cacheKey);
-	}
-
-	private static boolean matches(String[] array, String search) {
-		if (!StringUtils.hasText(search)) {
-			return true;
-		}
-		search = search.toLowerCase();
-		for (String field : array) {
-			if (StringUtils.hasText(field) && field.toLowerCase().contains(search)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 }
