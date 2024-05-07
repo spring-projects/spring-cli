@@ -1,0 +1,3 @@
+= Catalog
+
+The Project Catalog is a collection of projects that share a common theme.

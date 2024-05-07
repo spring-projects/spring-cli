@@ -1,0 +1,3 @@
+= Project
+
+A "Plain Old Java Project" hosted in GitHub or GitLab.

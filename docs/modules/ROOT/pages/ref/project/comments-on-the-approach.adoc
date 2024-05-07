@@ -12,7 +12,7 @@ The Spring team has created two ways to create a new project and one way to modi
 == Initializr
 
 The common way to create a new Spring Boot project has been to use Initializr, at https://start.spring.io.
-The Spring CLI provides you with a command to interact with Initializr. See xref:initializr.adoc[Initializr] but also offers other approaches to creating a new project and addresses the `day-2` use case of adding code or configuration to an existing project.
+The Spring CLI provides you with a command to interact with Initializr. See xref:howto/initializr.adoc[Initializr] but also offers other approaches to creating a new project and addresses the `day-2` use case of adding code or configuration to an existing project.
 
 [[comments-approach-boot-new]]
 == Using Boot New
@@ -22,7 +22,7 @@ The `boot new` command lets you specify a small set of options to customize it t
 
 The approach of `boot new` is to clone an existing repository that contains fully working code and configuration in addition to your project's dependencies.
 This approach makes it easy for your or members of your team to create several project archetypes, as they are regular Spring projects in a source code repository that can be verified to work with a CI process.
-See xref:creating-new-projects.adoc[Creating New Projects] for more information.
+See xref:ref/project/creating-new-projects.adoc[Creating New Projects] for more information.
 
 [[comments-approach-boot-add]]
 == Using Boot Add
@@ -30,13 +30,13 @@ See xref:creating-new-projects.adoc[Creating New Projects] for more information.
 Then, after initial project creation, you can add additional code and dependencies as needed by using the `boot add` command.
 This command intelligently merges an existing project into your current project.
 As with the `boot new` command, the existing project is a regular Spring project in a source code repository that can be compiled and verified to work with a CI process.
-See xref:boot-add-guide.adoc[Guide to "boot add"] for more information.
+See xref:howto/boot-add-guide.adoc[Guide to "boot add"] for more information.
 
 [[comments-approach-templating-code-configuration]]
 == Templating Code and Configuration
 
 Alternatively, you can add additional code and dependencies by using user defined commands, which rely on using a template engine to create code and configuration.
-See xref:user-command-guide.adoc[Guide to user defined commands] for more information.
+See xref:ref/usercommand/user-command-guide.adoc[Guide to user defined commands] for more information.
 The approach to using a template engine and making it easy for users to contribute commands that invoke those template was inspired by the https://github.com/jondot/hygen/[hygen] project.
 
 [[comments-approach-conclusion]]

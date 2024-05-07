@@ -31,7 +31,7 @@ actions:
 The `{{user-name}}` and `{{os-name}}` variables are replaced with actual values by the Handlebars template engine.
 Command line options passed to user-defined command are exposed as variables to be used by the template engine.
 
-For more information on predefined template engine variables, see the xref:user-command-guide.adoc#_template_engine[Template Engine] section.
+For more information on predefined template engine variables, see the xref:ref/usercommand/user-command-guide.adoc#_template_engine[Template Engine] section.
 
 === Literal Syntax
 
@@ -96,7 +96,7 @@ The following listing shows its contents:
 }
 ```
 
-Running `spring hello create` from the xref:action-file-overview.adoc#_an_introductory_example[introductory example] produces a file called `hello.json`, as follows:
+Running `spring hello create` from the xref:ref/usercommand/action-file-overview.adoc#_an_introductory_example[introductory example] produces a file called `hello.json`, as follows:
 
 ```
 $ spring hello create
@@ -133,7 +133,7 @@ actions:
       from: RestController.java
 ```
 
-For more information on predefined template engine variables, see the xref:user-command-guide.adoc#_template_engine[Template Engine] section.
+For more information on predefined template engine variables, see the xref:ref/usercommand/user-command-guide.adoc#_template_engine[Template Engine] section.
 
 [[action-inject]]
 == Inject

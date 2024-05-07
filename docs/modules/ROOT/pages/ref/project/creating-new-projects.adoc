@@ -12,7 +12,7 @@ If you provide the `--package-name`, the code is refactored after cloning the so
 
 The following sections provide detailed explanations of each of these topics.
 
-For more information on adding additional code to an already existing application, see xref:boot-add-guide.adoc[spring boot add] and xref:user-command-guide.adoc[User Defined Commands].
+For more information on adding additional code to an already existing application, see xref:howto/boot-add-guide.adoc[spring boot add] and xref:ref/usercommand/user-command-guide.adoc[User Defined Commands].
 
 == Quick Start
 

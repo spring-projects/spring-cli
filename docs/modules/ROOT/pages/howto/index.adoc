@@ -1,0 +1,3 @@
+= How-to Guides
+
+This section provides answers to some common ‘how do I do that…​’ questions that often arise when using Spring CLI. Its coverage is not exhaustive, but it does cover quite a lot.

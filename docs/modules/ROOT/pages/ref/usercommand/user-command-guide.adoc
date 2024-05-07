@@ -285,7 +285,7 @@ The following listing shows the action file named `hello.yaml`. It generates the
 
 ```
 actions:
-  - generate: 
+  - generate:
       to: hello.txt
       text: Hello {{greeting}} at {{now}} on {{os-name}}.
 ```
@@ -307,4 +307,4 @@ Hello World at Mar 9, 2023 on Linux.
 
 == Learning more
 
-The xref:action-file-overview.adoc[Action Guide] describes all the options available for you to use in action files (to add or modify code and configuration to a project).
+The xref:ref/usercommand/action-file-overview.adoc[Action Guide] describes all the options available for you to use in action files (to add or modify code and configuration to a project).

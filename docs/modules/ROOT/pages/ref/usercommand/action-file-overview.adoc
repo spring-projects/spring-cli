@@ -1,9 +1,9 @@
 = Action Files
 
-Action files power xref:user-command-guide.adoc[user defined commands].
+Action files power xref:ref/usercommand/user-command-guide.adoc[user defined commands].
 These files are written in YAML format and are stored in the directory that defines the command.
 
-See the documentation on xref:user-command-guide.adoc#_structure[Action file Structure] for more information on the directory structure for user-defined commands.
+See the documentation on xref:ref/usercommand/user-command-guide.adoc#_structure[Action file Structure] for more information on the directory structure for user-defined commands.
 
 Each file contains a series of actions that are run in the order in which they are defined in the file.
 An action performs a task that is commonly needed to help developers add or modify code and configuration to their current project.
