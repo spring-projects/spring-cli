@@ -234,13 +234,7 @@ node {
 
 antora {
 	version = '3.2.0-alpha.2'
-	playbook = 'docs/cached-antora-playbook.yml'
-	playbookProvider {
-		repository = 'spring-projects-experimental/spring-cli'
-		branch = 'docs-build'
-		path = 'lib/antora/templates/per-branch-antora-playbook.yml'
-		checkLocalBranch = true
-	}
+	playbook = 'docs/antora-playbook.yml'
 	options = ['--clean', '--stacktrace']
 	dependencies = [
 		'@antora/atlas-extension': '1.0.0-alpha.1',
