@@ -1,20 +1,18 @@
-= initializer new
+= boot start
 Create a new project from start.spring.io
 
 == NAME
-initializer new
+boot start
 
 == SYNOPSIS
 ====
 [source]
 ----
-initializer new --server-id String --path String --project String --language String --boot-version String --version String --group String --artifact String --name String --description String --package-name String --dependencies List --packaging String --java-version String --help 
+boot start --path String --project String --language String --boot-version String --version String --group String --artifact String --name String --description String --package-name String --dependencies List --packaging String --java-version String --help 
 ----
 ====
 
 == OPTIONS
-`--server-id` String Server to use *Optional*
-
 `--path` String Path to extract *Optional*
 
 `--project` String Project *Optional*
@@ -41,7 +39,7 @@ initializer new --server-id String --path String --project String --language Str
 
 `--java-version` String Java *Optional*
 
-`--help or -h`  help for initializer new *Optional*
+`--help or -h`  help for boot start *Optional*
 
 
-include::footers/initializer-new-footer.adoc[opts=optional]
+include::footers/boot-start-footer.adoc[opts=optional]

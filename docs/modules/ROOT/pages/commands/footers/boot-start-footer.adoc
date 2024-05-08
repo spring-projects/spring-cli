@@ -5,7 +5,7 @@ Create new project.
 ====
 [source, bash]
 ----
-spring initializr new
+spring boot start
 ----
 ====
 
@@ -14,7 +14,7 @@ Create new project with all given options.
 ====
 [source, bash]
 ----
-spring initializr new \
+spring boot start \
   --path demo \
   --project gradle-project \
   --language java \
