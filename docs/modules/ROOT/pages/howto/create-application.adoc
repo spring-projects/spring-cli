@@ -1,0 +1,15 @@
+= Create Application
+
+This section includes topics relating to application creation.
+
+[#initializr]
+== Create using start.spring.io
+
+You can use Spring CLI as a client for https://start.spring.io.
+
+Shell style project creation mimics how a project is created from the UI. The following image shows an example of it:
+
+[asciinema,rows=19]
+----
+include::example$boot-start-interactive.cast[]
+----

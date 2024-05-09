@@ -12,7 +12,7 @@ The Spring team has created two ways to create a new project and one way to modi
 == Initializr
 
 The common way to create a new Spring Boot project has been to use Initializr, at https://start.spring.io.
-The Spring CLI provides you with a command to interact with Initializr. See xref:howto/initializr.adoc[Initializr] but also offers other approaches to creating a new project and addresses the `day-2` use case of adding code or configuration to an existing project.
+The Spring CLI provides you with a command to interact with Initializr. See xref:howto/create-application#initializr.adoc[Initializr] but also offers other approaches to creating a new project and addresses the `day-2` use case of adding code or configuration to an existing project.
 
 [[comments-approach-boot-new]]
 == Using Boot New

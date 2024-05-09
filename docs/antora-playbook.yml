@@ -10,6 +10,7 @@ antora:
   - '@springio/antora-extensions/latest-version-extension'
   - require: '@springio/antora-extensions/root-component-extension'
     root_component_name: 'cli'
+  - require: '@springio/antora-extensions/asciinema-extension'
 site:
   title: Spring CLI Reference
 content:
