@@ -7,6 +7,7 @@ antora:
   - '@springio/antora-extensions/static-page-extension'
   - require: '@springio/antora-extensions/root-component-extension'
     root_component_name: 'cli'
+  - require: '@springio/antora-extensions/asciinema-extension'
 site:
   title: Spring Cli
   url: https://docs.spring.io/spring-cli/reference
