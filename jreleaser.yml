@@ -143,6 +143,16 @@ distributions:
         platform: 'windows-x86_64'
   spring-cli-installer:
     type: NATIVE_PACKAGE
+    winget:
+      active: RELEASE
+      continueOnError: true
+      package:
+        name: spring-cli
+      repository:
+        active: ALWAYS
+        owner: spring-cli-projects
+        name: winget-spring-cli
+        commitMessage: 'spring-cli {{tagName}}'
     artifacts:
       - path: '{{jpackageDir}}/spring_{{projectVersionNumber}}-1_amd64.deb'
         transform: '{{distributionName}}/{{distributionName}}_{{projectVersion}}-1_amd64.deb'
