@@ -192,27 +192,27 @@ In the previous example, the `{{capitalizeFirst feature}}` template variable is 
 
 By default, several system variables are exposed to the template engine:
 
-* `System.getProperties()` is available as `{{system-properties}}`
-* `System.getenv()` is available as `{{system-environment}}`
-* The current time (defined by `new Date().toString()`) is available as `{{now}}`
-* The `java.io.tmpdir` system property is available as `{{tmp-dir}}`
-* The `file.separator` system property is available as `{{file-separator}}`* The `os.name` system property is available as `{{os-name}}`
-* The `user.name` system property is available as `{{user.name}}`
+* `System.getProperties()` is available as `{\{system-properties}}`
+* `System.getenv()` is available as `{\{system-environment}}`
+* The current time (defined by `new Date().toString()`) is available as `{\{now}}`
+* The `java.io.tmpdir` system property is available as `{\{tmp-dir}}`
+* The `file.separator` system property is available as `{\{file-separator}}`* The `os.name` system property is available as `{\{os-name}}`
+* The `user.name` system property is available as `{\{user.name}}`
 
-The Java package name where the Spring Boot main application class resides is available as `{{root-package}}`.
+The Java package name where the Spring Boot main application class resides is available as `{\{root-package}}`.
 
-The directory where the Spring Boot main application class resides is available as `{{root-package-dir}}`.
+The directory where the Spring Boot main application class resides is available as `{\{root-package-dir}}`.
 
 The Maven model also exposes several variables:
 
-* `{{artifact-id}}`
-* `{{artifact-version}}`
-* `{{artifact-path}}`
-* `{{project-name}}`
-* `{{project-descriptoin}}`
-* `{{maven-model}` - This is the https://maven.apache.org/ref/3.9.0/maven-model/apidocs/org/apache/maven/model/Model.html[org.apache.maven.model.Model] class.
-* `{{maven-properties}}` - This is a Java properties object that has, as keys, the values of each entry in the POM's `<properties>` section.
-* `{{java-version}}` - This looks for a Maven Property named `java.version` in the POM. If the value is `1.8`, it is converted to a value of `8`.
+* `{\{artifact-id}}`
+* `{\{artifact-version}}`
+* `{\{artifact-path}}`
+* `{\{project-name}}`
+* `{\{project-descriptoin}}`
+* `{\{maven-model}}` - This is the https://maven.apache.org/ref/3.9.0/maven-model/apidocs/org/apache/maven/model/Model.html[org.apache.maven.model.Model] class.
+* `{\{maven-properties}}` - This is a Java properties object that has, as keys, the values of each entry in the POM's `<properties>` section.
+* `{\{java-version}}` - This looks for a Maven Property named `java.version` in the POM. If the value is `1.8`, it is converted to a value of `8`.
 
 == Creating a New User-defined Command
 

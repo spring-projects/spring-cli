@@ -126,9 +126,9 @@ The generated file contains:
 Hello Mondo on Linux.  Italian
 ----
 
-The value of `{{greeting}}` comes from the role variable because it was not provided as a command-line option.
+The value of `{\{greeting}}` comes from the role variable because it was not provided as a command-line option.
 
-The `{{language}}` variable was not a command line option, but it is available to use with Handlebars expressions.
+The `{\{language}}` variable was not a command line option, but it is available to use with Handlebars expressions.
 
 Now we can remove the generated file. in the interactive shell, we run `. ! rm hello.txt` and pass in the `greeting` command line option:
 
