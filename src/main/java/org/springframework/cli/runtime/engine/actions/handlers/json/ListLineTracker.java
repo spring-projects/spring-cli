@@ -93,8 +93,8 @@ class ListLineTracker {
 				}
 			}
 			else if (offset == line.offset) {
-				// left = right = mid;
-				left = mid;
+				right = mid;
+				left = right;
 			}
 		}
 
