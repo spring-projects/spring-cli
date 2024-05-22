@@ -45,7 +45,7 @@ jobs:
       - name: Release
         uses: jreleaser/release-action@v2
         with:
-          version: early-access
+          version: 1.12.0
           arguments: full-release
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.SPRING_CLI_REPO_JR_TOKEN }}
