@@ -36,3 +36,12 @@ jobs:
           name: buildreports-${{ matrix.nickname }}
           path: build/reports
           retention-days: 1
+  ea:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'spring-projects' && github.ref_name == 'main' && github.event_name == 'push'
+    needs: build
+    steps:
+      - name: Dispatch early access
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run jr-ea.yml -r main

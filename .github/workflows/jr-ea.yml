@@ -1,9 +1,11 @@
 name: Early Access
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
+
+concurrency:
+  group: jr-ea
+  cancel-in-progress: true
 
 jobs:
 
