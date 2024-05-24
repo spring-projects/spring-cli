@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -149,7 +149,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		return tableBuilder.addFullBorder(BorderStyle.fancy_light).build();
 	}
 
-	@Command(command = "add", description = "Add a project to a project catalog")
+	@Command(command = "add", description = "Add a project catalog")
 	public void catalogAdd(@Option(description = "Catalog name", required = true) String name,
 			@Option(description = "Catalog url", required = true) String url,
 			@Option(description = "Catalog description") String description,
@@ -189,7 +189,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		}
 	}
 
-	@Command(command = "remove", description = "Remove a project from a project catalog")
+	@Command(command = "remove", description = "Remove a project catalog")
 	public void catalogRemove(@Option(description = "Catalog name", required = true) String name) {
 		List<ProjectCatalog> originalProjectCatalogs = springCliUserConfig.getProjectCatalogs().getProjectCatalogs();
 		List<ProjectCatalog> updatedProjectCatalogs = originalProjectCatalogs.stream()
