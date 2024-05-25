@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 
 package org.springframework.cli.command;
 
+import java.util.Optional;
+
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cli.merger.ai.OpenAiHandler;
 import org.springframework.cli.merger.ai.service.GenerateCodeAiService;
 import org.springframework.cli.util.TerminalMessage;
@@ -39,15 +40,11 @@ public class AiCommands implements ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
 
-	@Autowired
-	public AiCommands(TerminalMessage terminalMessage) {
+	public AiCommands(Optional<OpenAiHandler> openAiHandler, TerminalMessage terminalMessage) {
 		this.terminalMessage = terminalMessage;
-		this.openAiHandler = new OpenAiHandler(new GenerateCodeAiService(this.terminalMessage));
-	}
-
-	public AiCommands(OpenAiHandler openAiHandler, TerminalMessage terminalMessage) {
-		this.terminalMessage = terminalMessage;
-		this.openAiHandler = openAiHandler;
+		this.openAiHandler = openAiHandler.orElseGet(() -> {
+			return new OpenAiHandler(new GenerateCodeAiService(this.terminalMessage));
+		});
 	}
 
 	@Command(command = "add", description = "Add code to the project from AI for a Spring project.")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.springframework.cli.command;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
@@ -42,8 +43,8 @@ public class AiCommandsTests {
 		this.contextRunner.withUserConfiguration(MockUserConfig.class).run((context) -> {
 
 			StubGenerateCodeAiService stubGenerateCodeAiService = new StubGenerateCodeAiService(TerminalMessage.noop());
-			AiCommands aiCommands = new AiCommands(new OpenAiHandler(stubGenerateCodeAiService),
-					TerminalMessage.noop());
+			OpenAiHandler openAiHandler = new OpenAiHandler(stubGenerateCodeAiService);
+			AiCommands aiCommands = new AiCommands(Optional.of(openAiHandler), TerminalMessage.noop());
 
 			CommandRunner commandRunner = new CommandRunner.Builder(context).prepareProject("rest-service", workingDir)
 				.build();
