@@ -8,7 +8,7 @@ The project catalog consists of a collection of projects that can be referenced 
 
 To add a project catalog, use the `spring project-catalog add` command.
 
-In this example, we register a sample catalog that is available at https://github.com/rd-1-2022/sample-project-catalog.
+In this example, we register a sample catalog that is available at https://github.com/rd-1-2022/catalog-for-project-tests.
 
 Within that repository, there is a file named `project-catalog.yml`.
 This is the filename for which the command searches.
@@ -17,16 +17,16 @@ The following listing shows the command:
 
 [source, bash]
 ----
-spring project-catalog add dapr https://github.com/rd-1-2022/sample-project-catalog
+spring project-catalog add dapr https://github.com/rd-1-2022/catalog-for-project-tests
 ----
 
-The preceding command registers a project catalog named `darp` from `https://github.com/rd-1-2022/sample-project-catalog` using positional parameters.
+The preceding command registers a project catalog named `darp` from `https://github.com/rd-1-2022/catalog-for-project-tests` using positional parameters.
 
 You can achieve the same result by using the `name` option, as follows:
 
 [source, bash]
 ----
-spring project-catalog add --name dapr --url https://github.com/rd-1-2022/sample-project-catalog
+spring project-catalog add --name dapr --url https://github.com/rd-1-2022/catalog-for-project-tests
 ----
 
 Now, you can view the available projects in the catalog by running the following command:
