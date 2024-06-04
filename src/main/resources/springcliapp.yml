@@ -3,6 +3,8 @@ spring:
     web-application-type: none
     banner-mode: off
   shell:
+    interactive:
+      enabled: true
     config:
       location: "{userconfig}/springcli"
     history:
