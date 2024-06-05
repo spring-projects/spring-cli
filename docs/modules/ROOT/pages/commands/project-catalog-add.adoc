@@ -1,14 +1,14 @@
-= project-catalog add
-Add a project to a project catalog
+= project catalog add
+Add a project catalog
 
 == NAME
-project-catalog add
+project catalog add
 
 == SYNOPSIS
 ====
 [source]
 ----
-project-catalog add [--name String] [--url String] --description String --tags List --help 
+project catalog add [--name String] [--url String] --description String --tags List --help 
 ----
 ====
 
@@ -21,7 +21,7 @@ project-catalog add [--name String] [--url String] --description String --tags L
 
 `--tags` List Project tags *Optional*
 
-`--help or -h`  help for project-catalog add *Optional*
+`--help or -h`  help for project catalog add *Optional*
 
 
 include::footers/project-catalog-add-footer.adoc[opts=optional]

@@ -1,21 +1,21 @@
-= project-catalog list
+= project catalog list
 List installed catalogs
 
 == NAME
-project-catalog list
+project catalog list
 
 == SYNOPSIS
 ====
 [source]
 ----
-project-catalog list --json boolean --help 
+project catalog list --json boolean --help 
 ----
 ====
 
 == OPTIONS
 `--json` boolean JSON format output *Optional, default = false*
 
-`--help or -h`  help for project-catalog list *Optional*
+`--help or -h`  help for project catalog list *Optional*
 
 
 include::footers/project-catalog-list-footer.adoc[opts=optional]
