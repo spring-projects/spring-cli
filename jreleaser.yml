@@ -72,13 +72,13 @@ assemble:
         - path: build/completion/zsh/_spring
           transform: completion/zsh/_spring
       targetJdks:
-        - path: 'build/jdks/bellsoft17Linux/jdk-17.0.9'
+        - path: 'build/jdks/bellsoft17Linux/jdk-17.0.11'
           platform: 'linux-x86_64'
-        - path: 'build/jdks/bellsoft17Osx/jdk-17.0.9.jdk'
+        - path: 'build/jdks/bellsoft17Osx/jdk-17.0.11.jdk'
           platform: 'osx-x86_64'
-        - path: 'build/jdks/bellsoft17OsxArm/jdk-17.0.9.jdk'
+        - path: 'build/jdks/bellsoft17OsxArm/jdk-17.0.11.jdk'
           platform: 'osx-aarch_64'
-        - path: 'build/jdks/bellsoft17Windows/jdk-17.0.9'
+        - path: 'build/jdks/bellsoft17Windows/jdk-17.0.11'
           platform: 'windows-x86_64'
 
   jpackage:
