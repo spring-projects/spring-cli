@@ -51,7 +51,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-@Command(command = "project-catalog", group = "Project Catalog")
+@Command(command = "project catalog", group = "Project Catalog")
 public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProjectCatalogCommands.class);
@@ -76,7 +76,7 @@ public class ProjectCatalogCommands extends AbstractSpringCliCommands {
 		this.objectMapper = objectMapper;
 	}
 
-	@Command(command = "list-available", description = "List available catalogs")
+	@Command(command = "available", description = "List available catalogs")
 	public Object catalogListAvailable(
 			@Option(description = "JSON format output", required = false, defaultValue = "false") boolean json)
 			throws JsonProcessingException {
