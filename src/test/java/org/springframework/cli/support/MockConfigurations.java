@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,17 @@
 
 package org.springframework.cli.support;
 
+import java.io.File;
 import java.nio.file.FileSystem;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.UUID;
 import java.util.function.Function;
 
 import com.google.common.jimfs.Jimfs;
+import org.apache.commons.io.FileUtils;
 import org.jline.terminal.Terminal;
 import org.mockito.Mockito;
 
@@ -34,7 +39,6 @@ import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalog;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectCatalogs;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepositories;
 import org.springframework.cli.config.SpringCliUserConfig.ProjectRepository;
-import org.springframework.cli.git.GitSourceRepositoryService;
 import org.springframework.cli.git.SourceRepositoryService;
 import org.springframework.cli.runtime.engine.model.MavenModelPopulator;
 import org.springframework.cli.runtime.engine.model.ModelPopulator;
@@ -63,8 +67,44 @@ public class MockConfigurations {
 		}
 
 		@Bean
-		GitSourceRepositoryService gitSourceRepositoryService(SpringCliUserConfig springCliUserConfig) {
-			return new GitSourceRepositoryService(springCliUserConfig);
+		SourceRepositoryService sourceRepositoryService() {
+			return new SourceRepositoryService() {
+
+				@Override
+				public Path retrieveRepositoryContents(String sourceRepoUrl) {
+					String testData = null;
+					if ("https://github.com/rd-1-2022/rest-service".equals(sourceRepoUrl)) {
+						testData = "rest-service";
+					}
+					else if ("https://github.com/rd-1-2022/rpt-spring-data-jpa".equals(sourceRepoUrl)) {
+						testData = "spring-data-jpa";
+					}
+					else if ("https://github.com/rd-1-2022/rpt-spring-scheduling-tasks".equals(sourceRepoUrl)) {
+						testData = "spring-scheduling-tasks";
+					}
+					else if ("https://github.com/rd-1-2022/rpt-config-client".equals(sourceRepoUrl)) {
+						testData = "config-client";
+					}
+					if (testData != null) {
+						try {
+							Path projectPath = Path.of("test-data").resolve("projects").resolve(testData);
+							Path tempPath = Paths.get(FileUtils.getTempDirectory().getAbsolutePath(),
+									UUID.randomUUID().toString());
+							File tmpdir = Files.createDirectories(tempPath).toFile();
+							FileUtils.copyDirectory(projectPath.toFile(), tmpdir);
+							return tmpdir.toPath();
+						}
+						catch (Exception ex) {
+							throw new RuntimeException(ex);
+						}
+
+					}
+					else {
+						throw new RuntimeException("Unknown mock for " + sourceRepoUrl);
+					}
+				}
+
+			};
 		}
 
 		@Bean
