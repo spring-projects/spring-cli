@@ -18,11 +18,13 @@ package org.springframework.cli.command;
 
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.beans.BeansException;
 import org.springframework.cli.merger.ai.OpenAiHandler;
+import org.springframework.cli.merger.ai.ResponseModifier;
 import org.springframework.cli.merger.ai.service.GenerateCodeAiService;
 import org.springframework.cli.util.TerminalMessage;
 import org.springframework.context.ApplicationContext;
@@ -55,6 +57,16 @@ public class AiCommands implements ApplicationContextAware {
 			@Option(description = "Create the README.md file but do not apply the changes to the code base.") boolean preview,
 			@Option(description = "Rewrite the 'description' option of the README.md file but do not apply the changes to the code base.") boolean rewrite) {
 		this.openAiHandler.add(description, path, preview, rewrite, terminalMessage);
+	}
+
+	@Command(command = "enhance-response",
+			description = "Enhance the AI response for a Spring project, i.e. make response Boot 3 compliant if necessary etc.")
+	public String aiModifyResponse(
+			@Option(description = "README.md file path containing the response from the AI.") String file,
+			@Option(description = "Path on which to run the command. Most of the time, you can not specify the path and use the default value, which is the current working directory.") String path)
+			throws JsonProcessingException {
+		ResponseModifier responseModifier = new ResponseModifier();
+		return responseModifier.modify(file, path);
 	}
 
 	private void printMissingDescriptionMessage() {
