@@ -21,9 +21,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.apache.commons.io.file.PathUtils;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import org.springframework.cli.CliTags;
 import org.springframework.cli.config.SpringCliUserConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +37,7 @@ public class GitSourceRepositoryServiceTests {
 	 * @param tempDir location to put contents of git repository
 	 */
 	@Test
+	@Tag(CliTags.GITHUB)
 	void testRetrieval(@TempDir Path tempDir) throws IOException {
 		GitSourceRepositoryService urlRepositoryService = new GitSourceRepositoryService(new SpringCliUserConfig());
 		Path contentPath = urlRepositoryService.retrieveRepositoryContents("https://github.com/rd-1-2022/rest-service");

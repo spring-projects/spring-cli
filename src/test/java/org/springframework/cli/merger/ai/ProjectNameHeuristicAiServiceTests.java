@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@
 
 package org.springframework.cli.merger.ai;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.cli.CliTags;
 import org.springframework.cli.merger.ai.service.ProjectNameHeuristicAiService;
 import org.springframework.cli.util.TerminalMessage;
 
@@ -26,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProjectNameHeuristicAiServiceTests {
 
 	@Test
+	@Tag(CliTags.AI)
 	void deriveProjectName() {
 		ProjectNameHeuristicAiService projectNameHeuristic = new ProjectNameHeuristicAiService(TerminalMessage.noop());
 
