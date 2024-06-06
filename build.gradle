@@ -139,34 +139,26 @@ dependencyManagement {
 }
 
 test {
-	useJUnitPlatform()
-}
-
-sourceSets {
-	integrationTest {
-		java {
-			compileClasspath += main.output + test.output
-			runtimeClasspath += main.output + test.output
-			srcDir file('src/integrationTest/java')
+	useJUnitPlatform {
+		if (!project.hasProperty('cliIncludeTags') && !project.hasProperty('cliExcludeTags')) {
+			includeTags = ['none()']
 		}
-		resources.srcDir file('src/integrationTest/resources')
+		else {
+			if (project.hasProperty('cliIncludeTags') && cliIncludeTags.size() > 0) {
+				includeTags = cliIncludeTags.split(',')
+			}
+			if (project.hasProperty('cliExcludeTags') && cliExcludeTags.size() > 0) {
+				excludeTags = cliExcludeTags.split(',')
+			}
+		}
+
 	}
-}
-
-task integrationTest(type: Test) {
-	useJUnitPlatform()
-	testClassesDirs = sourceSets.integrationTest.output.classesDirs
-	classpath = sourceSets.integrationTest.runtimeClasspath
-}
-
-configurations {
-	integrationTestCompile.extendsFrom testCompile
-	integrationTestRuntime.extendsFrom testRuntime
-	integrationTestImplementation.extendsFrom testImplementation
-}
-
-rootProject.tasks.named("processIntegrationTestResources") {
-	duplicatesStrategy = 'include'
+	if (project.hasProperty('cliTestLogging') && (cliTestLogging.isEmpty() ? true : cliTestLogging.toBoolean())) {
+		testLogging {
+			showStandardStreams = true
+			events = ["standardOut", "started", "passed", "failed", "skipped"]
+		}
+	}
 }
 
 task generateGitProperties {
