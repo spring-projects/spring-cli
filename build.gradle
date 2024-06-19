@@ -23,5 +23,6 @@ antora {
 		'@opendevise/antora-release-line-extension': '1.0.0',
 		'@springio/antora-extensions': '1.11.1',
 		'@springio/asciidoctor-extensions': '1.0.0-alpha.9',
+		'asciinema-player': '3.7.1'
 	]
 }
