@@ -3,6 +3,7 @@ antora:
   - '@antora/collector-extension'
   - '@antora/atlas-extension'
   - '@opendevise/antora-release-line-extension'
+  - '@springio/antora-extensions/set-algolia-env-extension'
   - '@springio/antora-extensions/latest-version-extension'
   - '@springio/antora-extensions/static-page-extension'
   - require: '@springio/antora-extensions/root-component-extension'
